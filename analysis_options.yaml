@@ -1,0 +1,17 @@
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+    - flutter-sdk/**
+    - .dart_tool/**
+    - test/**
+  errors:
+    invalid_annotation_target: ignore
+
+linter:
+  rules: {}

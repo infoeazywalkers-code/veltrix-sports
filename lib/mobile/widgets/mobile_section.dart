@@ -1,0 +1,148 @@
+import 'package:flutter/material.dart';
+import '../theme.dart';
+import 'mobile_card.dart';
+
+class MSection extends StatelessWidget {
+  final String title;
+  final String? action;
+  final VoidCallback? onActionTap;
+  final Widget child;
+
+  const MSection({
+    super.key,
+    required this.title,
+    this.action,
+    this.onActionTap,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(title, style: M.sectionTitle),
+            ),
+            if (action != null)
+              GestureDetector(
+                onTap: onActionTap,
+                child: Text(
+                  action!,
+                  style: const TextStyle(
+                    color: M.blue,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: M.md),
+        child,
+      ],
+    );
+  }
+}
+
+class MSectionIntro extends StatelessWidget {
+  final String eyebrow;
+  final String title;
+  final String body;
+
+  const MSectionIntro({
+    super.key,
+    required this.eyebrow,
+    required this.title,
+    required this.body,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          eyebrow,
+          style: const TextStyle(
+            color: M.blue,
+            fontSize: 10,
+            letterSpacing: 1.4,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: M.sm),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: M.navy,
+            fontSize: 26,
+            height: 1.1,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: M.sm),
+        Text(
+          body,
+          textAlign: TextAlign.center,
+          style: M.bodyMuted,
+        ),
+      ],
+    );
+  }
+}
+
+class MDivider extends StatelessWidget {
+  final String? label;
+  const MDivider({super.key, this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    if (label == null) return const Divider();
+    return Row(
+      children: [
+        const Expanded(child: Divider()),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: M.base),
+          child: Text(
+            label!,
+            style: const TextStyle(
+              color: M.muted,
+              fontSize: 10,
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ),
+        const Expanded(child: Divider()),
+      ],
+    );
+  }
+}
+
+void main() => runApp(MaterialApp(
+  theme: M.theme,
+  home: Scaffold(
+    backgroundColor: M.bg,
+    body: ListView(
+      padding: const EdgeInsets.all(M.base),
+      children: const [
+        MSection(
+          title: 'Section Title',
+          action: 'See all',
+          child: MCard(child: Text('Content here')),
+        ),
+        SizedBox(height: M.lg),
+        MSectionIntro(
+          eyebrow: 'EYEBROW',
+          title: 'Section intro title',
+          body: 'Body text goes here for context.',
+        ),
+        SizedBox(height: M.lg),
+        MDivider(label: 'OR'),
+      ],
+    ),
+  ),
+));
