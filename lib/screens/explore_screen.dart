@@ -28,11 +28,11 @@ class ExploreScreen extends StatelessWidget {
       Row(
         children: [
           Expanded(
-            child: _ExploreTile('Training plans', Icons.event_note, blue, onTap: () {}),
+            child: _ExploreTile('Training plans', Icons.event_note, blue, onTap: () => showFeatureMessage(context, 'Training plans are ready to explore.')),
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: _ExploreTile('Find a coach', Icons.groups, purple, onTap: () {}),
+            child: _ExploreTile('Find a coach', Icons.groups, purple, onTap: () => onNavigate?.call(6)),
           ),
         ],
       ),
@@ -40,11 +40,11 @@ class ExploreScreen extends StatelessWidget {
       Row(
         children: [
           Expanded(
-            child: _ExploreTile('Sports events', Icons.emoji_events, orange, onTap: () {}),
+            child: _ExploreTile('Sports events', Icons.emoji_events, orange, onTap: () => showFeatureMessage(context, 'Events are coming to your calendar soon.')),
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: _ExploreTile('My tickets', Icons.confirmation_number, teal, onTap: () {}),
+            child: _ExploreTile('My tickets', Icons.confirmation_number, teal, onTap: () => showFeatureMessage(context, 'Your event tickets will appear here.')),
           ),
         ],
       ),
@@ -52,11 +52,11 @@ class ExploreScreen extends StatelessWidget {
       Row(
         children: [
           Expanded(
-            child: _ExploreTile('Premium', Icons.workspace_premium, navy, onTap: () {}),
+            child: _ExploreTile('Premium', Icons.workspace_premium, navy, onTap: () => onNavigate?.call(5)),
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: _ExploreTile('Devices', Icons.devices_other, blue, onTap: () {}),
+            child: _ExploreTile('Devices', Icons.devices_other, blue, onTap: () => onNavigate?.call(7)),
           ),
         ],
       ),
@@ -85,7 +85,7 @@ class ExploreScreen extends StatelessWidget {
             const SizedBox(height: 15),
             FilledButton(
               style: FilledButton.styleFrom(backgroundColor: lime, foregroundColor: navy),
-              onPressed: () {},
+              onPressed: () => showFeatureMessage(context, 'Marathon Training Pro has been added to your plans.'),
               child: const Text('View plan', style: TextStyle(fontWeight: FontWeight.w900)),
             ),
           ],

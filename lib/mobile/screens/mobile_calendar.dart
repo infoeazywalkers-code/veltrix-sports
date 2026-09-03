@@ -13,6 +13,7 @@ class MobileCalendarScreen extends StatefulWidget {
 
 class _MobileCalendarScreenState extends State<MobileCalendarScreen> {
   int selectedDay = 5;
+  int weekOffset = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +30,13 @@ class _MobileCalendarScreenState extends State<MobileCalendarScreen> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () => setState(() => weekOffset--),
                     icon: const Icon(Icons.chevron_left),
                     iconSize: M.iconMd,
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      '24–30 Aug 2026',
+                      '${weekOffset == 0 ? '24–30 Aug 2026' : weekOffset < 0 ? '17–23 Aug 2026' : '31 Aug–6 Sep 2026'}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 17,
@@ -45,7 +46,7 @@ class _MobileCalendarScreenState extends State<MobileCalendarScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () => setState(() => weekOffset++),
                     icon: const Icon(Icons.chevron_right),
                     iconSize: M.iconMd,
                   ),

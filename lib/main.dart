@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'constants.dart';
 import 'shell.dart';
@@ -10,9 +9,7 @@ import 'mobile/shell.dart';
 import 'firebase_options.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Handle background messages
   await Firebase.initializeApp();
-  print('Handling a background message: ${message.messageId}');
 }
 
 Future<void> main() async {
@@ -21,11 +18,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Set up Firebase Messaging
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  // Initialize Firebase Analytics
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   runApp(kIsWeb ? const VeltrixApp() : const MobileApp());
 }

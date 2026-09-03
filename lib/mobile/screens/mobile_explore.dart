@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../constants.dart';
+import '../../screens/coach_match_screen.dart';
+import '../../screens/devices_screen.dart';
+import '../../screens/premium_screen.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -44,13 +48,13 @@ class MobileExploreScreen extends StatelessWidget {
                   mainAxisSpacing: M.sm,
                   crossAxisSpacing: M.sm,
                   childAspectRatio: 1.6,
-                  children: const [
-                    _ExploreTile('Training plans', Icons.event_note, M.blue),
-                    _ExploreTile('Find a coach', Icons.groups, M.purple),
-                    _ExploreTile('Sports events', Icons.emoji_events, M.orange),
-                    _ExploreTile('My tickets', Icons.confirmation_number, M.teal),
-                    _ExploreTile('Premium', Icons.workspace_premium, M.navy),
-                    _ExploreTile('Devices', Icons.devices_other, M.blue),
+                  children: [
+                    _ExploreTile('Training plans', Icons.event_note, M.blue, onTap: () => showFeatureMessage(context, 'Training plans are ready to explore.')),
+                    _ExploreTile('Find a coach', Icons.groups, M.purple, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CoachMatchScreen()))),
+                    _ExploreTile('Sports events', Icons.emoji_events, M.orange, onTap: () => _showMessage(context, 'Events are coming to your calendar soon.')),
+                    _ExploreTile('My tickets', Icons.confirmation_number, M.teal, onTap: () => _showMessage(context, 'Your event tickets will appear here.')),
+                    _ExploreTile('Premium', Icons.workspace_premium, M.navy, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PremiumScreen()))),
+                    _ExploreTile('Devices', Icons.devices_other, M.blue, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DevicesScreen()))),
                   ],
                 ),
               ),
@@ -87,7 +91,7 @@ class MobileExploreScreen extends StatelessWidget {
                           backgroundColor: M.lime,
                           foregroundColor: M.navy,
                         ),
-                        onPressed: () {},
+                        onPressed: () => _showMessage(context, 'Marathon Training Pro has been added to your plans.'),
                         child: const Text('View plan',
                             style: TextStyle(fontWeight: FontWeight.w900)),
                       ),
@@ -118,17 +122,22 @@ class MobileExploreScreen extends StatelessWidget {
   }
 }
 
+void _showMessage(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+}
+
 class _ExploreTile extends StatelessWidget {
   final String text;
   final IconData icon;
   final Color color;
+  final VoidCallback onTap;
 
-  const _ExploreTile(this.text, this.icon, this.color);
+  const _ExploreTile(this.text, this.icon, this.color, {required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return MCard(
-      onTap: () {},
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

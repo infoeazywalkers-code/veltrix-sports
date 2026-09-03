@@ -20,6 +20,8 @@ migrate_working_dir/
 
 # VS Code related
 .vscode/
+*.swp
+*.swo
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -69,6 +71,7 @@ app.*.map.json
 # Local environment files
 *.env
 .env.local
+.env.*.local
 .dart_tool/
 .flutter-plugins-dependencies
 
@@ -83,3 +86,24 @@ android-sdk/
 android-tools-unpacked/
 flutter-sdk/
 jdk17/
+
+# Dart/Flutter tooling
+.packages
+packages/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Localization
+*.arb
+
+# Coverage
+coverage/
+.lcov

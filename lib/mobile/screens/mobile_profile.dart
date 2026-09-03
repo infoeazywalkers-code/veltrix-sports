@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../screens/premium_screen.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -46,14 +47,14 @@ class MobileProfileScreen extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () => _showMessage(context, 'Profile editing is ready for your training details.'),
                     icon: const Icon(Icons.edit_outlined),
                   ),
                 ],
               ),
               const SizedBox(height: M.lg),
               MCard(
-                onTap: () {},
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PremiumScreen())),
                 color: const Color(0xFFEAF2F8),
                 child: const Row(
                   children: [
@@ -81,6 +82,7 @@ class MobileProfileScreen extends StatelessWidget {
               MSection(
                 title: 'Account',
                 child: _SettingsGroup(
+                  onSelect: (item) => _showMessage(context, '$item settings opened.'),
                   items: const [
                     ('Personal details', Icons.person_outline),
                     ('Training zones', Icons.tune),
@@ -93,6 +95,7 @@ class MobileProfileScreen extends StatelessWidget {
               MSection(
                 title: 'Support',
                 child: _SettingsGroup(
+                  onSelect: (item) => _showMessage(context, '$item is ready to help.'),
                   items: const [
                     ('Help center', Icons.help_outline),
                     ('Contact support', Icons.chat_bubble_outline),
@@ -102,7 +105,17 @@ class MobileProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: M.lg),
               OutlinedButton(
-                onPressed: () {},
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (dialogContext) => AlertDialog(
+                    title: const Text('Sign out?'),
+                    content: const Text('You can sign back in at any time.'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+                      FilledButton(onPressed: () { Navigator.pop(dialogContext); _showMessage(context, 'You have been signed out.'); }, child: const Text('Sign out')),
+                    ],
+                  ),
+                ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                   minimumSize: const Size.fromHeight(M.touchTarget),
@@ -121,8 +134,9 @@ class MobileProfileScreen extends StatelessWidget {
 
 class _SettingsGroup extends StatelessWidget {
   final List<(String, IconData)> items;
+  final ValueChanged<String> onSelect;
 
-  const _SettingsGroup({required this.items});
+  const _SettingsGroup({required this.items, required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +153,7 @@ class _SettingsGroup extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.w700)),
                 trailing:
                     const Icon(Icons.chevron_right, color: M.muted, size: 20),
+                onTap: () => onSelect(items[i].$1),
                 contentPadding: const EdgeInsets.symmetric(
                     horizontal: M.base, vertical: 2),
                 minVerticalPadding: 0,
@@ -151,6 +166,10 @@ class _SettingsGroup extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showMessage(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }
 
 class _MobileProfilePreview extends StatelessWidget {

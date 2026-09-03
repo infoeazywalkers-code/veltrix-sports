@@ -10,6 +10,7 @@ analyzer:
     - flutter-sdk/**
     - .dart_tool/**
     - test/**
+    - "Veltrix Sports/**"
   errors:
     invalid_annotation_target: ignore
 

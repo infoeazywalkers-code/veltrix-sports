@@ -5,11 +5,6 @@ allprojects {
     }
 }
 
-dependencies {
-    classpath("com.google.gms:google-services:4.4.2")
-    classpath("com.google.firebase:firebase-plugin:3.3.2")
-}
-
 val newBuildDir: Directory =
     rootProject.layout.buildDirectory
         .dir("../../build")

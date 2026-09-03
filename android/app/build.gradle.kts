@@ -4,7 +4,6 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services")
-    id("com.google.firebase.firebase-perf")
 }
 
 android {
@@ -38,9 +37,8 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
 
-            // Enable ProGuard for release builds to shrink and obfuscate code
-            minifyEnabled true
-            useProguard true
+            // Enable code shrinking for release builds
+            isMinifyEnabled = true
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -49,9 +47,8 @@ android {
         }
 
         debug {
-            // Disable ProGuard for debug builds to make debugging easier
-            minifyEnabled false
-            useProguard false
+            // Disable code shrinking for debug builds to make debugging easier
+            isMinifyEnabled = false
         }
     }
 }
@@ -69,8 +66,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-perf-plugin")
+    implementation("com.google.firebase:firebase-analytics-ktx:21.6.1")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

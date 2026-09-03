@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../screens/coach_match_screen.dart';
+import '../../screens/devices_screen.dart';
+import '../../screens/premium_screen.dart';
+import '../../screens/strength_screen.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -26,12 +30,12 @@ class MobileMoreScreen extends StatelessWidget {
               MSection(
                 title: 'Train with more support',
                 child: Column(
-                  children: const [
-                    _MoreFeature('Premium', 'Unlock advanced training tools', Icons.workspace_premium, M.orange),
+                  children: [
+                    _MoreFeature('Premium', 'Unlock advanced training tools', Icons.workspace_premium, M.orange, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PremiumScreen()))),
                     SizedBox(height: M.sm),
-                    _MoreFeature('Find a coach', 'Get guidance matched to your goals', Icons.groups_outlined, M.purple),
+                    _MoreFeature('Find a coach', 'Get guidance matched to your goals', Icons.groups_outlined, M.purple, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CoachMatchScreen()))),
                     SizedBox(height: M.sm),
-                    _MoreFeature('Strength', 'Build a stronger athletic foundation', Icons.fitness_center, M.teal),
+                    _MoreFeature('Strength', 'Build a stronger athletic foundation', Icons.fitness_center, M.teal, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const StrengthScreen()))),
                   ],
                 ),
               ),
@@ -39,10 +43,10 @@ class MobileMoreScreen extends StatelessWidget {
               MSection(
                 title: 'Connected training',
                 child: Column(
-                  children: const [
-                    _MoreFeature('Devices', 'Connect your watch and sensors', Icons.devices_other, M.blue),
+                  children: [
+                    _MoreFeature('Devices', 'Connect your watch and sensors', Icons.devices_other, M.blue, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DevicesScreen()))),
                     SizedBox(height: M.sm),
-                    _MoreFeature('Workout library', 'Save and reuse your favorite sessions', Icons.library_books_outlined, M.navy),
+                    _MoreFeature('Workout library', 'Save and reuse your favorite sessions', Icons.library_books_outlined, M.navy, onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Workout library is ready for your saved sessions.')))),
                   ],
                 ),
               ),
@@ -60,8 +64,9 @@ class _MoreFeature extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final Color color;
+  final VoidCallback onTap;
 
-  const _MoreFeature(this.title, this.subtitle, this.icon, this.color);
+  const _MoreFeature(this.title, this.subtitle, this.icon, this.color, {required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,7 @@ class _MoreFeature extends StatelessWidget {
       iconColor: color,
       title: title,
       subtitle: subtitle,
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }

@@ -12,13 +12,14 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarState extends State<CalendarScreen> {
   int day = 5;
+  int weekOffset = 0;
   @override
   Widget build(BuildContext context) => ListView(
     padding: const EdgeInsets.fromLTRB(18, 20, 18, 110),
     children: [
       Row(
         children: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.chevron_left)),
+          IconButton(onPressed: () => setState(() => weekOffset--), icon: const Icon(Icons.chevron_left)),
           const Expanded(
             child: Text(
               '24\u201330 Aug 2026',
@@ -26,7 +27,7 @@ class _CalendarState extends State<CalendarScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: navy),
             ),
           ),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.chevron_right)),
+          IconButton(onPressed: () => setState(() => weekOffset++), icon: const Icon(Icons.chevron_right)),
         ],
       ),
       const SizedBox(height: 12),

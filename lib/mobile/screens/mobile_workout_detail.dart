@@ -12,7 +12,7 @@ class MobileWorkoutDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Workout details'),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz)),
+          IconButton(onPressed: () => _showWorkoutMenu(context), icon: const Icon(Icons.more_horiz)),
         ],
       ),
       body: ListView(
@@ -107,7 +107,14 @@ class MobileWorkoutDetailScreen extends StatelessWidget {
               foregroundColor: M.navy,
               minimumSize: const Size.fromHeight(52),
             ),
-            onPressed: () {},
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (dialogContext) => AlertDialog(
+                title: const Text('Workout started'),
+                content: const Text('Your timer is ready. Stay relaxed and enjoy the session.'),
+                actions: [FilledButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Done'))],
+              ),
+            ),
             icon: const Icon(Icons.play_arrow),
             label: const Text('Start workout',
                 style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
@@ -117,6 +124,18 @@ class MobileWorkoutDetailScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showWorkoutMenu(BuildContext context) {
+  showModalBottomSheet<void>(
+    context: context,
+    builder: (sheetContext) => SafeArea(
+      child: Wrap(children: [
+        ListTile(leading: const Icon(Icons.edit), title: const Text('Edit workout'), onTap: () => Navigator.pop(sheetContext)),
+        ListTile(leading: const Icon(Icons.delete_outline), title: const Text('Remove workout'), onTap: () => Navigator.pop(sheetContext)),
+      ]),
+    ),
+  );
 }
 
 void main() => runApp(MaterialApp(

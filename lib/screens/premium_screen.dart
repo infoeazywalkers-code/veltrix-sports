@@ -4,6 +4,26 @@ import '../widgets/section_intro.dart';
 import '../widgets/responsive_cards.dart';
 import '../widgets/veltrix_footer.dart';
 
+void _startTrial(BuildContext context, String plan) {
+  showDialog<void>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text('$plan plan selected'),
+      content: const Text('Your 14-day free trial is ready to start. No payment is required during the trial.'),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Maybe later')),
+        FilledButton(
+          onPressed: () {
+            Navigator.pop(dialogContext);
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Your free trial has been started.')));
+          },
+          child: const Text('Start trial'),
+        ),
+      ],
+    ),
+  );
+}
+
 class PremiumScreen extends StatelessWidget {
   const PremiumScreen({super.key});
 
@@ -103,7 +123,7 @@ class PremiumScreen extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
                 ),
-                onPressed: () {},
+                onPressed: () => _startTrial(context, 'Premium'),
                 child: const Text('Get Premium Now', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
               ),
             ],
@@ -268,7 +288,7 @@ class _PriceCard extends StatelessWidget {
               foregroundColor: featured ? navy : Colors.white,
               minimumSize: const Size.fromHeight(48),
             ),
-            onPressed: () {},
+            onPressed: () => _startTrial(context, plan),
             child: const Text('Start free trial', style: TextStyle(fontWeight: FontWeight.w900)),
           ),
         ],

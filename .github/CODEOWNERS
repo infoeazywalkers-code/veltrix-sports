@@ -1,0 +1,24 @@
+# Global owners
+* @infoeazywalkers-code
+
+# Flutter/Dart code
+/lib/ @infoeazywalkers-code
+
+# Android configuration
+/android/ @infoeazywalkers-code
+
+# iOS configuration
+/ios/ @infoeazywalkers-code
+
+# Web configuration
+/web/ @infoeazywalkers-code
+
+# Tests
+/test/ @infoeazywalkers-code
+
+# CI/CD
+/.github/ @infoeazywalkers-code
+
+# Documentation
+/*.md @infoeazywalkers-code
+/docs/ @infoeazywalkers-code

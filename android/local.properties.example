@@ -1,0 +1,8 @@
+# Copy this file to local.properties and update the paths
+# This file is for documentation purposes only - local.properties is gitignored
+
+flutter.sdk=C:\\tools\\flutter
+sdk.dir=C:\\Users\\bezal\\AppData\\Local\\Android\\sdk
+flutter.buildMode=release
+flutter.versionName=1.0.0
+flutter.versionCode=1

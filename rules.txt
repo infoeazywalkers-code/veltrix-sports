@@ -1,0 +1,919 @@
+VELTRIX SPORTS — PHASE 2 PRODUCTION HARDENING EXECUTION PROMPT
+
+You are continuing work on the existing Veltrix Sports Flutter repository.
+
+Do NOT restart the project.
+
+Do NOT redesign the UI.
+
+Do NOT claim production readiness.
+
+The previous implementation phase has already completed the initial UI/demo hardening.
+
+Current known state:
+
+Static analyzer: PASS
+Source validation: PASS
+Dependency configuration: PASS
+Focused widget tests: BLOCKED
+Web release build: BLOCKED
+Flutter/Dart execution: BLOCKED
+
+The local Flutter environment has previously reported:
+
+Unable to determine engine version
+dart.bat timed out
+
+The latest widget tests were corrected for lazy-list viewport behavior, but the Flutter/Dart runner still cannot reliably complete execution.
+
+Current approximate state:
+
+UI/demo implementation: ~80%
+Production implementation: ~50%
+Automated QA: BLOCKED
+Production release: NOT APPROVED
+
+Your responsibility is now to move the project toward actual production readiness.
+
+---
+
+RULE 1 — DO NOT FAKE TEST RESULTS
+
+Never report:
+
+PASS
+
+unless the command actually completed successfully.
+
+If execution is impossible, report:
+
+BLOCKED
+
+and provide the exact reason.
+
+Do not convert:
+
+- analyzer success
+- compilation
+- static inspection
+- source inspection
+
+into:
+
+"application works."
+
+They are different levels of validation.
+
+---
+
+PHASE A — REPAIR THE DEVELOPMENT ENVIRONMENT FIRST
+
+Before implementing new product features, diagnose the Flutter SDK.
+
+Inspect:
+
+C:\tools\flutter
+C:\tools\flutter\bin
+C:\tools\flutter\bin\cache
+C:\tools\flutter\bin\cache\dart-sdk
+
+Determine:
+
+- Flutter version
+- Dart version
+- engine version
+- cache state
+- SDK permissions
+- PATH configuration
+- conflicting Flutter installations
+- conflicting Dart installations
+- corrupted cache
+- stale artifacts
+- environment variables
+- process timeout causes
+
+Run appropriate diagnostics.
+
+Use the actual Flutter executable being used by the project.
+
+Do not blindly reinstall everything.
+
+Determine why:
+
+flutter.bat
+dart.bat
+
+are timing out or being terminated.
+
+If the SDK is corrupted, repair it.
+
+If multiple SDK installations exist, identify which one is authoritative.
+
+Do not modify unrelated system configuration unnecessarily.
+
+---
+
+PHASE B — VERIFY THE TOOLCHAIN
+
+After repairing the environment, execute:
+
+flutter doctor -v
+flutter --version
+dart --version
+flutter pub get
+flutter analyze
+flutter test
+flutter build web --release
+flutter build apk --release
+
+Do not proceed to declaring the application healthy until the basic commands execute.
+
+If a command fails:
+
+1. Capture the exact error.
+2. Determine root cause.
+3. Fix it.
+4. Re-run it.
+
+Do not hide errors.
+
+---
+
+PHASE C — ESTABLISH A BASELINE
+
+Create a QA baseline containing:
+
+Analyzer:
+Tests:
+Web build:
+Android build:
+Integration tests:
+
+Example:
+
+Analyzer: PASS
+Unit/widget tests: PASS
+Integration tests: BLOCKED
+Web release: PASS
+Android release: PASS
+
+Only use actual results.
+
+---
+
+PHASE D — AUDIT THE EXISTING CODE AGAIN
+
+Search the project for:
+
+TODO
+FIXME
+PLACEHOLDER
+MOCK
+DEMO
+TEMP
+print(
+debugPrint(
+empty callbacks
+hardcoded URLs
+hardcoded credentials
+fake success
+fake payment
+fake authentication
+
+Search all relevant source files.
+
+Do not remove something merely because it contains the word DEMO.
+
+Determine whether it is:
+
+1. intentional test/mock infrastructure
+2. development-only functionality
+3. production functionality
+4. unfinished functionality
+
+Document the difference.
+
+---
+
+PHASE E — PRODUCTION CONFIGURATION
+
+Inspect:
+
+firebase_options.dart
+Android Firebase configuration
+Web Firebase configuration
+Google authentication configuration
+environment configuration
+
+Do not invent production credentials.
+
+If real Firebase credentials are unavailable, create the correct configuration structure and document exactly what must be supplied.
+
+Never commit secrets.
+
+---
+
+PHASE F — AUTHENTICATION
+
+Once valid Firebase configuration exists, implement and verify:
+
+Login
+
+- successful login
+- cancelled login
+- failed login
+- network failure
+- session restoration
+- expired session
+
+Logout
+
+- confirmation
+- cancellation
+- successful logout
+- session cleared
+
+Authorization
+
+Test:
+
+- logged-out access
+- logged-in access
+- athlete access
+- coach access
+- unauthorized user
+- direct route access
+
+Do not depend only on UI visibility.
+
+---
+
+PHASE G — USER DATA
+
+Implement real persistence for the user's:
+
+- profile
+- role
+- sport
+- preferences
+- training information
+
+Ensure user isolation.
+
+User A must never be able to access User B's private records.
+
+Use backend security rules.
+
+---
+
+PHASE H — COACH MATCH BACKEND
+
+The existing UI already contains:
+
+- sport
+- experience
+- goal
+- additional information
+- submission
+- confirmation
+
+Now implement persistence.
+
+Suggested structure:
+
+coach_requests/{requestId}
+
+with:
+
+id
+userId
+sport
+experience
+goal
+notes
+status
+createdAt
+updatedAt
+
+Implement:
+
+draft
+→ validation
+→ submitting
+→ success
+
+and:
+
+draft
+→ validation
+→ submitting
+→ error
+→ retry
+
+Prevent duplicate submissions.
+
+Never display success if the backend operation failed.
+
+---
+
+PHASE I — REAL WORKOUT DATA
+
+Replace demo-only workout state with persistent workout data.
+
+Support:
+
+- scheduled
+- started
+- paused
+- completed
+- skipped
+- cancelled
+
+Persist:
+
+- workout ID
+- user ID
+- date
+- sport
+- duration
+- distance
+- target pace
+- TSS
+- workout structure
+- status
+- timestamps
+
+The UI must reflect actual stored state.
+
+---
+
+PHASE J — CALENDAR
+
+Connect Calendar to persistent workout data.
+
+Verify:
+
+- previous week
+- next week
+- day selection
+- workouts
+- empty days
+- add workout
+- edit workout
+- delete workout
+
+Test date boundaries.
+
+Pay particular attention to timezone handling.
+
+---
+
+PHASE K — PROGRESS
+
+Do not use fake production metrics.
+
+Derive progress from actual workout/training data where the product requirements define a calculation.
+
+Implement appropriate:
+
+- fitness
+- fatigue
+- form
+- training volume
+- weekly statistics
+- trends
+
+If insufficient data exists:
+
+show:
+
+"Not enough data yet"
+
+instead of inventing statistics.
+
+---
+
+PHASE L — PREMIUM
+
+The existing Premium screen is currently a demo flow.
+
+Do not claim that it is production-ready.
+
+Implement the actual subscription architecture required by the product.
+
+Support:
+
+- monthly
+- annual
+- trial
+- entitlement
+- renewal
+- cancellation
+- expiration
+- restoration
+- failed payment
+
+Payment verification must use the appropriate secure server-side architecture.
+
+Never put private payment credentials in Flutter code.
+
+---
+
+PHASE M — DEVICE INTEGRATIONS
+
+Identify the exact device providers actually required by Veltrix.
+
+For each provider implement:
+
+Not connected
+→ Connecting
+→ Connected
+→ Syncing
+→ Synced
+
+Also support:
+
+Connection failed
+Authorization denied
+Disconnected
+Sync failed
+
+Never show:
+
+"Connected"
+
+when only a local Boolean was changed.
+
+If a device provider is not yet supported, clearly label it as unavailable/coming soon.
+
+---
+
+PHASE N — EVENTS
+
+Replace static production-facing event data with a repository/data-source architecture.
+
+Support:
+
+- loading
+- results
+- no results
+- errors
+- retry
+- event details
+
+Do not present fabricated ticket availability.
+
+---
+
+PHASE O — VIDEO
+
+Keep the existing:
+
+assets/video/home-training.mp4
+
+Verify:
+
+Android
+Mobile Web
+Desktop Web
+
+Requirements:
+
+- muted autoplay where supported
+- loop
+- mute/unmute
+- fallback image
+- initialization failure handling
+- disposal
+- repeated navigation
+
+Specifically test:
+
+Home
+→ Calendar
+→ Home
+→ Explore
+→ Home
+
+repeatedly.
+
+Look for:
+
+- crashes
+- controller leaks
+- multiple playback instances
+- increasing memory usage
+- frozen video
+- incorrect audio state
+
+---
+
+PHASE P — AUTOMATED TESTING
+
+Once Flutter execution is repaired, run the existing tests first.
+
+Do not immediately create hundreds of tests.
+
+First achieve:
+
+flutter analyze       PASS
+flutter test          PASS
+flutter build web     PASS
+flutter build apk     PASS
+
+Then expand coverage.
+
+Prioritize tests for:
+
+1. Navigation
+2. Authentication
+3. Calendar
+4. Workout
+5. Coach Match
+6. Premium
+7. Profile
+8. Responsive layouts
+9. Error states
+10. Backend repositories
+
+---
+
+PHASE Q — TEST THE REAL USER JOURNEYS
+
+Automate or manually verify these complete flows.
+
+Athlete
+
+Login
+→ Home
+→ Today's Workout
+→ Workout Details
+→ Start
+→ Complete
+
+Calendar
+
+Calendar
+→ Next Week
+→ Select Day
+→ Open Workout
+→ Edit
+→ Save
+→ Return Calendar
+
+Coach
+
+Explore
+→ Coach Match
+→ Select Sport
+→ Experience
+→ Goal
+→ Notes
+→ Submit
+→ Confirmation
+
+Premium
+
+Explore
+→ Premium
+→ Select Plan
+→ Trial/Subscription
+→ Verify Entitlement
+
+Strength
+
+More
+→ Strength
+→ Save Session
+→ Start
+→ Complete
+
+Devices
+
+More
+→ Devices
+→ Provider
+→ Connect
+→ Authorization
+→ Sync
+
+Profile
+
+Profile
+→ Settings
+→ Back
+→ Logout
+→ Confirm
+
+---
+
+PHASE R — RESPONSIVE QA
+
+Test:
+
+320×800
+360×800
+375×812
+390×844
+400×900
+600×800
+768×1024
+900×800
+1023×768
+1024×768
+1025×768
+1280×800
+1366×768
+1440×900
+1920×1080
+
+Check:
+
+- mobile shell
+- desktop shell
+- navigation
+- cards
+- forms
+- video
+- dialogs
+- buttons
+- typography
+- overflow
+- keyboard behavior
+
+Pay special attention to:
+
+1023 → 1024 → 1025
+
+because breakpoint errors frequently occur there.
+
+---
+
+PHASE S — ACCESSIBILITY
+
+Test:
+
+- keyboard navigation
+- focus
+- screen reader labels
+- icon semantics
+- contrast
+- scalable text
+- forms
+- error messages
+- dialogs
+- touch targets
+
+Do not treat accessibility as optional polish.
+
+---
+
+PHASE T — SECURITY
+
+Perform a security audit covering:
+
+- Firebase rules
+- authentication
+- authorization
+- user isolation
+- input validation
+- token handling
+- local storage
+- logs
+- environment variables
+- API security
+- payment security
+
+Test malicious input such as:
+
+<script>alert(1)</script>
+
+' OR '1'='1
+
+../../../../etc/passwd
+
+and extremely large strings.
+
+No crashes.
+
+No unauthorized access.
+
+No script execution.
+
+No sensitive information exposure.
+
+---
+
+PHASE U — ERROR INJECTION
+
+Intentionally simulate:
+
+- no internet
+- slow internet
+- timeout
+- HTTP 400
+- HTTP 401
+- HTTP 403
+- HTTP 404
+- HTTP 429
+- HTTP 500
+- malformed backend response
+- empty backend response
+- null fields
+- expired authentication
+- failed device connection
+
+Verify:
+
+Loading
+→ Error
+→ Retry
+
+instead of:
+
+Loading forever
+
+or:
+
+Blank screen
+
+---
+
+PHASE V — PERFORMANCE
+
+Measure rather than guess.
+
+Test:
+
+- cold startup
+- warm startup
+- navigation
+- scrolling
+- video
+- memory
+- repeated navigation
+- large workout lists
+- large event lists
+
+Look specifically for:
+
+- frame drops
+- excessive rebuilds
+- memory leaks
+- controller leaks
+- repeated API requests
+
+---
+
+PHASE W — RELEASE BUILD
+
+Once all applicable tests pass:
+
+Build:
+
+flutter build apk --release
+flutter build appbundle --release
+flutter build web --release
+
+Test the actual release artifacts.
+
+Do not assume a debug build represents production behavior.
+
+---
+
+PHASE X — RELEASE CHECK
+
+Do not approve release until:
+
+P0 defects = 0
+
+Release-blocking P1 defects = 0
+
+Analyzer = PASS
+
+Automated tests = PASS
+
+Web release build = PASS
+
+Android release build = PASS
+
+Authentication = VERIFIED
+
+Authorization = VERIFIED
+
+Backend persistence = VERIFIED
+
+Payment/subscription = VERIFIED
+where in scope
+
+Device integrations = VERIFIED
+where in scope
+
+Responsive QA = PASS
+
+Security review = PASS
+
+Accessibility review = PASS
+
+Performance review = ACCEPTED
+
+---
+
+REPORTING FORMAT
+
+At the end of every work session provide:
+
+Completed
+
+List only work actually completed.
+
+Tests Executed
+
+For every command provide:
+
+Command
+Result
+Duration if useful
+Important output
+
+Blocked
+
+List anything that could not be verified.
+
+Defects Found
+
+List:
+
+ID
+Severity
+Description
+Reproduction
+Root cause
+Fix
+Verification
+
+Production Readiness
+
+Calculate separately:
+
+UI readiness: __%
+
+Backend readiness: __%
+
+Authentication: __%
+
+Workout system: __%
+
+Premium: __%
+
+Device integrations: __%
+
+Testing: __%
+
+Security: __%
+
+Release readiness: __%
+
+Overall production readiness: __%
+
+Do not inflate the percentage.
+
+A feature that exists visually but has no backend implementation is NOT 100% complete.
+
+---
+
+MOST IMPORTANT INSTRUCTION
+
+Work in small verified slices.
+
+Do not modify the entire application in one operation.
+
+Use this loop:
+
+INSPECT
+↓
+PLAN
+↓
+IMPLEMENT
+↓
+FORMAT
+↓
+ANALYZE
+↓
+TEST
+↓
+BUILD
+↓
+INSPECT RESULT
+↓
+FIX
+↓
+RETEST
+
+Never skip verification.
+
+Start NOW with:
+
+PHASE A — Flutter/Dart environment diagnosis and repair.
+
+Do not start implementing payments, devices, or backend features until the development/build environment is stable enough to reliably run tests and builds.

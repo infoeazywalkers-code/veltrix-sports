@@ -80,7 +80,7 @@ class DevicesScreen extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () => showFeatureMessage(context, 'Support will help connect your device.'),
                 child: const Text('Contact support', style: TextStyle(fontWeight: FontWeight.w800)),
               ),
             ],

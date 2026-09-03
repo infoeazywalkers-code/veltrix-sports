@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../../auth_service.dart';
+import '../../constants.dart';
+import '../../screens/home_screen.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -31,7 +33,7 @@ class MobileHomeScreen extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () => showFeatureMessage(context, 'You have no new notifications.'),
               icon: const Badge(
                 child: Icon(Icons.notifications_none_rounded),
               ),
@@ -51,6 +53,8 @@ class MobileHomeScreen extends StatelessWidget {
                 'Built for athletes who want more from every session.',
                 style: M.bodyMuted,
               ),
+              const SizedBox(height: M.lg),
+              const HomeVideoHero(),
               const SizedBox(height: M.lg),
               Wrap(
                 spacing: M.sm,
@@ -135,7 +139,7 @@ class MobileHomeScreen extends StatelessWidget {
                         ),
                         const Spacer(),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () => showFeatureMessage(context, 'Race options are available from your training plan.'),
                           icon: const Icon(
                             Icons.more_horiz,
                             color: Colors.white70,
@@ -294,7 +298,7 @@ class MobileHomeScreen extends StatelessWidget {
                           foregroundColor: M.navy,
                           padding: const EdgeInsets.symmetric(vertical: M.md),
                         ),
-                        onPressed: () {},
+                        onPressed: () => showFeatureMessage(context, 'Your Veltrix training journey is ready to begin.'),
                         child: const Text('Get started',
                             style: TextStyle(fontWeight: FontWeight.w900)),
                       ),

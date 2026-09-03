@@ -30,19 +30,9 @@
     java.lang.Object readResolve();
 }
 
-# Preserve some classes that may be used dynamically via Class.forName
--keepclasses public class * {
-    public protected *;
-}
-
 # Keep native methods
--keepclasseswithmemberclasses class * {
+-keepclasseswithmembernames class * {
     native <methods>;
-}
-
-# Keep -Interfaces
--keepclassmembers class * implements * {
-    *** *;
 }
 
 # For using GSON @Expose annotation in the model
@@ -50,7 +40,6 @@
 
 # Gson specific classes
 -keep class sun.misc.Unsafe { *; }
-#-keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
 -keep class com.google.gson.Excluder
@@ -81,43 +70,14 @@
     @kotlin.jvm.JvmStatic *;
 }
 
-# Keep names of classes, methods and fields so they can be used reflectionally from Java
--keepclasseswithmembernames class * {
-    native <methods>;
-}
-
 # Keep names - NativeConditionalMethods
 -keepclasseswithmembernames class * {
     <methods>;
 }
 
-# Keepnames classes and class members which are referenced in the AndroidManifest.xml
--keepclassmemberclass class * {
-    android.*;
-}
-
-# Keep -Methods
--keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
-}
-
-# Keep -Parcelable
--keep class * implements android.os.Parcelable {
-  public static final android.os.Parcelable$Creator *;
-}
-
-# Support Library
--dontwarn android.support.**
--keep class android.support.v4.** { *; }
--keep interface android.support.v4.app.** { *; }
--keep class android.support.v7.** { *; }
--keep class * extends android.support.v4.Fragment
--keep class * extends android.support.v7.app.AppCompatActivity
-
-# Google Play Services
--keep class * extends java.util.ListResourceBundle {
-    protected Object[][] getContents();
+# Keep names of classes, methods and fields so they can be used reflectionally from Java
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
 }
 
 # Prevent obfuscation of methods called via JNI
@@ -130,12 +90,7 @@
     @android.webkit.JavascriptInterface <methods>;
 }
 
-# Prevent obfuscation of methods that may be called via JNI
--keepclasseswithmembernames,*sbo class * {
-    <methods>;
-}
-
-# Prevent obfuscation of methods that may be called via reflection from Native code
+# Suppress debug logging
 -assumenosideeffects class android.util.Log {
     public static *** d(...);
     public static *** v(...);
@@ -156,3 +111,40 @@
 -keepclassmembers class * {
     @com.google.firebase.database.PropertyName *;
 }
+
+# Keep Parcelable
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+# Keep Enum values
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Support Library (deprecated but kept for compatibility)
+-dontwarn android.support.**
+-keep class android.support.v4.** { *; }
+-keep interface android.support.v4.app.** { *; }
+-keep class android.support.v7.** { *; }
+-keep class * extends android.support.v4.Fragment
+-keep class * extends android.support.v7.app.AppCompatActivity
+
+# Google Play Services
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+# Play Core - Missing classes from R8
+-dontwarn com.google.android.play.core.splitcompat.SplitCompatApplication
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallException
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallManager
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallRequest$Builder
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallRequest
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallSessionState
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
+-dontwarn com.google.android.play.core.tasks.OnFailureListener
+-dontwarn com.google.android.play.core.tasks.OnSuccessListener
+-dontwarn com.google.android.play.core.tasks.Task

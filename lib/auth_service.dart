@@ -4,29 +4,39 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   // Sign in with Google
   Future<User?> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      await _googleSignIn.initialize(
+        serverClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
+      );
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate(
+        scopeHint: [
+          'email',
+          'https://www.googleapis.com/auth/contacts.readonly',
+        ],
+      );
 
       if (googleUser == null) {
         // The user canceled the sign-in
         return null;
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      
+      // Get access token using authorizationClient
+      final GoogleSignInClientAuthorization clientAuth = 
+          await googleUser.authorizationClient.authorizeScopes([
+        'email',
+        'https://www.googleapis.com/auth/contacts.readonly',
+      ]);
 
       final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        accessToken: clientAuth.accessToken,
+        idToken: googleAuth.idToken ?? '',
       );
 
       final UserCredential userCredential =
@@ -55,7 +65,7 @@ class AuthService {
   // Check if user is signed in
   Future<bool> isSignedIn() async {
     final User? user = _auth.currentUser;
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
+    final GoogleSignInAccount? googleUser = await _googleSignIn.attemptLightweightAuthentication();
 
     return user != null && googleUser != null;
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../widgets/section_intro.dart';
 import '../widgets/veltrix_footer.dart';
+import 'coach_questionnaire_screen.dart';
 
 class CoachMatchScreen extends StatelessWidget {
   const CoachMatchScreen({super.key});
@@ -25,7 +26,9 @@ class CoachMatchScreen extends StatelessWidget {
               foregroundColor: navy,
               padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const CoachQuestionnaireScreen()),
+            ),
             icon: const Icon(Icons.arrow_forward),
             label: const Text('Start Questionnaire', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
           ),
@@ -66,7 +69,9 @@ class CoachMatchScreen extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
                 ),
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const CoachQuestionnaireScreen()),
+                ),
                 child: const Text('Get started', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
               ),
             ],
@@ -328,7 +333,9 @@ class _PackageCard extends StatelessWidget {
                 foregroundColor: isGold ? navy : Colors.white,
                 minimumSize: const Size.fromHeight(48),
               ),
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const CoachQuestionnaireScreen()),
+              ),
               child: const Text('Get started', style: TextStyle(fontWeight: FontWeight.w900)),
             ),
           ],

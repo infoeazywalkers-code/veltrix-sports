@@ -13,3 +13,6 @@ const darkNavy = Color(0xff081f33);
 const lightGreen = Color(0xfff0f7ec);
 const successGreen = Color(0xff4c8c2b);
 const successText = Color(0xff3f6f26);
+void showFeatureMessage(BuildContext context, String message) {
+	ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+}

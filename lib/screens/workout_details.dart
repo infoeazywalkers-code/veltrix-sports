@@ -78,7 +78,7 @@ class WorkoutDetailsScreen extends StatelessWidget {
             foregroundColor: navy,
             minimumSize: const Size.fromHeight(54),
           ),
-          onPressed: () {},
+          onPressed: () => showFeatureMessage(context, 'Workout options are available from your plan.'),
           icon: const Icon(Icons.play_arrow),
           label: const Text('Start workout', style: TextStyle(fontWeight: FontWeight.w900)),
         ),

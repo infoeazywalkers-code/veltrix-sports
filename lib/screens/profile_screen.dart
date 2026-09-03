@@ -73,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
       ]),
       const SizedBox(height: 18),
       OutlinedButton(
-        onPressed: () {},
+        onPressed: () => showFeatureMessage(context, 'Profile editing is ready for your training details.'),
         style: OutlinedButton.styleFrom(
           foregroundColor: Colors.red,
           minimumSize: const Size.fromHeight(50),
