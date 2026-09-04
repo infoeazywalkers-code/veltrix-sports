@@ -3,15 +3,57 @@ import '../../constants.dart';
 import '../../screens/coach_match_screen.dart';
 import '../../screens/devices_screen.dart';
 import '../../screens/premium_screen.dart';
+import '../../widgets/event_details_dialog.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
 
-class MobileExploreScreen extends StatelessWidget {
+class MobileExploreScreen extends StatefulWidget {
   const MobileExploreScreen({super.key});
 
   @override
+  State<MobileExploreScreen> createState() => _MobileExploreScreenState();
+}
+
+class _MobileExploreScreenState extends State<MobileExploreScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  final List<Map<String, dynamic>> _allEvents = const [
+    {
+      'day': '25',
+      'month': 'OCT',
+      'title': 'Mumbai Half Marathon',
+      'location': 'Mumbai \u2022 Running',
+      'date': '25 October 2026',
+      'category': 'Running',
+      'participants': '15,000+ Runners',
+    },
+    {
+      'day': '20',
+      'month': 'NOV',
+      'title': 'Delhi Cycling Grand Prix',
+      'location': 'New Delhi \u2022 Cycling',
+      'date': '20 November 2026',
+      'category': 'Cycling',
+      'participants': '3,500+ Cyclists',
+    },
+  ];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final filteredEvents = _allEvents.where((e) {
+      final q = _searchQuery.toLowerCase();
+      return e['title'].toString().toLowerCase().contains(q) ||
+          e['location'].toString().toLowerCase().contains(q);
+    }).toList();
+
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -23,9 +65,20 @@ class MobileExploreScreen extends StatelessWidget {
           sliver: SliverList.list(
             children: [
               TextField(
+                controller: _searchController,
+                onChanged: (val) => setState(() => _searchQuery = val.trim()),
                 decoration: InputDecoration(
                   hintText: 'Search plans, events, coaches',
                   prefixIcon: const Icon(Icons.search, size: M.iconMd),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _searchQuery = '');
+                          },
+                        )
+                      : null,
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding: const EdgeInsets.symmetric(
@@ -49,68 +102,101 @@ class MobileExploreScreen extends StatelessWidget {
                   crossAxisSpacing: M.sm,
                   childAspectRatio: 1.6,
                   children: [
-                    _ExploreTile('Training plans', Icons.event_note, M.blue, onTap: () => showFeatureMessage(context, 'Training plans are ready to explore.')),
-                    _ExploreTile('Find a coach', Icons.groups, M.purple, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CoachMatchScreen()))),
-                    _ExploreTile('Sports events', Icons.emoji_events, M.orange, onTap: () => _showMessage(context, 'Events are coming to your calendar soon.')),
-                    _ExploreTile('My tickets', Icons.confirmation_number, M.teal, onTap: () => _showMessage(context, 'Your event tickets will appear here.')),
-                    _ExploreTile('Premium', Icons.workspace_premium, M.navy, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PremiumScreen()))),
-                    _ExploreTile('Devices', Icons.devices_other, M.blue, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DevicesScreen()))),
+                    _ExploreTile('Training plans', Icons.event_note, M.blue,
+                        onTap: () => showFeatureMessage(
+                            context, 'Training plans are ready to explore.')),
+                    _ExploreTile('Find a coach', Icons.groups, M.purple,
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const CoachMatchScreen()))),
+                    _ExploreTile('Sports events', Icons.emoji_events, M.orange,
+                        onTap: () => showFeatureMessage(
+                            context, 'Explore upcoming sports events below.')),
+                    _ExploreTile('My tickets', Icons.confirmation_number, M.teal,
+                        onTap: () => showFeatureMessage(
+                            context, 'Your event tickets will appear here.')),
+                    _ExploreTile('Premium', Icons.workspace_premium, M.navy,
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const PremiumScreen()))),
+                    _ExploreTile('Devices', Icons.devices_other, M.blue,
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const DevicesScreen()))),
                   ],
                 ),
               ),
               const SizedBox(height: M.lg),
-              MSection(
-                title: 'Recommended plan',
-                action: 'See plans',
-                child: MBanner(
-                  backgroundColor: M.navy,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.directions_run, color: M.lime, size: M.iconLg),
-                      const SizedBox(height: M.base),
-                      const Text(
-                        'Marathon Training Pro',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
+              if (_searchQuery.isEmpty ||
+                  'marathon training pro'.contains(_searchQuery.toLowerCase())) ...[
+                MSection(
+                  title: 'Recommended plan',
+                  action: 'See plans',
+                  child: MBanner(
+                    backgroundColor: M.navy,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.directions_run,
+                            color: M.lime, size: M.iconLg),
+                        const SizedBox(height: M.base),
+                        const Text(
+                          'Marathon Training Pro',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: M.xs),
-                      const Text(
-                        'Build endurance, speed and race-day confidence with a structured 16-week plan.',
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
-                      ),
-                      const SizedBox(height: M.md),
-                      const Text('16 weeks  •  Coach Amit',
-                          style: TextStyle(color: Colors.white70)),
-                      const SizedBox(height: M.base),
-                      FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: M.lime,
-                          foregroundColor: M.navy,
+                        const SizedBox(height: M.xs),
+                        const Text(
+                          'Build endurance, speed and race-day confidence with a structured 16-week plan.',
+                          style: TextStyle(color: Colors.white70, fontSize: 14),
                         ),
-                        onPressed: () => _showMessage(context, 'Marathon Training Pro has been added to your plans.'),
-                        child: const Text('View plan',
-                            style: TextStyle(fontWeight: FontWeight.w900)),
-                      ),
-                    ],
+                        const SizedBox(height: M.md),
+                        const Text('16 weeks  •  Coach Amit',
+                            style: TextStyle(color: Colors.white70)),
+                        const SizedBox(height: M.base),
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: M.lime,
+                            foregroundColor: M.navy,
+                          ),
+                          onPressed: () => showFeatureMessage(context,
+                              'Marathon Training Pro has been added to your plans.'),
+                          child: const Text('View plan',
+                              style: TextStyle(fontWeight: FontWeight.w900)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: M.lg),
+                const SizedBox(height: M.lg),
+              ],
               MSection(
-                title: 'Upcoming events',
+                title: 'Upcoming events (${filteredEvents.length})',
                 action: 'See all',
                 child: Column(
-                  children: const [
-                    _EventRow('25', 'OCT', 'Mumbai Half Marathon',
-                        'Mumbai  •  Running'),
-                    SizedBox(height: M.sm),
-                    _EventRow('20', 'NOV', 'Delhi Cycling Grand Prix',
-                        'New Delhi  •  Cycling'),
-                  ],
+                  children: filteredEvents
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.only(bottom: M.sm),
+                          child: _EventRow(
+                            d: e['day'],
+                            m: e['month'],
+                            title: e['title'],
+                            sub: e['location'],
+                            onTap: () => showDialog(
+                              context: context,
+                              builder: (_) => EventDetailsDialog(event: e),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
               const SizedBox(height: M.xxl),
@@ -120,10 +206,6 @@ class MobileExploreScreen extends StatelessWidget {
       ],
     );
   }
-}
-
-void _showMessage(BuildContext context, String message) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }
 
 class _ExploreTile extends StatelessWidget {
@@ -168,12 +250,20 @@ class _EventRow extends StatelessWidget {
   final String m;
   final String title;
   final String sub;
+  final VoidCallback? onTap;
 
-  const _EventRow(this.d, this.m, this.title, this.sub);
+  const _EventRow({
+    required this.d,
+    required this.m,
+    required this.title,
+    required this.sub,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MCard(
+      onTap: onTap,
       child: Row(
         children: [
           Container(
@@ -221,13 +311,4 @@ class _EventRow extends StatelessWidget {
   }
 }
 
-class _MobileExplorePreview extends StatelessWidget {
-  const _MobileExplorePreview();
-  @override
-  Widget build(BuildContext context) => const MobileExploreScreen();
-}
 
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: const _MobileExplorePreview(),
-));

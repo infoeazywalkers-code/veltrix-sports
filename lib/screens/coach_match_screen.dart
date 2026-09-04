@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../widgets/section_intro.dart';
 import '../widgets/veltrix_footer.dart';
+import '../services/coach_service.dart';
+import '../widgets/coach_booking_dialog.dart';
 import 'coach_questionnaire_screen.dart';
 
 class CoachMatchScreen extends StatelessWidget {
@@ -33,6 +35,8 @@ class CoachMatchScreen extends StatelessWidget {
             label: const Text('Start Questionnaire', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
           ),
         ),
+        const SizedBox(height: 48),
+        const _FeaturedCoachesList(),
         const SizedBox(height: 48),
         const _HowItWorks(),
         const SizedBox(height: 48),
@@ -84,14 +88,133 @@ class CoachMatchScreen extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(body: CoachMatchScreen()),
-));
+class _FeaturedCoachesList extends StatelessWidget {
+  const _FeaturedCoachesList();
+
+  @override
+  Widget build(BuildContext context) {
+    final desktop = MediaQuery.sizeOf(context).width >= 850;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Featured Veltrix Coaches',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: navy),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Book a direct 1-on-1 consultation with certified endurance experts.',
+          style: TextStyle(color: muted, fontSize: 14),
+        ),
+        const SizedBox(height: 24),
+        if (desktop)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: CoachService.featuredCoaches
+                .map((coach) => Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: _CoachCard(coach: coach),
+                      ),
+                    ))
+                .toList(),
+          )
+        else
+          Column(
+            children: CoachService.featuredCoaches
+                .map((coach) => Padding(
+                      padding: const EdgeInsets.only(bottom: 14),
+                      child: _CoachCard(coach: coach),
+                    ))
+                .toList(),
+          ),
+      ],
+    );
+  }
+}
+
+class _CoachCard extends StatelessWidget {
+  final CoachProfile coach;
+  const _CoachCard({required this.coach});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 26,
+                  backgroundColor: navy,
+                  backgroundImage: AssetImage(coach.image),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        coach.name,
+                        style: const TextStyle(fontWeight: FontWeight.w900, color: navy, fontSize: 16),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.amber, size: 14),
+                          const SizedBox(width: 4),
+                          Text(coach.rating, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: muted)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(coach.title, style: const TextStyle(color: blue, fontSize: 11, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 8),
+            Text(
+              coach.bio,
+              style: const TextStyle(color: muted, fontSize: 12, height: 1.4),
+            ),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: coach.specialities.map((spec) {
+                return Chip(
+                  label: Text(spec, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700)),
+                  backgroundColor: bg,
+                  padding: EdgeInsets.zero,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(coach.monthlyFee, style: const TextStyle(fontWeight: FontWeight.w900, color: navy, fontSize: 16)),
+                FilledButton(
+                  style: FilledButton.styleFrom(backgroundColor: lime, foregroundColor: navy),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => CoachBookingDialog(coach: coach),
+                  ),
+                  child: const Text('Book Call', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class _HowItWorks extends StatelessWidget {
   const _HowItWorks();

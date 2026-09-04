@@ -82,23 +82,3 @@ class WorkoutCard extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(
-    body: Padding(
-      padding: EdgeInsets.all(18),
-      child: WorkoutCard(
-        sport: 'RUN',
-        title: 'Aerobic endurance',
-        details: '45 min  •  7.2 km  •  62 TSS',
-        color: blue,
-        icon: Icons.directions_run_rounded,
-        progress: .68,
-      ),
-    ),
-  ),
-));

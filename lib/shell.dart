@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants.dart';
 import '../widgets/brand.dart';
 import '../widgets/nav_menu.dart';
+import '../providers.dart';
+import '../auth_service.dart';
 import '../screens/home_screen.dart';
 import '../screens/calendar_screen.dart';
 import '../screens/progress_screen.dart';
@@ -12,13 +15,15 @@ import '../screens/coach_match_screen.dart';
 import '../screens/devices_screen.dart';
 import '../screens/strength_screen.dart';
 
-class Shell extends StatefulWidget {
+import '../widgets/workout_builder_dialog.dart';
+
+class Shell extends ConsumerStatefulWidget {
   const Shell({super.key});
   @override
-  State<Shell> createState() => _ShellState();
+  ConsumerState<Shell> createState() => _ShellState();
 }
 
-class _ShellState extends State<Shell> {
+class _ShellState extends ConsumerState<Shell> {
   int page = 0;
 
   Widget _buildScreen() {
@@ -52,6 +57,11 @@ class _ShellState extends State<Shell> {
   Widget build(BuildContext context) {
     final desktop = MediaQuery.sizeOf(context).width >= 1050;
     final currentScreen = _buildScreen();
+    final authState = ref.watch(authStateProvider);
+    final isLoggedIn = authState.valueOrNull != null;
+    final profileAsync = ref.watch(userProfileProvider);
+    final profileName = profileAsync.valueOrNull?.displayName ?? '';
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: desktop ? 78 : 68,
@@ -100,18 +110,36 @@ class _ShellState extends State<Shell> {
         ),
         actions: [
           if (desktop) ...[
-            TextButton(
-              onPressed: () => go(4),
-              child: const Text('Log in', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-              child: FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: lime, foregroundColor: navy),
-                onPressed: () => go(3),
-                child: const Text('Get started', style: TextStyle(fontWeight: FontWeight.w900)),
+            if (isLoggedIn) ...[
+              TextButton(
+                onPressed: () => go(4),
+                child: Text(
+                  profileName.isNotEmpty ? profileName : 'Profile',
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                child: FilledButton(
+                  style: FilledButton.styleFrom(backgroundColor: lime, foregroundColor: navy),
+                  onPressed: () => AuthService().signOut(),
+                  child: const Text('Sign out', style: TextStyle(fontWeight: FontWeight.w900)),
+                ),
+              ),
+            ] else ...[
+              TextButton(
+                onPressed: () => go(4),
+                child: const Text('Log in', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                child: FilledButton(
+                  style: FilledButton.styleFrom(backgroundColor: lime, foregroundColor: navy),
+                  onPressed: () => go(3),
+                  child: const Text('Get started', style: TextStyle(fontWeight: FontWeight.w900)),
+                ),
+              ),
+            ],
           ] else
             IconButton(
               onPressed: () => showModalBottomSheet(
@@ -156,9 +184,9 @@ class _ShellState extends State<Shell> {
           ? FloatingActionButton.extended(
               backgroundColor: lime,
               foregroundColor: navy,
-              onPressed: () => showModalBottomSheet(
+              onPressed: () => showDialog(
                 context: context,
-                builder: (_) => const _AddWorkout(),
+                builder: (_) => const WorkoutBuilderDialog(),
               ),
               icon: const Icon(Icons.add),
               label: const Text('Add workout', style: TextStyle(fontWeight: FontWeight.w900)),
@@ -239,48 +267,3 @@ class _NoticeItem extends StatelessWidget {
   );
 }
 
-class _AddWorkout extends StatelessWidget {
-  const _AddWorkout();
-  @override
-  Widget build(BuildContext context) => SafeArea(
-    child: Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Add to calendar', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: navy)),
-          const SizedBox(height: 12),
-          ...const [
-            (Icons.directions_run, 'Run', blue),
-            (Icons.directions_bike, 'Bike', purple),
-            (Icons.pool, 'Swim', teal),
-            (Icons.fitness_center, 'Strength', orange),
-          ].map(
-            (e) => ListTile(
-              onTap: () => Navigator.pop(context),
-              leading: Icon(e.$1, color: e.$3),
-              title: Text(e.$2, style: const TextStyle(fontWeight: FontWeight.w800)),
-              trailing: const Icon(Icons.chevron_right),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-class _ShellPreview extends StatelessWidget {
-  const _ShellPreview();
-  @override
-  Widget build(BuildContext context) => const Shell();
-}
-
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const _ShellPreview(),
-));

@@ -50,18 +50,3 @@ class NavMenu extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(useMaterial3: true),
-  home: Scaffold(
-    backgroundColor: navy,
-    body: const Center(
-      child: NavMenu(
-        label: 'Training',
-        items: ['Calendar', 'Performance', 'Workout Library'],
-        onSelected: _navPreview,
-      ),
-    ),
-  ),
-));
-
-void _navPreview(int _) {}

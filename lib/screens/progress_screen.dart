@@ -1,102 +1,144 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants.dart';
 import '../widgets/heading.dart';
 import '../widgets/legend.dart';
 import '../widgets/insight.dart';
 import '../widgets/best.dart';
+import '../providers.dart';
 
-class ProgressScreen extends StatefulWidget {
+class ProgressScreen extends ConsumerStatefulWidget {
   const ProgressScreen({super.key});
   @override
-  State<ProgressScreen> createState() => _ProgressState();
+  ConsumerState<ProgressScreen> createState() => _ProgressState();
 }
 
-class _ProgressState extends State<ProgressScreen> {
+class _ProgressState extends ConsumerState<ProgressScreen> {
   int range = 1;
   @override
-  Widget build(BuildContext context) => ListView(
-    padding: const EdgeInsets.all(18),
-    children: [
-      const Text(
-        'Performance',
-        style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: navy),
-      ),
-      const Text('Understand the work behind your progress', style: TextStyle(color: muted)),
-      const SizedBox(height: 18),
-      SegmentedButton<int>(
-        segments: const [
-          ButtonSegment(value: 0, label: Text('4 weeks')),
-          ButtonSegment(value: 1, label: Text('3 months')),
-          ButtonSegment(value: 2, label: Text('Season')),
-        ],
-        selected: {range},
-        showSelectedIcon: false,
-        onSelectionChanged: (v) => setState(() => range = v.first),
-      ),
-      const SizedBox(height: 18),
-      Card(
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Fitness, fatigue & form',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: navy),
-              ),
-              const Text('Training load over time', style: TextStyle(color: muted, fontSize: 11)),
-              const SizedBox(height: 15),
-              const SizedBox(
-                height: 190,
-                child: CustomPaint(painter: Chart(), size: Size.infinite),
-              ),
-              const SizedBox(height: 12),
-              const Wrap(
-                spacing: 18,
+  Widget build(BuildContext context) {
+    final perfAsync = ref.watch(latestPerformanceProvider);
+
+    return ListView(
+      padding: const EdgeInsets.all(18),
+      children: [
+        const Text(
+          'Performance',
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: navy),
+        ),
+        const Text('Understand the work behind your progress', style: TextStyle(color: muted)),
+        const SizedBox(height: 18),
+        SegmentedButton<int>(
+          segments: const [
+            ButtonSegment(value: 0, label: Text('4 weeks')),
+            ButtonSegment(value: 1, label: Text('3 months')),
+            ButtonSegment(value: 2, label: Text('Season')),
+          ],
+          selected: {range},
+          showSelectedIcon: false,
+          onSelectionChanged: (v) => setState(() => range = v.first),
+        ),
+        const SizedBox(height: 18),
+        perfAsync.when(
+          loading: () => const Card(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: Center(child: CircularProgressIndicator(color: navy)),
+            ),
+          ),
+          error: (e, _) => Card(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
                 children: [
-                  Legend('Fitness', blue),
-                  Legend('Fatigue', purple),
-                  Legend('Form', orange),
+                  const Icon(Icons.error_outline, color: Colors.red, size: 36),
+                  const SizedBox(height: 10),
+                  Text('Failed to load performance data', style: TextStyle(color: muted)),
                 ],
               ),
-            ],
+            ),
           ),
+          data: (perf) {
+            if (perf == null) {
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      Icon(Icons.show_chart, color: muted, size: 44),
+                      const SizedBox(height: 10),
+                      const Text('No performance data yet', style: TextStyle(color: navy, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 4),
+                      Text('Complete workouts to see your metrics', style: TextStyle(color: muted)),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Fitness, fatigue & form',
+                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: navy),
+                    ),
+                    const Text('Training load over time', style: TextStyle(color: muted, fontSize: 11)),
+                    const SizedBox(height: 15),
+                    SizedBox(
+                      height: 190,
+                      child: CustomPaint(painter: Chart(), size: Size.infinite),
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 18,
+                      children: [
+                        Legend('Fitness ${perf.fitness.toStringAsFixed(1)}', blue),
+                        Legend('Fatigue ${perf.fatigue.toStringAsFixed(1)}', purple),
+                        Legend('Form ${perf.form.toStringAsFixed(1)}', orange),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
-      ),
-      const SizedBox(height: 22),
-      const SectionHeading('Key insights'),
-      const SizedBox(height: 10),
-      const Insight(Icons.trending_up, blue, 'Fitness is up 12%', 'Your 42-day load is trending in the right direction.'),
-      const SizedBox(height: 9),
-      const Insight(Icons.bedtime_outlined, purple, 'Recovery is consistent', 'Average sleep is 7h 38m across the last 7 days.'),
-      const SizedBox(height: 22),
-      const SectionHeading('Personal bests', action: 'View all'),
-      const SizedBox(height: 10),
-      const Row(
-        children: [
-          Expanded(child: Best('5K run', '21:42', Icons.directions_run, blue)),
-          SizedBox(width: 10),
-          Expanded(child: Best('20 min power', '278 W', Icons.directions_bike, purple)),
-        ],
-      ),
-    ],
-  );
+        const SizedBox(height: 22),
+        const SectionHeading('Key insights'),
+        const SizedBox(height: 10),
+        perfAsync.when(
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (perf) {
+            if (perf == null) return Text('No insights available', style: TextStyle(color: muted));
+            return Column(
+              children: [
+                Insight(Icons.trending_up, blue, 'Fitness is ${perf.fitness.toStringAsFixed(1)}', 'Your fitness level based on training load.'),
+                const SizedBox(height: 9),
+                Insight(Icons.show_chart, purple, 'Fatigue is ${perf.fatigue.toStringAsFixed(1)}', 'Weekly TSS: ${perf.weeklyTss.toStringAsFixed(0)} across ${perf.weeklyWorkouts} workouts.'),
+              ],
+            );
+          },
+        ),
+        const SizedBox(height: 22),
+        const SectionHeading('Personal bests', action: 'View all'),
+        const SizedBox(height: 10),
+        const Row(
+          children: [
+            Expanded(child: Best('5K run', '21:42', Icons.directions_run, blue)),
+            SizedBox(width: 10),
+            Expanded(child: Best('20 min power', '278 W', Icons.directions_bike, purple)),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
-class _ProgressPreview extends StatelessWidget {
-  const _ProgressPreview();
-  @override
-  Widget build(BuildContext context) => const ProgressScreen();
-}
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(body: _ProgressPreview()),
-));
 
 class Chart extends CustomPainter {
   const Chart();

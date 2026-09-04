@@ -45,20 +45,3 @@ class SectionIntro extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(
-    body: Padding(
-      padding: EdgeInsets.all(24),
-      child: SectionIntro(
-        eyebrow: 'ONE PLATFORM',
-        title: 'Everything you need.',
-        body: 'Expert plans, connected coaching and purposeful training.',
-      ),
-    ),
-  ),
-));

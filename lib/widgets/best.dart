@@ -30,15 +30,3 @@ class Best extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(
-    body: Center(
-      child: Best('5K run', '21:42', Icons.directions_run, blue),
-    ),
-  ),
-));

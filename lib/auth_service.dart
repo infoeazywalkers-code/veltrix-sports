@@ -1,77 +1,84 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/user_profile.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // Sign in with Google
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
+
+  User? get currentUser => _auth.currentUser;
+
   Future<User?> signInWithGoogle() async {
     try {
-      await _googleSignIn.initialize(
-        serverClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
-      );
-
-      final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate(
-        scopeHint: [
-          'email',
-          'https://www.googleapis.com/auth/contacts.readonly',
-        ],
-      );
-
-      if (googleUser == null) {
-        // The user canceled the sign-in
-        return null;
+      if (kIsWeb) {
+        final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.addScope('email');
+        googleProvider.addScope('profile');
+        final userCredential = await _auth.signInWithPopup(googleProvider);
+        if (userCredential.user != null) {
+          await _ensureUserProfile(userCredential.user!);
+        }
+        return userCredential.user;
       }
+
+      await _googleSignIn.initialize();
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate();
+      if (googleUser == null) return null;
 
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-      
-      // Get access token using authorizationClient
-      final GoogleSignInClientAuthorization clientAuth = 
-          await googleUser.authorizationClient.authorizeScopes([
-        'email',
-        'https://www.googleapis.com/auth/contacts.readonly',
-      ]);
-
       final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: clientAuth.accessToken,
-        idToken: googleAuth.idToken ?? '',
+        idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-
-      return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      if (kDebugMode) {
-        print('Google Sign-In Error: ${e.message}');
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final user = userCredential.user;
+      if (user != null) {
+        await _ensureUserProfile(user);
       }
+
+      return user;
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Google Sign-In Auth Error: ${e.message}');
       return null;
     } catch (e) {
-      if (kDebugMode) {
-        print('Unexpected Sign-In Error: $e');
-      }
+      debugPrint('Unexpected Sign-In Error: $e');
       return null;
     }
   }
 
-  // Sign out
+  Future<void> _ensureUserProfile(User user) async {
+    try {
+      final doc = await _db.collection('users').doc(user.uid).get();
+      if (!doc.exists) {
+        await _db.collection('users').doc(user.uid).set(UserProfile(
+          id: user.uid,
+          email: user.email ?? '',
+          displayName: user.displayName?.isNotEmpty == true ? user.displayName! : 'Athlete',
+          photoUrl: user.photoURL,
+          role: UserRole.athlete,
+          createdAt: DateTime.now(),
+        ).toMap());
+      }
+    } catch (e) {
+      debugPrint('Error creating user profile document: $e');
+    }
+  }
+
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
+    try {
+      await _googleSignIn.signOut();
+    } catch (_) {}
     await _auth.signOut();
   }
 
-  // Check if user is signed in
   Future<bool> isSignedIn() async {
-    final User? user = _auth.currentUser;
-    final GoogleSignInAccount? googleUser = await _googleSignIn.attemptLightweightAuthentication();
-
-    return user != null && googleUser != null;
-  }
-
-  // Get current user
-  User? getCurrentUser() {
-    return _auth.currentUser;
+    return _auth.currentUser != null;
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
-import 'mobile_card.dart';
 
 class MSection extends StatelessWidget {
   final String title;
@@ -122,27 +121,3 @@ class MDivider extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: Scaffold(
-    backgroundColor: M.bg,
-    body: ListView(
-      padding: const EdgeInsets.all(M.base),
-      children: const [
-        MSection(
-          title: 'Section Title',
-          action: 'See all',
-          child: MCard(child: Text('Content here')),
-        ),
-        SizedBox(height: M.lg),
-        MSectionIntro(
-          eyebrow: 'EYEBROW',
-          title: 'Section intro title',
-          body: 'Body text goes here for context.',
-        ),
-        SizedBox(height: M.lg),
-        MDivider(label: 'OR'),
-      ],
-    ),
-  ),
-));

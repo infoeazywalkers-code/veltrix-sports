@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../constants.dart';
 
 class ResponsiveCards extends StatelessWidget {
   final List<Widget> children;
@@ -27,22 +26,3 @@ class ResponsiveCards extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(
-    body: Padding(
-      padding: EdgeInsets.all(18),
-      child: ResponsiveCards(
-        children: [
-          Card(child: Padding(padding: EdgeInsets.all(20), child: Text('Card 1'))),
-          Card(child: Padding(padding: EdgeInsets.all(20), child: Text('Card 2'))),
-          Card(child: Padding(padding: EdgeInsets.all(20), child: Text('Card 3'))),
-        ],
-      ),
-    ),
-  ),
-));

@@ -13,6 +13,7 @@ import '../widgets/status_card.dart';
 import '../widgets/week_card.dart';
 import '../widgets/workout_card.dart';
 import '../widgets/veltrix_footer.dart';
+import '../widgets/event_details_dialog.dart';
 
 class HomeScreen extends StatelessWidget {
   final ValueChanged<int>? onNavigate;
@@ -50,7 +51,7 @@ class HomeScreen extends StatelessWidget {
                 foregroundColor: navy,
                 padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
               ),
-              onPressed: () => showFeatureMessage(context, 'Athlete registration is ready to begin.'),
+              onPressed: () => onNavigate?.call(3),
               child: const Text('Athlete sign up', style: TextStyle(fontWeight: FontWeight.w900)),
             ),
             OutlinedButton(
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                 foregroundColor: navy,
                 padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
               ),
-              onPressed: () => showFeatureMessage(context, 'Coach registration is ready to begin.'),
+              onPressed: () => onNavigate?.call(6),
               child: const Text('Coach sign up', style: TextStyle(fontWeight: FontWeight.w900)),
             ),
           ],
@@ -87,56 +88,86 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 26),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: [navy, Color(0xff174c72)]),
-            borderRadius: BorderRadius.circular(22),
+        InkWell(
+          borderRadius: BorderRadius.circular(22),
+          onTap: () => showDialog(
+            context: context,
+            builder: (_) => const EventDetailsDialog(
+              event: {
+                'title': 'Mumbai Half Marathon',
+                'date': '25 October 2026',
+                'location': 'Mumbai, India',
+                'category': 'Running',
+                'participants': '15,000+ Runners',
+              },
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Chip(
-                    label: Text('A RACE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10)),
-                    backgroundColor: lime,
-                    side: BorderSide.none,
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () => showFeatureMessage(context, 'Race options are available from your training plan.'),
-                    icon: const Icon(Icons.more_horiz, color: Colors.white70),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Mumbai Half Marathon',
-                style: TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w900),
-              ),
-              const SizedBox(height: 5),
-              const Text('25 October 2026  \u2022  21.1 km', style: TextStyle(color: Colors.white70)),
-              const SizedBox(height: 18),
-              const LinearProgressIndicator(
-                value: .62,
-                minHeight: 7,
-                color: lime,
-                backgroundColor: Colors.white24,
-              ),
-              const SizedBox(height: 7),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Plan progress', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                  Text('62%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12)),
-                ],
-              ),
-            ],
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: [navy, Color(0xff174c72)]),
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Chip(
+                      label: Text('A RACE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10)),
+                      backgroundColor: lime,
+                      side: BorderSide.none,
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (_) => const EventDetailsDialog(
+                          event: {
+                            'title': 'Mumbai Half Marathon',
+                            'date': '25 October 2026',
+                            'location': 'Mumbai, India',
+                            'category': 'Running',
+                            'participants': '15,000+ Runners',
+                          },
+                        ),
+                      ),
+                      icon: const Icon(Icons.more_horiz, color: Colors.white70),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Mumbai Half Marathon',
+                  style: TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 5),
+                const Text('25 October 2026  \u2022  21.1 km', style: TextStyle(color: Colors.white70)),
+                const SizedBox(height: 18),
+                const LinearProgressIndicator(
+                  value: .62,
+                  minHeight: 7,
+                  color: lime,
+                  backgroundColor: Colors.white24,
+                ),
+                const SizedBox(height: 7),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Plan progress', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                    Text('62%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12)),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 24),
-        SectionHeading('Today\u2019s training', action: 'View week'),
+        SectionHeading(
+          'Today\u2019s training',
+          action: 'View week',
+          onActionTap: () => onNavigate?.call(1),
+        ),
         const SizedBox(height: 12),
         WorkoutCard(
           sport: 'RUN',
@@ -148,7 +179,11 @@ class HomeScreen extends StatelessWidget {
           onTap: () => showFeatureMessage(context, 'Workout details are ready to review.'),
         ),
         const SizedBox(height: 24),
-        SectionHeading('Training status', action: 'Details'),
+        SectionHeading(
+          'Training status',
+          action: 'Details',
+          onActionTap: () => onNavigate?.call(2),
+        ),
         const SizedBox(height: 12),
         const StatusCard(),
         const SizedBox(height: 24),
@@ -492,17 +527,3 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
   );
 }
 
-class _HomePreview extends StatelessWidget {
-  const _HomePreview();
-  @override
-  Widget build(BuildContext context) => const HomeScreen();
-}
-
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(body: _HomePreview()),
-));

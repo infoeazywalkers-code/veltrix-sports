@@ -1,0 +1,6 @@
+# Template for Android Release Signing Key Config
+# Rename this file to key.properties and replace with your actual keystore credentials.
+storePassword=your_keystore_password
+keyPassword=your_key_alias_password
+keyAlias=veltrix_key_alias
+storeFile=../veltrix_release_key.jks

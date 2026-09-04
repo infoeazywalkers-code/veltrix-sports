@@ -48,11 +48,3 @@ class StatusCard extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(body: Center(child: StatusCard())),
-));

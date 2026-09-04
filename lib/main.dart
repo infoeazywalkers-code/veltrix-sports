@@ -1,12 +1,15 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'constants.dart';
 import 'shell.dart';
-import 'mobile/app.dart';
 import 'mobile/shell.dart';
 import 'firebase_options.dart';
+import 'services/notification_service.dart';
+import 'services/razorpay_service.dart';
+import 'widgets/error_boundary.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -14,17 +17,35 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // Register Global Error Boundary
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return VeltrixErrorBoundary(details: details);
+  };
 
-  runApp(kIsWeb ? const VeltrixApp() : const MobileApp());
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    );
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    
+    // Initialize Push Notifications & Razorpay Engine
+    await NotificationService().initialize();
+    RazorpayPaymentService().initialize();
+  } catch (error, stackTrace) {
+    debugPrint('Firebase initialization failed: $error');
+    debugPrintStack(stackTrace: stackTrace);
+  }
+
+  runApp(const ProviderScope(child: VeltrixRoot()));
 }
 
-class VeltrixApp extends StatelessWidget {
-  const VeltrixApp({super.key});
+class VeltrixRoot extends StatelessWidget {
+  const VeltrixRoot({super.key});
 
   @override
   Widget build(BuildContext context) {

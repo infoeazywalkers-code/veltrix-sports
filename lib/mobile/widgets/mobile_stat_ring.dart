@@ -47,18 +47,3 @@ class MStatRing extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: Scaffold(
-    body: Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          MStatRing(value: '54', label: 'Fitness', color: M.blue, progress: 0.72),
-          MStatRing(value: '61', label: 'Fatigue', color: M.purple, progress: 0.81),
-          MStatRing(value: '-7', label: 'Form', color: M.orange, progress: 0.46),
-        ],
-      ),
-    ),
-  ),
-));

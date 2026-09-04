@@ -97,23 +97,3 @@ class MarketingFeatureCard extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(
-    body: Padding(
-      padding: EdgeInsets.all(18),
-      child: MarketingFeatureCard(
-        color: Color(0xff173f5f),
-        icon: Icons.insights_rounded,
-        eyebrow: 'PERFORMANCE',
-        title: 'Real progress.',
-        body: 'Turn workouts into clear next steps.',
-        action: 'Explore insights',
-      ),
-    ),
-  ),
-));

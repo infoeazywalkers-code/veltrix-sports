@@ -96,17 +96,19 @@ class MBanner extends StatelessWidget {
   final Color backgroundColor;
   final Widget child;
   final EdgeInsets? padding;
+  final VoidCallback? onTap;
 
   const MBanner({
     super.key,
     required this.backgroundColor,
     required this.child,
     this.padding,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final content = Container(
       width: double.infinity,
       padding: padding ?? const EdgeInsets.all(M.lg),
       decoration: BoxDecoration(
@@ -115,6 +117,15 @@ class MBanner extends StatelessWidget {
       ),
       child: child,
     );
+
+    if (onTap != null) {
+      return InkWell(
+        borderRadius: BorderRadius.circular(M.rXl),
+        onTap: onTap,
+        child: content,
+      );
+    }
+    return content;
   }
 }
 
@@ -147,27 +158,3 @@ class MGradientBanner extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: Scaffold(
-    backgroundColor: M.bg,
-    body: ListView(
-      padding: const EdgeInsets.all(M.base),
-      children: const [
-        MCard(child: Text('Hello from MCard')),
-        SizedBox(height: M.md),
-        MBanner(
-          backgroundColor: M.navy,
-          child: Text('Banner', style: TextStyle(color: Colors.white)),
-        ),
-        SizedBox(height: M.md),
-        MInfoCard(
-          icon: Icons.star,
-          iconColor: M.blue,
-          title: 'Info Card',
-          subtitle: 'Subtitle text here',
-        ),
-      ],
-    ),
-  ),
-));

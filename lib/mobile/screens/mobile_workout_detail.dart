@@ -1,16 +1,34 @@
 import 'package:flutter/material.dart';
+import '../../models/workout.dart';
+import '../../screens/live_workout_screen.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
 
 class MobileWorkoutDetailScreen extends StatelessWidget {
-  const MobileWorkoutDetailScreen({super.key});
+  final Workout? workout;
+  const MobileWorkoutDetailScreen({super.key, this.workout});
 
   @override
   Widget build(BuildContext context) {
+    final title = workout?.title ?? 'Aerobic endurance';
+    final sportName = workout?.sport.name.toUpperCase() ?? 'RUN';
+    final desc = workout?.description.isNotEmpty == true
+        ? workout!.description
+        : 'Stay relaxed and keep your effort in Zone 2.';
+    final durationStr = workout?.duration ?? '45m';
+    final distanceStr = workout?.distanceKm != null ? '${workout!.distanceKm} km' : '7.2 km';
+    final tssStr = workout?.tss != null ? '${workout!.tss}' : '62';
+    final targetPace = workout?.targetPace ?? '5:55–6:15 /km';
+    final segments = workout?.segments ?? const [
+      WorkoutSegment(label: 'Warm up', duration: '10 min'),
+      WorkoutSegment(label: 'Aerobic run', duration: '30 min'),
+      WorkoutSegment(label: 'Cool down', duration: '5 min'),
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Workout details'),
+        title: Text(title),
         actions: [
           IconButton(onPressed: () => _showWorkoutMenu(context), icon: const Icon(Icons.more_horiz)),
         ],
@@ -23,24 +41,23 @@ class MobileWorkoutDetailScreen extends StatelessWidget {
             padding: const EdgeInsets.all(M.base),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('RUN • TODAY',
-                    style: TextStyle(
+              children: [
+                Text('$sportName • TODAY',
+                    style: const TextStyle(
                       color: M.lime,
                       fontSize: 10,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.2,
                     )),
-                SizedBox(height: M.md),
-                Text('Aerobic endurance',
-                    style: TextStyle(
+                const SizedBox(height: M.md),
+                Text(title,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
                     )),
-                SizedBox(height: M.xs),
-                Text('Stay relaxed and keep your effort in Zone 2.',
-                    style: TextStyle(color: Colors.white70)),
+                const SizedBox(height: M.xs),
+                Text(desc, style: const TextStyle(color: Colors.white70)),
               ],
             ),
           ),
@@ -48,22 +65,22 @@ class MobileWorkoutDetailScreen extends StatelessWidget {
           MCard(
             child: Column(
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _Metric('45m', 'Duration'),
-                    _Metric('7.2 km', 'Distance'),
-                    _Metric('62', 'TSS'),
+                    _Metric(durationStr, 'Duration'),
+                    _Metric(distanceStr, 'Distance'),
+                    _Metric(tssStr, 'TSS'),
                   ],
                 ),
                 const SizedBox(height: M.base),
                 const Divider(),
-                const ListTile(
+                ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.speed, color: M.blue),
-                  title: Text('Target pace'),
-                  trailing: Text('5:55–6:15 /km',
-                      style: TextStyle(
+                  leading: const Icon(Icons.speed, color: M.blue),
+                  title: const Text('Target pace'),
+                  trailing: Text(targetPace,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w900,
                         color: M.navy,
                       )),
@@ -76,11 +93,7 @@ class MobileWorkoutDetailScreen extends StatelessWidget {
             title: 'Workout structure',
             child: Column(
               children: [
-                for (final step in [
-                  'Warm up • 10 min',
-                  'Aerobic run • 30 min',
-                  'Cool down • 5 min',
-                ])
+                for (final seg in segments)
                   Padding(
                     padding: const EdgeInsets.only(bottom: M.sm),
                     child: MCard(
@@ -89,7 +102,7 @@ class MobileWorkoutDetailScreen extends StatelessWidget {
                           const Icon(Icons.drag_handle,
                               color: M.blue, size: M.iconMd),
                           const SizedBox(width: M.md),
-                          Text(step,
+                          Text('${seg.label} • ${seg.duration}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w800,
                               )),
@@ -107,14 +120,26 @@ class MobileWorkoutDetailScreen extends StatelessWidget {
               foregroundColor: M.navy,
               minimumSize: const Size.fromHeight(52),
             ),
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (dialogContext) => AlertDialog(
-                title: const Text('Workout started'),
-                content: const Text('Your timer is ready. Stay relaxed and enjoy the session.'),
-                actions: [FilledButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Done'))],
-              ),
-            ),
+            onPressed: () {
+              final activeWorkout = workout ??
+                  Workout(
+                    id: 'demo_run',
+                    planId: 'demo',
+                    sport: Sport.run,
+                    title: title,
+                    duration: durationStr,
+                    distanceKm: 7.2,
+                    tss: 62,
+                    targetPace: targetPace,
+                    scheduledFor: DateTime.now(),
+                  );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => LiveWorkoutScreen(workout: activeWorkout),
+                ),
+              );
+            },
             icon: const Icon(Icons.play_arrow),
             label: const Text('Start workout',
                 style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
@@ -138,11 +163,6 @@ void _showWorkoutMenu(BuildContext context) {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: const MobileWorkoutDetailScreen(),
-));
-
 class _Metric extends StatelessWidget {
   final String value;
   final String label;
@@ -158,3 +178,4 @@ class _Metric extends StatelessWidget {
     );
   }
 }
+

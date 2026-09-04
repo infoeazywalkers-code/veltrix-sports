@@ -71,19 +71,3 @@ class PillarCard extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(useMaterial3: true),
-  home: Scaffold(
-    backgroundColor: navy,
-    body: const Padding(
-      padding: EdgeInsets.all(18),
-      child: PillarCard(
-        number: '01',
-        verb: 'PLAN.',
-        title: 'Be ready for what\'s next.',
-        body: 'Build a season around structured workouts.',
-        icon: Icons.event_note_rounded,
-      ),
-    ),
-  ),
-));

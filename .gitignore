@@ -52,6 +52,8 @@ app.*.map.json
 **/firebase_options.dart
 **/google-services.json
 **/GoogleService-Info.plist
+**/key.properties
+session-*.md
 
 # Platform-specific build outputs
 /android/.gradle/

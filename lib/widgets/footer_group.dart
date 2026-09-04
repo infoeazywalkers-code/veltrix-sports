@@ -39,16 +39,3 @@ class FooterGroup extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(useMaterial3: true),
-  home: Scaffold(
-    backgroundColor: navy,
-    body: const Padding(
-      padding: EdgeInsets.all(24),
-      child: FooterGroup(
-        title: 'ATHLETES',
-        links: ['Features', 'Training plans', 'Find a coach', 'Premium'],
-      ),
-    ),
-  ),
-));

@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
 
-class MobileProgressScreen extends StatefulWidget {
+class MobileProgressScreen extends ConsumerStatefulWidget {
   const MobileProgressScreen({super.key});
 
   @override
-  State<MobileProgressScreen> createState() => _MobileProgressScreenState();
+  ConsumerState<MobileProgressScreen> createState() => _MobileProgressScreenState();
 }
 
-class _MobileProgressScreenState extends State<MobileProgressScreen> {
+class _MobileProgressScreenState extends ConsumerState<MobileProgressScreen> {
   int range = 1;
 
   @override
   Widget build(BuildContext context) {
+    final perfAsync = ref.watch(latestPerformanceProvider);
+
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
+        const SliverAppBar(
           pinned: true,
-          title: const Text('Performance'),
+          title: Text('Performance'),
         ),
         SliverPadding(
           padding: M.pagePadding(context),
@@ -36,58 +40,110 @@ class _MobileProgressScreenState extends State<MobileProgressScreen> {
                 ],
                 selected: {range},
                 showSelectedIcon: false,
-                onSelectionChanged: (v) =>
-                    setState(() => range = v.first),
+                onSelectionChanged: (v) => setState(() => range = v.first),
               ),
               const SizedBox(height: M.lg),
-              MCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Fitness, fatigue & form',
-                        style: M.cardTitle),
-                    const SizedBox(height: 2),
-                    const Text('Training load over time', style: M.caption),
-                    const SizedBox(height: M.md),
-                    SizedBox(
-                      height: 180,
-                      child: CustomPaint(
-                        painter: _Chart(),
-                        size: Size.infinite,
-                      ),
+              perfAsync.when(
+                loading: () => const MCard(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(M.lg),
+                      child: CircularProgressIndicator(),
                     ),
-                    const SizedBox(height: M.md),
-                    const Wrap(
-                      spacing: M.base,
+                  ),
+                ),
+                error: (e, _) => MCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(M.base),
+                    child: Text('Error loading performance data: $e', style: M.bodyMuted),
+                  ),
+                ),
+                data: (perf) {
+                  final fitness = perf?.fitness ?? 0;
+                  final fatigue = perf?.fatigue ?? 0;
+                  final form = perf?.form ?? 0;
+                  final fitnessProg = (fitness / 100).clamp(0.0, 1.0);
+                  final fatigueProg = (fatigue / 100).clamp(0.0, 1.0);
+                  final formProg = ((form + 50) / 100).clamp(0.0, 1.0);
+                  return MCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _Legend('Fitness', M.blue),
-                        _Legend('Fatigue', M.purple),
-                        _Legend('Form', M.orange),
+                        const Text('Fitness, fatigue & form', style: M.cardTitle),
+                        const SizedBox(height: 2),
+                        const Text('Training load over time', style: M.caption),
+                        const SizedBox(height: M.md),
+                        SizedBox(
+                          height: 180,
+                          child: CustomPaint(
+                            painter: _Chart(),
+                            size: Size.infinite,
+                          ),
+                        ),
+                        const SizedBox(height: M.md),
+                        Wrap(
+                          spacing: M.base,
+                          children: [
+                            _Legend('Fitness', M.blue),
+                            _Legend('Fatigue', M.purple),
+                            _Legend('Form', M.orange),
+                          ],
+                        ),
+                        const SizedBox(height: M.md),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _StatValue('Fitness', fitness.toStringAsFixed(0), M.blue, fitnessProg),
+                            _StatValue('Fatigue', fatigue.toStringAsFixed(0), M.purple, fatigueProg),
+                            _StatValue('Form', form > 0 ? '+${form.toStringAsFixed(0)}' : form.toStringAsFixed(0), M.orange, formProg),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
               const SizedBox(height: M.lg),
-              MSection(
-                title: 'Key insights',
-                child: Column(
-                  children: const [
-                    _InsightCard(
-                      Icons.trending_up,
-                      M.blue,
-                      'Fitness is up 12%',
-                      'Your 42-day load is trending up.',
+              perfAsync.when(
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
+                data: (perf) {
+                  if (perf == null) {
+                    return const MCard(
+                      child: Padding(
+                        padding: EdgeInsets.all(M.base),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.info_outline, color: M.muted, size: 20),
+                            SizedBox(width: M.sm),
+                            Text('Complete workouts to see insights', style: M.bodyMuted),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return MSection(
+                    title: 'Key insights',
+                    child: Column(
+                      children: [
+                        _InsightCard(
+                          Icons.trending_up,
+                          M.blue,
+                          'Weekly TSS: ${perf.weeklyTss.toStringAsFixed(0)}',
+                          '${perf.weeklyWorkouts} workouts this week, ${perf.weeklyDuration} total.',
+                        ),
+                        const SizedBox(height: M.sm),
+                        _InsightCard(
+                          Icons.fitness_center,
+                          M.purple,
+                          'Workouts completed: ${perf.weeklyWorkouts}',
+                          'Keep training consistently for best results.',
+                        ),
+                      ],
                     ),
-                    SizedBox(height: M.sm),
-                    _InsightCard(
-                      Icons.bedtime_outlined,
-                      M.purple,
-                      'Recovery is consistent',
-                      'Average sleep is 7h 38m across 7 days.',
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
               const SizedBox(height: M.lg),
               MSection(
@@ -96,13 +152,11 @@ class _MobileProgressScreenState extends State<MobileProgressScreen> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: _BestCard(
-                          '5K run', '21:42', Icons.directions_run, M.blue),
+                      child: _BestCard('5K run', '21:42', Icons.directions_run, M.blue),
                     ),
                     const SizedBox(width: M.sm),
                     Expanded(
-                      child: _BestCard('20 min power', '278 W',
-                          Icons.directions_bike, M.purple),
+                      child: _BestCard('20 min power', '278 W', Icons.directions_bike, M.purple),
                     ),
                   ],
                 ),
@@ -111,6 +165,40 @@ class _MobileProgressScreenState extends State<MobileProgressScreen> {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _StatValue extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color color;
+  final double progress;
+  const _StatValue(this.label, this.value, this.color, this.progress);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 56,
+          height: 56,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              CircularProgressIndicator(
+                value: progress,
+                strokeWidth: 5,
+                color: color,
+                backgroundColor: color.withValues(alpha: 0.15),
+              ),
+              Text(value, style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 14)),
+            ],
+          ),
+        ),
+        const SizedBox(height: M.xs),
+        Text(label, style: M.caption),
       ],
     );
   }
@@ -240,13 +328,3 @@ class _BestCard extends StatelessWidget {
   }
 }
 
-class _MobileProgressPreview extends StatelessWidget {
-  const _MobileProgressPreview();
-  @override
-  Widget build(BuildContext context) => const MobileProgressScreen();
-}
-
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: const _MobileProgressPreview(),
-));

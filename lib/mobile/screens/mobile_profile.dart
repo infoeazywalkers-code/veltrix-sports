@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../auth_service.dart';
+import '../../providers.dart';
 import '../../screens/premium_screen.dart';
+import '../../widgets/edit_profile_dialog.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
 
-class MobileProfileScreen extends StatelessWidget {
+class MobileProfileScreen extends ConsumerWidget {
   const MobileProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileAsync = ref.watch(userProfileProvider);
+
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -19,62 +25,102 @@ class MobileProfileScreen extends StatelessWidget {
           padding: M.pagePadding(context),
           sliver: SliverList.list(
             children: [
-              Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 32,
-                    backgroundColor: M.navy,
-                    child: Text('AS',
-                        style: TextStyle(
-                          color: M.lime,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                        )),
-                  ),
-                  const SizedBox(width: M.md),
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Arjun Sharma',
-                            style: TextStyle(
-                              color: M.navy,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                            )),
-                        Text('Runner • Cyclist', style: M.bodyMuted),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => _showMessage(context, 'Profile editing is ready for your training details.'),
-                    icon: const Icon(Icons.edit_outlined),
-                  ),
-                ],
+              profileAsync.when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: M.xl),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (e, _) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: M.xl),
+                  child: Center(child: Text('Error loading profile: $e', style: M.bodyMuted)),
+                ),
+                data: (profile) {
+                  if (profile == null) {
+                    return MCard(
+                      child: Column(
+                        children: [
+                          const Icon(Icons.person_outline, color: M.navy, size: 48),
+                          const SizedBox(height: M.sm),
+                          const Text('Welcome to Veltrix Sports', style: M.cardTitle),
+                          const SizedBox(height: M.xs),
+                          const Text('Sign in to access your training plan, settings, and performance data.', textAlign: TextAlign.center, style: M.bodyMuted),
+                          const SizedBox(height: M.md),
+                          FilledButton.icon(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: M.lime,
+                              foregroundColor: M.navy,
+                            ),
+                            onPressed: () async {
+                              await AuthService().signInWithGoogle();
+                            },
+                            icon: const Icon(Icons.login),
+                            label: const Text('Sign in with Google', style: TextStyle(fontWeight: FontWeight.w900)),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  final name = profile.displayName;
+                  final sports = profile.sports.isNotEmpty == true
+                      ? profile.sports.join(' • ')
+                      : 'No sports set';
+                  final initials = name.split(' ').map((w) => w.isNotEmpty ? w[0] : '').take(2).join().toUpperCase();
+                  return Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 32,
+                        backgroundColor: M.navy,
+                        backgroundImage: profile.photoUrl != null ? NetworkImage(profile.photoUrl!) : null,
+                        child: profile.photoUrl == null
+                            ? Text(initials, style: const TextStyle(color: M.lime, fontSize: 18, fontWeight: FontWeight.w900))
+                            : null,
+                      ),
+                      const SizedBox(width: M.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(name,
+                                style: const TextStyle(color: M.navy, fontSize: 20, fontWeight: FontWeight.w900)),
+                            Text(sports, style: M.bodyMuted),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (_) => EditProfileDialog(currentProfile: profile),
+                        ),
+                        icon: const Icon(Icons.edit_outlined),
+                      ),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: M.lg),
               MCard(
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PremiumScreen())),
                 color: const Color(0xFFEAF2F8),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.workspace_premium, color: M.blue),
-                    SizedBox(width: M.md),
+                    const Icon(Icons.workspace_premium, color: M.blue),
+                    const SizedBox(width: M.md),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Veltrix Premium',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                color: M.navy,
-                              )),
-                          Text('Renews 18 September 2026',
-                              style: M.caption),
+                          const Text('Veltrix Premium',
+                              style: TextStyle(fontWeight: FontWeight.w900, color: M.navy)),
+                          Text(
+                            profileAsync.valueOrNull?.subscriptionRenewsAt != null
+                                ? 'Renews ${profileAsync.valueOrNull!.subscriptionRenewsAt!.day} ${_monthName(profileAsync.valueOrNull!.subscriptionRenewsAt!.month)} ${profileAsync.valueOrNull!.subscriptionRenewsAt!.year}'
+                                : 'No active subscription',
+                            style: M.caption,
+                          ),
                         ],
                       ),
                     ),
-                    Icon(Icons.chevron_right, color: M.muted),
+                    const Icon(Icons.chevron_right, color: M.muted),
                   ],
                 ),
               ),
@@ -112,7 +158,14 @@ class MobileProfileScreen extends StatelessWidget {
                     content: const Text('You can sign back in at any time.'),
                     actions: [
                       TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
-                      FilledButton(onPressed: () { Navigator.pop(dialogContext); _showMessage(context, 'You have been signed out.'); }, child: const Text('Sign out')),
+                      FilledButton(
+                        onPressed: () async {
+                          Navigator.pop(dialogContext);
+                          await AuthService().signOut();
+                          _showMessage(context, 'You have been signed out.');
+                        },
+                        child: const Text('Sign out'),
+                      ),
                     ],
                   ),
                 ),
@@ -120,8 +173,7 @@ class MobileProfileScreen extends StatelessWidget {
                   foregroundColor: Colors.red,
                   minimumSize: const Size.fromHeight(M.touchTarget),
                 ),
-                child: const Text('Sign out',
-                    style: TextStyle(fontWeight: FontWeight.w800)),
+                child: const Text('Sign out', style: TextStyle(fontWeight: FontWeight.w800)),
               ),
               const SizedBox(height: M.xxl),
             ],
@@ -130,6 +182,8 @@ class MobileProfileScreen extends StatelessWidget {
       ],
     );
   }
+
+  String _monthName(int m) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m - 1];
 }
 
 class _SettingsGroup extends StatelessWidget {
@@ -172,13 +226,3 @@ void _showMessage(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }
 
-class _MobileProfilePreview extends StatelessWidget {
-  const _MobileProfilePreview();
-  @override
-  Widget build(BuildContext context) => const MobileProfileScreen();
-}
-
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: const _MobileProfilePreview(),
-));

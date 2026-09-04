@@ -35,16 +35,3 @@ class SectionHeading extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(
-    body: Padding(
-      padding: EdgeInsets.all(18),
-      child: SectionHeading("Today's training", action: 'View week'),
-    ),
-  ),
-));

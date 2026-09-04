@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme.dart';
 import 'screens/mobile_home.dart';
 import 'screens/mobile_calendar.dart';
@@ -7,14 +8,14 @@ import 'screens/mobile_explore.dart';
 import 'screens/mobile_profile.dart';
 import 'screens/mobile_more.dart';
 
-class MobileShell extends StatefulWidget {
+class MobileShell extends ConsumerStatefulWidget {
   const MobileShell({super.key});
 
   @override
-  State<MobileShell> createState() => _MobileShellState();
+  ConsumerState<MobileShell> createState() => _MobileShellState();
 }
 
-class _MobileShellState extends State<MobileShell> {
+class _MobileShellState extends ConsumerState<MobileShell> {
   int _index = 0;
 
   Widget _buildPage() {
@@ -82,31 +83,11 @@ class _MobileShellState extends State<MobileShell> {
         indicatorColor: M.lime,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
-            selectedIcon: Icon(Icons.calendar_month),
-            label: 'Calendar',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.insights_outlined),
-            selectedIcon: Icon(Icons.insights),
-            label: 'Progress',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.explore_outlined),
-            selectedIcon: Icon(Icons.explore),
-            label: 'Explore',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+          NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.calendar_month_outlined), selectedIcon: Icon(Icons.calendar_month), label: 'Calendar'),
+          NavigationDestination(icon: Icon(Icons.insights_outlined), selectedIcon: Icon(Icons.insights), label: 'Progress'),
+          NavigationDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore), label: 'Explore'),
+          NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );
@@ -128,7 +109,3 @@ class _MobileShellState extends State<MobileShell> {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(useMaterial3: true),
-  home: const MobileShell(),
-));

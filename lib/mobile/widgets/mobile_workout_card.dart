@@ -76,19 +76,3 @@ class MWorkoutCard extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: const Scaffold(
-    body: Padding(
-      padding: EdgeInsets.all(M.base),
-      child: MWorkoutCard(
-        sport: 'RUN',
-        title: 'Aerobic endurance',
-        details: '45 min  •  7.2 km  •  62 TSS',
-        color: M.blue,
-        icon: Icons.directions_run_rounded,
-        progress: 0.68,
-      ),
-    ),
-  ),
-));

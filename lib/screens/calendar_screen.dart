@@ -1,113 +1,218 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants.dart';
 import '../widgets/heading.dart';
 import '../widgets/workout_card.dart';
 import '../widgets/week_row.dart';
+import '../providers.dart';
+import '../models/workout.dart';
 
-class CalendarScreen extends StatefulWidget {
+class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
   @override
-  State<CalendarScreen> createState() => _CalendarState();
+  ConsumerState<CalendarScreen> createState() => _CalendarState();
 }
 
-class _CalendarState extends State<CalendarScreen> {
+class _CalendarState extends ConsumerState<CalendarScreen> {
   int day = 5;
   int weekOffset = 0;
+
+  DateTime get _weekStart {
+    return getStartOfWeek(DateTime.now(), weekOffset: weekOffset);
+  }
+
+  String _weekLabel() {
+    final start = _weekStart;
+    final end = start.add(const Duration(days: 6));
+    return '${start.day}\u2013${end.day} ${_month(start.month)} ${start.year}';
+  }
+
+  String _month(int m) => ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m];
+
+  String _dayLabel(int weekday) => ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][weekday - 1];
+
+  IconData _sportIcon(Sport sport) {
+    switch (sport) {
+      case Sport.run:
+        return Icons.directions_run;
+      case Sport.bike:
+        return Icons.directions_bike;
+      case Sport.swim:
+        return Icons.pool;
+      case Sport.strength:
+        return Icons.fitness_center;
+      case Sport.rest:
+        return Icons.self_improvement;
+    }
+  }
+
+  Color _sportColor(Sport sport) {
+    switch (sport) {
+      case Sport.run:
+        return blue;
+      case Sport.bike:
+        return purple;
+      case Sport.swim:
+        return teal;
+      case Sport.strength:
+        return orange;
+      case Sport.rest:
+        return muted;
+    }
+  }
+
   @override
-  Widget build(BuildContext context) => ListView(
-    padding: const EdgeInsets.fromLTRB(18, 20, 18, 110),
-    children: [
-      Row(
-        children: [
-          IconButton(onPressed: () => setState(() => weekOffset--), icon: const Icon(Icons.chevron_left)),
-          const Expanded(
-            child: Text(
-              '24\u201330 Aug 2026',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: navy),
-            ),
-          ),
-          IconButton(onPressed: () => setState(() => weekOffset++), icon: const Icon(Icons.chevron_right)),
-        ],
-      ),
-      const SizedBox(height: 12),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(
-          7,
-          (i) => GestureDetector(
-            onTap: () => setState(() => day = i),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 180),
-              width: 42,
-              padding: const EdgeInsets.symmetric(vertical: 9),
-              decoration: BoxDecoration(
-                color: day == i ? navy : Colors.white,
-                borderRadius: BorderRadius.circular(13),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
-                    style: TextStyle(color: day == i ? Colors.white70 : muted, fontSize: 10),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${24 + i}',
-                    style: TextStyle(
-                      color: day == i ? Colors.white : navy,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ],
+  Widget build(BuildContext context) {
+    final workoutsAsync = ref.watch(
+      workoutsByDateRangeProvider(_weekStart),
+    );
+
+    final selectedDate = _weekStart.add(Duration(days: day));
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(18, 20, 18, 110),
+      children: [
+        Row(
+          children: [
+            IconButton(onPressed: () => setState(() => weekOffset--), icon: const Icon(Icons.chevron_left)),
+            Expanded(
+              child: Text(
+                _weekLabel(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: navy),
               ),
             ),
+            IconButton(onPressed: () => setState(() => weekOffset++), icon: const Icon(Icons.chevron_right)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(
+            7,
+            (i) {
+              final date = _weekStart.add(Duration(days: i));
+              return GestureDetector(
+                onTap: () => setState(() => day = i),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  width: 42,
+                  padding: const EdgeInsets.symmetric(vertical: 9),
+                  decoration: BoxDecoration(
+                    color: day == i ? navy : Colors.white,
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
+                        style: TextStyle(color: day == i ? Colors.white70 : muted, fontSize: 10),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${date.day}',
+                        style: TextStyle(
+                          color: day == i ? Colors.white : navy,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
-      ),
-      const SizedBox(height: 22),
-      const SectionHeading('Saturday, 29 August'),
-      const SizedBox(height: 12),
-      const WorkoutCard(
-        sport: 'BIKE',
-        title: 'Tempo with surges',
-        details: '1h 20 min  \u2022  78 TSS',
-        color: purple,
-        icon: Icons.directions_bike,
-        progress: .92,
-      ),
-      const SizedBox(height: 10),
-      const WorkoutCard(
-        sport: 'STRENGTH',
-        title: 'Core & mobility',
-        details: '30 min  \u2022  Evening',
-        color: orange,
-        icon: Icons.fitness_center,
-      ),
-      const SizedBox(height: 24),
-      const SectionHeading('Week overview'),
-      const SizedBox(height: 10),
-      const WeekRow('MON 24', 'Easy recovery run', '35 min', blue, Icons.directions_run),
-      const WeekRow('TUE 25', 'Threshold intervals', '1h 05 min', blue, Icons.speed),
-      const WeekRow('WED 26', 'Rest day', 'Recovery', muted, Icons.self_improvement),
-      const WeekRow('THU 27', 'Endurance ride', '1h 45 min', purple, Icons.directions_bike),
-      const WeekRow('FRI 28', 'Pool technique', '50 min', teal, Icons.pool),
-      const WeekRow('SUN 30', 'Long aerobic run', '1h 30 min', blue, Icons.directions_run),
-    ],
-  );
+        const SizedBox(height: 22),
+        SectionHeading('${_dayLabel(selectedDate.weekday)}, ${selectedDate.day} ${_month(selectedDate.month)}'),
+        const SizedBox(height: 12),
+        workoutsAsync.when(
+          loading: () => const Padding(
+            padding: EdgeInsets.symmetric(vertical: 30),
+            child: Center(child: CircularProgressIndicator(color: navy)),
+          ),
+          error: (e, _) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: Center(child: Text('Failed to load workouts', style: TextStyle(color: muted))),
+          ),
+          data: (workouts) {
+            if (workouts.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Icon(Icons.event_busy, color: muted, size: 44),
+                      const SizedBox(height: 10),
+                      const Text('No workouts scheduled', style: TextStyle(color: navy, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 4),
+                      Text('Enjoy your rest day', style: TextStyle(color: muted)),
+                    ],
+                  ),
+                ),
+              );
+            }
+            final dayWorkouts = workouts.where((w) =>
+              w.scheduledFor.day == selectedDate.day &&
+              w.scheduledFor.month == selectedDate.month &&
+              w.scheduledFor.year == selectedDate.year,
+            ).toList();
+            if (dayWorkouts.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Icon(Icons.event_busy, color: muted, size: 44),
+                      const SizedBox(height: 10),
+                      const Text('No workouts today', style: TextStyle(color: navy, fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Column(
+              children: dayWorkouts.map((w) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: WorkoutCard(
+                  sport: w.sport.name.toUpperCase(),
+                  title: w.title,
+                  details: '${w.duration}${w.tss != null ? '  \u2022  ${w.tss} TSS' : ''}',
+                  color: _sportColor(w.sport),
+                  icon: _sportIcon(w.sport),
+                  progress: w.progress,
+                ),
+              )).toList(),
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+        const SectionHeading('Week overview'),
+        const SizedBox(height: 10),
+        workoutsAsync.when(
+          loading: () => const SizedBox(height: 40, child: Center(child: CircularProgressIndicator(color: navy))),
+          error: (e, _) => Text('Failed to load week', style: TextStyle(color: muted)),
+          data: (workouts) {
+            if (workouts.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text('No workouts this week', style: TextStyle(color: muted)),
+              );
+            }
+            final sorted = List<Workout>.from(workouts)..sort((a, b) => a.scheduledFor.compareTo(b.scheduledFor));
+            return Column(
+              children: sorted.map((w) => WeekRow(
+                '${_dayLabel(w.scheduledFor.weekday)} ${w.scheduledFor.day}',
+                w.title,
+                w.duration,
+                _sportColor(w.sport),
+                _sportIcon(w.sport),
+              )).toList(),
+            );
+          },
+        ),
+      ],
+    );
+  }
 }
 
-class _CalendarPreview extends StatelessWidget {
-  const _CalendarPreview();
-  @override
-  Widget build(BuildContext context) => const CalendarScreen();
-}
-
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(body: _CalendarPreview()),
-));

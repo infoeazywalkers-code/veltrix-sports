@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../constants.dart';
 
 class FooterSocial extends StatelessWidget {
   final IconData icon;
@@ -16,10 +15,3 @@ class FooterSocial extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(useMaterial3: true),
-  home: Scaffold(
-    backgroundColor: navy,
-    body: const Center(child: FooterSocial(Icons.camera_alt_outlined)),
-  ),
-));

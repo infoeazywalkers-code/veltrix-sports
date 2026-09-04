@@ -28,16 +28,3 @@ class Insight extends StatelessWidget {
   );
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(
-    body: Padding(
-      padding: EdgeInsets.all(18),
-      child: Insight(Icons.trending_up, blue, 'Fitness is up 12%', 'Your load is trending up.'),
-    ),
-  ),
-));

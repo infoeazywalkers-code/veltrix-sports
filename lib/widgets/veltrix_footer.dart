@@ -120,7 +120,3 @@ class VeltrixFooter extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(useMaterial3: true),
-  home: const Scaffold(body: SingleChildScrollView(child: VeltrixFooter())),
-));

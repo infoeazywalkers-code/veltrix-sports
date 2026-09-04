@@ -13,6 +13,28 @@ const darkNavy = Color(0xff081f33);
 const lightGreen = Color(0xfff0f7ec);
 const successGreen = Color(0xff4c8c2b);
 const successText = Color(0xff3f6f26);
+
 void showFeatureMessage(BuildContext context, String message) {
-	ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message, style: const TextStyle(fontWeight: FontWeight.w600)),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      duration: const Duration(seconds: 3),
+    ),
+  );
 }
+
+/// Normalizes a [DateTime] to midnight (00:00:00.000) for clean date comparison.
+DateTime normalizeDate(DateTime date) {
+  return DateTime(date.year, date.month, date.day);
+}
+
+/// Returns the Monday of the week containing [date].
+DateTime getStartOfWeek(DateTime date, {int weekOffset = 0}) {
+  final cleanDate = normalizeDate(date);
+  final daysFromMonday = cleanDate.weekday - 1;
+  return cleanDate.subtract(Duration(days: daysFromMonday)).add(Duration(days: weekOffset * 7));
+}
+

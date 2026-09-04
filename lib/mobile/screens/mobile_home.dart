@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth_service.dart';
 import '../../constants.dart';
+import '../../models/workout.dart';
+import '../../providers.dart';
 import '../../screens/home_screen.dart';
+import '../../widgets/event_details_dialog.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
 import '../widgets/mobile_stat_ring.dart';
 import '../widgets/mobile_workout_card.dart';
 
-class MobileHomeScreen extends StatelessWidget {
+class MobileHomeScreen extends ConsumerWidget {
   const MobileHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileAsync = ref.watch(userProfileProvider);
+    final workoutsAsync = ref.watch(upcomingWorkoutsProvider);
+
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -44,9 +50,16 @@ class MobileHomeScreen extends StatelessWidget {
           padding: M.pagePadding(context),
           sliver: SliverList.list(
             children: [
-              Text(
-                'Your complete\ntraining platform.',
-                style: M.screenTitle.copyWith(fontSize: 32),
+              profileAsync.when(
+                loading: () => const SizedBox(height: 40, child: Center(child: CircularProgressIndicator())),
+                error: (e, _) => Text('Error: $e', style: M.bodyMuted),
+                data: (profile) {
+                  final name = profile?.displayName.split(' ').first ?? 'Athlete';
+                  return Text(
+                    'Hello, $name',
+                    style: M.screenTitle.copyWith(fontSize: 32),
+                  );
+                },
               ),
               const SizedBox(height: M.sm),
               const Text(
@@ -56,56 +69,39 @@ class MobileHomeScreen extends StatelessWidget {
               const SizedBox(height: M.lg),
               const HomeVideoHero(),
               const SizedBox(height: M.lg),
-              Wrap(
-                spacing: M.sm,
-                runSpacing: M.sm,
-                children: [
-                  FilledButton(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: M.lime,
-                      foregroundColor: M.navy,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: M.base,
-                        vertical: M.md,
+              profileAsync.when(
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
+                data: (profile) {
+                  if (profile != null) return const SizedBox.shrink();
+                  return Wrap(
+                    spacing: M.sm,
+                    runSpacing: M.sm,
+                    children: [
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: M.lime,
+                          foregroundColor: M.navy,
+                          padding: const EdgeInsets.symmetric(horizontal: M.base, vertical: M.md),
+                        ),
+                        onPressed: () async {
+                          await AuthService().signInWithGoogle();
+                        },
+                        child: const Text('Athlete sign up', style: TextStyle(fontWeight: FontWeight.w900)),
                       ),
-                    ),
-                    onPressed: () async {
-                      final authService = AuthService();
-                      final user = await authService.signInWithGoogle();
-                      if (user != null) {
-                        // Handle successful sign-in
-                        // You could navigate to a different screen or update state
-                        if (kDebugMode) {
-                          print('User signed in: ${user.displayName}');
-                        }
-                      }
-                    },
-                    child: const Text('Athlete sign up',
-                        style: TextStyle(fontWeight: FontWeight.w900)),
-                  ),
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: M.navy,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: M.base,
-                        vertical: M.md,
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: M.navy,
+                          padding: const EdgeInsets.symmetric(horizontal: M.base, vertical: M.md),
+                        ),
+                        onPressed: () async {
+                          await AuthService().signInWithGoogle();
+                        },
+                        child: const Text('Coach sign up', style: TextStyle(fontWeight: FontWeight.w900)),
                       ),
-                    ),
-                    onPressed: () async {
-                      final authService = AuthService();
-                      final user = await authService.signInWithGoogle();
-                      if (user != null) {
-                        // Handle successful sign-in
-                        // You could navigate to a different screen or update state
-                        if (kDebugMode) {
-                          print('User signed in: ${user.displayName}');
-                        }
-                      }
-                    },
-                    child: const Text('Coach sign up',
-                        style: TextStyle(fontWeight: FontWeight.w900)),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
 
               const SizedBox(height: M.xl),
@@ -113,6 +109,18 @@ class MobileHomeScreen extends StatelessWidget {
               const SizedBox(height: M.lg),
 
               MBanner(
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (_) => const EventDetailsDialog(
+                    event: {
+                      'title': 'Mumbai Half Marathon',
+                      'date': '25 October 2026',
+                      'location': 'Mumbai, India',
+                      'category': 'Running',
+                      'participants': '15,000+ Runners',
+                    },
+                  ),
+                ),
                 backgroundColor: M.navy,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,66 +128,45 @@ class MobileHomeScreen extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: M.sm,
-                            vertical: M.xs,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: M.sm, vertical: M.xs),
                           decoration: BoxDecoration(
                             color: M.lime,
                             borderRadius: BorderRadius.circular(M.rSm),
                           ),
-                          child: const Text(
-                            'A RACE',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 10,
-                              color: M.navy,
-                            ),
-                          ),
+                          child: const Text('A RACE',
+                              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: M.navy)),
                         ),
                         const Spacer(),
                         IconButton(
-                          onPressed: () => showFeatureMessage(context, 'Race options are available from your training plan.'),
-                          icon: const Icon(
-                            Icons.more_horiz,
-                            color: Colors.white70,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (_) => const EventDetailsDialog(
+                              event: {
+                                'title': 'Mumbai Half Marathon',
+                                'date': '25 October 2026',
+                                'location': 'Mumbai, India',
+                                'category': 'Running',
+                                'participants': '15,000+ Runners',
+                              },
+                            ),
                           ),
+                          icon: const Icon(Icons.more_horiz, color: Colors.white70),
                         ),
                       ],
                     ),
                     const SizedBox(height: M.base),
-                    const Text(
-                      'Mumbai Half Marathon',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
+                    const Text('Mumbai Half Marathon',
+                        style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900)),
                     const SizedBox(height: M.xs),
-                    const Text(
-                      '25 October 2026  •  21.1 km',
-                      style: TextStyle(color: Colors.white70),
-                    ),
+                    const Text('25 October 2026  •  21.1 km', style: TextStyle(color: Colors.white70)),
                     const SizedBox(height: M.base),
-                    const LinearProgressIndicator(
-                      value: 0.62,
-                      minHeight: 6,
-                      color: M.lime,
-                      backgroundColor: Colors.white24,
-                    ),
+                    const LinearProgressIndicator(value: 0.62, minHeight: 6, color: M.lime, backgroundColor: Colors.white24),
                     const SizedBox(height: M.sm),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Plan progress',
-                            style: TextStyle(
-                                color: Colors.white70, fontSize: 12)),
-                        Text('62%',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 12)),
+                        Text('Plan progress', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                        Text('62%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12)),
                       ],
                     ),
                   ],
@@ -190,13 +177,55 @@ class MobileHomeScreen extends StatelessWidget {
               MSection(
                 title: 'Today\'s training',
                 action: 'View week',
-                child: const MWorkoutCard(
-                  sport: 'RUN',
-                  title: 'Aerobic endurance',
-                  details: '45 min  •  7.2 km  •  62 TSS',
-                  color: M.blue,
-                  icon: Icons.directions_run_rounded,
-                  progress: 0.68,
+                child: workoutsAsync.when(
+                  loading: () => const MCard(child: Center(child: Padding(padding: EdgeInsets.all(M.base), child: CircularProgressIndicator()))),
+                  error: (e, _) => MCard(child: Padding(padding: const EdgeInsets.all(M.base), child: Text('Error: $e', style: M.bodyMuted))),
+                  data: (workouts) {
+                    if (workouts.isEmpty) {
+                      return const MCard(
+                        child: Padding(
+                          padding: EdgeInsets.all(M.base),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.fitness_center, color: M.muted, size: 20),
+                              SizedBox(width: M.sm),
+                              Text('No upcoming workouts', style: M.bodyMuted),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    final w = workouts.first;
+                    final sportLabel = w.sport.name.toUpperCase();
+                    final details = [w.duration, if (w.distanceKm != null) '${w.distanceKm} km', if (w.tss != null) '${w.tss} TSS'].join('  •  ');
+                    final icon = w.sport == Sport.run
+                        ? Icons.directions_run_rounded
+                        : w.sport == Sport.bike
+                            ? Icons.directions_bike
+                            : w.sport == Sport.swim
+                                ? Icons.pool
+                                : w.sport == Sport.strength
+                                    ? Icons.fitness_center
+                                    : Icons.self_improvement;
+                    final color = w.sport == Sport.run
+                        ? M.blue
+                        : w.sport == Sport.bike
+                            ? M.purple
+                            : w.sport == Sport.swim
+                                ? M.teal
+                                : w.sport == Sport.strength
+                                    ? M.orange
+                                    : M.muted;
+                    return MWorkoutCard(
+                      sport: sportLabel,
+                      title: w.title,
+                      details: details,
+                      color: color,
+                      icon: icon,
+                      progress: w.progress,
+                    );
+                  },
                 ),
               ),
 
@@ -210,24 +239,9 @@ class MobileHomeScreen extends StatelessWidget {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          MStatRing(
-                            value: '54',
-                            label: 'Fitness',
-                            color: M.blue,
-                            progress: 0.72,
-                          ),
-                          MStatRing(
-                            value: '61',
-                            label: 'Fatigue',
-                            color: M.purple,
-                            progress: 0.81,
-                          ),
-                          MStatRing(
-                            value: '-7',
-                            label: 'Form',
-                            color: M.orange,
-                            progress: 0.46,
-                          ),
+                          MStatRing(value: '--', label: 'Fitness', color: M.blue, progress: 0),
+                          MStatRing(value: '--', label: 'Fatigue', color: M.purple, progress: 0),
+                          MStatRing(value: '--', label: 'Form', color: M.orange, progress: 0),
                         ],
                       ),
                       const SizedBox(height: M.base),
@@ -239,17 +253,12 @@ class MobileHomeScreen extends StatelessWidget {
                         ),
                         child: const Row(
                           children: [
-                            Icon(Icons.trending_up,
-                                color: Color(0xFF4C8C2B), size: 20),
+                            Icon(Icons.trending_up, color: Color(0xFF4C8C2B), size: 20),
                             SizedBox(width: M.sm),
                             Expanded(
                               child: Text(
                                 'Productive training — fitness is building steadily.',
-                                style: TextStyle(
-                                  color: Color(0xFF3F6F26),
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 12,
-                                ),
+                                style: TextStyle(color: Color(0xFF3F6F26), fontWeight: FontWeight.w800, fontSize: 12),
                               ),
                             ),
                           ],
@@ -272,23 +281,11 @@ class MobileHomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(M.lg),
                 child: Column(
                   children: [
-                    const Text(
-                      'Ready starts here.',
-                      style: TextStyle(
-                        color: M.lime,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
+                    const Text('Ready starts here.',
+                        style: TextStyle(color: M.lime, fontSize: 22, fontWeight: FontWeight.w900)),
                     const SizedBox(height: M.sm),
-                    const Text(
-                      'Plan, train and grow on Veltrix.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
-                    ),
+                    const Text('Plan, train and grow on Veltrix.',
+                        textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 14)),
                     const SizedBox(height: M.base),
                     SizedBox(
                       width: double.infinity,
@@ -299,8 +296,7 @@ class MobileHomeScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: M.md),
                         ),
                         onPressed: () => showFeatureMessage(context, 'Your Veltrix training journey is ready to begin.'),
-                        child: const Text('Get started',
-                            style: TextStyle(fontWeight: FontWeight.w900)),
+                        child: const Text('Get started', style: TextStyle(fontWeight: FontWeight.w900)),
                       ),
                     ),
                   ],
@@ -381,13 +377,3 @@ class _WeekStat extends StatelessWidget {
   }
 }
 
-class _MobileHomePreview extends StatelessWidget {
-  const _MobileHomePreview();
-  @override
-  Widget build(BuildContext context) => const MobileHomeScreen();
-}
-
-void main() => runApp(MaterialApp(
-  theme: M.theme,
-  home: const _MobileHomePreview(),
-));

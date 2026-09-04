@@ -119,14 +119,6 @@ class StrengthScreen extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(body: StrengthScreen()),
-));
 
 class _StrengthFeature extends StatelessWidget {
   final IconData icon;

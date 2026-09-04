@@ -3,24 +3,13 @@ import '../constants.dart';
 import '../widgets/section_intro.dart';
 import '../widgets/responsive_cards.dart';
 import '../widgets/veltrix_footer.dart';
+import '../services/payment_service.dart';
+import '../widgets/checkout_dialog.dart';
 
-void _startTrial(BuildContext context, String plan) {
-  showDialog<void>(
+void _openCheckout(BuildContext context, SubscriptionPlan plan) {
+  showDialog<bool>(
     context: context,
-    builder: (dialogContext) => AlertDialog(
-      title: Text('$plan plan selected'),
-      content: const Text('Your 14-day free trial is ready to start. No payment is required during the trial.'),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Maybe later')),
-        FilledButton(
-          onPressed: () {
-            Navigator.pop(dialogContext);
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Your free trial has been started.')));
-          },
-          child: const Text('Start trial'),
-        ),
-      ],
-    ),
+    builder: (_) => CheckoutDialog(plan: plan),
   );
 }
 
@@ -123,7 +112,7 @@ class PremiumScreen extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
                 ),
-                onPressed: () => _startTrial(context, 'Premium'),
+                onPressed: () => _openCheckout(context, PaymentService.availablePlans[1]),
                 child: const Text('Get Premium Now', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
               ),
             ],
@@ -136,14 +125,6 @@ class PremiumScreen extends StatelessWidget {
   }
 }
 
-void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: bg,
-    colorScheme: ColorScheme.fromSeed(seedColor: navy),
-  ),
-  home: const Scaffold(body: PremiumScreen()),
-));
 
 class _PremiumFeature extends StatelessWidget {
   final IconData icon;
@@ -288,8 +269,13 @@ class _PriceCard extends StatelessWidget {
               foregroundColor: featured ? navy : Colors.white,
               minimumSize: const Size.fromHeight(48),
             ),
-            onPressed: () => _startTrial(context, plan),
-            child: const Text('Start free trial', style: TextStyle(fontWeight: FontWeight.w900)),
+            onPressed: () {
+              final selectedPlan = featured
+                  ? PaymentService.availablePlans[1]
+                  : PaymentService.availablePlans.first;
+              _openCheckout(context, selectedPlan);
+            },
+            child: const Text('Get Started Now', style: TextStyle(fontWeight: FontWeight.w900)),
           ),
         ],
       ),
