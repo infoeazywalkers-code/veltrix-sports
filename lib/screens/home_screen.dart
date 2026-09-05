@@ -14,6 +14,8 @@ import '../widgets/week_card.dart';
 import '../widgets/workout_card.dart';
 import '../widgets/veltrix_footer.dart';
 import '../widgets/event_details_dialog.dart';
+import '../screens/workout_details.dart';
+import '../models/workout.dart';
 
 class HomeScreen extends StatelessWidget {
   final ValueChanged<int>? onNavigate;
@@ -176,7 +178,28 @@ class HomeScreen extends StatelessWidget {
           color: blue,
           icon: Icons.directions_run_rounded,
           progress: .68,
-          onTap: () => showFeatureMessage(context, 'Workout details are ready to review.'),
+          onTap: () {
+            final demoWorkout = Workout(
+              id: 'demo_run',
+              planId: 'demo',
+              sport: Sport.run,
+              title: 'Aerobic endurance',
+              description: 'Stay relaxed and keep your effort in Zone 2.',
+              duration: '45 min',
+              distanceKm: 7.2,
+              tss: 62,
+              targetPace: '5:55–6:15 /km',
+              scheduledFor: DateTime.now(),
+              progress: 0.68,
+              completed: false,
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => WorkoutDetailsScreen(workout: demoWorkout),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 24),
         SectionHeading(
@@ -462,7 +485,7 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          if (controller.value.isInitialized)
+          if (controller.value.isInitialized && !controller.value.hasError)
             FittedBox(
               fit: BoxFit.cover,
               child: SizedBox(
@@ -472,7 +495,22 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
               ),
             )
           else
-            Image.asset('assets/images/endurance-runner.png', fit: BoxFit.cover),
+            Image.asset(
+              'assets/images/endurance-runner.png',
+              fit: BoxFit.cover,
+              errorBuilder: (ctx, err, stack) => Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [navy, Color(0xff1e3a5f)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(Icons.fitness_center_rounded, color: lime, size: 48),
+                ),
+              ),
+            ),
           const DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(

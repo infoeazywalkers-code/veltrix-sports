@@ -93,7 +93,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             Expanded(
               child: _ExploreTile('Training plans', Icons.event_note, blue,
                   onTap: () => showFeatureMessage(
-                      context, 'Training plans are ready to explore.')),
+                      context, 'Training plans feature coming soon!')),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -108,14 +108,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
             Expanded(
               child: _ExploreTile('Sports events', Icons.emoji_events, orange,
                   onTap: () => showFeatureMessage(
-                      context, 'Explore upcoming sports events below.')),
+                      context, 'Sports events feature coming soon!')),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: _ExploreTile(
                   'My tickets', Icons.confirmation_number, teal,
                   onTap: () => showFeatureMessage(
-                      context, 'Your registered race tickets will appear here.')),
+                      context, 'My tickets feature coming soon!')),
             ),
           ],
         ),
@@ -167,7 +167,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   style: FilledButton.styleFrom(
                       backgroundColor: lime, foregroundColor: navy),
                   onPressed: () => showFeatureMessage(context,
-                      'Marathon Training Pro has been added to your plans.'),
+                      'Marathon Training Pro plan selected! Full integration coming soon.'),
                   child: const Text('View plan',
                       style: TextStyle(fontWeight: FontWeight.w900)),
                 ),

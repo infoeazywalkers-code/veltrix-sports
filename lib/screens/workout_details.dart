@@ -3,28 +3,56 @@ import '../constants.dart';
 import '../models/workout.dart';
 import '../widgets/heading.dart';
 import '../widgets/metric.dart';
+import '../services/workout_service.dart';
 import 'live_workout_screen.dart';
 
-class WorkoutDetailsScreen extends StatelessWidget {
+class WorkoutDetailsScreen extends StatefulWidget {
   final Workout? workout;
   const WorkoutDetailsScreen({super.key, this.workout});
 
   @override
+  State<WorkoutDetailsScreen> createState() => _WorkoutDetailsScreenState();
+}
+
+class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
+  bool _loading = false;
+
+  Future<void> _markAsComplete() async {
+    if (widget.workout == null) return;
+    
+    setState(() => _loading = true);
+    try {
+      await WorkoutService().complete(widget.workout!.id, progress: 1.0);
+      if (mounted) {
+        showFeatureMessage(context, 'Workout marked as complete!');
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        showFeatureMessage(context, 'Failed to mark workout complete: $e');
+      }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final title = workout?.title ?? 'Aerobic endurance';
-    final sportName = workout?.sport.name.toUpperCase() ?? 'RUN';
-    final desc = workout?.description.isNotEmpty == true
-        ? workout!.description
+    final title = widget.workout?.title ?? 'Aerobic endurance';
+    final sportName = widget.workout?.sport.name.toUpperCase() ?? 'RUN';
+    final desc = widget.workout?.description.isNotEmpty == true
+        ? widget.workout!.description
         : 'Stay relaxed and keep your effort in Zone 2.';
-    final durationStr = workout?.duration ?? '45m';
-    final distanceStr = workout?.distanceKm != null ? '${workout!.distanceKm} km' : '7.2 km';
-    final tssStr = workout?.tss != null ? '${workout!.tss}' : '62';
-    final targetPace = workout?.targetPace ?? '5:55–6:15 /km';
-    final segments = workout?.segments ?? const [
+    final durationStr = widget.workout?.duration ?? '45m';
+    final distanceStr = widget.workout?.distanceKm != null ? '${widget.workout!.distanceKm} km' : '7.2 km';
+    final tssStr = widget.workout?.tss != null ? '${widget.workout!.tss}' : '62';
+    final targetPace = widget.workout?.targetPace ?? '5:55–6:15 /km';
+    final segments = widget.workout?.segments ?? const [
       WorkoutSegment(label: 'Warm up', duration: '10 min'),
       WorkoutSegment(label: 'Aerobic run', duration: '30 min'),
       WorkoutSegment(label: 'Cool down', duration: '5 min'),
     ];
+    final isCompleted = widget.workout?.completed ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -93,35 +121,61 @@ class WorkoutDetailsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: lime,
-              foregroundColor: navy,
-              minimumSize: const Size.fromHeight(54),
+          if (isCompleted)
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                minimumSize: const Size.fromHeight(54),
+              ),
+              onPressed: null,
+              icon: const Icon(Icons.check_circle),
+              label: const Text('Workout completed', style: TextStyle(fontWeight: FontWeight.w900)),
+            )
+          else
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: lime,
+                foregroundColor: navy,
+                minimumSize: const Size.fromHeight(54),
+              ),
+              onPressed: () {
+                final activeWorkout = widget.workout ??
+                    Workout(
+                      id: 'demo_run',
+                      planId: 'demo',
+                      sport: Sport.run,
+                      title: title,
+                      duration: durationStr,
+                      distanceKm: 7.2,
+                      tss: 62,
+                      targetPace: targetPace,
+                      scheduledFor: DateTime.now(),
+                    );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => LiveWorkoutScreen(workout: activeWorkout),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.play_arrow),
+              label: const Text('Start workout', style: TextStyle(fontWeight: FontWeight.w900)),
             ),
-            onPressed: () {
-              final activeWorkout = workout ??
-                  Workout(
-                    id: 'demo_run',
-                    planId: 'demo',
-                    sport: Sport.run,
-                    title: title,
-                    duration: durationStr,
-                    distanceKm: 7.2,
-                    tss: 62,
-                    targetPace: targetPace,
-                    scheduledFor: DateTime.now(),
-                  );
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => LiveWorkoutScreen(workout: activeWorkout),
-                ),
-              );
-            },
-            icon: const Icon(Icons.play_arrow),
-            label: const Text('Start workout', style: TextStyle(fontWeight: FontWeight.w900)),
-          ),
+          if (!isCompleted && widget.workout != null) ...[
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: navy,
+                minimumSize: const Size.fromHeight(48),
+              ),
+              onPressed: _loading ? null : _markAsComplete,
+              icon: _loading 
+                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.check),
+              label: const Text('Mark as complete', style: TextStyle(fontWeight: FontWeight.w800)),
+            ),
+          ],
         ],
       ),
     );

@@ -37,6 +37,10 @@ class _MobileShellState extends ConsumerState<MobileShell> {
     }
   }
 
+  void _navigateToScreen(int index) {
+    setState(() => _index = index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +83,7 @@ class _MobileShellState extends ConsumerState<MobileShell> {
       bottomNavigationBar: NavigationBar(
         height: M.navBarHeight,
         selectedIndex: _index < 5 ? _index : 4,
-        onDestinationSelected: (i) => setState(() => _index = i),
+        onDestinationSelected: (i) => _navigateToScreen(i),
         indicatorColor: M.lime,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         destinations: const [
@@ -103,7 +107,7 @@ class _MobileShellState extends ConsumerState<MobileShell> {
       title: Text(label, style: const TextStyle(fontWeight: FontWeight.w800, color: M.ink)),
       onTap: () {
         Navigator.pop(context);
-        setState(() => _index = index);
+        _navigateToScreen(index);
       },
     );
   }

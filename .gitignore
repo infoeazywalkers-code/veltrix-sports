@@ -55,6 +55,10 @@ app.*.map.json
 **/key.properties
 session-*.md
 
+# Allow development Firebase options
+!**/firebase_options_dev.dart
+!**/firebase_options.dart.template
+
 # Platform-specific build outputs
 /android/.gradle/
 /android/app/build/

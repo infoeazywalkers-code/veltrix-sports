@@ -185,6 +185,13 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
                         hintText: '10.0',
                         border: OutlineInputBorder(),
                       ),
+                      validator: (val) {
+                        if (val != null && val.trim().isNotEmpty) {
+                          final parsed = double.tryParse(val.trim());
+                          if (parsed == null || parsed < 0) return 'Must be >= 0';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ],
@@ -197,10 +204,18 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
                       controller: _tssController,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                        labelText: 'Target TSS',
+                        labelText: 'Target TSS Score',
                         hintText: '50',
                         border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.analytics),
                       ),
+                      validator: (val) {
+                        if (val != null && val.trim().isNotEmpty) {
+                          final parsed = int.tryParse(val.trim());
+                          if (parsed == null || parsed < 0) return 'Must be >= 0';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   const SizedBox(width: 10),

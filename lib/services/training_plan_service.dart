@@ -7,6 +7,64 @@ class TrainingPlanService {
   CollectionReference<Map<String, dynamic>> get _plans =>
       _db.collection('training_plans');
 
+  // Demo training plans for showcase
+  static List<TrainingPlan> get demoPlans => [
+    TrainingPlan(
+      id: 'marathon_pro',
+      userId: 'demo',
+      name: 'Marathon Training Pro',
+      description: 'Build endurance, speed and race-day confidence with a structured 16-week plan.',
+      sport: 'Running',
+      durationWeeks: 16,
+      difficulty: 'Intermediate',
+      targetGoal: 'Sub-3:45 Marathon',
+      price: 29.99,
+      status: 'active',
+      createdAt: DateTime.now(),
+      coachId: null,
+      eventName: null,
+      startDate: null,
+      endDate: null,
+      totalDistanceKm: null,
+    ),
+    TrainingPlan(
+      id: 'cycling_performance',
+      userId: 'demo',
+      name: 'Cycling Performance Builder',
+      description: 'Improve FTP, cadence efficiency, and hill climbing speed over 12 weeks.',
+      sport: 'Cycling',
+      durationWeeks: 12,
+      difficulty: 'Advanced',
+      targetGoal: 'FTP 250W+',
+      price: 24.99,
+      status: 'active',
+      createdAt: DateTime.now(),
+      coachId: null,
+      eventName: null,
+      startDate: null,
+      endDate: null,
+      totalDistanceKm: null,
+    ),
+    TrainingPlan(
+      id: 'triathlon_base',
+      userId: 'demo',
+      name: 'Triathlon Base Builder',
+      description: 'Foundation training for sprint and Olympic distance triathletes.',
+      sport: 'Triathlon',
+      durationWeeks: 8,
+      difficulty: 'Beginner',
+      targetGoal: 'Complete First Triathlon',
+      price: 19.99,
+      status: 'active',
+      createdAt: DateTime.now(),
+      coachId: null,
+      eventName: null,
+      startDate: null,
+      endDate: null,
+      totalDistanceKm: null,
+    ),
+  ];
+
   Future<void> create(TrainingPlan plan) async {
     try {
       await _plans.doc(plan.id).set(plan.toMap());
@@ -65,6 +123,24 @@ class TrainingPlanService {
       await _plans.doc(id).update({'status': 'completed'});
     } catch (e) {
       throw Exception('Failed to complete plan: $e');
+    }
+  }
+
+  Future<List<TrainingPlan>> getFeaturedPlans() async {
+    // Return demo plans when Firestore is not available
+    try {
+      final q = await _plans
+          .where('isFeatured', isEqualTo: true)
+          .limit(10)
+          .get();
+      if (q.docs.isEmpty) {
+        return demoPlans;
+      }
+      return q.docs
+          .map((doc) => TrainingPlan.fromMap(doc.id, doc.data()))
+          .toList();
+    } catch (e) {
+      return demoPlans;
     }
   }
 }

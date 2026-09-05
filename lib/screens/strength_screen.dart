@@ -106,7 +106,7 @@ class StrengthScreen extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
                 ),
-                onPressed: () => showFeatureMessage(context, 'Strength session saved to your training plan.'),
+                onPressed: () => showFeatureMessage(context, 'Strength training feature coming soon!'),
                 child: const Text('Explore Premium', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
               ),
             ],
@@ -219,7 +219,7 @@ class _PlanCard extends StatelessWidget {
           const SizedBox(height: 14),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: navy, foregroundColor: Colors.white),
-              onPressed: () => showFeatureMessage(context, 'Strength workout started.'),
+              onPressed: () => showFeatureMessage(context, 'Strength workout builder coming soon!'),
             child: const Text('View plan', style: TextStyle(fontWeight: FontWeight.w800)),
           ),
         ],

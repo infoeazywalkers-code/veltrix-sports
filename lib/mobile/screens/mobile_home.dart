@@ -5,6 +5,7 @@ import '../../constants.dart';
 import '../../models/workout.dart';
 import '../../providers.dart';
 import '../../screens/home_screen.dart';
+import '../../screens/workout_details.dart';
 import '../../widgets/event_details_dialog.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
@@ -182,18 +183,36 @@ class MobileHomeScreen extends ConsumerWidget {
                   error: (e, _) => MCard(child: Padding(padding: const EdgeInsets.all(M.base), child: Text('Error: $e', style: M.bodyMuted))),
                   data: (workouts) {
                     if (workouts.isEmpty) {
-                      return const MCard(
-                        child: Padding(
-                          padding: EdgeInsets.all(M.base),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.fitness_center, color: M.muted, size: 20),
-                              SizedBox(width: M.sm),
-                              Text('No upcoming workouts', style: M.bodyMuted),
-                            ],
-                          ),
-                        ),
+                      // Show demo workout when no workouts exist
+                      final demoWorkout = Workout(
+                        id: 'demo_run',
+                        planId: 'demo',
+                        sport: Sport.run,
+                        title: 'Aerobic endurance',
+                        description: 'Stay relaxed and keep your effort in Zone 2.',
+                        duration: '45 min',
+                        distanceKm: 7.2,
+                        tss: 62,
+                        targetPace: '5:55–6:15 /km',
+                        scheduledFor: DateTime.now(),
+                        progress: 0.68,
+                        completed: false,
+                      );
+                      return MWorkoutCard(
+                        sport: 'RUN',
+                        title: demoWorkout.title,
+                        details: '${demoWorkout.duration}  •  ${demoWorkout.distanceKm} km  •  ${demoWorkout.tss} TSS',
+                        color: M.blue,
+                        icon: Icons.directions_run_rounded,
+                        progress: demoWorkout.progress,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => WorkoutDetailsScreen(workout: demoWorkout),
+                            ),
+                          );
+                        },
                       );
                     }
                     final w = workouts.first;
@@ -224,6 +243,14 @@ class MobileHomeScreen extends ConsumerWidget {
                       color: color,
                       icon: icon,
                       progress: w.progress,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => WorkoutDetailsScreen(workout: w),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),

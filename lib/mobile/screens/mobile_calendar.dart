@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants.dart';
 import '../../models/workout.dart';
 import '../../providers.dart';
+import '../../screens/workout_details.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -124,18 +125,36 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                         w.scheduledFor.month == selectedDate.month &&
                         w.scheduledFor.day == selectedDate.day).toList();
                     if (dayWorkouts.isEmpty) {
-                      return const MCard(
-                        child: Padding(
-                          padding: EdgeInsets.all(M.base),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.event_available, color: M.muted, size: 20),
-                              SizedBox(width: M.sm),
-                              Text('No workouts scheduled', style: M.bodyMuted),
-                            ],
-                          ),
-                        ),
+                      // Show demo workout when no workouts exist
+                      final demoWorkout = Workout(
+                        id: 'demo_run',
+                        planId: 'demo',
+                        sport: Sport.run,
+                        title: 'Easy Recovery Run',
+                        description: 'Stay relaxed and keep your effort in Zone 2.',
+                        duration: '30 min',
+                        distanceKm: 4.5,
+                        tss: 35,
+                        targetPace: '6:30–7:00 /km',
+                        scheduledFor: selectedDate,
+                        progress: 0,
+                        completed: false,
+                      );
+                      return MWorkoutCard(
+                        sport: 'RUN',
+                        title: demoWorkout.title,
+                        details: '${demoWorkout.duration}  •  ${demoWorkout.distanceKm} km  •  ${demoWorkout.tss} TSS',
+                        color: M.blue,
+                        icon: Icons.directions_run,
+                        progress: demoWorkout.progress,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => WorkoutDetailsScreen(workout: demoWorkout),
+                            ),
+                          );
+                        },
                       );
                     }
                     return Column(
@@ -162,7 +181,22 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                                         : M.muted;
                         return Column(
                           children: [
-                            MWorkoutCard(sport: sportLabel, title: w.title, details: details, color: color, icon: icon, progress: w.progress),
+                            MWorkoutCard(
+                              sport: sportLabel, 
+                              title: w.title, 
+                              details: details, 
+                              color: color, 
+                              icon: icon, 
+                              progress: w.progress,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => WorkoutDetailsScreen(workout: w),
+                                  ),
+                                );
+                              },
+                            ),
                             const SizedBox(height: M.sm),
                           ],
                         );

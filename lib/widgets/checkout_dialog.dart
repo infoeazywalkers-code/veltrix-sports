@@ -207,7 +207,13 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                         labelText: 'Expires (MM/YY)',
                         border: OutlineInputBorder(),
                       ),
-                      validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
+                      validator: (val) {
+                        if (val == null || val.trim().isEmpty) return 'Required';
+                        if (!RegExp(r'^(0[1-9]|1[0-2])\/\d{2}$').hasMatch(val.trim())) {
+                          return 'Use MM/YY';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -219,7 +225,13 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                         labelText: 'CVC',
                         border: OutlineInputBorder(),
                       ),
-                      validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
+                      validator: (val) {
+                        if (val == null || val.trim().isEmpty) return 'Required';
+                        if (!RegExp(r'^\d{3,4}$').hasMatch(val.trim())) {
+                          return '3-4 digits';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ],

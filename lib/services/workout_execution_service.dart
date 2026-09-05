@@ -130,7 +130,9 @@ class WorkoutExecutionService extends ChangeNotifier {
         _distanceKm,
         calculatedTss,
       );
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Failed to complete workout: $e');
+    }
     notifyListeners();
   }
 

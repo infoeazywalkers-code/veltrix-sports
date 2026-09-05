@@ -46,7 +46,7 @@ class MobileMoreScreen extends StatelessWidget {
                   children: [
                     _MoreFeature('Devices', 'Connect your watch and sensors', Icons.devices_other, M.blue, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DevicesScreen()))),
                     SizedBox(height: M.sm),
-                    _MoreFeature('Workout library', 'Save and reuse your favorite sessions', Icons.library_books_outlined, M.navy, onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Workout library is ready for your saved sessions.')))),
+                    _MoreFeature('Workout library', 'Save and reuse your favorite sessions', Icons.library_books_outlined, M.navy, onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Workout library feature coming soon!')))),
                   ],
                 ),
               ),

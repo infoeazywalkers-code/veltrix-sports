@@ -33,8 +33,25 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please sign in first')),
+        showDialog<void>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('Sign in required'),
+            content: const Text('Please sign in to submit your coach questionnaire.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  Navigator.pop(context);
+                },
+                child: const Text('Sign in'),
+              ),
+            ],
+          ),
         );
       }
       return;
@@ -59,8 +76,24 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
         showDialog<void>(
           context: context,
           builder: (dialogContext) => AlertDialog(
-            title: const Text('Questionnaire submitted'),
-            content: Text('We will match you with a $sport coach for your goal: $goal.'),
+            title: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.green),
+                SizedBox(width: 10),
+                Text('Questionnaire submitted'),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('We will match you with a $sport coach for your goal: $goal.'),
+                const SizedBox(height: 12),
+                const Text('Our team will review your answers and contact you within 24-48 hours with a recommended coach match.',
+                  style: TextStyle(color: muted, fontSize: 13),
+                ),
+              ],
+            ),
             actions: [
               FilledButton(
                 onPressed: () {
@@ -76,7 +109,10 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Submission failed: $e')),
+          SnackBar(
+            content: Text('Submission failed: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {

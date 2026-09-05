@@ -17,7 +17,23 @@ class AuthWrapper extends ConsumerWidget {
         body: Center(child: CircularProgressIndicator(color: navy)),
       ),
       error: (e, _) => Scaffold(
-        body: Center(child: Text('Auth error: $e')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.error_outline_rounded, color: Colors.redAccent, size: 48),
+                const SizedBox(height: 12),
+                Text(
+                  AuthService.getHumanReadableAuthError(e),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.w700, color: navy),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       data: (user) {
         if (user == null) return const SignInPrompt();

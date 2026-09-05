@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,10 +7,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'constants.dart';
 import 'shell.dart';
 import 'mobile/shell.dart';
-import 'firebase_options.dart';
+import 'firebase_options_dev.dart' as firebase_options;
 import 'services/notification_service.dart';
 import 'services/razorpay_service.dart';
 import 'widgets/error_boundary.dart';
+
+class VeltrixScrollBehavior extends MaterialScrollBehavior {
+  const VeltrixScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.stylus,
+      };
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+  }
+}
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -25,7 +43,7 @@ Future<void> main() async {
 
   try {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+      options: firebase_options.DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true,
@@ -39,6 +57,7 @@ Future<void> main() async {
   } catch (error, stackTrace) {
     debugPrint('Firebase initialization failed: $error');
     debugPrintStack(stackTrace: stackTrace);
+    // App should still work without Firebase
   }
 
   runApp(const ProviderScope(child: VeltrixRoot()));
@@ -55,6 +74,7 @@ class VeltrixRoot extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Veltrix Sports',
+      scrollBehavior: const VeltrixScrollBehavior(),
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: bg,

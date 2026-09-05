@@ -85,7 +85,7 @@ class DevicesScreen extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => showFeatureMessage(context, 'Support will help connect your device.'),
+                onPressed: () => showFeatureMessage(context, 'Contact support feature coming soon!'),
                 child: const Text('Contact support', style: TextStyle(fontWeight: FontWeight.w800)),
               ),
             ],

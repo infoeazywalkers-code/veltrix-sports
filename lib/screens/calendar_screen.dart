@@ -6,6 +6,7 @@ import '../widgets/workout_card.dart';
 import '../widgets/week_row.dart';
 import '../providers.dart';
 import '../models/workout.dart';
+import '../screens/workout_details.dart';
 
 class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
@@ -181,6 +182,14 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                   color: _sportColor(w.sport),
                   icon: _sportIcon(w.sport),
                   progress: w.progress,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => WorkoutDetailsScreen(workout: w),
+                      ),
+                    );
+                  },
                 ),
               )).toList(),
             );
