@@ -108,8 +108,8 @@ void main() {
       await tester.tap(find.text('Open Dialog'));
       await tester.pumpAndSettle();
 
-      expect(find.textContaining(coach.name), findsOneWidget);
-      expect(find.text('Submit Consultation Request'), findsOneWidget);
+      expect(find.textContaining('Book Call with'), findsOneWidget);
+      expect(find.text('Book 1-on-1 Consultation'), findsOneWidget);
 
       // Tap Cancel
       await tester.tap(find.text('Cancel'));
