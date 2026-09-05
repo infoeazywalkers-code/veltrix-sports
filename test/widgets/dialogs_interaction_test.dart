@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:veltrix_sports/models/user_profile.dart';
 import 'package:veltrix_sports/services/coach_service.dart';
 import 'package:veltrix_sports/services/payment_service.dart';
 import 'package:veltrix_sports/widgets/checkout_dialog.dart';
@@ -89,10 +90,20 @@ void main() {
       tester.view.physicalSize = const Size(1280, 900);
       addTearDown(() => tester.view.resetPhysicalSize());
 
+      final profile = UserProfile(
+        id: 'test_user_1',
+        email: 'test@veltrix.com',
+        displayName: 'Alex Athlete',
+        sports: ['Running', 'Cycling'],
+        role: UserRole.athlete,
+        isPremium: true,
+        createdAt: DateTime.now(),
+      );
+
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
-            body: EditProfileDialog(),
+            body: EditProfileDialog(currentProfile: profile),
           ),
         ),
       );
