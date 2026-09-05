@@ -12,6 +12,7 @@ void main() {
   group('Dialogs Interaction Widget Tests', () {
     testWidgets('CheckoutDialog renders Razorpay pay button and validates form', (tester) async {
       tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
       final plan = PaymentService.availablePlans.first;
@@ -19,11 +20,20 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CheckoutDialog(plan: plan),
+            body: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => CheckoutDialog(plan: plan),
+                ),
+                child: const Text('Open Dialog'),
+              ),
+            ),
           ),
         ),
       );
 
+      await tester.tap(find.text('Open Dialog'));
       await tester.pumpAndSettle();
 
       expect(find.byType(CheckoutDialog), findsOneWidget);
@@ -37,20 +47,30 @@ void main() {
 
     testWidgets('DeviceConnectDialog renders device name and pair buttons', (tester) async {
       tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
-            body: DeviceConnectDialog(
-              deviceName: 'Garmin Forerunner 965',
-              category: 'GPS Watch',
-              isConnected: false,
+            body: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const DeviceConnectDialog(
+                    deviceName: 'Garmin Forerunner 965',
+                    category: 'GPS Watch',
+                    isConnected: false,
+                  ),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
       );
 
+      await tester.tap(find.text('Open Dialog'));
       await tester.pumpAndSettle();
 
       expect(find.text('Garmin Forerunner 965'), findsOneWidget);
@@ -64,6 +84,7 @@ void main() {
 
     testWidgets('CoachBookingDialog renders coach profile and booking button', (tester) async {
       tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
       final coach = CoachService.featuredCoaches.first;
@@ -71,11 +92,20 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CoachBookingDialog(coach: coach),
+            body: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => CoachBookingDialog(coach: coach),
+                ),
+                child: const Text('Open Dialog'),
+              ),
+            ),
           ),
         ),
       );
 
+      await tester.tap(find.text('Open Dialog'));
       await tester.pumpAndSettle();
 
       expect(find.textContaining(coach.name), findsOneWidget);
@@ -88,6 +118,7 @@ void main() {
 
     testWidgets('EditProfileDialog renders display name input and save button', (tester) async {
       tester.view.physicalSize = const Size(1280, 900);
+      tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
       final profile = UserProfile(
@@ -103,11 +134,20 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: EditProfileDialog(currentProfile: profile),
+            body: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => EditProfileDialog(currentProfile: profile),
+                ),
+                child: const Text('Open Dialog'),
+              ),
+            ),
           ),
         ),
       );
 
+      await tester.tap(find.text('Open Dialog'));
       await tester.pumpAndSettle();
 
       expect(find.text('Edit Profile'), findsOneWidget);
