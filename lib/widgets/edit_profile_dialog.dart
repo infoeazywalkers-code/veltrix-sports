@@ -97,7 +97,9 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         children: [
           Icon(Icons.edit, color: navy),
           SizedBox(width: 10),
-          Text('Edit Profile', style: TextStyle(fontWeight: FontWeight.w900, color: navy)),
+          Expanded(
+            child: Text('Edit Profile', style: TextStyle(fontWeight: FontWeight.w900, color: navy)),
+          ),
         ],
       ),
       content: SingleChildScrollView(
