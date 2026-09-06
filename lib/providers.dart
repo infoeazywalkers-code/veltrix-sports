@@ -67,3 +67,10 @@ final latestPerformanceProvider = StreamProvider<PerformanceSnapshot?>((ref) {
   if (user == null) return Stream.value(null);
   return ref.watch(performanceServiceProvider).watchLatest(user.uid);
 });
+
+final performanceHistoryProvider = StreamProvider.autoDispose.family<List<PerformanceSnapshot>, int>((ref, range) {
+  final user = ref.watch(currentUserProvider);
+  if (user == null) return Stream.value([]);
+  final limit = range == 0 ? 14 : (range == 1 ? 30 : 90);
+  return ref.watch(performanceServiceProvider).watchHistory(user.uid, limit: limit);
+});

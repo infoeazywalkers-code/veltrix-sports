@@ -10,7 +10,7 @@ class WeekCard extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       child: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Metric('5', 'Workouts'),

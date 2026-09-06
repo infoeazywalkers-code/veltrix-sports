@@ -94,18 +94,18 @@ class VeltrixFooter extends StatelessWidget {
           const SizedBox(height: 36),
           const Divider(color: Colors.white12),
           const SizedBox(height: 14),
-          Wrap(
+          const Wrap(
             spacing: 18,
             runSpacing: 8,
             alignment: WrapAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 '\u00a9 2026 Veltrix Sports. All rights reserved.',
                 style: TextStyle(color: Colors.white38, fontSize: 11),
               ),
               Wrap(
                 spacing: 16,
-                children: const [
+                children: [
                   Text('Privacy', style: TextStyle(color: Colors.white54, fontSize: 11)),
                   Text('Terms', style: TextStyle(color: Colors.white54, fontSize: 11)),
                   Text('Cookies', style: TextStyle(color: Colors.white54, fontSize: 11)),

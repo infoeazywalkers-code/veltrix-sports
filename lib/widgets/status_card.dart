@@ -10,7 +10,7 @@ class StatusCard extends StatelessWidget {
       padding: const EdgeInsets.all(17),
       child: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Ring('54', 'Fitness', blue, .72),

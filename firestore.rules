@@ -2,39 +2,49 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // User Profile Rules
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User Profile Rules - Strictly scoped to the authenticated owner
     match /users/{userId} {
-      allow read: if request.auth != null;
-      allow create, update: if request.auth != null && request.auth.uid == userId;
-      allow delete: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if isOwner(userId);
     }
 
-    // Workouts Rules
+    // Workouts - Strictly owned by the user
     match /workouts/{workoutId} {
-      allow read: if request.auth != null;
-      allow create, update: if request.auth != null;
-      allow delete: if request.auth != null;
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isAuthenticated() && 
+        resource.data.userId == request.auth.uid;
     }
 
-    // Plans Rules
-    match /plans/{planId} {
-      allow read: if true;
-      allow write: if request.auth != null;
+    // Training Plans - Owned by the athlete or assigned coach
+    match /training_plans/{planId} {
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || 
+         ('coachId' in resource.data && resource.data.coachId == request.auth.uid));
     }
 
-    // Coaches & Inquiries Rules
-    match /coaches/{coachId} {
-      allow read: if true;
-      allow write: if request.auth != null;
+    // Coach Requests - Readable/Updatable by the requester or matched coach
+    match /coach_requests/{requestId} {
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read, update: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || 
+         ('matchedCoachId' in resource.data && resource.data.matchedCoachId == request.auth.uid));
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
 
-    match /coach_inquiries/{inquiryId} {
-      allow create, read: if request.auth != null;
-    }
-
-    // Subscriptions Rules
-    match /subscriptions/{subId} {
-      allow read, create, update: if request.auth != null;
+    // Performance Snapshots - Strictly private to the user
+    match /performance_snapshots/{snapshotId} {
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
   }
 }

@@ -56,9 +56,9 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
 
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
+        const SliverAppBar(
           pinned: true,
-          title: const Text('Explore'),
+          title: Text('Explore'),
         ),
         SliverPadding(
           padding: M.pagePadding(context),

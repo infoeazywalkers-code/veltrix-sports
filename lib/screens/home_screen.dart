@@ -210,7 +210,7 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(height: 12),
         const StatusCard(),
         const SizedBox(height: 24),
-        SectionHeading('This week'),
+        const SectionHeading('This week'),
         const SizedBox(height: 12),
         const WeekCard(),
         const SizedBox(height: 24),
@@ -228,7 +228,7 @@ class HomeScreen extends StatelessWidget {
           alignment: Alignment.centerRight,
         ),
         const SizedBox(height: 24),
-        SectionHeading('Coach note'),
+        const SectionHeading('Coach note'),
         const SizedBox(height: 12),
         Card(
           child: Padding(
@@ -263,7 +263,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 64),
-        VeltrixFooter(),
+        const VeltrixFooter(),
       ],
     );
   }
@@ -283,11 +283,11 @@ class PublicHomeSections extends StatelessWidget {
           style: TextStyle(color: navy, fontSize: 26, fontWeight: FontWeight.w900),
         ),
         const SizedBox(height: 22),
-        Wrap(
+        const Wrap(
           alignment: WrapAlignment.center,
           spacing: 12,
           runSpacing: 12,
-          children: const [
+          children: [
             TrustBadge(Icons.directions_run, 'ENDURANCE INDIA'),
             TrustBadge(Icons.directions_bike, 'VELO CLUB'),
             TrustBadge(Icons.pool, 'AQUA ELITE'),
@@ -333,21 +333,21 @@ class PublicHomeSections extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: desktop ? 56 : 22, vertical: desktop ? 56 : 34),
           decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(28)),
-          child: Column(
+          child: const Column(
             children: [
-              const Text(
+              Text(
                 'All-in-one, for the all-in\nathlete and coach.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 34, height: 1.02, fontWeight: FontWeight.w900),
               ),
-              const SizedBox(height: 12),
-              const Text(
+              SizedBox(height: 12),
+              Text(
                 'Plan. Train. Lift. Find your coach. One connected platform.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white70, fontSize: 16),
               ),
-              const SizedBox(height: 34),
-              const ResponsiveCards(
+              SizedBox(height: 34),
+              ResponsiveCards(
                 children: [
                   PillarCard(
                     number: '01',
@@ -382,11 +382,11 @@ class PublicHomeSections extends StatelessWidget {
           body: 'Bring your watches, trainers and health data together. Veltrix keeps the entire journey in sync.',
         ),
         const SizedBox(height: 24),
-        Wrap(
+        const Wrap(
           alignment: WrapAlignment.center,
           spacing: 10,
           runSpacing: 10,
-          children: const [
+          children: [
             DeviceChip(Icons.watch_outlined, 'Smartwatch'),
             DeviceChip(Icons.directions_bike_outlined, 'Bike trainer'),
             DeviceChip(Icons.favorite_outline, 'Heart rate'),

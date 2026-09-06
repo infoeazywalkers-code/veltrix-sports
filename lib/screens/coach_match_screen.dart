@@ -82,7 +82,7 @@ class CoachMatchScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 48),
-        VeltrixFooter(),
+        const VeltrixFooter(),
       ],
     );
   }
@@ -338,18 +338,18 @@ class _Testimonials extends StatelessWidget {
     width: double.infinity,
     padding: const EdgeInsets.all(32),
     decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(24)),
-    child: Column(
+    child: const Column(
       children: [
-        const Icon(Icons.format_quote, color: lime, size: 40),
-        const SizedBox(height: 16),
-        const Text(
+        Icon(Icons.format_quote, color: lime, size: 40),
+        SizedBox(height: 16),
+        Text(
           '"Having a coach who understands my data and my goals has completely changed how I approach training."',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white, fontSize: 18, height: 1.5, fontWeight: FontWeight.w600),
         ),
-        const SizedBox(height: 16),
-        const Text('Ruth Croft', style: TextStyle(color: lime, fontWeight: FontWeight.w900)),
-        const Text('Elite Trail Runner', style: TextStyle(color: Colors.white60, fontSize: 12)),
+        SizedBox(height: 16),
+        Text('Ruth Croft', style: TextStyle(color: lime, fontWeight: FontWeight.w900)),
+        Text('Elite Trail Runner', style: TextStyle(color: Colors.white60, fontSize: 12)),
       ],
     ),
   );

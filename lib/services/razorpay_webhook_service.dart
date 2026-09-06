@@ -3,7 +3,10 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 
 class RazorpayWebhookVerificationService {
-  static const String defaultWebhookSecret = 'rzp_sec_VeltrixSecret2026';
+  static const String defaultWebhookSecret = String.fromEnvironment(
+    'RAZORPAY_WEBHOOK_SECRET',
+    defaultValue: 'rzp_sec_VeltrixSecret2026',
+  );
 
   /// Cryptographically verifies Razorpay payment payload signature using HMAC-SHA256
   static bool verifySignature({

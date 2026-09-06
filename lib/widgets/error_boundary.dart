@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import '../constants.dart';
 
@@ -22,7 +23,11 @@ class VeltrixErrorBoundary extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.redAccent, width: 1.5),
                 ),
-                child: const Icon(Icons.warning_amber_rounded, color: Colors.redAccent, size: 48),
+                child: const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.redAccent,
+                  size: 48,
+                ),
               ),
               const SizedBox(height: 24),
               const Text(
@@ -45,26 +50,27 @@ class VeltrixErrorBoundary extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white10),
-                ),
-                child: SingleChildScrollView(
-                  child: Text(
-                    details.exceptionAsString(),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white60,
-                      fontFamily: 'monospace',
-                      fontSize: 11,
+              if (kDebugMode)
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      details.exceptionAsString(),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white60,
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                      ),
                     ),
                   ),
                 ),
-              ),
               const SizedBox(height: 28),
               ElevatedButton.icon(
                 onPressed: () {
@@ -73,8 +79,13 @@ class VeltrixErrorBoundary extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: lime,
                   foregroundColor: navy,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 14,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 icon: const Icon(Icons.refresh, size: 20),
                 label: const Text(

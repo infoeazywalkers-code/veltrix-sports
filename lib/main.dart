@@ -1,8 +1,12 @@
-import 'package:flutter/gestures.dart';
+import 'dart:ui' show PlatformDispatcher;
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'constants.dart';
 import 'shell.dart';
@@ -17,11 +21,11 @@ class VeltrixScrollBehavior extends MaterialScrollBehavior {
 
   @override
   Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        PointerDeviceKind.trackpad,
-        PointerDeviceKind.stylus,
-      };
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+    PointerDeviceKind.stylus,
+  };
 
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
@@ -38,7 +42,18 @@ Future<void> main() async {
 
   // Register Global Error Boundary
   ErrorWidget.builder = (FlutterErrorDetails details) {
+    if (!kIsWeb) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+    }
     return VeltrixErrorBoundary(details: details);
+  };
+
+  // Catch unhandled async errors
+  PlatformDispatcher.instance.onError = (error, stack) {
+    if (!kIsWeb) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    }
+    return true;
   };
 
   try {
@@ -50,13 +65,20 @@ Future<void> main() async {
       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
     );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    
+
+    if (!kIsWeb) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+        !kDebugMode,
+      );
+    }
+    await FirebaseAnalytics.instance.logAppOpen();
+
     // Initialize Push Notifications & Razorpay Engine
     await NotificationService().initialize();
     RazorpayPaymentService().initialize();
   } catch (error, stackTrace) {
-    debugPrint('Firebase initialization failed: $error');
-    debugPrintStack(stackTrace: stackTrace);
+    if (kDebugMode) debugPrint('Firebase initialization failed: $error');
+    if (kDebugMode) debugPrintStack(stackTrace: stackTrace);
     // App should still work without Firebase
   }
 
@@ -83,7 +105,9 @@ class VeltrixRoot extends StatelessWidget {
           elevation: 0,
           color: Colors.white,
           margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
         ),
         textTheme: const TextTheme(
           titleLarge: TextStyle(fontWeight: FontWeight.w900, color: navy),

@@ -55,6 +55,7 @@ class WorkoutExecutionService extends ChangeNotifier {
   List<LapSplit> get laps => List.unmodifiable(_laps);
   bool get isBleConnected => _bleSensor.isConnected;
   String? get connectedDeviceName => _bleSensor.connectedDeviceName;
+  bool get isDemoMode => kDebugMode && !_bleSensor.isConnected;
 
   String get formattedTime {
     final hours = _elapsedSeconds ~/ 3600;
@@ -97,6 +98,8 @@ class WorkoutExecutionService extends ChangeNotifier {
       _distanceKm += 0.0032; // ~11.5 km/h simulation pace
       if (!_bleSensor.isConnected) {
         _currentHeartRate = 135 + (_elapsedSeconds % 25);
+        // Simulate realistic cadence variation between 165-180 spm
+        _currentCadence = 172 + (_elapsedSeconds % 9 - 4);
       }
       notifyListeners();
     });
@@ -110,12 +113,14 @@ class WorkoutExecutionService extends ChangeNotifier {
   }
 
   void recordLap() {
-    _laps.add(LapSplit(
-      lapIndex: _laps.length + 1,
-      duration: formattedTime,
-      pace: currentPace,
-      avgHeartRate: _currentHeartRate,
-    ));
+    _laps.add(
+      LapSplit(
+        lapIndex: _laps.length + 1,
+        duration: formattedTime,
+        pace: currentPace,
+        avgHeartRate: _currentHeartRate,
+      ),
+    );
     notifyListeners();
   }
 
@@ -131,7 +136,7 @@ class WorkoutExecutionService extends ChangeNotifier {
         calculatedTss,
       );
     } catch (e) {
-      debugPrint('Failed to complete workout: $e');
+      if (kDebugMode) debugPrint('Failed to complete workout: $e');
     }
     notifyListeners();
   }
@@ -143,4 +148,3 @@ class WorkoutExecutionService extends ChangeNotifier {
     super.dispose();
   }
 }
-

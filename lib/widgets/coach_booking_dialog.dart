@@ -14,7 +14,9 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
   final _formKey = GlobalKey<FormState>();
   final _goalController = TextEditingController(text: 'Sub-3:45 Marathon PR');
   final _messageController = TextEditingController(
-      text: 'Hi! Looking to optimize my weekly mileage and strength work for upcoming races.');
+    text:
+        'Hi! Looking to optimize my weekly mileage and strength work for upcoming races.',
+  );
   DateTime _preferredDate = DateTime.now().add(const Duration(days: 3));
   bool _submitting = false;
 
@@ -59,9 +61,9 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to send request: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to send request: $e')));
       }
     } finally {
       if (mounted) setState(() => _submitting = false);
@@ -77,8 +79,12 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Book Call with ${widget.coach.name.split(' ').elementAt(1)}',
-              style: const TextStyle(fontWeight: FontWeight.w900, color: navy, fontSize: 18),
+              'Book Call with ${widget.coach.name.split(' ').length > 1 ? widget.coach.name.split(' ').elementAt(1) : widget.coach.name}',
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                color: navy,
+                fontSize: 18,
+              ),
             ),
           ),
         ],
@@ -92,42 +98,67 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
             children: [
               Text(
                 widget.coach.title,
-                style: const TextStyle(fontWeight: FontWeight.w700, color: blue, fontSize: 12),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: blue,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                controller: _goalController,
-                decoration: const InputDecoration(
-                  labelText: 'Primary Target Goal *',
-                  hintText: 'e.g. Marathon Sub-3:45',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.flag_outlined),
+              Semantics(
+                label: 'Primary target goal, required',
+                child: TextFormField(
+                  controller: _goalController,
+                  decoration: const InputDecoration(
+                    labelText: 'Primary Target Goal *',
+                    hintText: 'e.g. Marathon Sub-3:45',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.flag_outlined),
+                  ),
+                  validator:
+                      (val) =>
+                          val == null || val.trim().isEmpty ? 'Required' : null,
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.calendar_month, color: navy),
-                title: Text(
-                  'Call Date: ${_preferredDate.year}-${_preferredDate.month.toString().padLeft(2, '0')}-${_preferredDate.day.toString().padLeft(2, '0')}',
-                  style: const TextStyle(fontWeight: FontWeight.w700, color: navy, fontSize: 13),
-                ),
-                trailing: TextButton(
-                  onPressed: _pickDate,
-                  child: const Text('Change Date'),
+              Semantics(
+                label:
+                    'Call date: ${_preferredDate.year}-${_preferredDate.month.toString().padLeft(2, '0')}-${_preferredDate.day.toString().padLeft(2, '0')}',
+                button: true,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.calendar_month, color: navy),
+                  title: Text(
+                    'Call Date: ${_preferredDate.year}-${_preferredDate.month.toString().padLeft(2, '0')}-${_preferredDate.day.toString().padLeft(2, '0')}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: navy,
+                      fontSize: 13,
+                    ),
+                  ),
+                  trailing: TextButton(
+                    onPressed: _pickDate,
+                    child: const Text('Change Date'),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _messageController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Message for Coach',
-                  hintText: 'Share your background, injury history, and schedule availability...',
-                  border: OutlineInputBorder(),
+              Semantics(
+                label: 'Message for coach, optional',
+                child: TextFormField(
+                  controller: _messageController,
+                  maxLines: 3,
+                  maxLength: 1000,
+                  decoration: const InputDecoration(
+                    labelText: 'Message for Coach',
+                    hintText:
+                        'Share your background, injury history, and schedule availability...',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator:
+                      (val) =>
+                          val == null || val.trim().isEmpty ? 'Required' : null,
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
               ),
             ],
           ),
@@ -138,22 +169,27 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
           onPressed: _submitting ? null : () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        FilledButton(
-          style: FilledButton.styleFrom(
-            backgroundColor: lime,
-            foregroundColor: navy,
+        Semantics(
+          label: 'Book one-on-one consultation with ${widget.coach.name}',
+          button: true,
+          child: FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: lime,
+              foregroundColor: navy,
+            ),
+            onPressed: _submitting ? null : _submit,
+            child:
+                _submitting
+                    ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                    : const Text(
+                      'Book 1-on-1 Consultation',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
           ),
-          onPressed: _submitting ? null : _submit,
-          child: _submitting
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text(
-                  'Book 1-on-1 Consultation',
-                  style: TextStyle(fontWeight: FontWeight.w900),
-                ),
         ),
       ],
     );

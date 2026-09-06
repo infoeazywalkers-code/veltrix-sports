@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz_data;
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -8,7 +10,8 @@ class NotificationService {
   NotificationService._internal();
 
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   bool _initialized = false;
   String? _fcmToken;
@@ -20,6 +23,9 @@ class NotificationService {
     _initialized = true;
 
     try {
+      // Initialize timezone database for OS-level scheduling
+      tz_data.initializeTimeZones();
+
       // 1. Request FCM Push Permissions
       final settings = await _fcm.requestPermission(
         alert: true,
@@ -29,7 +35,9 @@ class NotificationService {
       );
 
       if (kDebugMode) {
-        debugPrint('[FCM Notification Status] Authorization: ${settings.authorizationStatus}');
+        debugPrint(
+          '[FCM Notification Status] Authorization: ${settings.authorizationStatus}',
+        );
       }
 
       // 2. Fetch FCM Device Token
@@ -41,18 +49,30 @@ class NotificationService {
       }
 
       // 3. Initialize Local Notifications Plugin
-      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+      const androidSettings = AndroidInitializationSettings(
+        '@mipmap/ic_launcher',
+      );
       const iosSettings = DarwinInitializationSettings();
-      const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
+      const initSettings = InitializationSettings(
+        android: androidSettings,
+        iOS: iosSettings,
+      );
 
-      await _localNotifications.initialize(initSettings);
+      await _localNotifications.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: _onNotificationTapped,
+      );
 
-      // 4. Foreground FCM Listener
+      // 4. Request exact alarm permission on Android 13+
+      await _requestExactAlarmPermission();
+
+      // 5. Foreground FCM Listener
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         if (message.notification != null) {
           showNotification(
             title: message.notification?.title ?? 'Veltrix Update',
-            body: message.notification?.body ?? 'You have a new activity update.',
+            body:
+                message.notification?.body ?? 'You have a new activity update.',
           );
         }
       });
@@ -61,7 +81,34 @@ class NotificationService {
     }
   }
 
-  Future<void> showNotification({required String title, required String body}) async {
+  Future<void> _requestExactAlarmPermission() async {
+    if (kIsWeb) return;
+    try {
+      final androidPlugin =
+          _localNotifications
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
+      if (androidPlugin != null) {
+        await androidPlugin.requestNotificationsPermission();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[Notification Permission Request] $e');
+      }
+    }
+  }
+
+  void _onNotificationTapped(NotificationResponse response) {
+    if (kDebugMode) {
+      debugPrint('[Notification Tapped] payload: ${response.payload}');
+    }
+  }
+
+  Future<void> showNotification({
+    required String title,
+    required String body,
+  }) async {
     try {
       const androidDetails = AndroidNotificationDetails(
         'veltrix_channel',
@@ -71,7 +118,10 @@ class NotificationService {
         priority: Priority.high,
       );
       const iosDetails = DarwinNotificationDetails();
-      const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
+      const details = NotificationDetails(
+        android: androidDetails,
+        iOS: iosDetails,
+      );
 
       await _localNotifications.show(
         DateTime.now().millisecondsSinceEpoch ~/ 1000,
@@ -84,16 +134,63 @@ class NotificationService {
     }
   }
 
-  Future<void> scheduleWorkoutReminder(String workoutTitle, DateTime reminderTime) async {
-    final now = DateTime.now();
-    if (reminderTime.isBefore(now)) return;
+  /// Schedules a workout reminder using OS-level scheduling via [zonedSchedule].
+  /// This notification persists across app restarts and device reboots.
+  Future<void> scheduleWorkoutReminder(
+    String workoutTitle,
+    DateTime reminderTime,
+  ) async {
+    try {
+      final now = tz.TZDateTime.now(tz.local);
+      final scheduledDate = tz.TZDateTime.from(reminderTime, tz.local);
 
-    final delay = reminderTime.difference(now);
-    Future.delayed(delay, () {
-      showNotification(
-        title: '🏋️ Time for Workout: $workoutTitle',
-        body: 'Your scheduled Veltrix workout starts now. Let’s crush your targets!',
+      if (scheduledDate.isBefore(now)) return;
+
+      const androidDetails = AndroidNotificationDetails(
+        'veltrix_workout_reminders',
+        'Workout Reminders',
+        channelDescription: 'Scheduled workout reminders',
+        importance: Importance.high,
+        priority: Priority.high,
       );
-    });
+      const iosDetails = DarwinNotificationDetails();
+      const details = NotificationDetails(
+        android: androidDetails,
+        iOS: iosDetails,
+      );
+
+      // Use zonedSchedule for OS-level persistence.
+      // The notification survives app kills and reboots.
+      await _localNotifications.zonedSchedule(
+        workoutTitle.hashCode,
+        'Time for Workout: $workoutTitle',
+        'Your scheduled Veltrix workout starts now. Let\'s crush your targets!',
+        scheduledDate,
+        details,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+
+      if (kDebugMode) {
+        debugPrint(
+          '[Notification] Scheduled reminder for "$workoutTitle" at $scheduledDate',
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[Notification Schedule Error] $e');
+      }
+    }
+  }
+
+  /// Cancels a previously scheduled workout reminder by [workoutTitle].
+  Future<void> cancelWorkoutReminder(String workoutTitle) async {
+    await _localNotifications.cancel(workoutTitle.hashCode);
+  }
+
+  /// Cancels all scheduled notifications.
+  Future<void> cancelAllNotifications() async {
+    await _localNotifications.cancelAll();
   }
 }

@@ -14,9 +14,9 @@ class MobileMoreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
+        const SliverAppBar(
           pinned: true,
-          title: const Text('More features'),
+          title: Text('More features'),
         ),
         SliverPadding(
           padding: M.pagePadding(context),
@@ -32,9 +32,9 @@ class MobileMoreScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     _MoreFeature('Premium', 'Unlock advanced training tools', Icons.workspace_premium, M.orange, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PremiumScreen()))),
-                    SizedBox(height: M.sm),
+                    const SizedBox(height: M.sm),
                     _MoreFeature('Find a coach', 'Get guidance matched to your goals', Icons.groups_outlined, M.purple, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CoachMatchScreen()))),
-                    SizedBox(height: M.sm),
+                    const SizedBox(height: M.sm),
                     _MoreFeature('Strength', 'Build a stronger athletic foundation', Icons.fitness_center, M.teal, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const StrengthScreen()))),
                   ],
                 ),
@@ -45,7 +45,7 @@ class MobileMoreScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     _MoreFeature('Devices', 'Connect your watch and sensors', Icons.devices_other, M.blue, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DevicesScreen()))),
-                    SizedBox(height: M.sm),
+                    const SizedBox(height: M.sm),
                     _MoreFeature('Workout library', 'Save and reuse your favorite sessions', Icons.library_books_outlined, M.navy, onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Workout library feature coming soon!')))),
                   ],
                 ),

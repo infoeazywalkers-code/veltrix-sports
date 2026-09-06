@@ -6,7 +6,8 @@ import 'analytics_service.dart';
 import 'razorpay_webhook_service.dart';
 
 class RazorpayPaymentService extends ChangeNotifier {
-  static final RazorpayPaymentService _instance = RazorpayPaymentService._internal();
+  static final RazorpayPaymentService _instance =
+      RazorpayPaymentService._internal();
   factory RazorpayPaymentService() => _instance;
   RazorpayPaymentService._internal();
 
@@ -14,6 +15,7 @@ class RazorpayPaymentService extends ChangeNotifier {
   bool _isProcessing = false;
   String? _lastPaymentId;
   String? _lastError;
+  String? _pendingPlanId;
 
   bool get isProcessing => _isProcessing;
   String? get lastPaymentId => _lastPaymentId;
@@ -40,12 +42,16 @@ class RazorpayPaymentService extends ChangeNotifier {
   }) async {
     _isProcessing = true;
     _lastError = null;
+    _pendingPlanId = planId;
     notifyListeners();
 
     final amountPaise = (priceInr * 100).toInt();
 
     final options = {
-      'key': 'rzp_test_VeltrixSports2026',
+      'key': const String.fromEnvironment(
+        'RAZORPAY_KEY_ID',
+        defaultValue: 'rzp_test_VeltrixSports2026',
+      ),
       'amount': amountPaise,
       'name': 'Veltrix Sports Premium',
       'description': '$planTitle Subscription',
@@ -56,13 +62,14 @@ class RazorpayPaymentService extends ChangeNotifier {
       'theme': {'color': '#102a43'},
       'external': {
         'wallets': ['paytm', 'phonepe', 'gpay'],
-      }
+      },
     };
 
     if (kIsWeb) {
       // Simulated Razorpay Web checkout for web client test environments
       await Future.delayed(const Duration(milliseconds: 1500));
-      final simulatedPaymentId = 'pay_web_${DateTime.now().millisecondsSinceEpoch}';
+      final simulatedPaymentId =
+          'pay_web_${DateTime.now().millisecondsSinceEpoch}';
       await _processSuccessfulUpgrade(planId, simulatedPaymentId);
       return true;
     }
@@ -73,6 +80,7 @@ class RazorpayPaymentService extends ChangeNotifier {
       return true;
     } catch (e) {
       _isProcessing = false;
+      _pendingPlanId = null;
       _lastError = e.toString();
       notifyListeners();
       return false;
@@ -80,8 +88,12 @@ class RazorpayPaymentService extends ChangeNotifier {
   }
 
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    final paymentId = response.paymentId ?? 'pay_success_${DateTime.now().millisecondsSinceEpoch}';
-    final orderId = response.orderId ?? 'order_sim_${DateTime.now().millisecondsSinceEpoch}';
+    final paymentId =
+        response.paymentId ??
+        'pay_success_${DateTime.now().millisecondsSinceEpoch}';
+    final orderId =
+        response.orderId ??
+        'order_sim_${DateTime.now().millisecondsSinceEpoch}';
     final signature = response.signature ?? '';
 
     if (signature.isNotEmpty) {
@@ -90,17 +102,33 @@ class RazorpayPaymentService extends ChangeNotifier {
         paymentId: paymentId,
         signature: signature,
       );
-      if (!isVerified && kDebugMode) {
-        debugPrint('[Razorpay Warning] Unverified signature for payment: $paymentId');
+      if (!isVerified) {
+        _isProcessing = false;
+        _pendingPlanId = null;
+        _lastError =
+            'Payment signature verification failed. '
+            'Please contact support if you were charged.';
+        notifyListeners();
+        return;
       }
+    } else if (!kDebugMode) {
+      // In release mode, reject payments without a signature entirely
+      _isProcessing = false;
+      _pendingPlanId = null;
+      _lastError =
+          'Payment response missing signature. '
+          'Please contact support if you were charged.';
+      notifyListeners();
+      return;
     }
 
     _lastPaymentId = paymentId;
-    await _processSuccessfulUpgrade('pro', paymentId);
+    await _processSuccessfulUpgrade(_pendingPlanId ?? 'monthly_pro', paymentId);
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     _isProcessing = false;
+    _pendingPlanId = null;
     _lastError = response.message ?? 'Payment failed or cancelled by user.';
     notifyListeners();
   }
@@ -111,7 +139,10 @@ class RazorpayPaymentService extends ChangeNotifier {
     }
   }
 
-  Future<void> _processSuccessfulUpgrade(String planId, String paymentId) async {
+  Future<void> _processSuccessfulUpgrade(
+    String planId,
+    String paymentId,
+  ) async {
     try {
       final targetPlan = PaymentService.availablePlans.firstWhere(
         (p) => p.id == planId,
@@ -127,6 +158,7 @@ class RazorpayPaymentService extends ChangeNotifier {
       if (kDebugMode) debugPrint('[Razorpay Upgrade Error] $e');
     } finally {
       _isProcessing = false;
+      _pendingPlanId = null;
       notifyListeners();
     }
   }

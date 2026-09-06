@@ -92,7 +92,7 @@ class DevicesScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 48),
-        VeltrixFooter(),
+        const VeltrixFooter(),
       ],
     );
   }

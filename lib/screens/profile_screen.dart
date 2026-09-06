@@ -16,17 +16,19 @@ class ProfileScreen extends ConsumerWidget {
     final profileAsync = ref.watch(userProfileProvider);
 
     return profileAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: navy)),
-      error: (e, _) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.error_outline, color: Colors.red, size: 40),
-            const SizedBox(height: 12),
-            Text('Failed to load profile', style: TextStyle(color: muted)),
-          ],
-        ),
-      ),
+      loading:
+          () => const Center(child: CircularProgressIndicator(color: navy)),
+      error:
+          (e, _) => const Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error_outline, color: Colors.red, size: 40),
+                SizedBox(height: 12),
+                Text('Failed to load profile', style: TextStyle(color: muted)),
+              ],
+            ),
+          ),
       data: (profile) {
         if (profile == null) {
           return Center(
@@ -37,21 +39,38 @@ class ProfileScreen extends ConsumerWidget {
                 children: [
                   const Icon(Icons.person_outline, color: navy, size: 64),
                   const SizedBox(height: 16),
-                  const Text('Welcome to Veltrix Sports', style: TextStyle(color: navy, fontSize: 22, fontWeight: FontWeight.w900)),
+                  const Text(
+                    'Welcome to Veltrix Sports',
+                    style: TextStyle(
+                      color: navy,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  const Text('Sign in with Google to save workouts, connect devices, and track your progress.', textAlign: TextAlign.center, style: TextStyle(color: muted)),
+                  const Text(
+                    'Sign in with Google to save workouts, connect devices, and track your progress.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: muted),
+                  ),
                   const SizedBox(height: 24),
                   FilledButton.icon(
                     style: FilledButton.styleFrom(
                       backgroundColor: lime,
                       foregroundColor: navy,
-                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 28,
+                        vertical: 16,
+                      ),
                     ),
                     onPressed: () async {
                       await AuthService().signInWithGoogle();
                     },
                     icon: const Icon(Icons.login),
-                    label: const Text('Sign in with Google', style: TextStyle(fontWeight: FontWeight.w900)),
+                    label: const Text(
+                      'Sign in with Google',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
                   ),
                 ],
               ),
@@ -59,11 +78,21 @@ class ProfileScreen extends ConsumerWidget {
           );
         }
 
-        final initials = profile.displayName.split(' ').map((w) => w.isNotEmpty ? w[0] : '').take(2).join().toUpperCase();
-        final sportsLabel = profile.sports.isEmpty ? 'No sports added' : profile.sports.join(' \u2022 ');
-        final renewsText = profile.subscriptionRenewsAt != null
-            ? 'Renews ${profile.subscriptionRenewsAt!.day} ${_month(profile.subscriptionRenewsAt!.month)} ${profile.subscriptionRenewsAt!.year}'
-            : 'No active subscription';
+        final initials =
+            profile.displayName
+                .split(' ')
+                .map((w) => w.isNotEmpty ? w[0] : '')
+                .take(2)
+                .join()
+                .toUpperCase();
+        final sportsLabel =
+            profile.sports.isEmpty
+                ? 'No sports added'
+                : profile.sports.join(' \u2022 ');
+        final renewsText =
+            profile.subscriptionRenewsAt != null
+                ? 'Renews ${profile.subscriptionRenewsAt!.day} ${monthName(profile.subscriptionRenewsAt!.month)} ${profile.subscriptionRenewsAt!.year}'
+                : 'No active subscription';
 
         return ListView(
           padding: const EdgeInsets.all(18),
@@ -73,28 +102,46 @@ class ProfileScreen extends ConsumerWidget {
                 CircleAvatar(
                   radius: 34,
                   backgroundColor: navy,
-                  backgroundImage: profile.photoUrl != null && profile.photoUrl!.isNotEmpty
-                      ? NetworkImage(profile.photoUrl!)
-                      : null,
-                  child: profile.photoUrl == null || profile.photoUrl!.isEmpty
-                      ? Text(initials, style: const TextStyle(color: lime, fontSize: 20, fontWeight: FontWeight.w900))
-                      : null,
+                  backgroundImage:
+                      profile.photoUrl != null && profile.photoUrl!.isNotEmpty
+                          ? NetworkImage(profile.photoUrl!)
+                          : null,
+                  child:
+                      profile.photoUrl == null || profile.photoUrl!.isEmpty
+                          ? Text(
+                            initials,
+                            style: const TextStyle(
+                              color: lime,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          )
+                          : null,
                 ),
                 const SizedBox(width: 13),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(profile.displayName, style: const TextStyle(color: navy, fontSize: 21, fontWeight: FontWeight.w900)),
+                      Text(
+                        profile.displayName,
+                        style: const TextStyle(
+                          color: navy,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                       Text(sportsLabel, style: const TextStyle(color: muted)),
                     ],
                   ),
                 ),
                 IconButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (_) => EditProfileDialog(currentProfile: profile),
-                  ),
+                  onPressed:
+                      () => showDialog(
+                        context: context,
+                        builder:
+                            (_) => EditProfileDialog(currentProfile: profile),
+                      ),
                   icon: const Icon(Icons.edit_outlined),
                 ),
               ],
@@ -104,16 +151,25 @@ class ProfileScreen extends ConsumerWidget {
               onTap: onNavigateToPremium,
               child: Container(
                 padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(color: const Color(0xffeaf2f8), borderRadius: BorderRadius.circular(16)),
-                child: Row(
-                  children: const [
+                decoration: BoxDecoration(
+                  color: const Color(0xffeaf2f8),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Row(
+                  children: [
                     Icon(Icons.workspace_premium, color: blue),
                     SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Veltrix Premium', style: TextStyle(fontWeight: FontWeight.w900, color: navy)),
+                          Text(
+                            'Veltrix Premium',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: navy,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -124,7 +180,10 @@ class ProfileScreen extends ConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text(renewsText, style: const TextStyle(color: muted, fontSize: 11)),
+              child: Text(
+                renewsText,
+                style: const TextStyle(color: muted, fontSize: 11),
+              ),
             ),
             const SizedBox(height: 22),
             const SectionHeading('Account'),
@@ -152,18 +211,17 @@ class ProfileScreen extends ConsumerWidget {
                 foregroundColor: Colors.red,
                 minimumSize: const Size.fromHeight(50),
               ),
-              child: const Text('Sign out', style: TextStyle(fontWeight: FontWeight.w800)),
+              child: const Text(
+                'Sign out',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
             ),
           ],
         );
       },
     );
   }
-
-  String _month(int m) => ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m];
 }
-
-
 
 class _Settings extends StatelessWidget {
   final List<(String, IconData)> items;
@@ -177,7 +235,10 @@ class _Settings extends StatelessWidget {
           children: [
             ListTile(
               leading: Icon(items[i].$2, color: navy),
-              title: Text(items[i].$1, style: const TextStyle(fontWeight: FontWeight.w700)),
+              title: Text(
+                items[i].$1,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
               trailing: const Icon(Icons.chevron_right, color: muted),
             ),
             if (i < items.length - 1) const Divider(height: 1, indent: 55),

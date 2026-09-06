@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_profile.dart';
 
 class UserService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+
+  UserService({FirebaseFirestore? db}) : _db = db ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _users =>
       _db.collection('users');
@@ -45,12 +47,16 @@ class UserService {
   }
 
   Stream<UserProfile?> watch(String id) {
-    return _users.doc(id).snapshots().map((doc) {
-      if (!doc.exists || doc.data() == null) return null;
-      return UserProfile.fromMap(doc.id, doc.data()!);
-    }).handleError((e) {
-      throw Exception('Failed to watch user: $e');
-    });
+    return _users
+        .doc(id)
+        .snapshots()
+        .map((doc) {
+          if (!doc.exists || doc.data() == null) return null;
+          return UserProfile.fromMap(doc.id, doc.data()!);
+        })
+        .handleError((e) {
+          throw Exception('Failed to watch user: $e');
+        });
   }
 
   Future<void> upsert(UserProfile profile) async {

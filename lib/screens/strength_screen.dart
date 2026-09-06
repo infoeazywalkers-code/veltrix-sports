@@ -46,25 +46,25 @@ class StrengthScreen extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: desktop ? 56 : 24, vertical: 44),
           decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(28)),
-          child: Column(
+          child: const Column(
             children: [
-              const Text(
+              Text(
                 'Strength for endurance athletes.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w900),
               ),
-              const SizedBox(height: 10),
-              const Text(
+              SizedBox(height: 10),
+              Text(
                 'Workouts sync to your calendar. Execute on mobile. Build on desktop.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white70, fontSize: 15),
               ),
-              const SizedBox(height: 28),
+              SizedBox(height: 28),
               Wrap(
                 spacing: 16,
                 runSpacing: 16,
                 alignment: WrapAlignment.center,
-                children: const [
+                children: [
                   _StrengthStat(Icons.library_books, '1000+', 'Exercises'),
                   _StrengthStat(Icons.videocam_outlined, 'Video', 'Library'),
                   _StrengthStat(Icons.sync, 'Calendar', 'Sync'),
@@ -113,7 +113,7 @@ class StrengthScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 48),
-        VeltrixFooter(),
+        const VeltrixFooter(),
       ],
     );
   }
@@ -235,18 +235,18 @@ class _StrengthTestimonials extends StatelessWidget {
     width: double.infinity,
     padding: const EdgeInsets.all(32),
     decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(24)),
-    child: Column(
+    child: const Column(
       children: [
-        const Icon(Icons.format_quote, color: lime, size: 40),
-        const SizedBox(height: 16),
-        const Text(
+        Icon(Icons.format_quote, color: lime, size: 40),
+        SizedBox(height: 16),
+        Text(
           '"Adding structured strength work has made me a more resilient runner. I\u2019ve stayed injury-free for two full seasons."',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white, fontSize: 18, height: 1.5, fontWeight: FontWeight.w600),
         ),
-        const SizedBox(height: 16),
-        const Text('Ryan M.', style: TextStyle(color: lime, fontWeight: FontWeight.w900)),
-        const Text('Marathon Runner', style: TextStyle(color: Colors.white60, fontSize: 12)),
+        SizedBox(height: 16),
+        Text('Ryan M.', style: TextStyle(color: lime, fontWeight: FontWeight.w900)),
+        Text('Marathon Runner', style: TextStyle(color: Colors.white60, fontSize: 12)),
       ],
     ),
   );

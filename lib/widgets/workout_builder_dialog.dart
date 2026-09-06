@@ -76,9 +76,10 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
         duration: _durationController.text.trim(),
         distanceKm: double.tryParse(_distanceController.text.trim()),
         tss: int.tryParse(_tssController.text.trim()),
-        targetPace: _targetPaceController.text.trim().isNotEmpty
-            ? _targetPaceController.text.trim()
-            : null,
+        targetPace:
+            _targetPaceController.text.trim().isNotEmpty
+                ? _targetPaceController.text.trim()
+                : null,
         scheduledFor: _scheduledFor,
         progress: 0.0,
         completed: false,
@@ -136,8 +137,11 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.directions_run),
                 ),
-                validator: (val) =>
-                    val == null || val.trim().isEmpty ? 'Enter workout title' : null,
+                validator:
+                    (val) =>
+                        val == null || val.trim().isEmpty
+                            ? 'Enter workout title'
+                            : null,
               ),
               const SizedBox(height: 14),
               DropdownButtonFormField<Sport>(
@@ -147,15 +151,16 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.category),
                 ),
-                items: Sport.values.map((sport) {
-                  return DropdownMenuItem(
-                    value: sport,
-                    child: Text(
-                      sport.name.toUpperCase(),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                  );
-                }).toList(),
+                items:
+                    Sport.values.map((sport) {
+                      return DropdownMenuItem(
+                        value: sport,
+                        child: Text(
+                          sport.name.toUpperCase(),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      );
+                    }).toList(),
                 onChanged: (val) {
                   if (val != null) setState(() => _selectedSport = val);
                 },
@@ -171,15 +176,20 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
                         hintText: '45m',
                         border: OutlineInputBorder(),
                       ),
-                      validator: (val) =>
-                          val == null || val.trim().isEmpty ? 'Required' : null,
+                      validator:
+                          (val) =>
+                              val == null || val.trim().isEmpty
+                                  ? 'Required'
+                                  : null,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: TextFormField(
                       controller: _distanceController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Distance (km)',
                         hintText: '10.0',
@@ -188,7 +198,8 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
                       validator: (val) {
                         if (val != null && val.trim().isNotEmpty) {
                           final parsed = double.tryParse(val.trim());
-                          if (parsed == null || parsed < 0) return 'Must be >= 0';
+                          if (parsed == null || parsed < 0)
+                            return 'Must be >= 0';
                         }
                         return null;
                       },
@@ -212,7 +223,8 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
                       validator: (val) {
                         if (val != null && val.trim().isNotEmpty) {
                           final parsed = int.tryParse(val.trim());
-                          if (parsed == null || parsed < 0) return 'Must be >= 0';
+                          if (parsed == null || parsed < 0)
+                            return 'Must be >= 0';
                         }
                         return null;
                       },
@@ -237,7 +249,10 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
                 leading: const Icon(Icons.calendar_today, color: navy),
                 title: Text(
                   'Date: ${_scheduledFor.year}-${_scheduledFor.month.toString().padLeft(2, '0')}-${_scheduledFor.day.toString().padLeft(2, '0')}',
-                  style: const TextStyle(fontWeight: FontWeight.w700, color: navy),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: navy,
+                  ),
                 ),
                 trailing: TextButton(
                   onPressed: _pickDate,
@@ -248,6 +263,7 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
               TextFormField(
                 controller: _descriptionController,
                 maxLines: 2,
+                maxLength: 500,
                 decoration: const InputDecoration(
                   labelText: 'Notes / Description',
                   hintText: 'e.g., Focus on consistent cadences above 175 spm',
@@ -269,16 +285,17 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
             foregroundColor: navy,
           ),
           onPressed: _saving ? null : _save,
-          child: _saving
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text(
-                  'Create Workout',
-                  style: TextStyle(fontWeight: FontWeight.w900),
-                ),
+          child:
+              _saving
+                  ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                  : const Text(
+                    'Create Workout',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
         ),
       ],
     );

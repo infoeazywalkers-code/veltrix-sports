@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../services/payment_service.dart';
@@ -44,12 +45,11 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
 
   Future<void> _payWithRazorpay() async {
     setState(() => _processing = true);
-    final inrPrice = _finalPrice * 83.0; // Approx 1 USD = 83 INR conversion
 
     final success = await RazorpayPaymentService().openRazorpayCheckout(
       planId: widget.plan.id,
       planTitle: widget.plan.title,
-      priceInr: inrPrice,
+      priceInr: _finalPrice,
       userEmail: 'athlete@veltrixsports.com',
       userPhone: '9876543210',
     );
@@ -86,9 +86,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Payment failed: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Payment failed: $e')));
       }
     } finally {
       if (mounted) setState(() => _processing = false);
@@ -107,7 +107,11 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
           Expanded(
             child: Text(
               'Checkout — ${widget.plan.title}',
-              style: const TextStyle(fontWeight: FontWeight.w900, color: navy, fontSize: 18),
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                color: navy,
+                fontSize: 18,
+              ),
             ),
           ),
         ],
@@ -119,42 +123,92 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: navy.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: navy.withValues(alpha: 0.1)),
+              if (kDebugMode || kIsWeb)
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.orange, width: 0.8),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.science_outlined,
+                        color: Colors.orange,
+                        size: 13,
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        'DEMO MODE — Simulated payment',
+                        style: TextStyle(
+                          color: Colors.orange,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(widget.plan.title, style: const TextStyle(fontWeight: FontWeight.w900, color: navy)),
-                        Text('/${widget.plan.period}', style: const TextStyle(color: muted, fontSize: 12)),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        if (discountApplied)
+              Semantics(
+                label:
+                    'Total price: ${_finalPrice.toStringAsFixed(0)} Indian rupees',
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: navy.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: navy.withValues(alpha: 0.1)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            '\$${widget.plan.price.toStringAsFixed(2)}',
+                            widget.plan.title,
                             style: const TextStyle(
-                              decoration: TextDecoration.lineThrough,
-                              color: muted,
-                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                              color: navy,
                             ),
                           ),
-                        Text(
-                          '\$${_finalPrice.toStringAsFixed(2)}',
-                          style: const TextStyle(fontWeight: FontWeight.w900, color: navy, fontSize: 20),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Text(
+                            '/${widget.plan.period}',
+                            style: const TextStyle(color: muted, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if (discountApplied)
+                            Text(
+                              '\u20b9${widget.plan.price.toStringAsFixed(0)}',
+                              style: const TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                                color: muted,
+                                fontSize: 12,
+                              ),
+                            ),
+                          Text(
+                            '\u20b9${_finalPrice.toStringAsFixed(0)}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: navy,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -167,9 +221,15 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                     backgroundColor: const Color(0xff0c2340),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  icon: const Icon(Icons.account_balance_wallet_outlined, color: lime, size: 20),
+                  icon: const Icon(
+                    Icons.account_balance_wallet_outlined,
+                    color: lime,
+                    size: 20,
+                  ),
                   label: const Text(
                     'Pay via Razorpay (UPI, GPay, Card, NetBanking)',
                     style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
@@ -182,7 +242,14 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                   Expanded(child: Divider()),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('OR DIRECT CARD', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: muted)),
+                    child: Text(
+                      'OR DIRECT CARD',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: muted,
+                      ),
+                    ),
                   ),
                   Expanded(child: Divider()),
                 ],
@@ -195,7 +262,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.credit_card),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Required' : null,
+                validator:
+                    (val) =>
+                        val == null || val.trim().isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
               Row(
@@ -208,8 +277,11 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                         border: OutlineInputBorder(),
                       ),
                       validator: (val) {
-                        if (val == null || val.trim().isEmpty) return 'Required';
-                        if (!RegExp(r'^(0[1-9]|1[0-2])\/\d{2}$').hasMatch(val.trim())) {
+                        if (val == null || val.trim().isEmpty)
+                          return 'Required';
+                        if (!RegExp(
+                          r'^(0[1-9]|1[0-2])\/\d{2}$',
+                        ).hasMatch(val.trim())) {
                           return 'Use MM/YY';
                         }
                         return null;
@@ -226,7 +298,8 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                         border: OutlineInputBorder(),
                       ),
                       validator: (val) {
-                        if (val == null || val.trim().isEmpty) return 'Required';
+                        if (val == null || val.trim().isEmpty)
+                          return 'Required';
                         if (!RegExp(r'^\d{3,4}$').hasMatch(val.trim())) {
                           return '3-4 digits';
                         }
@@ -245,16 +318,21 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                   hintText: 'e.g. VELTRIXPRO or ATHLETE20',
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.card_giftcard),
-                  suffixIcon: discountApplied
-                      ? const Icon(Icons.check_circle, color: Colors.green)
-                      : null,
+                  suffixIcon:
+                      discountApplied
+                          ? const Icon(Icons.check_circle, color: Colors.green)
+                          : null,
                 ),
               ),
               if (discountApplied) ...[
                 const SizedBox(height: 6),
                 const Text(
                   'Promo code applied successfully!',
-                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.w700, fontSize: 12),
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ],
@@ -266,22 +344,30 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
           onPressed: _processing ? null : () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        FilledButton(
-          style: FilledButton.styleFrom(
-            backgroundColor: lime,
-            foregroundColor: navy,
+        Semantics(
+          label:
+              'Pay ${_finalPrice.toStringAsFixed(0)} Indian rupees for ${widget.plan.title}',
+          button: true,
+          child: FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: lime,
+              foregroundColor: navy,
+            ),
+            onPressed: _processing ? null : _pay,
+            child:
+                _processing
+                    ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                    : Text(
+                      _finalPrice == 0
+                          ? 'Activate Free Access'
+                          : 'Pay \u20b9${_finalPrice.toStringAsFixed(0)}',
+                      style: const TextStyle(fontWeight: FontWeight.w900),
+                    ),
           ),
-          onPressed: _processing ? null : _pay,
-          child: _processing
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Text(
-                  _finalPrice == 0 ? 'Activate Free Access' : 'Pay \$${_finalPrice.toStringAsFixed(2)}',
-                  style: const TextStyle(fontWeight: FontWeight.w900),
-                ),
         ),
       ],
     );

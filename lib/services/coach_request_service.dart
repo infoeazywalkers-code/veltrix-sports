@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/coach_request.dart';
 
 class CoachRequestService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+
+  CoachRequestService({FirebaseFirestore? db})
+    : _db = db ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _requests =>
       _db.collection('coach_requests');
@@ -41,20 +44,24 @@ class CoachRequestService {
         .where('status', isEqualTo: 'pending')
         .orderBy('createdAt')
         .snapshots()
-        .map((snap) => snap.docs
-            .map((doc) => CoachRequest.fromMap(doc.id, doc.data()))
-            .toList())
+        .map(
+          (snap) =>
+              snap.docs
+                  .map((doc) => CoachRequest.fromMap(doc.id, doc.data()))
+                  .toList(),
+        )
         .handleError((e) {
-      throw Exception('Failed to watch pending requests: $e');
-    });
+          throw Exception('Failed to watch pending requests: $e');
+        });
   }
 
   Future<List<CoachRequest>> getByUserId(String userId) async {
     try {
-      final q = await _requests
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .get();
+      final q =
+          await _requests
+              .where('userId', isEqualTo: userId)
+              .orderBy('createdAt', descending: true)
+              .get();
       return q.docs
           .map((doc) => CoachRequest.fromMap(doc.id, doc.data()))
           .toList();

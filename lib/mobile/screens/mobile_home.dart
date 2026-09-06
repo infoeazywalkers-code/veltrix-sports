@@ -26,11 +26,11 @@ class MobileHomeScreen extends ConsumerWidget {
         SliverAppBar(
           pinned: true,
           expandedHeight: 64,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: const EdgeInsets.only(left: M.pageH, bottom: 14),
+          flexibleSpace: const FlexibleSpaceBar(
+            titlePadding: EdgeInsets.only(left: M.pageH, bottom: 14),
             title: Text(
               'VELTRIX',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.5,
@@ -344,9 +344,9 @@ class _WeekSummary extends StatelessWidget {
     return MCard(
       child: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
+            children: [
               _WeekStat('5', 'Workouts'),
               _WeekStat('4h 35m', 'Duration'),
               _WeekStat('286', 'TSS'),

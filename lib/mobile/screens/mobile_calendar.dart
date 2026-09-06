@@ -36,9 +36,9 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
 
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
+        const SliverAppBar(
           pinned: true,
-          title: const Text('Calendar'),
+          title: Text('Calendar'),
         ),
         SliverPadding(
           padding: M.pagePadding(context),

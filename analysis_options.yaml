@@ -9,10 +9,30 @@ analyzer:
     - linux/**
     - flutter-sdk/**
     - .dart_tool/**
-    - test/**
     - "Veltrix Sports/**"
   errors:
     invalid_annotation_target: ignore
 
 linter:
-  rules: {}
+  rules:
+    # Catch real bugs
+    - avoid_empty_else
+    - avoid_print
+    - avoid_unnecessary_containers
+    - avoid_web_libraries_in_flutter
+    - empty_catches
+    - empty_statements
+    - no_duplicate_case_values
+
+    # Unused code (analyzer errors for dead_code / unused_import are always-on)
+    - unnecessary_this
+
+    # Formatting / readability
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_fields
+    - prefer_final_locals
+    - prefer_is_empty
+    - prefer_is_not_empty
+    - use_key_in_widget_constructors
+    - sized_box_for_whitespace

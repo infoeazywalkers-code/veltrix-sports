@@ -25,12 +25,11 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
   String _weekLabel() {
     final start = _weekStart;
     final end = start.add(const Duration(days: 6));
-    return '${start.day}\u2013${end.day} ${_month(start.month)} ${start.year}';
+    return '${start.day}\u2013${end.day} ${monthName(start.month)} ${start.year}';
   }
 
-  String _month(int m) => ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m];
-
-  String _dayLabel(int weekday) => ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][weekday - 1];
+  String _dayLabel(int weekday) =>
+      ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][weekday - 1];
 
   IconData _sportIcon(Sport sport) {
     switch (sport) {
@@ -64,9 +63,7 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final workoutsAsync = ref.watch(
-      workoutsByDateRangeProvider(_weekStart),
-    );
+    final workoutsAsync = ref.watch(workoutsByDateRangeProvider(_weekStart));
 
     final selectedDate = _weekStart.add(Duration(days: day));
 
@@ -75,123 +72,168 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
       children: [
         Row(
           children: [
-            IconButton(onPressed: () => setState(() => weekOffset--), icon: const Icon(Icons.chevron_left)),
+            IconButton(
+              onPressed: () => setState(() => weekOffset--),
+              icon: const Icon(Icons.chevron_left),
+            ),
             Expanded(
               child: Text(
                 _weekLabel(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: navy),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: navy,
+                ),
               ),
             ),
-            IconButton(onPressed: () => setState(() => weekOffset++), icon: const Icon(Icons.chevron_right)),
+            IconButton(
+              onPressed: () => setState(() => weekOffset++),
+              icon: const Icon(Icons.chevron_right),
+            ),
           ],
         ),
         const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(
-            7,
-            (i) {
-              final date = _weekStart.add(Duration(days: i));
-              return GestureDetector(
-                onTap: () => setState(() => day = i),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  width: 42,
-                  padding: const EdgeInsets.symmetric(vertical: 9),
-                  decoration: BoxDecoration(
-                    color: day == i ? navy : Colors.white,
-                    borderRadius: BorderRadius.circular(13),
+          children: List.generate(7, (i) {
+            final date = _weekStart.add(Duration(days: i));
+            return GestureDetector(
+              onTap: () => setState(() => day = i),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                width: 42,
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                decoration: BoxDecoration(
+                  color: day == i ? navy : Colors.white,
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
+                      style: TextStyle(
+                        color: day == i ? Colors.white70 : muted,
+                        fontSize: 10,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${date.day}',
+                      style: TextStyle(
+                        color: day == i ? Colors.white : navy,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+        ),
+        const SizedBox(height: 22),
+        SectionHeading(
+          '${_dayLabel(selectedDate.weekday)}, ${selectedDate.day} ${monthName(selectedDate.month)}',
+        ),
+        const SizedBox(height: 12),
+        workoutsAsync.when(
+          loading:
+              () => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 30),
+                child: Center(child: CircularProgressIndicator(color: navy)),
+              ),
+          error:
+              (e, _) => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 30),
+                child: Center(
+                  child: Text(
+                    'Failed to load workouts',
+                    style: TextStyle(color: muted),
                   ),
+                ),
+              ),
+          data: (workouts) {
+            if (workouts.isEmpty) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 30),
+                child: Center(
                   child: Column(
                     children: [
+                      Icon(Icons.event_busy, color: muted, size: 44),
+                      SizedBox(height: 10),
                       Text(
-                        ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
-                        style: TextStyle(color: day == i ? Colors.white70 : muted, fontSize: 10),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${date.day}',
+                        'No workouts scheduled',
                         style: TextStyle(
-                          color: day == i ? Colors.white : navy,
-                          fontWeight: FontWeight.w900,
+                          color: navy,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Enjoy your rest day',
+                        style: TextStyle(color: muted),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            final dayWorkouts =
+                workouts
+                    .where(
+                      (w) =>
+                          w.scheduledFor.day == selectedDate.day &&
+                          w.scheduledFor.month == selectedDate.month &&
+                          w.scheduledFor.year == selectedDate.year,
+                    )
+                    .toList();
+            if (dayWorkouts.isEmpty) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 30),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Icon(Icons.event_busy, color: muted, size: 44),
+                      SizedBox(height: 10),
+                      Text(
+                        'No workouts today',
+                        style: TextStyle(
+                          color: navy,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],
                   ),
                 ),
               );
-            },
-          ),
-        ),
-        const SizedBox(height: 22),
-        SectionHeading('${_dayLabel(selectedDate.weekday)}, ${selectedDate.day} ${_month(selectedDate.month)}'),
-        const SizedBox(height: 12),
-        workoutsAsync.when(
-          loading: () => const Padding(
-            padding: EdgeInsets.symmetric(vertical: 30),
-            child: Center(child: CircularProgressIndicator(color: navy)),
-          ),
-          error: (e, _) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30),
-            child: Center(child: Text('Failed to load workouts', style: TextStyle(color: muted))),
-          ),
-          data: (workouts) {
-            if (workouts.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                child: Center(
-                  child: Column(
-                    children: [
-                      Icon(Icons.event_busy, color: muted, size: 44),
-                      const SizedBox(height: 10),
-                      const Text('No workouts scheduled', style: TextStyle(color: navy, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 4),
-                      Text('Enjoy your rest day', style: TextStyle(color: muted)),
-                    ],
-                  ),
-                ),
-              );
-            }
-            final dayWorkouts = workouts.where((w) =>
-              w.scheduledFor.day == selectedDate.day &&
-              w.scheduledFor.month == selectedDate.month &&
-              w.scheduledFor.year == selectedDate.year,
-            ).toList();
-            if (dayWorkouts.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                child: Center(
-                  child: Column(
-                    children: [
-                      Icon(Icons.event_busy, color: muted, size: 44),
-                      const SizedBox(height: 10),
-                      const Text('No workouts today', style: TextStyle(color: navy, fontWeight: FontWeight.w800)),
-                    ],
-                  ),
-                ),
-              );
             }
             return Column(
-              children: dayWorkouts.map((w) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: WorkoutCard(
-                  sport: w.sport.name.toUpperCase(),
-                  title: w.title,
-                  details: '${w.duration}${w.tss != null ? '  \u2022  ${w.tss} TSS' : ''}',
-                  color: _sportColor(w.sport),
-                  icon: _sportIcon(w.sport),
-                  progress: w.progress,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => WorkoutDetailsScreen(workout: w),
-                      ),
-                    );
-                  },
-                ),
-              )).toList(),
+              children:
+                  dayWorkouts
+                      .map(
+                        (w) => Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: WorkoutCard(
+                            sport: w.sport.name.toUpperCase(),
+                            title: w.title,
+                            details:
+                                '${w.duration}${w.tss != null ? '  \u2022  ${w.tss} TSS' : ''}',
+                            color: _sportColor(w.sport),
+                            icon: _sportIcon(w.sport),
+                            progress: w.progress,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => WorkoutDetailsScreen(workout: w),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                      .toList(),
             );
           },
         ),
@@ -199,24 +241,41 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
         const SectionHeading('Week overview'),
         const SizedBox(height: 10),
         workoutsAsync.when(
-          loading: () => const SizedBox(height: 40, child: Center(child: CircularProgressIndicator(color: navy))),
-          error: (e, _) => Text('Failed to load week', style: TextStyle(color: muted)),
+          loading:
+              () => const SizedBox(
+                height: 40,
+                child: Center(child: CircularProgressIndicator(color: navy)),
+              ),
+          error:
+              (e, _) => const Text(
+                'Failed to load week',
+                style: TextStyle(color: muted),
+              ),
           data: (workouts) {
             if (workouts.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text('No workouts this week', style: TextStyle(color: muted)),
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'No workouts this week',
+                  style: TextStyle(color: muted),
+                ),
               );
             }
-            final sorted = List<Workout>.from(workouts)..sort((a, b) => a.scheduledFor.compareTo(b.scheduledFor));
+            final sorted = List<Workout>.from(workouts)
+              ..sort((a, b) => a.scheduledFor.compareTo(b.scheduledFor));
             return Column(
-              children: sorted.map((w) => WeekRow(
-                '${_dayLabel(w.scheduledFor.weekday)} ${w.scheduledFor.day}',
-                w.title,
-                w.duration,
-                _sportColor(w.sport),
-                _sportIcon(w.sport),
-              )).toList(),
+              children:
+                  sorted
+                      .map(
+                        (w) => WeekRow(
+                          '${_dayLabel(w.scheduledFor.weekday)} ${w.scheduledFor.day}',
+                          w.title,
+                          w.duration,
+                          _sportColor(w.sport),
+                          _sportIcon(w.sport),
+                        ),
+                      )
+                      .toList(),
             );
           },
         ),
@@ -224,4 +283,3 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
     );
   }
 }
-

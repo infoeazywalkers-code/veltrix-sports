@@ -3,12 +3,23 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user_profile.dart';
+import 'services/seed_data_service.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth;
+  final GoogleSignIn _googleSignIn;
+  final FirebaseFirestore _db;
+  final SeedDataService _seedService;
+
+  AuthService({
+    FirebaseAuth? auth,
+    GoogleSignIn? googleSignIn,
+    FirebaseFirestore? db,
+    SeedDataService? seedService,
+  }) : _auth = auth ?? FirebaseAuth.instance,
+       _googleSignIn = googleSignIn ?? GoogleSignIn.instance,
+       _db = db ?? FirebaseFirestore.instance,
+       _seedService = seedService ?? SeedDataService();
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
@@ -29,7 +40,8 @@ class AuthService {
 
       await _googleSignIn.initialize();
 
-      final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate();
+      final GoogleSignInAccount? googleUser =
+          await _googleSignIn.authenticate();
       if (googleUser == null) return null;
 
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
@@ -37,7 +49,9 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
       final user = userCredential.user;
       if (user != null) {
         await _ensureUserProfile(user);
@@ -45,10 +59,10 @@ class AuthService {
 
       return user;
     } on FirebaseAuthException catch (e) {
-      debugPrint('Google Sign-In Auth Error: ${e.message}');
+      if (kDebugMode) debugPrint('Google Sign-In Auth Error: ${e.message}');
       return null;
     } catch (e) {
-      debugPrint('Unexpected Sign-In Error: $e');
+      if (kDebugMode) debugPrint('Unexpected Sign-In Error: $e');
       return null;
     }
   }
@@ -57,17 +71,16 @@ class AuthService {
     try {
       final doc = await _db.collection('users').doc(user.uid).get();
       if (!doc.exists) {
-        await _db.collection('users').doc(user.uid).set(UserProfile(
-          id: user.uid,
-          email: user.email ?? '',
-          displayName: user.displayName?.isNotEmpty == true ? user.displayName! : 'Athlete',
+        await _seedService.seedNewUser(
+          user.uid,
+          displayName: user.displayName,
+          email: user.email,
           photoUrl: user.photoURL,
-          role: UserRole.athlete,
-          createdAt: DateTime.now(),
-        ).toMap());
+        );
       }
     } catch (e) {
-      debugPrint('Error creating user profile document: $e');
+      if (kDebugMode)
+        debugPrint('Error provisioning starting profile & workouts: $e');
     }
   }
 

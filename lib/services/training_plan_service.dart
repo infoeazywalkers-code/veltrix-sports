@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/training_plan.dart';
 
 class TrainingPlanService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+
+  TrainingPlanService({FirebaseFirestore? db})
+    : _db = db ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _plans =>
       _db.collection('training_plans');
@@ -13,7 +16,8 @@ class TrainingPlanService {
       id: 'marathon_pro',
       userId: 'demo',
       name: 'Marathon Training Pro',
-      description: 'Build endurance, speed and race-day confidence with a structured 16-week plan.',
+      description:
+          'Build endurance, speed and race-day confidence with a structured 16-week plan.',
       sport: 'Running',
       durationWeeks: 16,
       difficulty: 'Intermediate',
@@ -31,7 +35,8 @@ class TrainingPlanService {
       id: 'cycling_performance',
       userId: 'demo',
       name: 'Cycling Performance Builder',
-      description: 'Improve FTP, cadence efficiency, and hill climbing speed over 12 weeks.',
+      description:
+          'Improve FTP, cadence efficiency, and hill climbing speed over 12 weeks.',
       sport: 'Cycling',
       durationWeeks: 12,
       difficulty: 'Advanced',
@@ -49,7 +54,8 @@ class TrainingPlanService {
       id: 'triathlon_base',
       userId: 'demo',
       name: 'Triathlon Base Builder',
-      description: 'Foundation training for sprint and Olympic distance triathletes.',
+      description:
+          'Foundation training for sprint and Olympic distance triathletes.',
       sport: 'Triathlon',
       durationWeeks: 8,
       difficulty: 'Beginner',
@@ -93,10 +99,11 @@ class TrainingPlanService {
 
   Future<List<TrainingPlan>> getByUserId(String userId) async {
     try {
-      final q = await _plans
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .get();
+      final q =
+          await _plans
+              .where('userId', isEqualTo: userId)
+              .orderBy('createdAt', descending: true)
+              .get();
       return q.docs
           .map((doc) => TrainingPlan.fromMap(doc.id, doc.data()))
           .toList();
@@ -110,12 +117,15 @@ class TrainingPlanService {
         .where('userId', isEqualTo: userId)
         .where('status', isEqualTo: 'active')
         .snapshots()
-        .map((snap) => snap.docs
-            .map((doc) => TrainingPlan.fromMap(doc.id, doc.data()))
-            .toList())
+        .map(
+          (snap) =>
+              snap.docs
+                  .map((doc) => TrainingPlan.fromMap(doc.id, doc.data()))
+                  .toList(),
+        )
         .handleError((e) {
-      throw Exception('Failed to watch active plans: $e');
-    });
+          throw Exception('Failed to watch active plans: $e');
+        });
   }
 
   Future<void> completePlan(String id) async {
@@ -129,10 +139,8 @@ class TrainingPlanService {
   Future<List<TrainingPlan>> getFeaturedPlans() async {
     // Return demo plans when Firestore is not available
     try {
-      final q = await _plans
-          .where('isFeatured', isEqualTo: true)
-          .limit(10)
-          .get();
+      final q =
+          await _plans.where('isFeatured', isEqualTo: true).limit(10).get();
       if (q.docs.isEmpty) {
         return demoPlans;
       }

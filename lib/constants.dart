@@ -18,7 +18,10 @@ void showFeatureMessage(BuildContext context, String message) {
   ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(message, style: const TextStyle(fontWeight: FontWeight.w600)),
+      content: Text(
+        message,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       duration: const Duration(seconds: 3),
@@ -35,6 +38,25 @@ DateTime normalizeDate(DateTime date) {
 DateTime getStartOfWeek(DateTime date, {int weekOffset = 0}) {
   final cleanDate = normalizeDate(date);
   final daysFromMonday = cleanDate.weekday - 1;
-  return cleanDate.subtract(Duration(days: daysFromMonday)).add(Duration(days: weekOffset * 7));
+  return cleanDate
+      .subtract(Duration(days: daysFromMonday))
+      .add(Duration(days: weekOffset * 7));
 }
 
+/// Returns the full month name for the given month number (1-12).
+String monthName(int m) =>
+    [
+      '',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ][m];

@@ -18,6 +18,7 @@ class WorkoutSegment {
 
 class Workout {
   final String id;
+  final String userId;
   final String planId;
   final Sport sport;
   final String title;
@@ -33,6 +34,7 @@ class Workout {
 
   const Workout({
     required this.id,
+    this.userId = '',
     required this.planId,
     required this.sport,
     required this.title,
@@ -50,6 +52,7 @@ class Workout {
   factory Workout.fromMap(String id, Map<String, dynamic> map) {
     return Workout(
       id: id,
+      userId: map['userId'] as String? ?? '',
       planId: map['planId'] as String? ?? '',
       sport: Sport.values.firstWhere(
         (s) => s.name == map['sport'],
@@ -72,6 +75,7 @@ class Workout {
   }
 
   Map<String, dynamic> toMap() => {
+        'userId': userId,
         'planId': planId,
         'sport': sport.name,
         'title': title,
