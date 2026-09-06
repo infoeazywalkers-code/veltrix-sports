@@ -32,21 +32,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDemoKeyForWeb',
-    appId: '1:123456789012:web:abcdef123456',
-    messagingSenderId: '123456789012',
-    projectId: 'veltrix-sports-demo',
-    authDomain: 'veltrix-sports-demo.firebaseapp.com',
-    storageBucket: 'veltrix-sports-demo.appspot.com',
-    measurementId: 'G-DEMO123456',
+    apiKey: 'AIzaSyAwtl2l3e6m4eKxHP-_-wq2PcDPkom5z_o',
+    appId: '1:25616595982:web:d3aa8cf032ea388fc8d05f',
+    messagingSenderId: '25616595982',
+    projectId: 'veltrix-sports',
+    authDomain: 'veltrix-sports.firebaseapp.com',
+    storageBucket: 'veltrix-sports.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDemoKeyForAndroid',
-    appId: '1:123456789012:android:abcdef123456',
-    messagingSenderId: '123456789012',
-    projectId: 'veltrix-sports-demo',
-    storageBucket: 'veltrix-sports-demo.appspot.com',
+    apiKey: 'AIzaSyAwtl2l3e6m4eKxHP-_-wq2PcDPkom5z_o',
+    appId: '1:25616595982:android:d3aa8cf032ea388fc8d05f',
+    messagingSenderId: '25616595982',
+    projectId: 'veltrix-sports',
+    storageBucket: 'veltrix-sports.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
