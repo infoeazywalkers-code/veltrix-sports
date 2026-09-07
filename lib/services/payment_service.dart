@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
-import '../services/user_service.dart';
 import 'analytics_service.dart';
 
 class SubscriptionPlan {
@@ -114,26 +113,17 @@ class PaymentService {
     required String cardNumber,
     required String promoCode,
   }) async {
-    // Simulate gateway handoff
-    await Future.delayed(const Duration(milliseconds: 1400));
-
     final user = FirebaseAuth.instance.currentUser;
     final finalPrice = applyPromoCode(promoCode, plan.price);
 
-    if (user != null) {
-      final renewalDate =
-          plan.period == 'year'
-              ? DateTime.now().add(const Duration(days: 365))
-              : DateTime.now().add(const Duration(days: 30));
-
-      await UserService().update(user.uid, {
-        'isPremium': true,
-        'subscriptionTier': plan.title,
-        'subscriptionRenewsAt': renewalDate,
-      });
+    if (kDebugMode) {
+      await AnalyticsService.logSubscriptionPurchased(plan.id, finalPrice);
     }
 
-    await AnalyticsService.logSubscriptionPurchased(plan.id, finalPrice);
-    return true;
+    throw UnsupportedError(
+      'Client-side payments are disabled. Create a Razorpay order on a trusted '
+      'backend, verify the payment server-side, then grant the subscription '
+      'entitlement from that backend for user ${user?.uid ?? 'unknown'}.',
+    );
   }
 }

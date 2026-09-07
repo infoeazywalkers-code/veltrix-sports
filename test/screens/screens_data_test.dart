@@ -252,7 +252,7 @@ void main() {
             authStateProvider.overrideWith((ref) => Stream.value(null)),
             userProfileProvider.overrideWith((ref) => Stream.value(null)),
           ],
-          child: MaterialApp(home: Scaffold(body: const MobileProfileScreen())),
+          child: const MaterialApp(home: Scaffold(body: MobileProfileScreen())),
         ),
       );
       expect(find.text('Profile'), findsOneWidget);

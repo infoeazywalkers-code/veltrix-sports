@@ -1,1 +1,56 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"veltrix-sports","appId":"1:25616595982:android:d3aa8cf032ea388fc8d05f","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"veltrix-sports","configurations":{"android":"1:25616595982:android:d3aa8cf032ea388fc8d05f","web":"1:25616595982:web:9858680bae4c42fcc8d05f"}}}}}}
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|ico)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "veltrix-sports",
+          "appId": "1:25616595982:android:d3aa8cf032ea388fc8d05f",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "veltrix-sports",
+          "configurations": {
+            "android": "1:25616595982:android:d3aa8cf032ea388fc8d05f",
+            "web": "1:25616595982:web:9858680bae4c42fcc8d05f"
+          }
+        }
+      }
+    }
+  }
+}

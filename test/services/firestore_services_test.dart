@@ -83,7 +83,7 @@ void main() {
     test('getByPlanId filters by plan', () async {
       await service.create(_makeWorkout(id: 'a', planId: 'plan-x'));
       await service.create(_makeWorkout(id: 'b', planId: 'plan-y'));
-      final results = await service.getByPlanId('plan-x');
+      final results = await service.getByPlanId('u1', 'plan-x');
       expect(results.length, 1);
       expect(results.first.id, 'a');
     });
@@ -96,7 +96,7 @@ void main() {
       await service.create(
         _makeWorkout(id: 'out', scheduledFor: DateTime(2026, 8, 1)),
       );
-      final results = await service.getWeek(weekStart);
+      final results = await service.getWeek('u1', weekStart);
       expect(results.map((w) => w.id), contains('in'));
       expect(results.map((w) => w.id), isNot(contains('out')));
     });
@@ -108,7 +108,7 @@ void main() {
       await service.create(
         _makeWorkout(id: 'past', scheduledFor: DateTime(2020, 1, 1)),
       );
-      final results = await service.getUpcoming();
+      final results = await service.getUpcoming('u1');
       expect(results.map((w) => w.id), contains('future'));
       expect(results.map((w) => w.id), isNot(contains('past')));
     });
@@ -116,7 +116,7 @@ void main() {
     test('watchByDateRange emits workouts in range', () async {
       final start = DateTime(2026, 9, 1);
       final end = DateTime(2026, 9, 30);
-      final stream = service.watchByDateRange(start, end);
+      final stream = service.watchByDateRange('u1', start, end);
       final emitted = await stream.first;
       expect(emitted, isA<List<Workout>>());
     });

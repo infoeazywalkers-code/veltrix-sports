@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/models/workout.dart';
 import 'package:veltrix_sports/services/workout_execution_service.dart';

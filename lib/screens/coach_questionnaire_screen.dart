@@ -131,7 +131,11 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Find your coach')),
+      appBar: AppBar(
+        title: const Text('Find your coach'),
+        backgroundColor: navy,
+        foregroundColor: Colors.white,
+      ),
       body: Form(
         key: _formKey,
         child: ListView(

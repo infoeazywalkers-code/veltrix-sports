@@ -107,27 +107,33 @@ class _FeaturedCoachesList extends StatelessWidget {
           style: TextStyle(color: muted, fontSize: 14),
         ),
         const SizedBox(height: 24),
-        if (desktop)
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: CoachService.featuredCoaches
-                .map((coach) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 12),
+        FutureBuilder<List<CoachProfile>>(
+          future: CoachService.fetchFeaturedCoaches(),
+          builder: (context, snapshot) {
+            final coaches = snapshot.data ?? CoachService.featuredCoaches;
+            if (desktop) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: coaches
+                    .map((coach) => Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: _CoachCard(coach: coach),
+                          ),
+                        ))
+                    .toList(),
+              );
+            }
+            return Column(
+              children: coaches
+                  .map((coach) => Padding(
+                        padding: const EdgeInsets.only(bottom: 14),
                         child: _CoachCard(coach: coach),
-                      ),
-                    ))
-                .toList(),
-          )
-        else
-          Column(
-            children: CoachService.featuredCoaches
-                .map((coach) => Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
-                      child: _CoachCard(coach: coach),
-                    ))
-                .toList(),
-          ),
+                      ))
+                  .toList(),
+            );
+          },
+        ),
       ],
     );
   }

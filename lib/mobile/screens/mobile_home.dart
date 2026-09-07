@@ -4,6 +4,7 @@ import '../../auth_service.dart';
 import '../../constants.dart';
 import '../../models/workout.dart';
 import '../../providers.dart';
+import '../../screens/notifications_screen.dart';
 import '../../screens/home_screen.dart';
 import '../../screens/workout_details.dart';
 import '../../widgets/event_details_dialog.dart';
@@ -34,16 +35,19 @@ class MobileHomeScreen extends ConsumerWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.5,
-                color: Colors.white,
               ),
             ),
           ),
           actions: [
             IconButton(
-              onPressed: () => showFeatureMessage(context, 'You have no new notifications.'),
-              icon: const Badge(
-                child: Icon(Icons.notifications_none_rounded),
-              ),
+              onPressed:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const NotificationsScreen(),
+                    ),
+                  ),
+              icon: const Badge(child: Icon(Icons.notifications_none_rounded)),
             ),
           ],
         ),
@@ -52,10 +56,15 @@ class MobileHomeScreen extends ConsumerWidget {
           sliver: SliverList.list(
             children: [
               profileAsync.when(
-                loading: () => const SizedBox(height: 40, child: Center(child: CircularProgressIndicator())),
+                loading:
+                    () => const SizedBox(
+                      height: 40,
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
                 error: (e, _) => Text('Error: $e', style: M.bodyMuted),
                 data: (profile) {
-                  final name = profile?.displayName.split(' ').first ?? 'Athlete';
+                  final name =
+                      profile?.displayName.split(' ').first ?? 'Athlete';
                   return Text(
                     'Hello, $name',
                     style: M.screenTitle.copyWith(fontSize: 32),
@@ -83,22 +92,34 @@ class MobileHomeScreen extends ConsumerWidget {
                         style: FilledButton.styleFrom(
                           backgroundColor: M.lime,
                           foregroundColor: M.navy,
-                          padding: const EdgeInsets.symmetric(horizontal: M.base, vertical: M.md),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: M.base,
+                            vertical: M.md,
+                          ),
                         ),
                         onPressed: () async {
                           await AuthService().signInWithGoogle();
                         },
-                        child: const Text('Athlete sign up', style: TextStyle(fontWeight: FontWeight.w900)),
+                        child: const Text(
+                          'Athlete sign up',
+                          style: TextStyle(fontWeight: FontWeight.w900),
+                        ),
                       ),
                       OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           foregroundColor: M.navy,
-                          padding: const EdgeInsets.symmetric(horizontal: M.base, vertical: M.md),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: M.base,
+                            vertical: M.md,
+                          ),
                         ),
                         onPressed: () async {
                           await AuthService().signInWithGoogle();
                         },
-                        child: const Text('Coach sign up', style: TextStyle(fontWeight: FontWeight.w900)),
+                        child: const Text(
+                          'Coach sign up',
+                          style: TextStyle(fontWeight: FontWeight.w900),
+                        ),
                       ),
                     ],
                   );
@@ -110,18 +131,20 @@ class MobileHomeScreen extends ConsumerWidget {
               const SizedBox(height: M.lg),
 
               MBanner(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (_) => const EventDetailsDialog(
-                    event: {
-                      'title': 'Mumbai Half Marathon',
-                      'date': '25 October 2026',
-                      'location': 'Mumbai, India',
-                      'category': 'Running',
-                      'participants': '15,000+ Runners',
-                    },
-                  ),
-                ),
+                onTap:
+                    () => showDialog(
+                      context: context,
+                      builder:
+                          (_) => const EventDetailsDialog(
+                            event: {
+                              'title': 'Mumbai Half Marathon',
+                              'date': '25 October 2026',
+                              'location': 'Mumbai, India',
+                              'category': 'Running',
+                              'participants': '15,000+ Runners',
+                            },
+                          ),
+                    ),
                 backgroundColor: M.navy,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,45 +152,83 @@ class MobileHomeScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: M.sm, vertical: M.xs),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: M.sm,
+                            vertical: M.xs,
+                          ),
                           decoration: BoxDecoration(
                             color: M.lime,
                             borderRadius: BorderRadius.circular(M.rSm),
                           ),
-                          child: const Text('A RACE',
-                              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: M.navy)),
+                          child: const Text(
+                            'A RACE',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 10,
+                              color: M.navy,
+                            ),
+                          ),
                         ),
                         const Spacer(),
                         IconButton(
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (_) => const EventDetailsDialog(
-                              event: {
-                                'title': 'Mumbai Half Marathon',
-                                'date': '25 October 2026',
-                                'location': 'Mumbai, India',
-                                'category': 'Running',
-                                'participants': '15,000+ Runners',
-                              },
-                            ),
+                          onPressed:
+                              () => showDialog(
+                                context: context,
+                                builder:
+                                    (_) => const EventDetailsDialog(
+                                      event: {
+                                        'title': 'Mumbai Half Marathon',
+                                        'date': '25 October 2026',
+                                        'location': 'Mumbai, India',
+                                        'category': 'Running',
+                                        'participants': '15,000+ Runners',
+                                      },
+                                    ),
+                              ),
+                          icon: const Icon(
+                            Icons.more_horiz,
+                            color: Colors.white70,
                           ),
-                          icon: const Icon(Icons.more_horiz, color: Colors.white70),
                         ),
                       ],
                     ),
                     const SizedBox(height: M.base),
-                    const Text('Mumbai Half Marathon',
-                        style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900)),
+                    const Text(
+                      'Mumbai Half Marathon',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                     const SizedBox(height: M.xs),
-                    const Text('25 October 2026  •  21.1 km', style: TextStyle(color: Colors.white70)),
+                    const Text(
+                      '25 October 2026  •  21.1 km',
+                      style: TextStyle(color: Colors.white70),
+                    ),
                     const SizedBox(height: M.base),
-                    const LinearProgressIndicator(value: 0.62, minHeight: 6, color: M.lime, backgroundColor: Colors.white24),
+                    const LinearProgressIndicator(
+                      value: 0.62,
+                      minHeight: 6,
+                      color: M.lime,
+                      backgroundColor: Colors.white24,
+                    ),
                     const SizedBox(height: M.sm),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Plan progress', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                        Text('62%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12)),
+                        Text(
+                          'Plan progress',
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
+                        Text(
+                          '62%',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 12,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -179,8 +240,22 @@ class MobileHomeScreen extends ConsumerWidget {
                 title: 'Today\'s training',
                 action: 'View week',
                 child: workoutsAsync.when(
-                  loading: () => const MCard(child: Center(child: Padding(padding: EdgeInsets.all(M.base), child: CircularProgressIndicator()))),
-                  error: (e, _) => MCard(child: Padding(padding: const EdgeInsets.all(M.base), child: Text('Error: $e', style: M.bodyMuted))),
+                  loading:
+                      () => const MCard(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(M.base),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      ),
+                  error:
+                      (e, _) => MCard(
+                        child: Padding(
+                          padding: const EdgeInsets.all(M.base),
+                          child: Text('Error: $e', style: M.bodyMuted),
+                        ),
+                      ),
                   data: (workouts) {
                     if (workouts.isEmpty) {
                       // Show demo workout when no workouts exist
@@ -189,7 +264,8 @@ class MobileHomeScreen extends ConsumerWidget {
                         planId: 'demo',
                         sport: Sport.run,
                         title: 'Aerobic endurance',
-                        description: 'Stay relaxed and keep your effort in Zone 2.',
+                        description:
+                            'Stay relaxed and keep your effort in Zone 2.',
                         duration: '45 min',
                         distanceKm: 7.2,
                         tss: 62,
@@ -201,7 +277,8 @@ class MobileHomeScreen extends ConsumerWidget {
                       return MWorkoutCard(
                         sport: 'RUN',
                         title: demoWorkout.title,
-                        details: '${demoWorkout.duration}  •  ${demoWorkout.distanceKm} km  •  ${demoWorkout.tss} TSS',
+                        details:
+                            '${demoWorkout.duration}  •  ${demoWorkout.distanceKm} km  •  ${demoWorkout.tss} TSS',
                         color: M.blue,
                         icon: Icons.directions_run_rounded,
                         progress: demoWorkout.progress,
@@ -209,7 +286,10 @@ class MobileHomeScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => WorkoutDetailsScreen(workout: demoWorkout),
+                              builder:
+                                  (_) => WorkoutDetailsScreen(
+                                    workout: demoWorkout,
+                                  ),
                             ),
                           );
                         },
@@ -217,25 +297,31 @@ class MobileHomeScreen extends ConsumerWidget {
                     }
                     final w = workouts.first;
                     final sportLabel = w.sport.name.toUpperCase();
-                    final details = [w.duration, if (w.distanceKm != null) '${w.distanceKm} km', if (w.tss != null) '${w.tss} TSS'].join('  •  ');
-                    final icon = w.sport == Sport.run
-                        ? Icons.directions_run_rounded
-                        : w.sport == Sport.bike
+                    final details = [
+                      w.duration,
+                      if (w.distanceKm != null) '${w.distanceKm} km',
+                      if (w.tss != null) '${w.tss} TSS',
+                    ].join('  •  ');
+                    final icon =
+                        w.sport == Sport.run
+                            ? Icons.directions_run_rounded
+                            : w.sport == Sport.bike
                             ? Icons.directions_bike
                             : w.sport == Sport.swim
-                                ? Icons.pool
-                                : w.sport == Sport.strength
-                                    ? Icons.fitness_center
-                                    : Icons.self_improvement;
-                    final color = w.sport == Sport.run
-                        ? M.blue
-                        : w.sport == Sport.bike
+                            ? Icons.pool
+                            : w.sport == Sport.strength
+                            ? Icons.fitness_center
+                            : Icons.self_improvement;
+                    final color =
+                        w.sport == Sport.run
+                            ? M.blue
+                            : w.sport == Sport.bike
                             ? M.purple
                             : w.sport == Sport.swim
-                                ? M.teal
-                                : w.sport == Sport.strength
-                                    ? M.orange
-                                    : M.muted;
+                            ? M.teal
+                            : w.sport == Sport.strength
+                            ? M.orange
+                            : M.muted;
                     return MWorkoutCard(
                       sport: sportLabel,
                       title: w.title,
@@ -266,9 +352,24 @@ class MobileHomeScreen extends ConsumerWidget {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          MStatRing(value: '--', label: 'Fitness', color: M.blue, progress: 0),
-                          MStatRing(value: '--', label: 'Fatigue', color: M.purple, progress: 0),
-                          MStatRing(value: '--', label: 'Form', color: M.orange, progress: 0),
+                          MStatRing(
+                            value: '--',
+                            label: 'Fitness',
+                            color: M.blue,
+                            progress: 0,
+                          ),
+                          MStatRing(
+                            value: '--',
+                            label: 'Fatigue',
+                            color: M.purple,
+                            progress: 0,
+                          ),
+                          MStatRing(
+                            value: '--',
+                            label: 'Form',
+                            color: M.orange,
+                            progress: 0,
+                          ),
                         ],
                       ),
                       const SizedBox(height: M.base),
@@ -280,12 +381,20 @@ class MobileHomeScreen extends ConsumerWidget {
                         ),
                         child: const Row(
                           children: [
-                            Icon(Icons.trending_up, color: Color(0xFF4C8C2B), size: 20),
+                            Icon(
+                              Icons.trending_up,
+                              color: Color(0xFF4C8C2B),
+                              size: 20,
+                            ),
                             SizedBox(width: M.sm),
                             Expanded(
                               child: Text(
                                 'Productive training — fitness is building steadily.',
-                                style: TextStyle(color: Color(0xFF3F6F26), fontWeight: FontWeight.w800, fontSize: 12),
+                                style: TextStyle(
+                                  color: Color(0xFF3F6F26),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           ],
@@ -297,10 +406,7 @@ class MobileHomeScreen extends ConsumerWidget {
               ),
 
               const SizedBox(height: M.lg),
-              MSection(
-                title: 'This week',
-                child: _WeekSummary(),
-              ),
+              MSection(title: 'This week', child: _WeekSummary()),
 
               const SizedBox(height: M.xl),
               MBanner(
@@ -308,11 +414,20 @@ class MobileHomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(M.lg),
                 child: Column(
                   children: [
-                    const Text('Ready starts here.',
-                        style: TextStyle(color: M.lime, fontSize: 22, fontWeight: FontWeight.w900)),
+                    const Text(
+                      'Ready starts here.',
+                      style: TextStyle(
+                        color: M.lime,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                     const SizedBox(height: M.sm),
-                    const Text('Plan, train and grow on Veltrix.',
-                        textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 14)),
+                    const Text(
+                      'Plan, train and grow on Veltrix.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
                     const SizedBox(height: M.base),
                     SizedBox(
                       width: double.infinity,
@@ -322,8 +437,15 @@ class MobileHomeScreen extends ConsumerWidget {
                           foregroundColor: M.navy,
                           padding: const EdgeInsets.symmetric(vertical: M.md),
                         ),
-                        onPressed: () => showFeatureMessage(context, 'Your Veltrix training journey is ready to begin.'),
-                        child: const Text('Get started', style: TextStyle(fontWeight: FontWeight.w900)),
+                        onPressed:
+                            () => showFeatureMessage(
+                              context,
+                              'Your Veltrix training journey is ready to begin.',
+                            ),
+                        child: const Text(
+                          'Get started',
+                          style: TextStyle(fontWeight: FontWeight.w900),
+                        ),
                       ),
                     ),
                   ],
@@ -362,8 +484,7 @@ class _WeekSummary extends StatelessWidget {
                 children: [
                   Container(
                     width: 16,
-                    height: [30.0, 55.0, 18.0, 68.0, 42.0, 74.0, 25.0][i] *
-                        0.6,
+                    height: [30.0, 55.0, 18.0, 68.0, 42.0, 74.0, 25.0][i] * 0.6,
                     decoration: BoxDecoration(
                       color: i == 5 ? M.lime : M.blue.withValues(alpha: 0.25),
                       borderRadius: BorderRadius.circular(4),
@@ -403,4 +524,3 @@ class _WeekStat extends StatelessWidget {
     );
   }
 }
-

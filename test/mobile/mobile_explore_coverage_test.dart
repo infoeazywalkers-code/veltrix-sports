@@ -127,12 +127,13 @@ void main() {
   });
 
   group('MobileExploreScreen interactions', () {
-    testWidgets('Training plans tile shows snackbar', (tester) async {
+    testWidgets('Training plans tile opens plans page', (tester) async {
       await tester.pumpWidget(wrapExplore());
       await tester.pumpAndSettle();
       await tester.tap(find.text('Training plans'));
-      await tester.pump();
-      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.text('Training plans'), findsWidgets);
+      expect(find.text('Marathon Training Pro'), findsOneWidget);
     });
 
     testWidgets('premium tile navigates', (tester) async {

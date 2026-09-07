@@ -12,10 +12,18 @@ import 'models/performance_snapshot.dart';
 
 // Services
 final userServiceProvider = Provider<UserService>((ref) => UserService());
-final workoutServiceProvider = Provider<WorkoutService>((ref) => WorkoutService());
-final trainingPlanServiceProvider = Provider<TrainingPlanService>((ref) => TrainingPlanService());
-final coachRequestServiceProvider = Provider<CoachRequestService>((ref) => CoachRequestService());
-final performanceServiceProvider = Provider<PerformanceService>((ref) => PerformanceService());
+final workoutServiceProvider = Provider<WorkoutService>(
+  (ref) => WorkoutService(),
+);
+final trainingPlanServiceProvider = Provider<TrainingPlanService>(
+  (ref) => TrainingPlanService(),
+);
+final coachRequestServiceProvider = Provider<CoachRequestService>(
+  (ref) => CoachRequestService(),
+);
+final performanceServiceProvider = Provider<PerformanceService>(
+  (ref) => PerformanceService(),
+);
 
 // Auth
 final authStateProvider = StreamProvider<User?>((ref) {
@@ -38,21 +46,27 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) {
 final upcomingWorkoutsProvider = FutureProvider<List<Workout>>((ref) async {
   final user = ref.watch(currentUserProvider);
   if (user == null) return Future.value([]);
-  return ref.watch(workoutServiceProvider).getUpcoming(limit: 5);
+  return ref.watch(workoutServiceProvider).getUpcoming(user.uid, limit: 5);
 });
 
-final weekWorkoutsProvider = FutureProvider.family<List<Workout>, DateTime>((ref, weekStart) async {
+final weekWorkoutsProvider = FutureProvider.family<List<Workout>, DateTime>((
+  ref,
+  weekStart,
+) async {
   final user = ref.watch(currentUserProvider);
   if (user == null) return [];
-  return ref.watch(workoutServiceProvider).getWeek(weekStart);
+  return ref.watch(workoutServiceProvider).getWeek(user.uid, weekStart);
 });
 
-final workoutsByDateRangeProvider = StreamProvider.autoDispose.family<List<Workout>, DateTime>((ref, weekStart) {
-  final user = ref.watch(currentUserProvider);
-  if (user == null) return Stream.value([]);
-  final weekEnd = weekStart.add(const Duration(days: 7));
-  return ref.watch(workoutServiceProvider).watchByDateRange(weekStart, weekEnd);
-});
+final workoutsByDateRangeProvider = StreamProvider.autoDispose
+    .family<List<Workout>, DateTime>((ref, weekStart) {
+      final user = ref.watch(currentUserProvider);
+      if (user == null) return Stream.value([]);
+      final weekEnd = weekStart.add(const Duration(days: 7));
+      return ref
+          .watch(workoutServiceProvider)
+          .watchByDateRange(user.uid, weekStart, weekEnd);
+    });
 
 // Training Plans
 final activePlansProvider = StreamProvider<List<TrainingPlan>>((ref) {
@@ -68,9 +82,12 @@ final latestPerformanceProvider = StreamProvider<PerformanceSnapshot?>((ref) {
   return ref.watch(performanceServiceProvider).watchLatest(user.uid);
 });
 
-final performanceHistoryProvider = StreamProvider.autoDispose.family<List<PerformanceSnapshot>, int>((ref, range) {
-  final user = ref.watch(currentUserProvider);
-  if (user == null) return Stream.value([]);
-  final limit = range == 0 ? 14 : (range == 1 ? 30 : 90);
-  return ref.watch(performanceServiceProvider).watchHistory(user.uid, limit: limit);
-});
+final performanceHistoryProvider = StreamProvider.autoDispose
+    .family<List<PerformanceSnapshot>, int>((ref, range) {
+      final user = ref.watch(currentUserProvider);
+      if (user == null) return Stream.value([]);
+      final limit = range == 0 ? 14 : (range == 1 ? 30 : 90);
+      return ref
+          .watch(performanceServiceProvider)
+          .watchHistory(user.uid, limit: limit);
+    });

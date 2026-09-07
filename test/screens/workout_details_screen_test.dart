@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/constants.dart';
 import 'package:veltrix_sports/models/workout.dart';
 import 'package:veltrix_sports/screens/workout_details.dart';
 

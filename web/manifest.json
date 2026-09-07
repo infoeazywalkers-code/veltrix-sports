@@ -1,11 +1,11 @@
 {
-    "name": "veltrix_sports",
-    "short_name": "veltrix_sports",
+    "name": "Veltrix Sports",
+    "short_name": "Veltrix",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Training, coaching, performance tracking, and device sync for endurance athletes.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

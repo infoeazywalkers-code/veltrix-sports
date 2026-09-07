@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/shell.dart';
 
-Widget _shellWrap({Size? size}) => ProviderScope(
+Widget _shellWrap() => ProviderScope(
   overrides: [
     authStateProvider.overrideWith((ref) => Stream.value(null)),
     userProfileProvider.overrideWith((ref) => Stream.value(null)),
@@ -17,7 +17,7 @@ Widget _shellWrap({Size? size}) => ProviderScope(
     workoutsByDateRangeProvider.overrideWith((ref, arg) => Stream.value([])),
     performanceHistoryProvider.overrideWith((ref, arg) => Stream.value([])),
   ],
-  child: MaterialApp(home: Shell()),
+  child: const MaterialApp(home: Shell()),
 );
 
 void _setMobile(WidgetTester tester) {
@@ -95,7 +95,7 @@ void main() {
       expect(find.text('Performance'), findsWidgets);
     });
 
-    testWidgets('desktop: Athletes > Training Plans navigates to Explore', (
+    testWidgets('desktop: Athletes > Training Plans opens plans page', (
       tester,
     ) async {
       _setDesktop(tester);
@@ -106,10 +106,11 @@ void main() {
       await tester.tap(find.text('Training Plans'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Browse Veltrix'), findsOneWidget);
+      expect(find.text('Training plans'), findsWidgets);
+      expect(find.text('Marathon Training Pro'), findsOneWidget);
     });
 
-    testWidgets('desktop: Coaches > Coach Platform navigates to Explore', (
+    testWidgets('desktop: Coaches > Coach Platform opens platform page', (
       tester,
     ) async {
       _setDesktop(tester);
@@ -120,10 +121,11 @@ void main() {
       await tester.tap(find.text('Coach Platform'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Browse Veltrix'), findsOneWidget);
+      expect(find.text('Coach platform'), findsWidgets);
+      expect(find.text('Athlete command center'), findsOneWidget);
     });
 
-    testWidgets('desktop: Coaches > Coach Resources navigates to Explore', (
+    testWidgets('desktop: Coaches > Coach Resources opens resources page', (
       tester,
     ) async {
       _setDesktop(tester);
@@ -134,10 +136,11 @@ void main() {
       await tester.tap(find.text('Coach Resources'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Browse Veltrix'), findsOneWidget);
+      expect(find.text('Coach resources'), findsWidgets);
+      expect(find.text('Onboarding checklist'), findsOneWidget);
     });
 
-    testWidgets('desktop: Training > Workout Library navigates to Explore', (
+    testWidgets('desktop: Training > Workout Library opens library page', (
       tester,
     ) async {
       _setDesktop(tester);
@@ -148,12 +151,11 @@ void main() {
       await tester.tap(find.text('Workout Library'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Browse Veltrix'), findsOneWidget);
+      expect(find.text('Workout library'), findsWidgets);
+      expect(find.text('Aerobic endurance'), findsOneWidget);
     });
 
-    testWidgets('desktop: Connect > Events navigates to Explore', (
-      tester,
-    ) async {
+    testWidgets('desktop: Connect > Events opens events page', (tester) async {
       _setDesktop(tester);
       await tester.pumpWidget(_shellWrap());
 
@@ -162,10 +164,11 @@ void main() {
       await tester.tap(find.text('Events'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Browse Veltrix'), findsOneWidget);
+      expect(find.text('Sports events'), findsWidgets);
+      expect(find.text('Delhi Cycling Grand Prix'), findsOneWidget);
     });
 
-    testWidgets('desktop: Connect > Training Plans navigates to Explore', (
+    testWidgets('desktop: Connect > Training Plans opens plans page', (
       tester,
     ) async {
       _setDesktop(tester);
@@ -176,10 +179,11 @@ void main() {
       await tester.tap(find.text('Training Plans'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Browse Veltrix'), findsOneWidget);
+      expect(find.text('Training plans'), findsWidgets);
+      expect(find.text('Marathon Training Pro'), findsOneWidget);
     });
 
-    testWidgets('desktop: Resources > Training Guides navigates to Profile', (
+    testWidgets('desktop: Resources > Training Guides opens guides page', (
       tester,
     ) async {
       _setDesktop(tester);
@@ -190,12 +194,11 @@ void main() {
       await tester.tap(find.text('Training Guides'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Welcome to Veltrix Sports'), findsOneWidget);
+      expect(find.text('Training guides'), findsWidgets);
+      expect(find.text('Build a season'), findsOneWidget);
     });
 
-    testWidgets('desktop: Resources > About navigates to Profile', (
-      tester,
-    ) async {
+    testWidgets('desktop: Resources > About opens about page', (tester) async {
       _setDesktop(tester);
       await tester.pumpWidget(_shellWrap());
 
@@ -204,7 +207,8 @@ void main() {
       await tester.tap(find.text('About'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Welcome to Veltrix Sports'), findsOneWidget);
+      expect(find.text('About Veltrix'), findsWidgets);
+      expect(find.text('Production principle'), findsOneWidget);
     });
   });
 
@@ -242,7 +246,7 @@ void main() {
       expect(find.byIcon(Icons.notifications_none_rounded), findsOneWidget);
     });
 
-    testWidgets('mobile: notifications icon opens notices bottom sheet', (
+    testWidgets('mobile: notifications icon opens notifications page', (
       tester,
     ) async {
       _setMobile(tester);
@@ -256,7 +260,7 @@ void main() {
       expect(find.text('Coach Priya commented'), findsOneWidget);
     });
 
-    testWidgets('mobile: notices bottom sheet has correct content', (
+    testWidgets('mobile: notifications page has correct content', (
       tester,
     ) async {
       _setMobile(tester);
@@ -269,7 +273,10 @@ void main() {
         find.text('Your aerobic run is scheduled for 7:00 AM.'),
         findsOneWidget,
       );
-      expect(find.text('Strong work on the intervals.'), findsOneWidget);
+      expect(
+        find.text('Strong work on the intervals. Keep tomorrow easy.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('mobile: FAB visible only on Calendar screen', (tester) async {
@@ -340,7 +347,7 @@ void main() {
               (ref, arg) => Stream.value([]),
             ),
           ],
-          child: MaterialApp(home: Shell()),
+          child: const MaterialApp(home: Shell()),
         ),
       );
 
@@ -369,7 +376,7 @@ void main() {
               (ref, arg) => Stream.value([]),
             ),
           ],
-          child: MaterialApp(home: Shell()),
+          child: const MaterialApp(home: Shell()),
         ),
       );
 
@@ -380,7 +387,7 @@ void main() {
   });
 
   group('Shell - _buildScreen default fallback', () {
-    testWidgets('desktop: clicking Get started goes to Explore', (
+    testWidgets('desktop: clicking Get started opens onboarding', (
       tester,
     ) async {
       _setDesktop(tester);
@@ -389,7 +396,8 @@ void main() {
       await tester.tap(find.text('Get started'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Browse Veltrix'), findsOneWidget);
+      expect(find.text('Athlete onboarding'), findsWidgets);
+      expect(find.text('Create your athlete profile'), findsOneWidget);
     });
 
     testWidgets('desktop: clicking Log in goes to Profile', (tester) async {

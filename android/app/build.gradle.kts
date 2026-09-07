@@ -48,11 +48,10 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (keystorePropertiesFile.exists()) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
+            if (!keystorePropertiesFile.exists()) {
+                throw GradleException("Missing android/key.properties for release signing")
             }
+            signingConfig = signingConfigs.getByName("release")
 
             isMinifyEnabled = true
 

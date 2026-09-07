@@ -10,7 +10,7 @@ void main() {
       const paymentId = 'pay_custom_1';
       const secret = 'my_custom_secret_key_123';
 
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -32,7 +32,7 @@ void main() {
       const actualSecret = 'actual_secret';
       const wrongSecret = 'wrong_secret';
 
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(actualSecret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -74,7 +74,7 @@ void main() {
       const orderId = 'order_123#abc!@\$%^&*()';
       const paymentId = 'pay_456/abc\\[]{}|';
 
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -95,7 +95,7 @@ void main() {
       const paymentId = 'pay_ws';
       const secret = 'test_secret';
 
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -131,7 +131,7 @@ void main() {
 
     test('returns false for empty order ID with valid-looking signature', () {
       const secret = 'test_secret';
-      final payload = '|pay_only';
+      const payload = '|pay_only';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -149,7 +149,7 @@ void main() {
 
     test('returns false for empty payment ID with valid-looking signature', () {
       const secret = 'test_secret';
-      final payload = 'order_only|';
+      const payload = 'order_only|';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -170,7 +170,7 @@ void main() {
       const orderId = 'order_\u00e9\u00e8\u00ea';
       const paymentId = 'pay_\u00fc\u00f6\u00e4';
 
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -191,7 +191,7 @@ void main() {
       const paymentId = 'pay_case';
       const secret = 'test_secret';
 
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -217,15 +217,8 @@ void main() {
       expect(isValid, isFalse);
     });
 
-    test('defaultWebhookSecret contains expected value', () {
-      expect(
-        RazorpayWebhookVerificationService.defaultWebhookSecret,
-        isNotEmpty,
-      );
-      expect(
-        RazorpayWebhookVerificationService.defaultWebhookSecret,
-        contains('Veltrix'),
-      );
+    test('defaultWebhookSecret is empty unless provided at build time', () {
+      expect(RazorpayWebhookVerificationService.defaultWebhookSecret, isEmpty);
     });
   });
 }

@@ -1,5 +1,5 @@
 name: veltrix_sports
-description: "A new Flutter project."
+description: "Training, coaching, performance tracking, and device sync for endurance athletes."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -40,6 +40,7 @@ dependencies:
   firebase_messaging: ^15.2.10
   firebase_dynamic_links: ^6.1.10
   firebase_crashlytics: ^4.3.0
+  cloud_functions: ^5.6.2
   google_sign_in: ^7.2.0
   flutter_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
@@ -63,6 +64,8 @@ dev_dependencies:
   firebase_auth_mocks: ^0.14.2
   fake_cloud_firestore: ^3.1.0
 
+  firebase_core_platform_interface: ^6.0.3
+  fake_async: ^1.3.3
 flutter_launcher_icons:
   android: "launch_background"
   ios: true

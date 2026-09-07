@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 class RazorpayWebhookVerificationService {
   static const String defaultWebhookSecret = String.fromEnvironment(
     'RAZORPAY_WEBHOOK_SECRET',
-    defaultValue: 'rzp_sec_VeltrixSecret2026',
   );
 
   /// Cryptographically verifies Razorpay payment payload signature using HMAC-SHA256
@@ -16,6 +15,12 @@ class RazorpayWebhookVerificationService {
     String webhookSecret = defaultWebhookSecret,
   }) {
     if (signature.isEmpty) return false;
+    if (webhookSecret.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('[Razorpay Signature Error] Missing webhook secret');
+      }
+      return false;
+    }
 
     try {
       final payload = '$orderId|$paymentId';

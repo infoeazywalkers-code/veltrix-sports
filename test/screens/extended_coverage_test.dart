@@ -95,7 +95,7 @@ Widget desktopShell(Widget child) => ProviderScope(
 void main() {
   group('ProfileScreen with data', () {
     testWidgets('renders full profile', (tester) async {
-      await tester.pumpWidget(desktopShell(ProfileScreen()));
+      await tester.pumpWidget(desktopShell(const ProfileScreen()));
       await tester.pumpAndSettle();
       expect(find.text('Priya Sharma'), findsOneWidget);
       expect(find.text('PS'), findsOneWidget);
@@ -131,7 +131,7 @@ void main() {
               (ref) => Stream.value(noSubProfile),
             ),
           ],
-          child: MaterialApp(home: Scaffold(body: ProfileScreen())),
+          child: const MaterialApp(home: Scaffold(body: ProfileScreen())),
         ),
       );
       await tester.pumpAndSettle();
@@ -141,14 +141,14 @@ void main() {
 
   group('CalendarScreen with data', () {
     testWidgets('renders with week navigation', (tester) async {
-      await tester.pumpWidget(desktopShell(CalendarScreen()));
+      await tester.pumpWidget(desktopShell(const CalendarScreen()));
       await tester.pumpAndSettle();
       expect(find.byIcon(Icons.chevron_left), findsWidgets);
       expect(find.byIcon(Icons.chevron_right), findsWidgets);
     });
 
     testWidgets('navigates weeks', (tester) async {
-      await tester.pumpWidget(desktopShell(CalendarScreen()));
+      await tester.pumpWidget(desktopShell(const CalendarScreen()));
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(Icons.chevron_right).first);
       await tester.pumpAndSettle();
@@ -159,7 +159,7 @@ void main() {
 
   group('ExploreScreen with data', () {
     testWidgets('renders events and sections', (tester) async {
-      await tester.pumpWidget(desktopShell(ExploreScreen()));
+      await tester.pumpWidget(desktopShell(const ExploreScreen()));
       await tester.pumpAndSettle();
       expect(find.text('Browse Veltrix'), findsOneWidget);
     });
@@ -167,7 +167,7 @@ void main() {
 
   group('MobileExploreScreen', () {
     testWidgets('renders explore view', (tester) async {
-      await tester.pumpWidget(desktopShell(MobileExploreScreen()));
+      await tester.pumpWidget(desktopShell(const MobileExploreScreen()));
       await tester.pumpAndSettle();
       expect(find.text('Explore'), findsOneWidget);
     });

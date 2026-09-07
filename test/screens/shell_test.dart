@@ -16,7 +16,7 @@ Widget shellWrap() => ProviderScope(
     workoutsByDateRangeProvider.overrideWith((ref, arg) => Stream.value([])),
     performanceHistoryProvider.overrideWith((ref, arg) => Stream.value([])),
   ],
-  child: MaterialApp(home: Shell()),
+  child: const MaterialApp(home: Shell()),
 );
 
 void main() {
@@ -77,7 +77,7 @@ void main() {
         ),
         performanceHistoryProvider.overrideWith((ref, arg) => Stream.value([])),
       ],
-      child: MaterialApp(home: Shell()),
+      child: const MaterialApp(home: Shell()),
     );
 
     void setDesktopSize(WidgetTester tester) {
@@ -165,7 +165,7 @@ void main() {
     });
 
     testWidgets(
-      'desktop: tapping Resources > Help Center navigates to Profile',
+      'desktop: tapping Resources > Help Center opens support center',
       (tester) async {
         setDesktopSize(tester);
         await tester.pumpWidget(desktopShell());
@@ -173,7 +173,8 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text('Help Center'));
         await tester.pumpAndSettle();
-        expect(find.text('Welcome to Veltrix Sports'), findsOneWidget);
+        expect(find.text('Support center'), findsWidgets);
+        expect(find.text('Device pairing help'), findsOneWidget);
       },
     );
   });

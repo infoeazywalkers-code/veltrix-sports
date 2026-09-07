@@ -243,7 +243,7 @@ void main() {
     });
 
     test('toMap roundtrip preserves data', () {
-      final plan = TrainingPlan(
+      const plan = TrainingPlan(
         id: 'tp2',
         userId: 'u1',
         coachId: 'c1',

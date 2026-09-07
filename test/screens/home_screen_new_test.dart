@@ -49,7 +49,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       await tester.tap(find.text('Athlete sign up').first);
-      expect(navigatedTo, 3);
+      expect(navigatedTo, 19);
     });
 
     testWidgets('calls onNavigate when coach sign up tapped', (tester) async {
@@ -116,10 +116,7 @@ void main() {
     });
 
     testWidgets('renders View week after scrolling', (tester) async {
-      int navigatedTo = -1;
-      await tester.pumpWidget(
-        wrap(HomeScreen(onNavigate: (i) => navigatedTo = i)),
-      );
+      await tester.pumpWidget(wrap(const HomeScreen()));
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(find.text('View week'), 300);
       await tester.pumpAndSettle();

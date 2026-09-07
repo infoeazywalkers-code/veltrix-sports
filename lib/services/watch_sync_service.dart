@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 import '../models/workout.dart';
 import '../services/workout_service.dart';
@@ -32,10 +33,11 @@ class WatchSyncService {
   }
 
   static Future<int> syncLatestWatchWorkouts() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return 0;
     final hasPerm = await requestPermissions();
     if (!hasPerm) {
-      // Fallback demo sync if running in simulator or ungranted environment
-      return _simulateWatchSync();
+      return 0;
     }
 
     try {
@@ -52,18 +54,18 @@ class WatchSyncService {
       for (final dp in healthData) {
         final workoutObj = _convertHealthDataPointToWorkout(dp);
         if (workoutObj != null) {
-          await WorkoutService().create(workoutObj);
+          await WorkoutService().create(workoutObj.copyWith(userId: userId));
           importedCount++;
         }
       }
 
       await AnalyticsService.logDevicePaired('Apple Watch / HealthConnect', 'Health Sync');
-      return importedCount > 0 ? importedCount : _simulateWatchSync();
+      return importedCount;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[WatchSync Error] $e');
       }
-      return _simulateWatchSync();
+      return 0;
     }
   }
 
@@ -112,7 +114,7 @@ class WatchSyncService {
     final durationMins = (dp.dateTo.difference(dp.dateFrom).inMinutes).clamp(1, 600);
 
     return Workout(
-      id: const Uuid().v4(),
+      id: 'watch_${dp.dateFrom.millisecondsSinceEpoch}_${typeStr}',
       planId: 'watch_import',
       sport: sport,
       title: 'Synced ${val.workoutActivityType.name}',

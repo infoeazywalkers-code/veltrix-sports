@@ -43,7 +43,7 @@ void main() {
         specialities: ['Running'],
       );
 
-      await tester.pumpWidget(openDialog(CoachBookingDialog(coach: coach)));
+      await tester.pumpWidget(openDialog(const CoachBookingDialog(coach: coach)));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 

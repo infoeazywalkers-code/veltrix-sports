@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -144,7 +143,6 @@ void main() {
   });
 
   testWidgets('close button triggers Navigator.pop', (tester) async {
-    bool? popResult;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -152,7 +150,7 @@ void main() {
             builder:
                 (context) => TextButton(
                   onPressed: () async {
-                    popResult = await Navigator.push<bool>(
+                    await Navigator.push<bool>(
                       context,
                       MaterialPageRoute(
                         builder:
@@ -202,7 +200,6 @@ void main() {
   });
 
   testWidgets('start then finish completes workout', (tester) async {
-    bool? popResult;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -210,7 +207,7 @@ void main() {
             builder:
                 (context) => TextButton(
                   onPressed: () async {
-                    popResult = await Navigator.push<bool>(
+                    await Navigator.push<bool>(
                       context,
                       MaterialPageRoute(
                         builder:

@@ -105,6 +105,23 @@ flutter build appbundle --release
 3. Run `flutterfire configure` to generate `firebase_options.dart`
 4. Add your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
 
+### Production services
+
+Production builds use `--dart-define=VELTRIX_PRODUCTION=true` and the generated
+production Firebase options. Payment order creation, Razorpay verification,
+event registration, capacity accounting, and subscription entitlement updates
+run in `functions/` and must be deployed before enabling paid flows.
+
+Configure the Functions secrets before deployment:
+
+```bash
+firebase functions:secrets:set RAZORPAY_KEY_ID
+firebase functions:secrets:set RAZORPAY_KEY_SECRET
+firebase deploy --only functions,firestore:rules,firestore:indexes
+```
+
+Use `--dart-define=VELTRIX_PRODUCTION=false` (or omit it) for development.
+
 ## Contributing
 
 1. Fork the repository

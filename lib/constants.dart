@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-const navy = Color(0xff102a43);
-const ink = Color(0xff243b53);
-const muted = Color(0xff829ab1);
-const bg = Color(0xfff5f7fa);
-const lime = Color(0xffb7e22a);
-const blue = Color(0xff1687e0);
-const purple = Color(0xff7657d5);
-const orange = Color(0xffff8a3d);
-const teal = Color(0xff00a9a5);
-const darkNavy = Color(0xff081f33);
-const lightGreen = Color(0xfff0f7ec);
-const successGreen = Color(0xff4c8c2b);
-const successText = Color(0xff3f6f26);
+const navy = Color(0xff123047);
+const ink = Color(0xff1f2933);
+const muted = Color(0xff66788a);
+const bg = Color(0xfff6f2ea);
+const lime = Color(0xffc8f169);
+const blue = Color(0xff2176ae);
+const purple = Color(0xff7759c2);
+const orange = Color(0xffe9763f);
+const teal = Color(0xff008f8c);
+const darkNavy = Color(0xff081826);
+const lightGreen = Color(0xffeef8df);
+const successGreen = Color(0xff3f7f32);
+const successText = Color(0xff315f29);
 
 void showFeatureMessage(BuildContext context, String message) {
   ScaffoldMessenger.of(context).clearSnackBars();

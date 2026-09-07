@@ -51,25 +51,37 @@ class HomeScreen extends StatelessWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: lime,
                 foregroundColor: navy,
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 16,
+                ),
               ),
-              onPressed: () => onNavigate?.call(3),
-              child: const Text('Athlete sign up', style: TextStyle(fontWeight: FontWeight.w900)),
+              onPressed: () => onNavigate?.call(19),
+              child: const Text(
+                'Athlete sign up',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
             ),
             OutlinedButton(
               style: OutlinedButton.styleFrom(
                 foregroundColor: navy,
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 16,
+                ),
               ),
               onPressed: () => onNavigate?.call(6),
-              child: const Text('Coach sign up', style: TextStyle(fontWeight: FontWeight.w900)),
+              child: const Text(
+                'Coach sign up',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 26),
         const HomeVideoHero(),
         const SizedBox(height: 54),
-        const PublicHomeSections(),
+        PublicHomeSections(onNavigate: onNavigate),
         const SizedBox(height: 54),
         const Row(
           children: [
@@ -92,18 +104,20 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(height: 26),
         InkWell(
           borderRadius: BorderRadius.circular(22),
-          onTap: () => showDialog(
-            context: context,
-            builder: (_) => const EventDetailsDialog(
-              event: {
-                'title': 'Mumbai Half Marathon',
-                'date': '25 October 2026',
-                'location': 'Mumbai, India',
-                'category': 'Running',
-                'participants': '15,000+ Runners',
-              },
-            ),
-          ),
+          onTap:
+              () => showDialog(
+                context: context,
+                builder:
+                    (_) => const EventDetailsDialog(
+                      event: {
+                        'title': 'Mumbai Half Marathon',
+                        'date': '25 October 2026',
+                        'location': 'Mumbai, India',
+                        'category': 'Running',
+                        'participants': '15,000+ Runners',
+                      },
+                    ),
+              ),
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -116,24 +130,32 @@ class HomeScreen extends StatelessWidget {
                 Row(
                   children: [
                     const Chip(
-                      label: Text('A RACE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10)),
+                      label: Text(
+                        'A RACE',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 10,
+                        ),
+                      ),
                       backgroundColor: lime,
                       side: BorderSide.none,
                     ),
                     const Spacer(),
                     IconButton(
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (_) => const EventDetailsDialog(
-                          event: {
-                            'title': 'Mumbai Half Marathon',
-                            'date': '25 October 2026',
-                            'location': 'Mumbai, India',
-                            'category': 'Running',
-                            'participants': '15,000+ Runners',
-                          },
-                        ),
-                      ),
+                      onPressed:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (_) => const EventDetailsDialog(
+                                  event: {
+                                    'title': 'Mumbai Half Marathon',
+                                    'date': '25 October 2026',
+                                    'location': 'Mumbai, India',
+                                    'category': 'Running',
+                                    'participants': '15,000+ Runners',
+                                  },
+                                ),
+                          ),
                       icon: const Icon(Icons.more_horiz, color: Colors.white70),
                     ),
                   ],
@@ -141,10 +163,17 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 const Text(
                   'Mumbai Half Marathon',
-                  style: TextStyle(color: Colors.white, fontSize: 21, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 21,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 const SizedBox(height: 5),
-                const Text('25 October 2026  \u2022  21.1 km', style: TextStyle(color: Colors.white70)),
+                const Text(
+                  '25 October 2026  \u2022  21.1 km',
+                  style: TextStyle(color: Colors.white70),
+                ),
                 const SizedBox(height: 18),
                 const LinearProgressIndicator(
                   value: .62,
@@ -156,8 +185,18 @@ class HomeScreen extends StatelessWidget {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Plan progress', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                    Text('62%', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12)),
+                    Text(
+                      'Plan progress',
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                    Text(
+                      '62%',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -245,7 +284,13 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Coach Priya', style: TextStyle(fontWeight: FontWeight.w900, color: navy)),
+                      const Text(
+                        'Coach Priya',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          color: navy,
+                        ),
+                      ),
                       const SizedBox(height: 5),
                       const Text(
                         'Strong work on the intervals. Keep tomorrow truly easy so we can build again Thursday.',
@@ -253,7 +298,10 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 7),
                       Text(
                         'Yesterday \u2022 6:42 PM',
-                        style: TextStyle(color: muted.withValues(alpha: .9), fontSize: 11),
+                        style: TextStyle(
+                          color: muted.withValues(alpha: .9),
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   ),
@@ -270,7 +318,8 @@ class HomeScreen extends StatelessWidget {
 }
 
 class PublicHomeSections extends StatelessWidget {
-  const PublicHomeSections({super.key});
+  final ValueChanged<int>? onNavigate;
+  const PublicHomeSections({super.key, this.onNavigate});
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +329,11 @@ class PublicHomeSections extends StatelessWidget {
         const Text(
           'Train like the world\u2019s best.',
           textAlign: TextAlign.center,
-          style: TextStyle(color: navy, fontSize: 26, fontWeight: FontWeight.w900),
+          style: TextStyle(
+            color: navy,
+            fontSize: 26,
+            fontWeight: FontWeight.w900,
+          ),
         ),
         const SizedBox(height: 22),
         const Wrap(
@@ -299,7 +352,8 @@ class PublicHomeSections extends StatelessWidget {
         const SectionIntro(
           eyebrow: 'ONE PLATFORM. EVERY GOAL.',
           title: 'Everything you need to go further.',
-          body: 'Expert plans, connected coaching and purposeful training\u2014working together in one place.',
+          body:
+              'Expert plans, connected coaching and purposeful training\u2014working together in one place.',
         ),
         const SizedBox(height: 24),
         const ResponsiveCards(
@@ -308,14 +362,16 @@ class PublicHomeSections extends StatelessWidget {
               image: 'assets/images/endurance-runner.png',
               eyebrow: 'TRAINING PLANS',
               title: 'Expertise. No guesswork.',
-              body: 'Follow a proven path built for your sport, schedule and goal.',
+              body:
+                  'Follow a proven path built for your sport, schedule and goal.',
               action: 'Find your plan',
             ),
             MarketingFeatureCard(
               image: 'assets/images/cyclist-coaching.png',
               eyebrow: 'COACHING',
               title: 'Even better together.',
-              body: 'Work with an expert who sees the full picture behind every session.',
+              body:
+                  'Work with an expert who sees the full picture behind every session.',
               action: 'Find a coach',
             ),
             MarketingFeatureCard(
@@ -323,7 +379,8 @@ class PublicHomeSections extends StatelessWidget {
               icon: Icons.insights_rounded,
               eyebrow: 'PERFORMANCE',
               title: 'Real progress.',
-              body: 'Turn workouts, health metrics and trends into clear next steps.',
+              body:
+                  'Turn workouts, health metrics and trends into clear next steps.',
               action: 'Explore insights',
             ),
           ],
@@ -331,14 +388,25 @@ class PublicHomeSections extends StatelessWidget {
         const SizedBox(height: 64),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: desktop ? 56 : 22, vertical: desktop ? 56 : 34),
-          decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(28)),
+          padding: EdgeInsets.symmetric(
+            horizontal: desktop ? 56 : 22,
+            vertical: desktop ? 56 : 34,
+          ),
+          decoration: BoxDecoration(
+            color: navy,
+            borderRadius: BorderRadius.circular(28),
+          ),
           child: const Column(
             children: [
               Text(
                 'All-in-one, for the all-in\nathlete and coach.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 34, height: 1.02, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 34,
+                  height: 1.02,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               SizedBox(height: 12),
               Text(
@@ -353,21 +421,24 @@ class PublicHomeSections extends StatelessWidget {
                     number: '01',
                     verb: 'PLAN.',
                     title: 'Be ready for what\u2019s next.',
-                    body: 'Build a season around structured workouts, events and expert guidance.',
+                    body:
+                        'Build a season around structured workouts, events and expert guidance.',
                     icon: Icons.event_note_rounded,
                   ),
                   PillarCard(
                     number: '02',
                     verb: 'TRAIN.',
                     title: 'Purpose in every session.',
-                    body: 'Take workouts anywhere and keep every device in sync.',
+                    body:
+                        'Take workouts anywhere and keep every device in sync.',
                     icon: Icons.directions_run_rounded,
                   ),
                   PillarCard(
                     number: '03',
                     verb: 'LIFT.',
                     title: 'Build durable strength.',
-                    body: 'Balance endurance with guided strength and mobility work.',
+                    body:
+                        'Balance endurance with guided strength and mobility work.',
                     icon: Icons.fitness_center_rounded,
                   ),
                 ],
@@ -379,7 +450,8 @@ class PublicHomeSections extends StatelessWidget {
         const SectionIntro(
           eyebrow: 'CONNECTED TRAINING',
           title: 'Connect with any device.',
-          body: 'Bring your watches, trainers and health data together. Veltrix keeps the entire journey in sync.',
+          body:
+              'Bring your watches, trainers and health data together. Veltrix keeps the entire journey in sync.',
         ),
         const SizedBox(height: 24),
         const Wrap(
@@ -407,7 +479,11 @@ class PublicHomeSections extends StatelessWidget {
             children: [
               const Text(
                 'Ready starts here.',
-                style: TextStyle(color: navy, fontSize: 34, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                  color: navy,
+                  fontSize: 34,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -425,19 +501,31 @@ class PublicHomeSections extends StatelessWidget {
                     style: FilledButton.styleFrom(
                       backgroundColor: navy,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 16,
+                      ),
                     ),
-                    onPressed: () => showFeatureMessage(context, 'Athlete registration is ready to begin.'),
-                    child: const Text('Athlete sign up', style: TextStyle(fontWeight: FontWeight.w900)),
+                    onPressed: () => onNavigate?.call(19),
+                    child: const Text(
+                      'Athlete sign up',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
                   ),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: navy,
                       side: const BorderSide(color: navy),
-                      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 16,
+                      ),
                     ),
-                    onPressed: () => showFeatureMessage(context, 'Coach registration is ready to begin.'),
-                    child: const Text('Coach sign up', style: TextStyle(fontWeight: FontWeight.w900)),
+                    onPressed: () => onNavigate?.call(6),
+                    child: const Text(
+                      'Coach sign up',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
                   ),
                 ],
               ),
@@ -465,10 +553,13 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
     controller = VideoPlayerController.asset('assets/video/home-training.mp4');
     controller.setLooping(true);
     controller.setVolume(0);
-    controller.initialize().then((_) {
-      if (mounted) setState(() {});
-      controller.play();
-    }).catchError((_) {});
+    controller
+        .initialize()
+        .then((_) {
+          if (mounted) setState(() {});
+          controller.play();
+        })
+        .catchError((_) {});
   }
 
   @override
@@ -498,18 +589,23 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
             Image.asset(
               'assets/images/endurance-runner.png',
               fit: BoxFit.cover,
-              errorBuilder: (ctx, err, stack) => Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [navy, Color(0xff1e3a5f)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              errorBuilder:
+                  (ctx, err, stack) => Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [navy, Color(0xff1e3a5f)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.fitness_center_rounded,
+                        color: lime,
+                        size: 48,
+                      ),
+                    ),
                   ),
-                ),
-                child: const Center(
-                  child: Icon(Icons.fitness_center_rounded, color: lime, size: 48),
-                ),
-              ),
             ),
           const DecoratedBox(
             decoration: BoxDecoration(
@@ -539,7 +635,12 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
                 SizedBox(height: 5),
                 Text(
                   'Your strongest season starts here.',
-                  style: TextStyle(color: Colors.white, fontSize: 23, height: 1.05, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 23,
+                    height: 1.05,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ],
             ),
@@ -556,7 +657,9 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
                 setState(() => muted = !muted);
                 controller.setVolume(muted ? 0 : 1);
               },
-              icon: Icon(muted ? Icons.volume_off_rounded : Icons.volume_up_rounded),
+              icon: Icon(
+                muted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
+              ),
             ),
           ),
         ],
@@ -564,4 +667,3 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
     ),
   );
 }
-

@@ -47,32 +47,30 @@ class CoachService {
     ),
   ];
 
-  /// Fetches featured coaches from Firestore.
-  /// Falls back to [featuredCoaches] static data when offline or on error.
-  // TODO: Implement Firestore integration:
-  //   static Future<List<CoachProfile>> fetchFeaturedCoaches() async {
-  //     try {
-  //       final snapshot = await FirebaseFirestore.instance
-  //           .collection('coaches')
-  //           .where('featured', isEqualTo: true)
-  //           .orderBy('rating', descending: true)
-  //           .get();
-  //       return snapshot.docs.map(CoachProfile.fromFirestore).toList();
-  //     } catch (e) {
-  //       return featuredCoaches; // fallback to static data
-  //     }
-  //   }
+  static Future<List<CoachProfile>> fetchFeaturedCoaches() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('coaches')
+          .where('featured', isEqualTo: true)
+          .limit(20)
+          .get();
+      if (snapshot.docs.isEmpty) return featuredCoaches;
+      return snapshot.docs.map(CoachProfile.fromFirestore).toList();
+    } catch (_) {
+      return featuredCoaches;
+    }
+  }
 
-  /// Fetches a single coach profile by [coachId] from Firestore.
-  // TODO: Implement Firestore integration:
-  //   static Future<CoachProfile?> fetchCoachById(String coachId) async {
-  //     final doc = await FirebaseFirestore.instance
-  //         .collection('coaches')
-  //         .doc(coachId)
-  //         .get();
-  //     if (!doc.exists) return null;
-  //     return CoachProfile.fromFirestore(doc);
-  //   }
+  static Future<CoachProfile?> fetchCoachById(String coachId) async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection('coaches').doc(coachId).get();
+      if (doc.exists) return CoachProfile.fromFirestore(doc);
+    } catch (_) {}
+    for (final coach in featuredCoaches) {
+      if (coach.id == coachId) return coach;
+    }
+    return null;
+  }
 
   static Future<bool> sendInquiry({
     required String coachId,

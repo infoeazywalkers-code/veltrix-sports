@@ -120,55 +120,55 @@ void main() {
 
   group('Color constants', () {
     test('navy has correct value', () {
-      expect(navy.value, 0xff102a43);
+      expect(navy.toARGB32(), 0xff123047);
     });
 
     test('ink has correct value', () {
-      expect(ink.value, 0xff243b53);
+      expect(ink.toARGB32(), 0xff1f2933);
     });
 
     test('muted has correct value', () {
-      expect(muted.value, 0xff829ab1);
+      expect(muted.toARGB32(), 0xff66788a);
     });
 
     test('bg has correct value', () {
-      expect(bg.value, 0xfff5f7fa);
+      expect(bg.toARGB32(), 0xfff6f2ea);
     });
 
     test('lime has correct value', () {
-      expect(lime.value, 0xffb7e22a);
+      expect(lime.toARGB32(), 0xffc8f169);
     });
 
     test('blue has correct value', () {
-      expect(blue.value, 0xff1687e0);
+      expect(blue.toARGB32(), 0xff2176ae);
     });
 
     test('purple has correct value', () {
-      expect(purple.value, 0xff7657d5);
+      expect(purple.toARGB32(), 0xff7759c2);
     });
 
     test('orange has correct value', () {
-      expect(orange.value, 0xffff8a3d);
+      expect(orange.toARGB32(), 0xffe9763f);
     });
 
     test('teal has correct value', () {
-      expect(teal.value, 0xff00a9a5);
+      expect(teal.toARGB32(), 0xff008f8c);
     });
 
     test('darkNavy has correct value', () {
-      expect(darkNavy.value, 0xff081f33);
+      expect(darkNavy.toARGB32(), 0xff081826);
     });
 
     test('lightGreen has correct value', () {
-      expect(lightGreen.value, 0xfff0f7ec);
+      expect(lightGreen.toARGB32(), 0xffeef8df);
     });
 
     test('successGreen has correct value', () {
-      expect(successGreen.value, 0xff4c8c2b);
+      expect(successGreen.toARGB32(), 0xff3f7f32);
     });
 
     test('successText has correct value', () {
-      expect(successText.value, 0xff3f6f26);
+      expect(successText.toARGB32(), 0xff315f29);
     });
   });
 }

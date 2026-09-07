@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz_data;
+import 'notification_repository.dart';
+import '../models/notification_record.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -12,6 +14,7 @@ class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
+  final NotificationRepository _repository = NotificationRepository();
 
   bool _initialized = false;
   String? _fcmToken;
@@ -43,6 +46,9 @@ class NotificationService {
       // 2. Fetch FCM Device Token
       if (!kIsWeb) {
         _fcmToken = await _fcm.getToken();
+        if (_fcmToken != null) {
+          await _repository.saveToken(_fcmToken!, platform: 'mobile');
+        }
         if (kDebugMode) {
           debugPrint('[FCM Device Token] $_fcmToken');
         }
@@ -69,15 +75,41 @@ class NotificationService {
       // 5. Foreground FCM Listener
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         if (message.notification != null) {
+          final notification = message.notification!;
+          _persistNotification(
+            title: notification.title ?? 'Veltrix Update',
+            body: notification.body ?? 'You have a new activity update.',
+            payload: message.data['route'] as String?,
+          );
           showNotification(
-            title: message.notification?.title ?? 'Veltrix Update',
-            body:
-                message.notification?.body ?? 'You have a new activity update.',
+            title: notification.title ?? 'Veltrix Update',
+            body: notification.body ?? 'You have a new activity update.',
           );
         }
       });
     } catch (e) {
       if (kDebugMode) debugPrint('[Notification Init Error] $e');
+    }
+  }
+
+  Future<void> _persistNotification({
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    try {
+      await _repository.add(
+        NotificationRecord(
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          title: title,
+          body: body,
+          type: 'push',
+          payload: payload,
+          createdAt: DateTime.now(),
+        ),
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('[Notification Persistence Error] $e');
     }
   }
 

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/services/ble_sensor_service.dart';
 
@@ -121,10 +120,7 @@ void main() {
 
     test('notifies listeners on state changes', () {
       final ble = BleSensorService();
-      var notified = false;
-      ble.addListener(() {
-        notified = true;
-      });
+      ble.addListener(() {});
 
       ble.disconnect();
 

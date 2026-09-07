@@ -161,7 +161,7 @@ void main() {
               (ref, arg) => Stream.value([]),
             ),
           ],
-          child: MaterialApp(home: Scaffold(body: CalendarScreen())),
+          child: const MaterialApp(home: Scaffold(body: CalendarScreen())),
         ),
       );
       // The calendar shows chevron navigation and week day labels
@@ -179,7 +179,7 @@ void main() {
             authStateProvider.overrideWith((ref) => Stream.value(null)),
             userProfileProvider.overrideWith((ref) => Stream.value(null)),
           ],
-          child: MaterialApp(home: Scaffold(body: ProfileScreen())),
+          child: const MaterialApp(home: Scaffold(body: ProfileScreen())),
         ),
       );
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -197,7 +197,7 @@ void main() {
               (ref, arg) => Stream.value([]),
             ),
           ],
-          child: MaterialApp(home: Scaffold(body: ProgressScreen())),
+          child: const MaterialApp(home: Scaffold(body: ProgressScreen())),
         ),
       );
       expect(find.text('Performance'), findsOneWidget);
@@ -213,7 +213,7 @@ void main() {
               (ref, arg) => Stream.value([]),
             ),
           ],
-          child: MaterialApp(home: Scaffold(body: ProgressScreen())),
+          child: const MaterialApp(home: Scaffold(body: ProgressScreen())),
         ),
       );
       expect(find.text('4 weeks'), findsOneWidget);

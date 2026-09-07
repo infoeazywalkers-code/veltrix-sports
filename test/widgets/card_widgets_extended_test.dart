@@ -235,7 +235,7 @@ void main() {
     testWidgets('onTapLinks shorter than links does not crash', (tester) async {
       await tester.pumpWidget(
         wrap(
-          FooterGroup(
+          const FooterGroup(
             title: 'GROUP',
             links: ['A', 'B', 'C'],
             onTapLinks: [null],
@@ -313,7 +313,7 @@ void main() {
     testWidgets('renders with color', (tester) async {
       await tester.pumpWidget(
         wrap(
-          MarketingFeatureCard(
+          const MarketingFeatureCard(
             color: Colors.deepPurple,
             icon: Icons.star,
             eyebrow: 'EYE',

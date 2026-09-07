@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/services/training_plan_service.dart';
-import 'package:veltrix_sports/models/training_plan.dart';
 
 void main() {
   group('TrainingPlanService.demoPlans', () {

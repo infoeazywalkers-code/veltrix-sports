@@ -3,6 +3,8 @@ import '../constants.dart';
 import '../widgets/section_intro.dart';
 import '../widgets/responsive_cards.dart';
 import '../widgets/veltrix_footer.dart';
+import 'premium_screen.dart';
+import 'production_pages.dart';
 
 class StrengthScreen extends StatelessWidget {
   const StrengthScreen({super.key});
@@ -11,12 +13,18 @@ class StrengthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final desktop = MediaQuery.sizeOf(context).width >= 850;
     return ListView(
-      padding: EdgeInsets.fromLTRB(desktop ? 40 : 18, 32, desktop ? 40 : 18, 64),
+      padding: EdgeInsets.fromLTRB(
+        desktop ? 40 : 18,
+        32,
+        desktop ? 40 : 18,
+        64,
+      ),
       children: [
         const SectionIntro(
           eyebrow: 'STRENGTH',
           title: 'Empower Your Training',
-          body: 'Build strength that supports endurance. Guided workouts, exercise library and calendar sync\u2014all in one place.',
+          body:
+              'Build strength that supports endurance. Guided workouts, exercise library and calendar sync\u2014all in one place.',
         ),
         const SizedBox(height: 40),
         const ResponsiveCards(
@@ -44,14 +52,24 @@ class StrengthScreen extends StatelessWidget {
         const SizedBox(height: 48),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: desktop ? 56 : 24, vertical: 44),
-          decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(28)),
+          padding: EdgeInsets.symmetric(
+            horizontal: desktop ? 56 : 24,
+            vertical: 44,
+          ),
+          decoration: BoxDecoration(
+            color: navy,
+            borderRadius: BorderRadius.circular(28),
+          ),
           child: const Column(
             children: [
               Text(
                 'Strength for endurance athletes.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               SizedBox(height: 10),
               Text(
@@ -68,7 +86,11 @@ class StrengthScreen extends StatelessWidget {
                   _StrengthStat(Icons.library_books, '1000+', 'Exercises'),
                   _StrengthStat(Icons.videocam_outlined, 'Video', 'Library'),
                   _StrengthStat(Icons.sync, 'Calendar', 'Sync'),
-                  _StrengthStat(Icons.check_circle_outline, 'Compliance', 'Tracking'),
+                  _StrengthStat(
+                    Icons.check_circle_outline,
+                    'Compliance',
+                    'Tracking',
+                  ),
                 ],
               ),
             ],
@@ -92,7 +114,11 @@ class StrengthScreen extends StatelessWidget {
             children: [
               const Text(
                 'Start building strength today.',
-                style: TextStyle(color: navy, fontSize: 30, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                  color: navy,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -104,10 +130,20 @@ class StrengthScreen extends StatelessWidget {
                 style: FilledButton.styleFrom(
                   backgroundColor: navy,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 18,
+                  ),
                 ),
-                onPressed: () => showFeatureMessage(context, 'Strength training feature coming soon!'),
-                child: const Text('Explore Premium', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                onPressed:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                    ),
+                child: const Text(
+                  'Explore Premium',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                ),
               ),
             ],
           ),
@@ -118,7 +154,6 @@ class StrengthScreen extends StatelessWidget {
     );
   }
 }
-
 
 class _StrengthFeature extends StatelessWidget {
   final IconData icon;
@@ -133,11 +168,29 @@ class _StrengthFeature extends StatelessWidget {
         children: [
           Icon(icon, color: lime, size: 36),
           const SizedBox(height: 20),
-          Text(eyebrow, style: const TextStyle(color: orange, fontSize: 10, letterSpacing: 1.2, fontWeight: FontWeight.w900)),
+          Text(
+            eyebrow,
+            style: const TextStyle(
+              color: orange,
+              fontSize: 10,
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
           const SizedBox(height: 6),
-          Text(title, style: const TextStyle(color: navy, fontSize: 18, fontWeight: FontWeight.w900)),
+          Text(
+            title,
+            style: const TextStyle(
+              color: navy,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(body, style: const TextStyle(color: muted, fontSize: 13, height: 1.5)),
+          Text(
+            body,
+            style: const TextStyle(color: muted, fontSize: 13, height: 1.5),
+          ),
         ],
       ),
     ),
@@ -161,8 +214,18 @@ class _StrengthStat extends StatelessWidget {
       children: [
         Icon(icon, color: lime, size: 24),
         const SizedBox(height: 8),
-        Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18)),
-        Text(label, style: const TextStyle(color: Colors.white60, fontSize: 11)),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w900,
+            fontSize: 18,
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white60, fontSize: 11),
+        ),
       ],
     ),
   );
@@ -174,23 +237,57 @@ class _StrengthPlans extends StatelessWidget {
   Widget build(BuildContext context) {
     final desktop = MediaQuery.sizeOf(context).width >= 850;
     const plans = [
-      ('Base Building', '12 weeks', 'Foundation strength for endurance athletes', blue),
-      ('Race Ready', '8 weeks', 'Power and explosive strength for race day', purple),
-      ('Injury Prevention', '6 weeks', 'Mobility, stability and prehab exercises', teal),
+      (
+        'Base Building',
+        '12 weeks',
+        'Foundation strength for endurance athletes',
+        blue,
+      ),
+      (
+        'Race Ready',
+        '8 weeks',
+        'Power and explosive strength for race day',
+        purple,
+      ),
+      (
+        'Injury Prevention',
+        '6 weeks',
+        'Mobility, stability and prehab exercises',
+        teal,
+      ),
     ];
     return Column(
       children: [
-        const Text('Explore strength plans', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: navy)),
+        const Text(
+          'Explore strength plans',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w900,
+            color: navy,
+          ),
+        ),
         const SizedBox(height: 8),
-        const Text('Find the right strength program for your phase', style: TextStyle(color: muted, fontSize: 14)),
+        const Text(
+          'Find the right strength program for your phase',
+          style: TextStyle(color: muted, fontSize: 14),
+        ),
         const SizedBox(height: 24),
         if (desktop)
-          Row(children: plans.map((p) => Expanded(child: _PlanCard(p.$1, p.$2, p.$3, p.$4))).toList())
+          Row(
+            children:
+                plans
+                    .map(
+                      (p) => Expanded(child: _PlanCard(p.$1, p.$2, p.$3, p.$4)),
+                    )
+                    .toList(),
+          )
         else
-          ...plans.map((p) => Padding(
-            padding: const EdgeInsets.only(bottom: 14),
-            child: _PlanCard(p.$1, p.$2, p.$3, p.$4),
-          )),
+          ...plans.map(
+            (p) => Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: _PlanCard(p.$1, p.$2, p.$3, p.$4),
+            ),
+          ),
       ],
     );
   }
@@ -209,18 +306,47 @@ class _PlanCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(color: color.withValues(alpha: .12), borderRadius: BorderRadius.circular(8)),
-            child: Text(duration, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w900)),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: .12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              duration,
+              style: TextStyle(
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
           ),
           const SizedBox(height: 14),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w900, color: navy, fontSize: 17)),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w900,
+              color: navy,
+              fontSize: 17,
+            ),
+          ),
           const SizedBox(height: 6),
           Text(description, style: const TextStyle(color: muted, fontSize: 13)),
           const SizedBox(height: 14),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: navy, foregroundColor: Colors.white),
-              onPressed: () => showFeatureMessage(context, 'Strength workout builder coming soon!'),
-            child: const Text('View plan', style: TextStyle(fontWeight: FontWeight.w800)),
+            style: FilledButton.styleFrom(
+              backgroundColor: navy,
+              foregroundColor: Colors.white,
+            ),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => strengthPlanDetailScreen(title),
+                  ),
+                ),
+            child: const Text(
+              'View plan',
+              style: TextStyle(fontWeight: FontWeight.w800),
+            ),
           ),
         ],
       ),
@@ -234,7 +360,10 @@ class _StrengthTestimonials extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     width: double.infinity,
     padding: const EdgeInsets.all(32),
-    decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(24)),
+    decoration: BoxDecoration(
+      color: navy,
+      borderRadius: BorderRadius.circular(24),
+    ),
     child: const Column(
       children: [
         Icon(Icons.format_quote, color: lime, size: 40),
@@ -242,11 +371,22 @@ class _StrengthTestimonials extends StatelessWidget {
         Text(
           '"Adding structured strength work has made me a more resilient runner. I\u2019ve stayed injury-free for two full seasons."',
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white, fontSize: 18, height: 1.5, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            height: 1.5,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         SizedBox(height: 16),
-        Text('Ryan M.', style: TextStyle(color: lime, fontWeight: FontWeight.w900)),
-        Text('Marathon Runner', style: TextStyle(color: Colors.white60, fontSize: 12)),
+        Text(
+          'Ryan M.',
+          style: TextStyle(color: lime, fontWeight: FontWeight.w900),
+        ),
+        Text(
+          'Marathon Runner',
+          style: TextStyle(color: Colors.white60, fontSize: 12),
+        ),
       ],
     ),
   );
@@ -257,27 +397,58 @@ class _StrengthFAQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const faqs = [
-      ('Is strength training included in Premium?', 'Yes. All strength features including the exercise library, workout builder and compliance tracking are included with Veltrix Premium.'),
-      ('Can I build custom workouts?', 'Premium coach and athlete accounts can build custom strength workouts on desktop. Mobile is for execution only.'),
-      ('Do strength workouts sync to my calendar?', 'Yes. Purchased and custom strength plans are delivered to your Training Plan Library and sync to your calendar automatically.'),
-      ('Can I export strength workouts to other apps?', 'Currently strength workouts cannot be exported to third-party apps. They are designed to be used within the Veltrix ecosystem.'),
+      (
+        'Is strength training included in Premium?',
+        'Yes. All strength features including the exercise library, workout builder and compliance tracking are included with Veltrix Premium.',
+      ),
+      (
+        'Can I build custom workouts?',
+        'Premium coach and athlete accounts can build custom strength workouts on desktop. Mobile is for execution only.',
+      ),
+      (
+        'Do strength workouts sync to my calendar?',
+        'Yes. Purchased and custom strength plans are delivered to your Training Plan Library and sync to your calendar automatically.',
+      ),
+      (
+        'Can I export strength workouts to other apps?',
+        'Currently strength workouts cannot be exported to third-party apps. They are designed to be used within the Veltrix ecosystem.',
+      ),
     ];
     return Column(
       children: [
-        const Text('Frequently asked questions', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: navy)),
+        const Text(
+          'Frequently asked questions',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w900,
+            color: navy,
+          ),
+        ),
         const SizedBox(height: 20),
-        ...faqs.map((f) => Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Card(
-            child: ExpansionTile(
-              tilePadding: const EdgeInsets.symmetric(horizontal: 18),
-              childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-              title: Text(f.$1, style: const TextStyle(fontWeight: FontWeight.w800, color: navy)),
-              children: [Text(f.$2, style: const TextStyle(color: muted, height: 1.5))],
+        ...faqs.map(
+          (f) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Card(
+              child: ExpansionTile(
+                tilePadding: const EdgeInsets.symmetric(horizontal: 18),
+                childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                title: Text(
+                  f.$1,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: navy,
+                  ),
+                ),
+                children: [
+                  Text(f.$2, style: const TextStyle(color: muted, height: 1.5)),
+                ],
+              ),
             ),
           ),
-        )),
+        ),
       ],
     );
   }

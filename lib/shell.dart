@@ -14,6 +14,9 @@ import '../screens/premium_screen.dart';
 import '../screens/coach_match_screen.dart';
 import '../screens/devices_screen.dart';
 import '../screens/strength_screen.dart';
+import '../screens/notifications_screen.dart';
+import '../screens/feature_collection_screen.dart';
+import '../screens/production_pages.dart';
 
 import '../widgets/workout_builder_dialog.dart';
 import '../widgets/connectivity_banner.dart';
@@ -47,6 +50,28 @@ class _ShellState extends ConsumerState<Shell> {
         return const DevicesScreen();
       case 8:
         return const StrengthScreen();
+      case 9:
+        return const NotificationsScreen();
+      case 10:
+        return trainingPlansScreen();
+      case 11:
+        return eventsScreen();
+      case 12:
+        return ticketsScreen();
+      case 13:
+        return workoutLibraryScreen();
+      case 14:
+        return coachPlatformScreen();
+      case 15:
+        return coachResourcesScreen();
+      case 16:
+        return supportScreen();
+      case 17:
+        return trainingGuidesScreen();
+      case 18:
+        return aboutScreen();
+      case 19:
+        return athleteOnboardingScreen();
       default:
         return HomeScreen(onNavigate: go);
     }
@@ -98,7 +123,7 @@ class _ShellState extends ConsumerState<Shell> {
                       i == 0
                           ? 2
                           : i == 1
-                          ? 3
+                          ? 10
                           : i == 2
                           ? 6
                           : 5,
@@ -111,7 +136,14 @@ class _ShellState extends ConsumerState<Shell> {
                   'Coach Match',
                   'Coach Resources',
                 ],
-                onSelected: (i) => go(i == 1 ? 6 : 3),
+                onSelected:
+                    (i) => go(
+                      i == 0
+                          ? 14
+                          : i == 1
+                          ? 6
+                          : 15,
+                    ),
               ),
               NavMenu(
                 label: 'Training',
@@ -128,7 +160,7 @@ class _ShellState extends ConsumerState<Shell> {
                           : i == 1
                           ? 2
                           : i == 2
-                          ? 3
+                          ? 13
                           : 8,
                     ),
               ),
@@ -140,14 +172,21 @@ class _ShellState extends ConsumerState<Shell> {
                       i == 0
                           ? 7
                           : i == 1
-                          ? 3
-                          : 3,
+                          ? 11
+                          : 10,
                     ),
               ),
               NavMenu(
                 label: 'Resources',
                 items: const ['Help Center', 'Training Guides', 'About'],
-                onSelected: (_) => go(4),
+                onSelected:
+                    (i) => go(
+                      i == 0
+                          ? 16
+                          : i == 1
+                          ? 17
+                          : 18,
+                    ),
               ),
             ],
           ],
@@ -203,7 +242,7 @@ class _ShellState extends ConsumerState<Shell> {
                     backgroundColor: lime,
                     foregroundColor: navy,
                   ),
-                  onPressed: () => go(3),
+                  onPressed: () => go(19),
                   child: const Text(
                     'Get started',
                     style: TextStyle(fontWeight: FontWeight.w900),
@@ -213,11 +252,7 @@ class _ShellState extends ConsumerState<Shell> {
             ],
           ] else
             IconButton(
-              onPressed:
-                  () => showModalBottomSheet(
-                    context: context,
-                    builder: (_) => const _Notices(),
-                  ),
+              onPressed: () => go(9),
               icon: const Badge(child: Icon(Icons.notifications_none_rounded)),
             ),
         ],
@@ -255,6 +290,29 @@ class _ShellState extends ConsumerState<Shell> {
                       _drawerItem(6, Icons.groups_outlined, 'Coach Match'),
                       _drawerItem(7, Icons.devices_other, 'Devices'),
                       _drawerItem(8, Icons.fitness_center, 'Strength'),
+                      _drawerItem(
+                        9,
+                        Icons.notifications_none_rounded,
+                        'Notifications',
+                      ),
+                      _drawerItem(10, Icons.event_note, 'Training plans'),
+                      _drawerItem(11, Icons.emoji_events, 'Events'),
+                      _drawerItem(12, Icons.confirmation_number, 'Tickets'),
+                      _drawerItem(13, Icons.library_books, 'Workout library'),
+                      _drawerItem(
+                        14,
+                        Icons.dashboard_customize,
+                        'Coach platform',
+                      ),
+                      _drawerItem(15, Icons.menu_book, 'Coach resources'),
+                      _drawerItem(16, Icons.support_agent, 'Support center'),
+                      _drawerItem(17, Icons.school, 'Training guides'),
+                      _drawerItem(18, Icons.info_outline, 'About Veltrix'),
+                      _drawerItem(
+                        19,
+                        Icons.directions_run,
+                        'Athlete onboarding',
+                      ),
                     ],
                   ),
                 ),
@@ -330,69 +388,4 @@ class _ShellState extends ConsumerState<Shell> {
       },
     );
   }
-}
-
-class _Notices extends StatelessWidget {
-  const _Notices();
-  @override
-  Widget build(BuildContext context) => const SafeArea(
-    child: Padding(
-      padding: EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Notifications',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              color: navy,
-            ),
-          ),
-          SizedBox(height: 12),
-          _NoticeItem(
-            Icons.event_available,
-            blue,
-            'Workout ready',
-            'Your aerobic run is scheduled for 7:00 AM.',
-          ),
-          SizedBox(height: 9),
-          _NoticeItem(
-            Icons.chat_bubble_outline,
-            purple,
-            'Coach Priya commented',
-            'Strong work on the intervals.',
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-class _NoticeItem extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final String title, body;
-  const _NoticeItem(this.icon, this.color, this.title, this.body);
-  @override
-  Widget build(BuildContext context) => Card(
-    child: ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-      leading: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: .12),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Icon(icon, color: color),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.w900, color: navy),
-      ),
-      subtitle: Text(body, style: const TextStyle(fontSize: 11)),
-    ),
-  );
 }

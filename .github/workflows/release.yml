@@ -27,6 +27,17 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Configure Android signing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        run: |
+          test -n "$ANDROID_KEYSTORE_BASE64"
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-keystore.jks
+          printf "storeFile=app/release-keystore.jks\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=%s\n" "$ANDROID_STORE_PASSWORD" "$ANDROID_KEY_PASSWORD" "$ANDROID_KEY_ALIAS" > android/key.properties
+
       - name: Get version from tag
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
@@ -37,14 +48,20 @@ jobs:
 
       - run: flutter pub get
 
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test --coverage
+
       - name: Build Web
-        run: flutter build web --release --no-tree-shake-icons
+        run: flutter build web --release --no-tree-shake-icons --dart-define=VELTRIX_PRODUCTION=true
 
       - name: Build Android APK
-        run: flutter build apk --release --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
+        run: flutter build apk --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
 
       - name: Build Android App Bundle
-        run: flutter build appbundle --release --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
+        run: flutter build appbundle --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v2

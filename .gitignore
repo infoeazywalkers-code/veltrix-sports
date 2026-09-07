@@ -113,3 +113,6 @@ Desktop.ini
 # Coverage
 coverage/
 .lcov
+
+# Node
+functions/node_modules/

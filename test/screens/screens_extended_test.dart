@@ -39,7 +39,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: PremiumScreen())),
+        const MaterialApp(home: Scaffold(body: PremiumScreen())),
       );
       // Top of the ListView should show these
       expect(find.text('PREMIUM'), findsOneWidget);
@@ -51,7 +51,7 @@ void main() {
 
     testWidgets('scrolls to pricing section', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: PremiumScreen())),
+        const MaterialApp(home: Scaffold(body: PremiumScreen())),
       );
       // Scroll down to reach the pricing section
       await tester.scrollUntilVisible(find.text('Monthly'), 200);
@@ -62,7 +62,7 @@ void main() {
 
     testWidgets('scrolls to virtual section', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: PremiumScreen())),
+        const MaterialApp(home: Scaffold(body: PremiumScreen())),
       );
       await tester.scrollUntilVisible(
         find.text('Veltrix Virtual included.'),
@@ -74,7 +74,7 @@ void main() {
 
     testWidgets('scrolls to feature highlights', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: PremiumScreen())),
+        const MaterialApp(home: Scaffold(body: PremiumScreen())),
       );
       await tester.scrollUntilVisible(
         find.text('Why athletes choose Premium'),
@@ -88,7 +88,7 @@ void main() {
 
     testWidgets('scrolls to CTA section', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: PremiumScreen())),
+        const MaterialApp(home: Scaffold(body: PremiumScreen())),
       );
       await tester.scrollUntilVisible(
         find.text('Go further with Premium.'),
@@ -101,7 +101,7 @@ void main() {
 
     testWidgets('scrolls to footer', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: PremiumScreen())),
+        const MaterialApp(home: Scaffold(body: PremiumScreen())),
       );
       await tester.scrollUntilVisible(find.text('VELTRIX'), 200);
       await tester.pumpAndSettle();
@@ -110,7 +110,7 @@ void main() {
 
     testWidgets('scrolls to pricing details', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: PremiumScreen())),
+        const MaterialApp(home: Scaffold(body: PremiumScreen())),
       );
       await tester.scrollUntilVisible(find.text('BEST VALUE'), 200);
       await tester.pumpAndSettle();
@@ -121,10 +121,10 @@ void main() {
 
     testWidgets('renders desktop layout when wide', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: MediaQuery(
-              data: const MediaQueryData(size: Size(1200, 800)),
+              data: MediaQueryData(size: Size(1200, 800)),
               child: PremiumScreen(),
             ),
           ),
@@ -137,10 +137,10 @@ void main() {
 
     testWidgets('renders mobile layout when narrow', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: MediaQuery(
-              data: const MediaQueryData(size: Size(400, 800)),
+              data: MediaQueryData(size: Size(400, 800)),
               child: PremiumScreen(),
             ),
           ),
@@ -228,7 +228,7 @@ void main() {
     });
 
     testWidgets('renders with null workout', (tester) async {
-      await tester.pumpWidget(MaterialApp(home: const WorkoutDetailsScreen()));
+      await tester.pumpWidget(const MaterialApp(home: WorkoutDetailsScreen()));
       expect(find.byType(Scaffold), findsOneWidget);
     });
 

@@ -169,7 +169,7 @@ void main() {
   });
 
   group('DevicesScreen - additional coverage', () {
-    testWidgets('contact support button shows snackbar', (tester) async {
+    testWidgets('contact support button opens support center', (tester) async {
       _setMobile(tester);
       await tester.pumpWidget(_wrap(const DevicesScreen()));
       await tester.pumpAndSettle();
@@ -179,8 +179,9 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Contact support'));
-      await tester.pump();
-      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.text('Support center'), findsWidgets);
+      expect(find.text('Device pairing help'), findsOneWidget);
     });
 
     testWidgets('Sync Watch Workouts Now button exists', (tester) async {

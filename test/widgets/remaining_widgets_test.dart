@@ -11,8 +11,6 @@ void main() {
     home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
   );
 
-  Widget wrapFull(Widget child) => MaterialApp(home: Scaffold(body: child));
-
   group('Ring', () {
     testWidgets('renders value, label, and CircularProgressIndicator', (
       tester,
@@ -140,11 +138,11 @@ void main() {
   group('ResponsiveCards', () {
     testWidgets('renders as Row on desktop', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: MediaQuery(
-              data: const MediaQueryData(size: Size(1200, 800)),
-              child: const ResponsiveCards(
+              data: MediaQueryData(size: Size(1200, 800)),
+              child: ResponsiveCards(
                 children: [
                   Card(
                     child: Padding(
@@ -171,11 +169,11 @@ void main() {
 
     testWidgets('renders as Wrap on mobile', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: MediaQuery(
-              data: const MediaQueryData(size: Size(400, 800)),
-              child: const ResponsiveCards(
+              data: MediaQueryData(size: Size(400, 800)),
+              child: ResponsiveCards(
                 children: [
                   Card(
                     child: Padding(
@@ -204,11 +202,11 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: MediaQuery(
-              data: const MediaQueryData(size: Size(1200, 800)),
-              child: const ResponsiveCards(
+              data: MediaQueryData(size: Size(1200, 800)),
+              child: ResponsiveCards(
                 mobileColumns: 2,
                 children: [
                   Card(
@@ -228,11 +226,11 @@ void main() {
 
     testWidgets('renders single child', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: MediaQuery(
-              data: const MediaQueryData(size: Size(1200, 800)),
-              child: const ResponsiveCards(
+              data: MediaQueryData(size: Size(1200, 800)),
+              child: ResponsiveCards(
                 children: [
                   Card(
                     child: Padding(
@@ -291,11 +289,11 @@ void main() {
 
     testWidgets('renders as Wrap on mobile viewport', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: MediaQuery(
-              data: const MediaQueryData(size: Size(400, 800)),
-              child: const SingleChildScrollView(child: VeltrixFooter()),
+              data: MediaQueryData(size: Size(400, 800)),
+              child: SingleChildScrollView(child: VeltrixFooter()),
             ),
           ),
         ),

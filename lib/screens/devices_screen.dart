@@ -5,6 +5,7 @@ import '../widgets/veltrix_footer.dart';
 import '../widgets/device_connect_dialog.dart';
 import '../services/watch_sync_service.dart';
 import '../services/ble_sensor_service.dart';
+import 'production_pages.dart';
 
 class DevicesScreen extends StatelessWidget {
   const DevicesScreen({super.key});
@@ -13,12 +14,18 @@ class DevicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final desktop = MediaQuery.sizeOf(context).width >= 850;
     return ListView(
-      padding: EdgeInsets.fromLTRB(desktop ? 40 : 18, 32, desktop ? 40 : 18, 64),
+      padding: EdgeInsets.fromLTRB(
+        desktop ? 40 : 18,
+        32,
+        desktop ? 40 : 18,
+        64,
+      ),
       children: [
         const SectionIntro(
           eyebrow: 'DEVICES & WATCHES',
           title: 'One App, Endless Ways to Train',
-          body: 'Connect your Apple Watch, Garmin, Polar, or COROS via Apple HealthKit & HealthConnect for auto workout sync, or pair BLE heart rate monitors for live training.',
+          body:
+              'Connect your Apple Watch, Garmin, Polar, or COROS via Apple HealthKit & HealthConnect for auto workout sync, or pair BLE heart rate monitors for live training.',
         ),
         const SizedBox(height: 24),
         const _WatchSyncBanner(),
@@ -73,7 +80,10 @@ class DevicesScreen extends StatelessWidget {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: const Color(0xffeaf2f8), borderRadius: BorderRadius.circular(20)),
+          decoration: BoxDecoration(
+            color: const Color(0xffeaf2f8),
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Row(
             children: [
               const Icon(Icons.help_outline, color: blue),
@@ -85,8 +95,15 @@ class DevicesScreen extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => showFeatureMessage(context, 'Contact support feature coming soon!'),
-                child: const Text('Contact support', style: TextStyle(fontWeight: FontWeight.w800)),
+                onPressed:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => supportScreen()),
+                    ),
+                child: const Text(
+                  'Contact support',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
               ),
             ],
           ),
@@ -97,7 +114,6 @@ class DevicesScreen extends StatelessWidget {
     );
   }
 }
-
 
 class _TopDevices extends StatelessWidget {
   const _TopDevices();
@@ -116,46 +132,72 @@ class _TopDevices extends StatelessWidget {
       spacing: 12,
       runSpacing: 12,
       alignment: WrapAlignment.center,
-      children: devices.map((d) => InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => showDialog(
-          context: context,
-          builder: (_) => DeviceConnectDialog(
-            deviceName: d.$1,
-            category: d.$3,
-            isConnected: d.$4,
-          ),
-        ),
-        child: Container(
-          width: desktop ? 150 : (MediaQuery.sizeOf(context).width - 50) / 3,
-          padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: d.$4 ? Colors.green.withValues(alpha: 0.4) : const Color(0xffe4eaf0)),
-          ),
-          child: Column(
-            children: [
-              Icon(d.$2, color: d.$4 ? Colors.green[800] : navy, size: 32),
-              const SizedBox(height: 10),
-              Text(
-                d.$1,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w800, color: navy, fontSize: 12),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                d.$4 ? 'Connected' : 'Tap to pair',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  color: d.$4 ? Colors.green[700] : muted,
+      children:
+          devices
+              .map(
+                (d) => InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap:
+                      () => showDialog(
+                        context: context,
+                        builder:
+                            (_) => DeviceConnectDialog(
+                              deviceName: d.$1,
+                              category: d.$3,
+                              isConnected: d.$4,
+                            ),
+                      ),
+                  child: Container(
+                    width:
+                        desktop
+                            ? 150
+                            : (MediaQuery.sizeOf(context).width - 50) / 3,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 22,
+                      horizontal: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color:
+                            d.$4
+                                ? Colors.green.withValues(alpha: 0.4)
+                                : const Color(0xffe4eaf0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          d.$2,
+                          color: d.$4 ? Colors.green[800] : navy,
+                          size: 32,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          d.$1,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            color: navy,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          d.$4 ? 'Connected' : 'Tap to pair',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: d.$4 ? Colors.green[700] : muted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      )).toList(),
+              )
+              .toList(),
     );
   }
 }
@@ -175,13 +217,21 @@ class _DeviceCategory extends StatelessWidget {
           children: [
             Text(
               category.toUpperCase(),
-              style: const TextStyle(color: blue, fontSize: 10, letterSpacing: 1.4, fontWeight: FontWeight.w900),
+              style: const TextStyle(
+                color: blue,
+                fontSize: 10,
+                letterSpacing: 1.4,
+                fontWeight: FontWeight.w900,
+              ),
             ),
             const SizedBox(height: 16),
             Wrap(
               spacing: desktop ? 12 : 10,
               runSpacing: desktop ? 12 : 10,
-              children: devices.map((d) => _DeviceChip(d.$1, d.$2, category, d.$3)).toList(),
+              children:
+                  devices
+                      .map((d) => _DeviceChip(d.$1, d.$2, category, d.$3))
+                      .toList(),
             ),
           ],
         ),
@@ -199,27 +249,37 @@ class _DeviceChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InkWell(
     borderRadius: BorderRadius.circular(12),
-    onTap: () => showDialog(
-      context: context,
-      builder: (_) => DeviceConnectDialog(
-        deviceName: name,
-        category: category,
-        isConnected: connected,
-      ),
-    ),
+    onTap:
+        () => showDialog(
+          context: context,
+          builder:
+              (_) => DeviceConnectDialog(
+                deviceName: name,
+                category: category,
+                isConnected: connected,
+              ),
+        ),
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: connected ? lime.withValues(alpha: 0.25) : bg,
         borderRadius: BorderRadius.circular(12),
-        border: connected ? Border.all(color: navy.withValues(alpha: 0.3)) : null,
+        border:
+            connected ? Border.all(color: navy.withValues(alpha: 0.3)) : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: connected ? navy : muted, size: 18),
           const SizedBox(width: 8),
-          Text(name, style: TextStyle(color: connected ? navy : ink, fontWeight: FontWeight.w700, fontSize: 12)),
+          Text(
+            name,
+            style: TextStyle(
+              color: connected ? navy : ink,
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+            ),
+          ),
           if (connected) ...[
             const SizedBox(width: 6),
             const Icon(Icons.check_circle, color: Colors.green, size: 14),
@@ -252,7 +312,8 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
     if (mounted) {
       setState(() {
         _isSyncing = false;
-        _syncStatus = 'Successfully imported $count workout${count == 1 ? '' : 's'} from Apple Health / HealthConnect!';
+        _syncStatus =
+            'Successfully imported $count workout${count == 1 ? '' : 's'} from Apple Health / HealthConnect!';
       });
     }
   }
@@ -291,7 +352,11 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
                       color: lime.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.watch_outlined, color: lime, size: 28),
+                    child: const Icon(
+                      Icons.watch_outlined,
+                      color: lime,
+                      size: 28,
+                    ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -300,14 +365,21 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
                       children: [
                         const Text(
                           'Apple Watch & HealthConnect Auto-Sync',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 16,
+                          ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           ble.isConnected
                               ? 'Connected to ${ble.connectedDeviceName} (${ble.liveHeartRate} BPM streaming)'
                               : 'Auto-import workouts from Apple Watch, Garmin, Polar & COROS',
-                          style: const TextStyle(color: Colors.white70, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
@@ -323,16 +395,26 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.green.withValues(alpha: 0.5)),
+                    border: Border.all(
+                      color: Colors.green.withValues(alpha: 0.5),
+                    ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.check_circle, color: Colors.green, size: 18),
+                      const Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 18,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           _syncStatus!,
-                          style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ],
@@ -348,42 +430,63 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lime,
                       foregroundColor: navy,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    icon: _isSyncing
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: navy),
-                          )
-                        : const Icon(Icons.sync, size: 18),
+                    icon:
+                        _isSyncing
+                            ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: navy,
+                              ),
+                            )
+                            : const Icon(Icons.sync, size: 18),
                     label: Text(
                       _isSyncing ? 'Syncing...' : 'Sync Watch Workouts Now',
-                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                   OutlinedButton.icon(
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (_) => const DeviceConnectDialog(
-                          deviceName: 'Apple Watch Series 9',
-                          category: 'Wearable',
-                          isConnected: false,
-                        ),
+                        builder:
+                            (_) => const DeviceConnectDialog(
+                              deviceName: 'Apple Watch Series 9',
+                              category: 'Wearable',
+                              isConnected: false,
+                            ),
                       );
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.white,
                       side: const BorderSide(color: Colors.white38),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     icon: const Icon(Icons.bluetooth_searching, size: 18),
                     label: const Text(
                       'Pair BLE Sensor',
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                 ],
@@ -395,5 +498,3 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
     );
   }
 }
-
-

@@ -227,12 +227,12 @@ void main() {
       expect(find.text('Core Workout'), findsOneWidget);
     });
 
-    testWidgets('notification icon shows snackbar', (tester) async {
+    testWidgets('notification icon opens notifications page', (tester) async {
       await tester.pumpWidget(wrapHome());
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(Icons.notifications_none_rounded));
-      await tester.pump();
-      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.text('Notifications'), findsWidgets);
     });
   });
 

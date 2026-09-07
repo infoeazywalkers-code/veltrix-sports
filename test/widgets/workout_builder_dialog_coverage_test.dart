@@ -114,7 +114,6 @@ void main() {
 
       // Check that CircularProgressIndicator appears (saving state)
       // Note: it may be visible briefly before dialog pops
-      final loadingWidgets = find.byType(CircularProgressIndicator);
       // After pumpAndSettle the dialog should be popped
       await tester.pumpAndSettle();
     });

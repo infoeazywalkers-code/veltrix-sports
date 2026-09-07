@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:veltrix_sports/constants.dart';
 import 'package:veltrix_sports/models/performance_snapshot.dart';
 import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/screens/progress_screen.dart';

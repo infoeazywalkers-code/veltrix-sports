@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../models/workout.dart';
 import '../services/workout_service.dart';
+import '../screens/feature_collection_screen.dart';
+import '../models/event_ticket.dart';
+import '../services/event_service.dart';
 import 'package:uuid/uuid.dart';
 
 class EventDetailsDialog extends StatelessWidget {
@@ -16,7 +19,8 @@ class EventDetailsDialog extends StatelessWidget {
     final location = event['location'] as String? ?? 'Global';
     final category = event['category'] as String? ?? 'Endurance';
     final participants = event['participants'] as String? ?? '500+ Athletes';
-    final description = event['description'] as String? ??
+    final description =
+        event['description'] as String? ??
         'Join thousands of endurance athletes in this premier competition. Course maps, hydration stations, and official chip timing provided.';
 
     return AlertDialog(
@@ -59,7 +63,11 @@ class EventDetailsDialog extends StatelessWidget {
             const SizedBox(height: 16),
             const Text(
               'About the Event',
-              style: TextStyle(fontWeight: FontWeight.w800, color: navy, fontSize: 16),
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                color: navy,
+                fontSize: 16,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
@@ -81,7 +89,10 @@ class EventDetailsDialog extends StatelessWidget {
                     child: Text(
                       'Includes Veltrix Live Leaderboard & GPS Tracking',
                       style: TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w800, color: navy),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: navy,
+                      ),
                     ),
                   ),
                 ],
@@ -103,9 +114,10 @@ class EventDetailsDialog extends StatelessWidget {
               final raceWorkout = Workout(
                 id: const Uuid().v4(),
                 planId: 'race_entry',
-                sport: category.toLowerCase().contains('cycle')
-                    ? Sport.bike
-                    : Sport.run,
+                sport:
+                    category.toLowerCase().contains('cycle')
+                        ? Sport.bike
+                        : Sport.run,
                 title: 'RACE: $title',
                 description: 'Official Race Event in $location',
                 duration: '2h 30m',
@@ -121,7 +133,9 @@ class EventDetailsDialog extends StatelessWidget {
             if (context.mounted) {
               Navigator.pop(context);
               showFeatureMessage(
-                  context, 'Race "$title" added to your target calendar!');
+                context,
+                'Race "$title" added to your target calendar!',
+              );
             }
           },
         ),
@@ -130,10 +144,27 @@ class EventDetailsDialog extends StatelessWidget {
             backgroundColor: lime,
             foregroundColor: navy,
           ),
-          onPressed: () {
-            Navigator.pop(context);
-            showFeatureMessage(
-                context, 'Redirecting to Official $title Registration portal...');
+          onPressed: () async {
+            try {
+              final ticket = await EventService().register(
+                SportsEvent(
+                  id: event['id'] as String? ?? title.toLowerCase().replaceAll(' ', '_'),
+                  title: title,
+                  date: DateTime.tryParse(dateStr) ?? DateTime.now(),
+                  location: location,
+                  category: category,
+                  description: description,
+                ),
+              );
+              if (!context.mounted) return;
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => ticketsScreen()));
+              showFeatureMessage(context, 'Registration confirmed. Ticket ${ticket.qrPayload} is ready.');
+            } catch (error) {
+              if (context.mounted) {
+                showFeatureMessage(context, 'Registration failed: $error');
+              }
+            }
           },
           child: const Text(
             'Register Now',

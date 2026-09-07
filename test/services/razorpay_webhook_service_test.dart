@@ -29,7 +29,7 @@ void main() {
       const secret = 'rzp_sec_VeltrixSecret2026';
 
       // Generate the correct signature
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -51,7 +51,7 @@ void main() {
       const secret = 'rzp_sec_VeltrixSecret2026';
 
       // Generate signature for different order
-      final payload = 'order_different|pay_correct';
+      const payload = 'order_different|pay_correct';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -73,7 +73,7 @@ void main() {
       const secret = 'rzp_sec_VeltrixSecret2026';
 
       // Generate signature for different payment
-      final payload = 'order_1|pay_2';
+      const payload = 'order_1|pay_2';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -95,7 +95,7 @@ void main() {
       const secret = 'rzp_sec_WrongSecret';
 
       // Generate signature with wrong secret
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -116,7 +116,7 @@ void main() {
       const paymentId = 'pay_1';
       const secret = 'rzp_sec_VeltrixSecret2026';
 
-      final payload = '$orderId|$paymentId';
+      const payload = '$orderId|$paymentId';
       final secretBytes = utf8.encode(secret);
       final payloadBytes = utf8.encode(payload);
       final hmacSha256 = Hmac(sha256, secretBytes);
@@ -144,11 +144,8 @@ void main() {
       expect(isValid, isFalse);
     });
 
-    test('defaultWebhookSecret is not empty', () {
-      expect(
-        RazorpayWebhookVerificationService.defaultWebhookSecret,
-        isNotEmpty,
-      );
+    test('defaultWebhookSecret is empty unless provided at build time', () {
+      expect(RazorpayWebhookVerificationService.defaultWebhookSecret, isEmpty);
     });
   });
 }

@@ -102,7 +102,7 @@ void main() {
       final laps = engine.laps;
       expect(
         () => laps.add(
-          LapSplit(
+          const LapSplit(
             lapIndex: 1,
             duration: '01:00',
             pace: '5:00 /km',

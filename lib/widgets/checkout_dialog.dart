@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../services/payment_service.dart';
@@ -60,7 +60,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
         Navigator.pop(context, true);
         showFeatureMessage(
           context,
-          'Razorpay payment verified! Welcome to ${widget.plan.title}.',
+          'Secure checkout opened. Your subscription activates after payment verification.',
         );
       }
     }
@@ -123,7 +123,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (kDebugMode || kIsWeb)
+              if (kDebugMode)
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 14),
@@ -146,7 +146,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                       ),
                       SizedBox(width: 6),
                       Text(
-                        'DEMO MODE — Simulated payment',
+                        'DEMO MODE — payments require backend verification',
                         style: TextStyle(
                           color: Colors.orange,
                           fontSize: 11,
@@ -315,7 +315,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                 onChanged: _onPromoChanged,
                 decoration: InputDecoration(
                   labelText: 'Promo Code',
-                  hintText: 'e.g. VELTRIXPRO or ATHLETE20',
+                  hintText: 'e.g. ATHLETE20',
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.card_giftcard),
                   suffixIcon:

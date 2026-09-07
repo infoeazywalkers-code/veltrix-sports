@@ -98,7 +98,7 @@ void main() {
   group('MobileExploreScreen', () {
     testWidgets('renders search bar', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: MobileExploreScreen())),
+        const MaterialApp(home: Scaffold(body: MobileExploreScreen())),
       );
       expect(find.byType(TextField), findsOneWidget);
       expect(find.text('Explore'), findsOneWidget);
@@ -106,7 +106,7 @@ void main() {
 
     testWidgets('renders explore grid', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: MobileExploreScreen())),
+        const MaterialApp(home: Scaffold(body: MobileExploreScreen())),
       );
       expect(find.text('Browse Veltrix'), findsOneWidget);
       expect(find.text('Training plans'), findsOneWidget);
@@ -117,7 +117,7 @@ void main() {
   group('MobileMoreScreen', () {
     testWidgets('renders sections and links', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        const MaterialApp(home: Scaffold(body: MobileMoreScreen())),
       );
       expect(find.text('More features'), findsOneWidget);
       expect(find.text('Train with more support'), findsOneWidget);
@@ -126,7 +126,7 @@ void main() {
 
     testWidgets('renders feature items', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        const MaterialApp(home: Scaffold(body: MobileMoreScreen())),
       );
       expect(find.text('Premium'), findsOneWidget);
       expect(find.text('Find a coach'), findsOneWidget);
@@ -137,7 +137,7 @@ void main() {
 
     testWidgets('renders info cards', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        const MaterialApp(home: Scaffold(body: MobileMoreScreen())),
       );
       expect(find.byType(Card), findsWidgets);
     });

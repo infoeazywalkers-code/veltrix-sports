@@ -89,4 +89,21 @@ class Workout {
         'completed': completed,
         'segments': segments.map((s) => s.toMap()).toList(),
       };
+
+  Workout copyWith({String? userId}) => Workout(
+        id: id,
+        userId: userId ?? this.userId,
+        planId: planId,
+        sport: sport,
+        title: title,
+        description: description,
+        duration: duration,
+        distanceKm: distanceKm,
+        tss: tss,
+        targetPace: targetPace,
+        scheduledFor: scheduledFor,
+        progress: progress,
+        completed: completed,
+        segments: segments,
+      );
 }

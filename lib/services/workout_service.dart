@@ -52,10 +52,11 @@ class WorkoutService {
     }
   }
 
-  Future<List<Workout>> getByPlanId(String planId) async {
+  Future<List<Workout>> getByPlanId(String userId, String planId) async {
     try {
       final q =
           await _workouts
+              .where('userId', isEqualTo: userId)
               .where('planId', isEqualTo: planId)
               .orderBy('scheduledFor')
               .get();
@@ -65,8 +66,13 @@ class WorkoutService {
     }
   }
 
-  Stream<List<Workout>> watchByDateRange(DateTime start, DateTime end) {
+  Stream<List<Workout>> watchByDateRange(
+    String userId,
+    DateTime start,
+    DateTime end,
+  ) {
     return _workouts
+        .where('userId', isEqualTo: userId)
         .where('scheduledFor', isGreaterThanOrEqualTo: start)
         .where('scheduledFor', isLessThanOrEqualTo: end)
         .snapshots()
@@ -81,11 +87,12 @@ class WorkoutService {
         });
   }
 
-  Future<List<Workout>> getWeek(DateTime weekStart) async {
+  Future<List<Workout>> getWeek(String userId, DateTime weekStart) async {
     try {
       final weekEnd = weekStart.add(const Duration(days: 7));
       final q =
           await _workouts
+              .where('userId', isEqualTo: userId)
               .where('scheduledFor', isGreaterThanOrEqualTo: weekStart)
               .where('scheduledFor', isLessThanOrEqualTo: weekEnd)
               .orderBy('scheduledFor')
@@ -96,10 +103,11 @@ class WorkoutService {
     }
   }
 
-  Future<List<Workout>> getUpcoming({int limit = 5}) async {
+  Future<List<Workout>> getUpcoming(String userId, {int limit = 5}) async {
     try {
       final q =
           await _workouts
+              .where('userId', isEqualTo: userId)
               .where('scheduledFor', isGreaterThanOrEqualTo: DateTime.now())
               .where('completed', isEqualTo: false)
               .orderBy('scheduledFor')

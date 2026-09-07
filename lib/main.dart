@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -12,6 +13,7 @@ import 'constants.dart';
 import 'shell.dart';
 import 'mobile/shell.dart';
 import 'firebase_options_dev.dart' as firebase_options;
+import 'firebase_options.dart' as production_firebase_options;
 import 'services/notification_service.dart';
 import 'services/razorpay_service.dart';
 import 'widgets/error_boundary.dart';
@@ -58,7 +60,9 @@ Future<void> main() async {
 
   try {
     await Firebase.initializeApp(
-      options: firebase_options.DefaultFirebaseOptions.currentPlatform,
+      options: const bool.fromEnvironment('VELTRIX_PRODUCTION')
+          ? production_firebase_options.DefaultFirebaseOptions.currentPlatform
+          : firebase_options.DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true,
@@ -72,6 +76,11 @@ Future<void> main() async {
       );
     }
     await FirebaseAnalytics.instance.logAppOpen();
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      final userId = user?.uid ?? '';
+      FirebaseAnalytics.instance.setUserId(id: userId.isEmpty ? null : userId);
+      if (!kIsWeb) FirebaseCrashlytics.instance.setUserIdentifier(userId);
+    });
 
     // Initialize Push Notifications & Razorpay Engine
     await NotificationService().initialize();

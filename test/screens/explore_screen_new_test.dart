@@ -82,16 +82,14 @@ void main() {
       expect(find.text('View plan'), findsOneWidget);
     });
 
-    testWidgets('tap View plan shows feature message', (tester) async {
+    testWidgets('tap View plan opens training plans page', (tester) async {
       await tester.pumpWidget(wrap(const ExploreScreen()));
       await tester.pumpAndSettle();
       await scrollDown(tester);
       await tester.tap(find.text('View plan'));
       await tester.pumpAndSettle();
-      expect(
-        find.textContaining('Marathon Training Pro plan selected'),
-        findsOneWidget,
-      );
+      expect(find.text('Training plans'), findsWidgets);
+      expect(find.text('Cycling Performance Builder'), findsOneWidget);
     });
 
     testWidgets('renders upcoming events section after scrolling', (
@@ -191,12 +189,13 @@ void main() {
       expect(find.text('Marathon Training Pro'), findsNothing);
     });
 
-    testWidgets('tap Training plans shows feature message', (tester) async {
+    testWidgets('tap Training plans opens feature page', (tester) async {
       await tester.pumpWidget(wrap(const ExploreScreen()));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Training plans'));
       await tester.pumpAndSettle();
-      expect(find.text('Training plans feature coming soon!'), findsOneWidget);
+      expect(find.text('Training plans'), findsWidgets);
+      expect(find.text('Marathon Training Pro'), findsOneWidget);
     });
 
     testWidgets('tap Find a coach calls onNavigate(6)', (tester) async {
@@ -213,20 +212,22 @@ void main() {
       expect(navigatedTo, 6);
     });
 
-    testWidgets('tap Sports events shows feature message', (tester) async {
+    testWidgets('tap Sports events opens feature page', (tester) async {
       await tester.pumpWidget(wrap(const ExploreScreen()));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Sports events'));
       await tester.pumpAndSettle();
-      expect(find.text('Sports events feature coming soon!'), findsOneWidget);
+      expect(find.text('Sports events'), findsWidgets);
+      expect(find.text('Delhi Cycling Grand Prix'), findsOneWidget);
     });
 
-    testWidgets('tap My tickets shows feature message', (tester) async {
+    testWidgets('tap My tickets opens feature page', (tester) async {
       await tester.pumpWidget(wrap(const ExploreScreen()));
       await tester.pumpAndSettle();
       await tester.tap(find.text('My tickets'));
       await tester.pumpAndSettle();
-      expect(find.text('My tickets feature coming soon!'), findsOneWidget);
+      expect(find.text('My tickets'), findsWidgets);
+      expect(find.text('No active tickets'), findsOneWidget);
     });
 
     testWidgets('tap Premium calls onNavigate(5)', (tester) async {
