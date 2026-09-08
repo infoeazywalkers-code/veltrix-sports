@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'notification_repository.dart';
 import '../models/notification_record.dart';
+import '../models/user_preferences.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -20,6 +22,67 @@ class NotificationService {
   String? _fcmToken;
 
   String? get fcmToken => _fcmToken;
+
+  /// Checks whether notifications are allowed given the user's preferences
+  /// and the current time (respects quiet hours).
+  bool isNotificationAllowed({
+    required NotificationPreferences prefs,
+    required String type,
+  }) {
+    // Check if the specific notification type is enabled
+    switch (type) {
+      case 'workout_reminder':
+        if (!prefs.workoutReminders) return false;
+        break;
+      case 'coach_message':
+        if (!prefs.coachMessages) return false;
+        break;
+      case 'weekly_summary':
+        if (!prefs.weeklySummary) return false;
+        break;
+      case 'achievement':
+        if (!prefs.achievements) return false;
+        break;
+    }
+
+    // Check quiet hours
+    if (prefs.quietHoursEnabled) {
+      final now = TimeOfDay.now();
+      final start = _parseTimeString(prefs.quietHoursStart);
+      final end = _parseTimeString(prefs.quietHoursEnd);
+
+      if (start != null && end != null) {
+        if (_isWithinQuietHours(now, start, end)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  TimeOfDay? _parseTimeString(String timeStr) {
+    final parts = timeStr.split(':');
+    if (parts.length != 2) return null;
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) return null;
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  bool _isWithinQuietHours(TimeOfDay current, TimeOfDay start, TimeOfDay end) {
+    final currentMinutes = current.hour * 60 + current.minute;
+    final startMinutes = start.hour * 60 + start.minute;
+    final endMinutes = end.hour * 60 + end.minute;
+
+    if (startMinutes <= endMinutes) {
+      // Same day range (e.g., 09:00 - 17:00)
+      return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+    } else {
+      // Overnight range (e.g., 22:00 - 07:00)
+      return currentMinutes >= startMinutes || currentMinutes <= endMinutes;
+    }
+  }
 
   Future<void> initialize() async {
     if (_initialized) return;
@@ -168,11 +231,26 @@ class NotificationService {
 
   /// Schedules a workout reminder using OS-level scheduling via [zonedSchedule].
   /// This notification persists across app restarts and device reboots.
+  /// If [prefs] is provided, the reminder is only scheduled when the user's
+  /// notification preferences allow it (respects workout reminders toggle,
+  /// quiet hours, etc.).
   Future<void> scheduleWorkoutReminder(
     String workoutTitle,
-    DateTime reminderTime,
-  ) async {
+    DateTime reminderTime, {
+    NotificationPreferences? prefs,
+  }) async {
     try {
+      // Check user preferences before scheduling
+      if (prefs != null &&
+          !isNotificationAllowed(prefs: prefs, type: 'workout_reminder')) {
+        if (kDebugMode) {
+          debugPrint(
+            '[Notification] Skipping reminder for "$workoutTitle" — disabled by user preferences',
+          );
+        }
+        return;
+      }
+
       final now = tz.TZDateTime.now(tz.local);
       final scheduledDate = tz.TZDateTime.from(reminderTime, tz.local);
 

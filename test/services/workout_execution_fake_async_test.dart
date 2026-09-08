@@ -103,19 +103,16 @@ void main() {
       });
     });
 
-    test('currentZone transitions through running zones during demo', () {
+    test('currentZone stays at 1 when no personalized zones are provided', () {
       fakeAsync((async) {
         final engine = WorkoutExecutionService(workout: testWorkout);
         final zones = <int>{};
         engine.start();
-        // Iterate through several seconds to sample multiple HR values.
         for (var i = 0; i < 25; i++) {
           async.elapse(const Duration(seconds: 1));
           zones.add(engine.currentZone);
         }
-        // HR cycles 135-159, which maps to zones 3 and 4.
-        expect(zones, contains(3));
-        expect(zones, contains(4));
+        expect(zones, {1});
         engine.dispose();
       });
     });

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import '../models/user_preferences.dart';
 import '../models/workout.dart';
 import '../services/workout_service.dart';
 import 'analytics_service.dart';
@@ -23,17 +24,18 @@ class LapSplit {
 
 class WorkoutExecutionService extends ChangeNotifier {
   final Workout workout;
+  final List<HeartRateZone>? zones;
   Timer? _timer;
 
   int _elapsedSeconds = 0;
-  int _currentHeartRate = 142;
-  int _currentCadence = 172;
+  int _currentHeartRate = 0;
+  int _currentCadence = 0;
   double _distanceKm = 0.0;
   WorkoutExecutionState _state = WorkoutExecutionState.initial;
   final List<LapSplit> _laps = [];
   final BleSensorService _bleSensor = BleSensorService();
 
-  WorkoutExecutionService({required this.workout}) {
+  WorkoutExecutionService({required this.workout, this.zones}) {
     _bleSensor.addListener(_onBleSensorUpdate);
     if (_bleSensor.isConnected) {
       _currentHeartRate = _bleSensor.liveHeartRate;
@@ -81,13 +83,18 @@ class WorkoutExecutionService extends ChangeNotifier {
     return (hours * 65.0).toInt();
   }
 
-  int get currentZone {
-    if (_currentHeartRate < 120) return 1;
-    if (_currentHeartRate < 140) return 2;
-    if (_currentHeartRate < 155) return 3;
-    if (_currentHeartRate < 170) return 4;
-    return 5;
+  /// Determines the current HR zone (1-indexed) using the provided zone
+  /// definitions. Falls back to zone 1 when [zones] is empty or null.
+  int getCurrentZone(List<HeartRateZone>? zones) {
+    if (zones == null || zones.isEmpty) return 1;
+    for (int i = zones.length - 1; i >= 0; i--) {
+      if (_currentHeartRate >= zones[i].min) return i + 1;
+    }
+    return 1;
   }
+
+  /// Convenience getter that evaluates zone using the engine's stored zones.
+  int get currentZone => getCurrentZone(zones);
 
   void start() {
     if (_state == WorkoutExecutionState.running) return;

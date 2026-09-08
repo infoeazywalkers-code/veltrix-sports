@@ -11,7 +11,7 @@ void main() {
       );
       expect(
         AuthService.getHumanReadableAuthError(error),
-        'No account exists with this email address.',
+        'No account found with this email.',
       );
     });
 
@@ -22,7 +22,7 @@ void main() {
       );
       expect(
         AuthService.getHumanReadableAuthError(error),
-        'Incorrect password. Please check your credentials.',
+        'Incorrect password. Please try again.',
       );
     });
 
@@ -44,7 +44,7 @@ void main() {
       );
       expect(
         AuthService.getHumanReadableAuthError(error),
-        'An account already exists with this email address.',
+        'An account already exists with this email.',
       );
     });
 
@@ -55,7 +55,7 @@ void main() {
       );
       expect(
         AuthService.getHumanReadableAuthError(error),
-        'Password should be at least 6 characters long.',
+        'Something went wrong. Please try again.',
       );
     });
 
@@ -66,7 +66,7 @@ void main() {
       );
       expect(
         AuthService.getHumanReadableAuthError(error),
-        'Network error. Please check your internet connection.',
+        'Please check your internet connection.',
       );
     });
 
@@ -77,7 +77,7 @@ void main() {
       );
       expect(
         AuthService.getHumanReadableAuthError(error),
-        'Too many attempts. Please wait a moment and try again.',
+        'Too many attempts. Please try again later.',
       );
     });
 
@@ -88,7 +88,7 @@ void main() {
       );
       expect(
         AuthService.getHumanReadableAuthError(error),
-        'This account has been disabled. Please contact support.',
+        'This account has been disabled.',
       );
     });
 
@@ -99,7 +99,7 @@ void main() {
       );
       expect(
         AuthService.getHumanReadableAuthError(error),
-        'Something went wrong',
+        'Authentication failed. Please try again.',
       );
     });
 
@@ -117,21 +117,21 @@ void main() {
     test('returns generic message for non-FirebaseAuthException errors', () {
       expect(
         AuthService.getHumanReadableAuthError(Exception('some error')),
-        'An unexpected error occurred. Please try again.',
+        'Something went wrong. Please try again.',
       );
     });
 
     test('returns generic message for string errors', () {
       expect(
         AuthService.getHumanReadableAuthError('string error'),
-        'An unexpected error occurred. Please try again.',
+        'Something went wrong. Please try again.',
       );
     });
 
     test('returns generic message for StateError', () {
       expect(
         AuthService.getHumanReadableAuthError(StateError('state error')),
-        'An unexpected error occurred. Please try again.',
+        'Something went wrong. Please try again.',
       );
     });
   });

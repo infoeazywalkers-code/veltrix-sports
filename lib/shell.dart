@@ -17,6 +17,7 @@ import '../screens/strength_screen.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/feature_collection_screen.dart';
 import '../screens/production_pages.dart';
+import '../screens/onboarding_flow.dart';
 
 import '../widgets/workout_builder_dialog.dart';
 import '../widgets/connectivity_banner.dart';
@@ -86,7 +87,18 @@ class _ShellState extends ConsumerState<Shell> {
     final authState = ref.watch(authStateProvider);
     final isLoggedIn = authState.valueOrNull != null;
     final profileAsync = ref.watch(userProfileProvider);
+    final onboardingComplete =
+        profileAsync.whenOrNull(
+          data: (profile) => profile?.onboardingStatus == 'completed',
+        ) ??
+        false;
     final profileName = profileAsync.valueOrNull?.displayName ?? '';
+    final unreadCount =
+        ref.watch(unreadNotificationCountProvider).valueOrNull ?? 0;
+
+    if (isLoggedIn && !onboardingComplete) {
+      return const OnboardingFlow();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -253,7 +265,31 @@ class _ShellState extends ConsumerState<Shell> {
           ] else
             IconButton(
               onPressed: () => go(9),
-              icon: const Badge(child: Icon(Icons.notifications_none_rounded)),
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.notifications_none_rounded),
+                  if (unreadCount > 0)
+                    Positioned(
+                      right: -2,
+                      top: -2,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          unreadCount > 9 ? '9+' : '$unreadCount',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
         ],
       ),
@@ -294,6 +330,7 @@ class _ShellState extends ConsumerState<Shell> {
                         9,
                         Icons.notifications_none_rounded,
                         'Notifications',
+                        badgeCount: unreadCount,
                       ),
                       _drawerItem(10, Icons.event_note, 'Training plans'),
                       _drawerItem(11, Icons.emoji_events, 'Events'),
@@ -374,13 +411,39 @@ class _ShellState extends ConsumerState<Shell> {
     );
   }
 
-  Widget _drawerItem(int index, IconData icon, String label) {
+  Widget _drawerItem(
+    int index,
+    IconData icon,
+    String label, {
+    int badgeCount = 0,
+  }) {
     final isSelected = page == index;
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       selected: isSelected,
       selectedTileColor: lime.withValues(alpha: .35),
-      leading: Icon(icon),
+      leading: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Icon(icon),
+          if (badgeCount > 0)
+            Positioned(
+              right: -2,
+              top: -2,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  badgeCount > 9 ? '9+' : '$badgeCount',
+                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                ),
+              ),
+            ),
+        ],
+      ),
       title: Text(label, style: const TextStyle(fontWeight: FontWeight.w800)),
       onTap: () {
         Navigator.pop(context);

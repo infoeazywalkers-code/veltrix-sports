@@ -254,14 +254,14 @@ class HomeScreen extends StatelessWidget {
         const WeekCard(),
         const SizedBox(height: 24),
         const EditorialBanner(
-          image: 'assets/images/endurance-runner.png',
+          image: 'assets/images/purposeful-training.png',
           eyebrow: 'TRAIN WITH PURPOSE',
           title: 'Every session. One clear path forward.',
           alignment: Alignment.centerLeft,
         ),
         const SizedBox(height: 16),
         const EditorialBanner(
-          image: 'assets/images/cyclist-coaching.png',
+          image: 'assets/images/coach-trackside.png',
           eyebrow: 'COACHING THAT CONNECTS',
           title: 'Expert guidance, grounded in your data.',
           alignment: Alignment.centerRight,
@@ -359,7 +359,7 @@ class PublicHomeSections extends StatelessWidget {
         const ResponsiveCards(
           children: [
             MarketingFeatureCard(
-              image: 'assets/images/endurance-runner.png',
+              image: 'assets/images/expert-training-plan.png',
               eyebrow: 'TRAINING PLANS',
               title: 'Expertise. No guesswork.',
               body:
@@ -367,7 +367,7 @@ class PublicHomeSections extends StatelessWidget {
               action: 'Find your plan',
             ),
             MarketingFeatureCard(
-              image: 'assets/images/cyclist-coaching.png',
+              image: 'assets/images/coach-trackside.png',
               eyebrow: 'COACHING',
               title: 'Even better together.',
               body:
@@ -375,8 +375,7 @@ class PublicHomeSections extends StatelessWidget {
               action: 'Find a coach',
             ),
             MarketingFeatureCard(
-              color: Color(0xff173f5f),
-              icon: Icons.insights_rounded,
+              image: 'assets/images/real-progress.png',
               eyebrow: 'PERFORMANCE',
               title: 'Real progress.',
               body:
@@ -587,7 +586,7 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
             )
           else
             Image.asset(
-              'assets/images/endurance-runner.png',
+              'assets/images/forest-run.png',
               fit: BoxFit.cover,
               errorBuilder:
                   (ctx, err, stack) => Container(

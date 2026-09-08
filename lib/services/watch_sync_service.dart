@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:uuid/uuid.dart';
 import '../models/workout.dart';
 import '../services/workout_service.dart';
 import 'analytics_service.dart';
@@ -59,7 +58,10 @@ class WatchSyncService {
         }
       }
 
-      await AnalyticsService.logDevicePaired('Apple Watch / HealthConnect', 'Health Sync');
+      await AnalyticsService.logDevicePaired(
+        'Apple Watch / HealthConnect',
+        'Health Sync',
+      );
       return importedCount;
     } catch (e) {
       if (kDebugMode) {
@@ -69,49 +71,23 @@ class WatchSyncService {
     }
   }
 
-  static Future<int> _simulateWatchSync() async {
-    await Future.delayed(const Duration(milliseconds: 1200));
-
-    final watchWorkout = Workout(
-      id: const Uuid().v4(),
-      planId: 'watch_sync',
-      sport: Sport.run,
-      title: 'Apple Watch: Aerobic Tempo Run',
-      description: 'Auto-synced from Apple Watch / Garmin HealthKit',
-      duration: '42m',
-      distanceKm: 8.4,
-      tss: 68,
-      targetPace: '5:00 /km',
-      scheduledFor: DateTime.now(),
-      completed: true,
-      progress: 1.0,
-      segments: const [
-        WorkoutSegment(label: 'Watch Interval 1', duration: '20m'),
-        WorkoutSegment(label: 'Watch Interval 2', duration: '22m'),
-      ],
-    );
-
-    try {
-      await WorkoutService().create(watchWorkout);
-    } catch (_) {}
-
-    await AnalyticsService.logDevicePaired('Apple Watch / Garmin', 'HealthKit Auto-Sync');
-    return 1;
-  }
-
   static Workout? _convertHealthDataPointToWorkout(HealthDataPoint dp) {
     if (dp.value is! WorkoutHealthValue) return null;
     final val = dp.value as WorkoutHealthValue;
 
     final typeStr = val.workoutActivityType.name.toLowerCase();
-    final sport = typeStr.contains('cycle') || typeStr.contains('bike')
-        ? Sport.bike
-        : typeStr.contains('swim')
+    final sport =
+        typeStr.contains('cycle') || typeStr.contains('bike')
+            ? Sport.bike
+            : typeStr.contains('swim')
             ? Sport.swim
             : Sport.run;
 
     final distance = (val.totalDistance ?? 5000) / 1000.0;
-    final durationMins = (dp.dateTo.difference(dp.dateFrom).inMinutes).clamp(1, 600);
+    final durationMins = (dp.dateTo.difference(dp.dateFrom).inMinutes).clamp(
+      1,
+      600,
+    );
 
     return Workout(
       id: 'watch_${dp.dateFrom.millisecondsSinceEpoch}_${typeStr}',

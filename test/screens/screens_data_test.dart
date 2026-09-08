@@ -234,6 +234,8 @@ void main() {
     testWidgets('shows Support section', (tester) async {
       await tester.pumpWidget(dataShell(const MobileProfileScreen()));
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Support'), 200);
+      await tester.pumpAndSettle();
       expect(find.text('Support'), findsOneWidget);
     });
 

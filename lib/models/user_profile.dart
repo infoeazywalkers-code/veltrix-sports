@@ -11,6 +11,7 @@ class UserProfile {
   final List<String> sports;
   final String? experienceLevel;
   final String? mainGoal;
+  final String? onboardingStatus;
   final bool isPremium;
   final String? subscriptionTier;
   final DateTime? subscriptionRenewsAt;
@@ -26,6 +27,7 @@ class UserProfile {
     this.sports = const [],
     this.experienceLevel,
     this.mainGoal,
+    this.onboardingStatus,
     this.isPremium = false,
     this.subscriptionTier,
     this.subscriptionRenewsAt,
@@ -46,6 +48,7 @@ class UserProfile {
       sports: (map['sports'] as List? ?? []).cast<String>(),
       experienceLevel: map['experienceLevel'] as String?,
       mainGoal: map['mainGoal'] as String?,
+      onboardingStatus: map['onboardingStatus'] as String?,
       isPremium: map['isPremium'] as bool? ?? false,
       subscriptionTier: map['subscriptionTier'] as String?,
       subscriptionRenewsAt:
@@ -56,17 +59,18 @@ class UserProfile {
   }
 
   Map<String, dynamic> toMap() => {
-        'email': email,
-        'displayName': displayName,
-        'photoUrl': photoUrl,
-        'role': role.name,
-        'sports': sports,
-        'experienceLevel': experienceLevel,
-        'mainGoal': mainGoal,
-        'isPremium': isPremium,
-        'subscriptionTier': subscriptionTier,
-        'subscriptionRenewsAt': subscriptionRenewsAt,
-        'deviceIds': deviceIds,
-        'createdAt': createdAt,
-      };
+    'email': email,
+    'displayName': displayName,
+    'photoUrl': photoUrl,
+    'role': role.name,
+    'sports': sports,
+    'experienceLevel': experienceLevel,
+    'mainGoal': mainGoal,
+    'onboardingStatus': onboardingStatus,
+    'isPremium': isPremium,
+    'subscriptionTier': subscriptionTier,
+    'subscriptionRenewsAt': subscriptionRenewsAt,
+    'deviceIds': deviceIds,
+    'createdAt': createdAt,
+  };
 }

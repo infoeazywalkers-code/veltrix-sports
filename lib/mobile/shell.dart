@@ -7,7 +7,10 @@ import 'screens/mobile_progress.dart';
 import 'screens/mobile_explore.dart';
 import 'screens/mobile_profile.dart';
 import 'screens/mobile_more.dart';
+import '../models/user_preferences.dart';
+import '../providers.dart';
 import '../screens/notifications_screen.dart';
+import '../screens/onboarding_flow.dart';
 
 class MobileShell extends ConsumerStatefulWidget {
   const MobileShell({super.key});
@@ -46,8 +49,32 @@ class _MobileShellState extends ConsumerState<MobileShell> {
 
   @override
   Widget build(BuildContext context) {
+    final themeModePref = ref.watch(themeModeProvider);
+    final isDark =
+        themeModePref == ThemeModePreference.dark ||
+        (themeModePref == ThemeModePreference.system &&
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+    final unreadCount =
+        ref.watch(unreadNotificationCountProvider).valueOrNull ?? 0;
+
+    final authState = ref.watch(authStateProvider);
+    final isLoggedIn = authState.valueOrNull != null;
+    final profileAsync = ref.watch(userProfileProvider);
+    final onboardingComplete =
+        profileAsync.whenOrNull(
+          data: (profile) => profile?.onboardingStatus == 'completed',
+        ) ??
+        false;
+
+    if (isLoggedIn && !onboardingComplete) {
+      return Theme(
+        data: isDark ? M.darkTheme : M.lightTheme,
+        child: const OnboardingFlow(),
+      );
+    }
+
     return Theme(
-      data: M.theme,
+      data: isDark ? M.darkTheme : M.lightTheme,
       child: Scaffold(
         body: _buildPage(),
         drawer: Drawer(
@@ -99,6 +126,7 @@ class _MobileShellState extends ConsumerState<MobileShell> {
                   6,
                   Icons.notifications_none_rounded,
                   'Notifications',
+                  badgeCount: unreadCount,
                 ),
               ],
             ),
@@ -142,13 +170,39 @@ class _MobileShellState extends ConsumerState<MobileShell> {
     );
   }
 
-  Widget _drawerItem(int index, IconData icon, String label) {
+  Widget _drawerItem(
+    int index,
+    IconData icon,
+    String label, {
+    int badgeCount = 0,
+  }) {
     final selected = _index == index;
     return ListTile(
       selected: selected,
       selectedTileColor: M.lime.withValues(alpha: .35),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(M.rMd)),
-      leading: Icon(icon, color: selected ? M.navy : M.muted),
+      leading: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Icon(icon, color: selected ? M.navy : M.muted),
+          if (badgeCount > 0)
+            Positioned(
+              right: -2,
+              top: -2,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  badgeCount > 9 ? '9+' : '$badgeCount',
+                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                ),
+              ),
+            ),
+        ],
+      ),
       title: Text(
         label,
         style: const TextStyle(fontWeight: FontWeight.w800, color: M.ink),

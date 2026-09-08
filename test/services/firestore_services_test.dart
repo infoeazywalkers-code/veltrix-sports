@@ -411,10 +411,13 @@ void main() {
       expect(fetched!.status, 'completed');
     });
 
-    test('getFeaturedPlans falls back to demo when empty', () async {
-      final plans = await service.getFeaturedPlans();
-      expect(plans, isNotEmpty);
-    });
+    test(
+      'getFeaturedPlans returns empty list when no featured plans exist',
+      () async {
+        final plans = await service.getFeaturedPlans();
+        expect(plans, isEmpty);
+      },
+    );
 
     test('watchActive emits active plans', () async {
       await service.create(_plan('tp-active', userId: 'u1'));

@@ -9,35 +9,62 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final desktop = MediaQuery.sizeOf(context).width >= 850;
+    final repo = NotificationRepository();
     return StreamBuilder<List<NotificationRecord>>(
-      stream: NotificationRepository().watch(),
+      stream: repo.watch(),
       builder: (context, snapshot) {
         final notifications = snapshot.data ?? const <NotificationRecord>[];
-        return ListView(
-      padding: EdgeInsets.fromLTRB(
-        desktop ? 40 : 18,
-        desktop ? 38 : 22,
-        desktop ? 40 : 18,
-        64,
-      ),
-          children: [
-            const _Header(),
-            const SizedBox(height: 24),
-            if (snapshot.hasError)
-              const _EmptyState(message: 'Sign in to view your notifications.')
-            else if (notifications.isEmpty)
-              const _EmptyState(message: 'Your training and coach updates will appear here.'),
-            ...notifications.map((notification) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: _NotificationCard(
-                icon: notification.type == 'coach' ? Icons.chat_bubble_outline : Icons.notifications_outlined,
-                color: notification.type == 'coach' ? purple : blue,
-                title: notification.title,
-                body: notification.body,
-                meta: _formatDate(notification.createdAt),
+        final hasUnread = notifications.any((n) => !n.read);
+        return RefreshIndicator(
+          onRefresh: () async {},
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(
+              desktop ? 40 : 18,
+              desktop ? 38 : 22,
+              desktop ? 40 : 18,
+              64,
+            ),
+            children: [
+              _Header(
+                hasUnread: hasUnread,
+                onMarkAllRead: () async {
+                  for (final n in notifications) {
+                    if (!n.read) await repo.markRead(n.id);
+                  }
+                },
               ),
-            )),
-          ],
+              const SizedBox(height: 24),
+              if (snapshot.hasError)
+                const _EmptyState(
+                  message: 'Sign in to view your notifications.',
+                )
+              else if (notifications.isEmpty)
+                const _EmptyState(
+                  message: 'Your training and coach updates will appear here.',
+                ),
+              ...notifications.map(
+                (notification) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: GestureDetector(
+                    onTap:
+                        notification.read
+                            ? null
+                            : () => repo.markRead(notification.id),
+                    child: _NotificationCard(
+                      icon:
+                          notification.type == 'coach'
+                              ? Icons.chat_bubble_outline
+                              : Icons.notifications_outlined,
+                      color: notification.type == 'coach' ? purple : blue,
+                      title: notification.title,
+                      body: notification.body,
+                      meta: _formatDate(notification.createdAt),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -60,7 +87,9 @@ class _EmptyState extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header();
+  final bool hasUnread;
+  final VoidCallback onMarkAllRead;
+  const _Header({required this.hasUnread, required this.onMarkAllRead});
 
   @override
   Widget build(BuildContext context) => Container(
@@ -69,12 +98,33 @@ class _Header extends StatelessWidget {
       color: navy,
       borderRadius: BorderRadius.circular(22),
     ),
-    child: const Column(
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(Icons.notifications_active_outlined, color: lime, size: 34),
-        SizedBox(height: 18),
-        Text(
+        Row(
+          children: [
+            const Icon(
+              Icons.notifications_active_outlined,
+              color: lime,
+              size: 34,
+            ),
+            const Spacer(),
+            if (hasUnread)
+              TextButton(
+                onPressed: onMarkAllRead,
+                style: TextButton.styleFrom(
+                  backgroundColor: lime.withValues(alpha: .15),
+                  foregroundColor: lime,
+                ),
+                child: const Text(
+                  'Mark all read',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        const Text(
           'Notifications',
           style: TextStyle(
             color: Colors.white,
@@ -82,8 +132,8 @@ class _Header extends StatelessWidget {
             fontWeight: FontWeight.w900,
           ),
         ),
-        SizedBox(height: 8),
-        Text(
+        const SizedBox(height: 8),
+        const Text(
           'Training reminders, coach updates, device sync, and race alerts.',
           style: TextStyle(color: Colors.white70, height: 1.45),
         ),

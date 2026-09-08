@@ -113,7 +113,7 @@ void main() {
       );
       final map = profile.toMap();
 
-      expect(map.length, 12); // all fields
+      expect(map.length, 13); // all fields
       expect(map.containsKey('id'), isFalse); // id is not in toMap
       expect(map['email'], 'full@test.com');
       expect(map['displayName'], 'Full');
@@ -122,6 +122,7 @@ void main() {
       expect(map['sports'], ['Running', 'Cycling', 'Swimming']);
       expect(map['experienceLevel'], 'Expert');
       expect(map['mainGoal'], 'Olympics');
+      expect(map['onboardingStatus'], isNull);
       expect(map['isPremium'], true);
       expect(map['subscriptionTier'], 'Platinum');
       expect(map['deviceIds'], ['d1', 'd2']);

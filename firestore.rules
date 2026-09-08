@@ -11,9 +11,29 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // User Profile Rules - Strictly scoped to the authenticated owner
+    function getUserRole(userId) {
+      let doc = get(/databases/$(database)/documents/users/$(userId));
+      return doc.data().role;
+    }
+
+    function isCoach() {
+      return isAuthenticated() && getUserRole(request.auth.uid) == 'coach';
+    }
+
+    function isAthlete() {
+      return isAuthenticated() && getUserRole(request.auth.uid) == 'athlete';
+    }
+
+    function isAssignedCoachOf(athleteId) {
+      return isCoach() &&
+        exists(/databases/$(database)/documents/coach_athletes/$(athleteId)) &&
+        /databases/$(database)/documents/coach_athletes/$(athleteId).data().coachId == request.auth.uid;
+    }
+
+    // User Profile Rules
     match /users/{userId} {
-      allow read, create: if isOwner(userId);
+      allow read: if isOwner(userId) || isAssignedCoachOf(userId);
+      allow create: if isOwner(userId);
       allow update: if isOwner(userId) &&
         (!('id' in request.resource.data) || request.resource.data.id == userId);
       allow delete: if false;
@@ -23,7 +43,8 @@ service cloud.firestore {
     match /workouts/{workoutId} {
       allow create: if isAuthenticated() && 
         request.resource.data.userId == request.auth.uid;
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow read: if isOwner(resource.data.userId) ||
+        isAssignedCoachOf(resource.data.userId);
       allow update: if isAuthenticated() &&
         resource.data.userId == request.auth.uid &&
         request.resource.data.userId == resource.data.userId;
@@ -33,8 +54,9 @@ service cloud.firestore {
     // Training Plans - Owned by the athlete or assigned coach
     match /training_plans/{planId} {
       allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
-      allow read, delete: if isAuthenticated() &&
-        (resource.data.userId == request.auth.uid ||
+      allow read, delete: if isOwner(resource.data.userId) ||
+        isAssignedCoachOf(resource.data.userId) ||
+        (isAuthenticated() &&
          ('coachId' in resource.data && resource.data.coachId == request.auth.uid));
       allow update: if isAuthenticated() &&
         (resource.data.userId == request.auth.uid ||
@@ -55,10 +77,11 @@ service cloud.firestore {
       allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
 
-    // Performance Snapshots - Strictly private to the user
+    // Performance Snapshots - Private to the user, readable by assigned coach
     match /performance_snapshots/{snapshotId} {
       allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow read: if isOwner(resource.data.userId) ||
+        isAssignedCoachOf(resource.data.userId);
       allow update: if isAuthenticated() &&
         resource.data.userId == request.auth.uid &&
         request.resource.data.userId == resource.data.userId;
@@ -91,6 +114,11 @@ service cloud.firestore {
       allow read, write: if isOwner(userId);
     }
 
+    // User preferences - strictly private to the owner
+    match /users/{userId}/preferences/{docId} {
+      allow read, write: if isOwner(userId);
+    }
+
     // Event catalog is public to authenticated users; ticket ownership is strict.
     match /events/{eventId} {
       allow read: if isAuthenticated();
@@ -107,6 +135,42 @@ service cloud.firestore {
     match /coaches/{coachId} {
       allow read: if isAuthenticated();
       allow write: if false;
+    }
+
+    // Coach-athlete assignments — readable by both parties, writable by coach.
+    match /coach_athletes/{athleteId} {
+      allow create: if isCoach();
+      allow read: if (isCoach() && resource.data.coachId == request.auth.uid) ||
+        (isAthlete() && resource.data.userId == request.auth.uid);
+      allow update: if isCoach() && resource.data.coachId == request.auth.uid;
+      allow delete: if isCoach() && resource.data.coachId == request.auth.uid;
+    }
+
+    // Chat rooms — readable/writable by participants (athlete and coach).
+    match /chat_rooms/{chatRoomId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.athleteId == request.auth.uid ||
+         resource.data.coachId == request.auth.uid);
+      allow create: if isAuthenticated() &&
+        (request.resource.data.athleteId == request.auth.uid ||
+         (isCoach() && request.resource.data.coachId == request.auth.uid));
+      allow update: if isAuthenticated() &&
+        (resource.data.athleteId == request.auth.uid ||
+         resource.data.coachId == request.auth.uid);
+      allow delete: if false;
+
+      // Messages within a chat room
+      match /messages/{messageId} {
+        allow read: if isAuthenticated() &&
+          (get(/databases/$(database)/documents/chat_rooms/$(chatRoomId)).data().athleteId == request.auth.uid ||
+           get(/databases/$(database)/documents/chat_rooms/$(chatRoomId)).data().coachId == request.auth.uid);
+        allow create: if isAuthenticated() &&
+          request.resource.data.senderId == request.auth.uid;
+        allow update: if isAuthenticated() &&
+          (get(/databases/$(database)/documents/chat_rooms/$(chatRoomId)).data().athleteId == request.auth.uid ||
+           get(/databases/$(database)/documents/chat_rooms/$(chatRoomId)).data().coachId == request.auth.uid);
+        allow delete: if false;
+      }
     }
   }
 }

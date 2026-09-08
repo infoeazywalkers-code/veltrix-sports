@@ -130,6 +130,8 @@ void main() {
     testWidgets('renders Support section', (tester) async {
       await tester.pumpWidget(wrapWithProviders(profile: loggedInProfile));
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Support'), 300);
+      await tester.pumpAndSettle();
       expect(find.text('Support'), findsOneWidget);
       expect(find.text('Help center'), findsOneWidget);
       expect(find.text('Contact support'), findsOneWidget);

@@ -5,7 +5,8 @@ import '../widgets/heading.dart';
 import '../providers.dart';
 import '../auth_service.dart';
 
-import '../widgets/edit_profile_dialog.dart';
+import 'profile_edit_screen.dart';
+import 'settings_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   final VoidCallback? onNavigateToPremium;
@@ -137,10 +138,11 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 IconButton(
                   onPressed:
-                      () => showDialog(
-                        context: context,
-                        builder:
-                            (_) => EditProfileDialog(currentProfile: profile),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ProfileEditScreen(),
+                        ),
                       ),
                   icon: const Icon(Icons.edit_outlined),
                 ),
@@ -193,6 +195,7 @@ class ProfileScreen extends ConsumerWidget {
               ('Training zones', Icons.tune),
               ('Apps & devices', Icons.devices),
               ('Equipment', Icons.sports),
+              ('Settings', Icons.settings_outlined),
             ]),
             const SizedBox(height: 20),
             const SectionHeading('Support'),
@@ -240,6 +243,16 @@ class _Settings extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.w700),
               ),
               trailing: const Icon(Icons.chevron_right, color: muted),
+              onTap: () {
+                if (items[i].$1 == 'Settings') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                  );
+                } else {
+                  showFeatureMessage(context, '${items[i].$1} coming soon');
+                }
+              },
             ),
             if (i < items.length - 1) const Divider(height: 1, indent: 55),
           ],

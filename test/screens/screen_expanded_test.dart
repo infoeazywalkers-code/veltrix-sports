@@ -157,9 +157,7 @@ void main() {
 
     testWidgets('renders coach names', (tester) async {
       await tester.pumpWidget(wrap(const CoachMatchScreen()));
-      expect(find.text('Coach Priya Sharma'), findsOneWidget);
-      expect(find.text('Coach Amit Patel'), findsOneWidget);
-      expect(find.text('Coach Vikram Rao'), findsOneWidget);
+      expect(find.text('Featured Veltrix Coaches'), findsOneWidget);
     });
 
     testWidgets('renders How it works after scroll', (tester) async {
@@ -262,7 +260,7 @@ void main() {
 
     testWidgets('renders Book Call buttons', (tester) async {
       await tester.pumpWidget(wrap(const CoachMatchScreen()));
-      expect(find.text('Book Call'), findsNWidgets(3));
+      expect(find.text('Start Questionnaire'), findsOneWidget);
     });
 
     testWidgets('renders testimonial after scroll', (tester) async {
@@ -275,16 +273,22 @@ void main() {
 
     testWidgets('renders coach specialities', (tester) async {
       await tester.pumpWidget(wrap(const CoachMatchScreen()));
-      expect(find.text('Marathon'), findsWidgets);
-      expect(find.text('Cycling'), findsWidgets);
-      expect(find.text('Ultra Running'), findsWidgets);
+      await tester.scrollUntilVisible(find.text('Why Coach Match works'), 300);
+      await tester.pumpAndSettle();
+      expect(find.text('Science-backed'), findsOneWidget);
+      expect(find.text('Personalized'), findsOneWidget);
+      expect(find.text('Communication'), findsOneWidget);
+      expect(find.text('Long-game approach'), findsOneWidget);
     });
 
     testWidgets('renders monthly fees', (tester) async {
       await tester.pumpWidget(wrap(const CoachMatchScreen()));
-      expect(find.text('\$149/mo'), findsOneWidget);
-      expect(find.text('\$179/mo'), findsOneWidget);
-      expect(find.text('\$139/mo'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('Choose your package'), 300);
+      await tester.pumpAndSettle();
+      expect(find.text('Choose your package'), findsOneWidget);
+      expect(find.text('Bronze'), findsOneWidget);
+      expect(find.text('Silver'), findsOneWidget);
+      expect(find.text('Gold'), findsOneWidget);
     });
   });
 

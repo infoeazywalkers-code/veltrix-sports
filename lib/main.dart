@@ -9,9 +9,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'constants.dart';
+import 'models/user_preferences.dart';
+import 'providers.dart';
 import 'shell.dart';
 import 'mobile/shell.dart';
+import 'mobile/theme.dart';
 import 'firebase_options_dev.dart' as firebase_options;
 import 'firebase_options.dart' as production_firebase_options;
 import 'services/notification_service.dart';
@@ -60,9 +62,12 @@ Future<void> main() async {
 
   try {
     await Firebase.initializeApp(
-      options: const bool.fromEnvironment('VELTRIX_PRODUCTION')
-          ? production_firebase_options.DefaultFirebaseOptions.currentPlatform
-          : firebase_options.DefaultFirebaseOptions.currentPlatform,
+      options:
+          const bool.fromEnvironment('VELTRIX_PRODUCTION')
+              ? production_firebase_options
+                  .DefaultFirebaseOptions
+                  .currentPlatform
+              : firebase_options.DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true,
@@ -85,6 +90,27 @@ Future<void> main() async {
     // Initialize Push Notifications & Razorpay Engine
     await NotificationService().initialize();
     RazorpayPaymentService().initialize();
+
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null && FirebaseAuth.instance.currentUser != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+            'fcmToken': token,
+            'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
+          });
+    }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'fcmToken': token,
+          'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+    });
   } catch (error, stackTrace) {
     if (kDebugMode) debugPrint('Firebase initialization failed: $error');
     if (kDebugMode) debugPrintStack(stackTrace: stackTrace);
@@ -94,37 +120,36 @@ Future<void> main() async {
   runApp(const ProviderScope(child: VeltrixRoot()));
 }
 
-class VeltrixRoot extends StatelessWidget {
+class VeltrixRoot extends ConsumerWidget {
   const VeltrixRoot({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final useMobileLayout = screenWidth < 900;
+    final themeModePref = ref.watch(themeModeProvider);
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Veltrix Sports',
-      scrollBehavior: const VeltrixScrollBehavior(),
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: bg,
-        colorScheme: ColorScheme.fromSeed(seedColor: navy, primary: navy),
-        cardTheme: CardThemeData(
-          elevation: 0,
-          color: Colors.white,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-        ),
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(fontWeight: FontWeight.w900, color: navy),
-          titleMedium: TextStyle(fontWeight: FontWeight.w800, color: ink),
-          bodyMedium: TextStyle(color: ink, height: 1.35),
-        ),
+    return VeltrixErrorBoundary(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Veltrix Sports',
+        scrollBehavior: const VeltrixScrollBehavior(),
+        theme: M.lightTheme,
+        darkTheme: M.darkTheme,
+        themeMode: _resolveThemeMode(themeModePref),
+        home: useMobileLayout ? const MobileShell() : const Shell(),
       ),
-      home: useMobileLayout ? const MobileShell() : const Shell(),
     );
+  }
+
+  ThemeMode _resolveThemeMode(ThemeModePreference pref) {
+    switch (pref) {
+      case ThemeModePreference.light:
+        return ThemeMode.light;
+      case ThemeModePreference.dark:
+        return ThemeMode.dark;
+      case ThemeModePreference.system:
+        return ThemeMode.system;
+    }
   }
 }

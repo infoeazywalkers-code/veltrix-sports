@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import '../constants.dart';
+import '../errors/error_handler.dart';
 import '../services/payment_service.dart';
 import '../services/razorpay_service.dart';
 
@@ -14,9 +16,9 @@ class CheckoutDialog extends StatefulWidget {
 
 class _CheckoutDialogState extends State<CheckoutDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _cardController = TextEditingController(text: '4242 •••• •••• 4242');
-  final _expController = TextEditingController(text: '12/28');
-  final _cvcController = TextEditingController(text: '888');
+  final _cardController = TextEditingController();
+  final _expController = TextEditingController();
+  final _cvcController = TextEditingController();
   final _promoController = TextEditingController();
 
   double _finalPrice = 0.0;
@@ -46,12 +48,14 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
   Future<void> _payWithRazorpay() async {
     setState(() => _processing = true);
 
+    final user = FirebaseAuth.instance.currentUser;
+
     final success = await RazorpayPaymentService().openRazorpayCheckout(
       planId: widget.plan.id,
       planTitle: widget.plan.title,
       priceInr: _finalPrice,
-      userEmail: 'athlete@veltrixsports.com',
-      userPhone: '9876543210',
+      userEmail: user?.email ?? '',
+      userPhone: user?.phoneNumber ?? '',
     );
 
     if (mounted) {
@@ -88,7 +92,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Payment failed: $e')));
+        ).showSnackBar(SnackBar(content: Text(ErrorHandler.getUserMessage(e))));
       }
     } finally {
       if (mounted) setState(() => _processing = false);

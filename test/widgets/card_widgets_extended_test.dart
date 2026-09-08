@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/widgets/workout_card.dart';
 import 'package:veltrix_sports/widgets/week_row.dart';
 import 'package:veltrix_sports/widgets/footer_social.dart';
@@ -7,7 +9,13 @@ import 'package:veltrix_sports/widgets/footer_group.dart';
 import 'package:veltrix_sports/widgets/marketing_feature_card.dart';
 import 'package:veltrix_sports/widgets/week_card.dart';
 
-Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
+Widget wrap(Widget child) => ProviderScope(
+  overrides: [
+    weekWorkoutsProvider.overrideWith((ref, arg) async => []),
+    latestPerformanceProvider.overrideWith((ref) => Stream.value(null)),
+  ],
+  child: MaterialApp(home: Scaffold(body: child)),
+);
 
 void main() {
   group('WorkoutCard', () {
@@ -358,11 +366,13 @@ void main() {
   group('WeekCard', () {
     testWidgets('renders metrics row and day labels', (tester) async {
       await tester.pumpWidget(wrap(const WeekCard()));
-      expect(find.text('5'), findsOneWidget);
+      expect(
+        find.text('0'),
+        findsWidgets,
+      ); // workoutCount and totalTss both '0'
       expect(find.text('Workouts'), findsOneWidget);
-      expect(find.text('4h 35m'), findsOneWidget);
+      expect(find.text('0m'), findsOneWidget);
       expect(find.text('Duration'), findsOneWidget);
-      expect(find.text('286'), findsOneWidget);
       expect(find.text('TSS'), findsOneWidget);
       expect(find.text('M'), findsOneWidget);
       expect(find.text('S'), findsWidgets); // Saturday and Sunday

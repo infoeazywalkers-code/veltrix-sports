@@ -14,7 +14,7 @@ void main() {
       expect(ble.isConnected, isFalse);
       expect(ble.isScanning, isFalse);
       expect(ble.connectedDeviceName, isNull);
-      expect(ble.liveHeartRate, 145);
+      expect(ble.liveHeartRate, 0);
       expect(ble.discoveredDevices, isEmpty);
     });
 

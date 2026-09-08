@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/widgets/ring.dart';
 import 'package:veltrix_sports/widgets/status_card.dart';
 import 'package:veltrix_sports/widgets/nav_menu.dart';
@@ -7,8 +9,13 @@ import 'package:veltrix_sports/widgets/responsive_cards.dart';
 import 'package:veltrix_sports/widgets/veltrix_footer.dart';
 
 void main() {
-  Widget wrap(Widget child) => MaterialApp(
-    home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
+  Widget wrap(Widget child) => ProviderScope(
+    overrides: [
+      latestPerformanceProvider.overrideWith((ref) => Stream.value(null)),
+    ],
+    child: MaterialApp(
+      home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
+    ),
   );
 
   group('Ring', () {
@@ -52,9 +59,6 @@ void main() {
   group('StatusCard', () {
     testWidgets('renders three rings and training message', (tester) async {
       await tester.pumpWidget(wrap(const StatusCard()));
-      expect(find.text('54'), findsOneWidget);
-      expect(find.text('61'), findsOneWidget);
-      expect(find.text('-7'), findsOneWidget);
       expect(find.text('Fitness'), findsOneWidget);
       expect(find.text('Fatigue'), findsOneWidget);
       expect(find.text('Form'), findsOneWidget);

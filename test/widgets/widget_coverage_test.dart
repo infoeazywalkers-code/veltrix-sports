@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/widgets/status_card.dart';
 import 'package:veltrix_sports/widgets/legend.dart';
@@ -6,10 +7,26 @@ import 'package:veltrix_sports/widgets/ring.dart';
 import 'package:veltrix_sports/widgets/section_intro.dart';
 import 'package:veltrix_sports/widgets/heading.dart';
 import 'package:veltrix_sports/constants.dart';
+import 'package:veltrix_sports/models/performance_snapshot.dart';
+import 'package:veltrix_sports/providers.dart';
 
-Widget wrap(Widget child) => MaterialApp(
-  home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
+Widget wrap(Widget child) => ProviderScope(
+  child: MaterialApp(
+    home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
+  ),
 );
+
+Widget wrapWithPerf(Widget child, PerformanceSnapshot snapshot) =>
+    ProviderScope(
+      overrides: [
+        latestPerformanceProvider.overrideWith((ref) => Stream.value(snapshot)),
+      ],
+      child: MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(child: Center(child: child)),
+        ),
+      ),
+    );
 
 void main() {
   group('StatusCard', () {
@@ -19,19 +36,46 @@ void main() {
     });
 
     testWidgets('renders fitness ring with value 54', (tester) async {
-      await tester.pumpWidget(wrap(const StatusCard()));
+      final snapshot = PerformanceSnapshot(
+        id: 'test',
+        userId: 'user',
+        fitness: 54,
+        fatigue: 61,
+        form: -7,
+        recordedAt: DateTime(2026),
+      );
+      await tester.pumpWidget(wrapWithPerf(const StatusCard(), snapshot));
+      await tester.pump();
       expect(find.text('54'), findsOneWidget);
       expect(find.text('Fitness'), findsOneWidget);
     });
 
     testWidgets('renders fatigue ring with value 61', (tester) async {
-      await tester.pumpWidget(wrap(const StatusCard()));
+      final snapshot = PerformanceSnapshot(
+        id: 'test',
+        userId: 'user',
+        fitness: 54,
+        fatigue: 61,
+        form: -7,
+        recordedAt: DateTime(2026),
+      );
+      await tester.pumpWidget(wrapWithPerf(const StatusCard(), snapshot));
+      await tester.pump();
       expect(find.text('61'), findsOneWidget);
       expect(find.text('Fatigue'), findsOneWidget);
     });
 
     testWidgets('renders form ring with value -7', (tester) async {
-      await tester.pumpWidget(wrap(const StatusCard()));
+      final snapshot = PerformanceSnapshot(
+        id: 'test',
+        userId: 'user',
+        fitness: 54,
+        fatigue: 61,
+        form: -7,
+        recordedAt: DateTime(2026),
+      );
+      await tester.pumpWidget(wrapWithPerf(const StatusCard(), snapshot));
+      await tester.pump();
       expect(find.text('-7'), findsOneWidget);
       expect(find.text('Form'), findsOneWidget);
     });
@@ -237,19 +281,19 @@ void main() {
     });
 
     test('color constants have correct values', () {
-      expect(navy, const Color(0xff102a43));
-      expect(ink, const Color(0xff243b53));
-      expect(muted, const Color(0xff829ab1));
-      expect(bg, const Color(0xfff5f7fa));
-      expect(lime, const Color(0xffb7e22a));
-      expect(blue, const Color(0xff1687e0));
-      expect(purple, const Color(0xff7657d5));
-      expect(orange, const Color(0xffff8a3d));
-      expect(teal, const Color(0xff00a9a5));
-      expect(darkNavy, const Color(0xff081f33));
-      expect(lightGreen, const Color(0xfff0f7ec));
-      expect(successGreen, const Color(0xff4c8c2b));
-      expect(successText, const Color(0xff3f6f26));
+      expect(navy, const Color(0xff123047));
+      expect(ink, const Color(0xff1f2933));
+      expect(muted, const Color(0xff66788a));
+      expect(bg, const Color(0xfff6f2ea));
+      expect(lime, const Color(0xffc8f169));
+      expect(blue, const Color(0xff2176ae));
+      expect(purple, const Color(0xff7759c2));
+      expect(orange, const Color(0xffe9763f));
+      expect(teal, const Color(0xff008f8c));
+      expect(darkNavy, const Color(0xff081826));
+      expect(lightGreen, const Color(0xffeef8df));
+      expect(successGreen, const Color(0xff3f7f32));
+      expect(successText, const Color(0xff315f29));
     });
   });
 }

@@ -22,7 +22,7 @@ class BleSensorService extends ChangeNotifier {
   bool _isScanning = false;
   bool _isConnected = false;
   String? _connectedDeviceName;
-  int _liveHeartRate = 145;
+  int _liveHeartRate = 0;
 
   StreamSubscription? _scanSub;
   StreamSubscription? _hrSub;
@@ -33,7 +33,8 @@ class BleSensorService extends ChangeNotifier {
   bool get isConnected => _isConnected;
   String? get connectedDeviceName => _connectedDeviceName;
   int get liveHeartRate => _liveHeartRate;
-  List<DiscoveredWatchDevice> get discoveredDevices => List.unmodifiable(_discoveredDevices);
+  List<DiscoveredWatchDevice> get discoveredDevices =>
+      List.unmodifiable(_discoveredDevices);
 
   Future<void> startWatchScan() async {
     _discoveredDevices.clear();
@@ -53,16 +54,19 @@ class BleSensorService extends ChangeNotifier {
 
       _scanSub = FlutterBluePlus.scanResults.listen((results) {
         for (ScanResult r in results) {
-          final deviceName = r.device.platformName.isNotEmpty
-              ? r.device.platformName
-              : 'Heart Rate Monitor (${r.device.remoteId.str.substring(0, 5)})';
+          final deviceName =
+              r.device.platformName.isNotEmpty
+                  ? r.device.platformName
+                  : 'Heart Rate Monitor (${r.device.remoteId.str.substring(0, 5)})';
 
           if (!_discoveredDevices.any((d) => d.id == r.device.remoteId.str)) {
-            _discoveredDevices.add(DiscoveredWatchDevice(
-              id: r.device.remoteId.str,
-              name: deviceName,
-              rssi: r.rssi,
-            ));
+            _discoveredDevices.add(
+              DiscoveredWatchDevice(
+                id: r.device.remoteId.str,
+                name: deviceName,
+                rssi: r.rssi,
+              ),
+            );
             notifyListeners();
           }
         }
@@ -76,10 +80,26 @@ class BleSensorService extends ChangeNotifier {
   void _simulateDiscoveredDevices() {
     Future.delayed(const Duration(milliseconds: 600), () {
       _discoveredDevices.addAll([
-        const DiscoveredWatchDevice(id: 'dev_apple', name: 'Apple Watch Series 9', rssi: -58),
-        const DiscoveredWatchDevice(id: 'dev_garmin', name: 'Garmin Forerunner 965', rssi: -64),
-        const DiscoveredWatchDevice(id: 'dev_polar', name: 'Polar H10 Heart Rate Sensor', rssi: -42),
-        const DiscoveredWatchDevice(id: 'dev_wahoo', name: 'Wahoo TICKR X', rssi: -71),
+        const DiscoveredWatchDevice(
+          id: 'dev_apple',
+          name: 'Apple Watch Series 9',
+          rssi: -58,
+        ),
+        const DiscoveredWatchDevice(
+          id: 'dev_garmin',
+          name: 'Garmin Forerunner 965',
+          rssi: -64,
+        ),
+        const DiscoveredWatchDevice(
+          id: 'dev_polar',
+          name: 'Polar H10 Heart Rate Sensor',
+          rssi: -42,
+        ),
+        const DiscoveredWatchDevice(
+          id: 'dev_wahoo',
+          name: 'Wahoo TICKR X',
+          rssi: -71,
+        ),
       ]);
       _isScanning = false;
       notifyListeners();
@@ -94,7 +114,10 @@ class BleSensorService extends ChangeNotifier {
 
     // Start live BPM updates
     _hrSub?.cancel();
-    _hrSub = Stream.periodic(const Duration(seconds: 2), (i) => 140 + (i % 22)).listen((bpm) {
+    _hrSub = Stream.periodic(
+      const Duration(seconds: 2),
+      (i) => 140 + (i % 22),
+    ).listen((bpm) {
       _liveHeartRate = bpm;
       notifyListeners();
     });

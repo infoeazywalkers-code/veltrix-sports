@@ -5,9 +5,6 @@ void main() {
   group('CoachService - expanded coverage', () {
     group('sendInquiry', () {
       test('sendInquiry returns a Future<bool>', () async {
-        // sendInquiry requires FirebaseAuth.instance.currentUser
-        // which is null in test environment - tests the guest path
-        // Firebase is not initialized in tests, so the catch block returns false
         try {
           final result = await CoachService.sendInquiry(
             coachId: 'coach_1',
@@ -18,7 +15,6 @@ void main() {
           );
           expect(result, isA<bool>());
         } catch (e) {
-          // Expected: Firebase not initialized in test
           expect(e, isA<Exception>());
         }
       });
@@ -114,31 +110,77 @@ void main() {
       });
     });
 
-    group('featuredCoaches data integrity', () {
-      test('each coach has 2-4 specialities', () {
-        for (final coach in CoachService.featuredCoaches) {
-          expect(coach.specialities.length, greaterThanOrEqualTo(1));
-          expect(coach.specialities.length, lessThanOrEqualTo(5));
-        }
+    group('CoachProfile data integrity', () {
+      test('fromMap with empty fields uses defaults', () {
+        final profile = CoachProfile.fromMap('cp_empty', {});
+        expect(profile.id, 'cp_empty');
+        expect(profile.name, '');
+        expect(profile.title, '');
+        expect(profile.rating, '0.0');
+        expect(profile.bio, '');
+        expect(profile.image, '');
+        expect(profile.monthlyFee, '\$0/mo');
+        expect(profile.specialities, isEmpty);
       });
 
-      test('coach IDs follow naming convention', () {
-        for (final coach in CoachService.featuredCoaches) {
-          expect(coach.id, startsWith('coach_'));
-        }
+      test('toMap serializes all fields', () {
+        const profile = CoachProfile(
+          id: 'cp6',
+          name: 'Coach',
+          title: 'Title',
+          rating: '4.5',
+          bio: 'Bio text',
+          image: 'img.png',
+          monthlyFee: '\$80/mo',
+          specialities: ['Running'],
+        );
+        final map = profile.toMap();
+        expect(map['name'], 'Coach');
+        expect(map['title'], 'Title');
+        expect(map['rating'], '4.5');
+        expect(map['bio'], 'Bio text');
+        expect(map['image'], 'img.png');
+        expect(map['monthlyFee'], '\$80/mo');
+        expect(map['specialities'], ['Running']);
       });
 
-      test('coach names start with Coach', () {
-        for (final coach in CoachService.featuredCoaches) {
-          expect(coach.name, startsWith('Coach '));
-        }
+      test('toString returns readable string', () {
+        const profile = CoachProfile(
+          id: 'cp7',
+          name: 'Coach Priya',
+          title: 'T',
+          rating: '4.0',
+          bio: 'B',
+          image: 'I',
+          monthlyFee: '\$50/mo',
+          specialities: [],
+        );
+        expect(profile.toString(), contains('cp7'));
+        expect(profile.toString(), contains('Coach Priya'));
       });
 
-      test('all monthly fees start with dollar sign', () {
-        for (final coach in CoachService.featuredCoaches) {
-          expect(coach.monthlyFee, contains('\$'));
-          expect(coach.monthlyFee, contains('/mo'));
-        }
+      test('equality is based on id only', () {
+        const p1 = CoachProfile(
+          id: 'same_id',
+          name: 'Name 1',
+          title: 'T',
+          rating: '4.0',
+          bio: 'B',
+          image: 'I',
+          monthlyFee: '\$50/mo',
+          specialities: [],
+        );
+        const p2 = CoachProfile(
+          id: 'same_id',
+          name: 'Name 2',
+          title: 'T',
+          rating: '5.0',
+          bio: 'Different',
+          image: 'X',
+          monthlyFee: '\$99/mo',
+          specialities: ['A'],
+        );
+        expect(p1, p2);
       });
     });
   });

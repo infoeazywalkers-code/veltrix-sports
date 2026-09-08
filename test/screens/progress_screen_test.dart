@@ -16,6 +16,10 @@ void main() {
       performanceHistoryProvider.overrideWith(
         (ref, arg) => Stream.value(history),
       ),
+      personalBestsProvider.overrideWith(
+        (ref) async =>
+            PersonalBests(best5kPace: '21:42', best20MinPower: '278 W'),
+      ),
     ],
     child: const MaterialApp(home: Scaffold(body: ProgressScreen())),
   );

@@ -123,7 +123,7 @@ void main() {
 
     test('currentCadence has default value', () {
       final engine = WorkoutExecutionService(workout: testWorkout);
-      expect(engine.currentCadence, 172);
+      expect(engine.currentCadence, 0);
       engine.dispose();
     });
 

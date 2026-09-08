@@ -8,6 +8,17 @@ import 'package:veltrix_sports/widgets/coach_booking_dialog.dart';
 import 'package:veltrix_sports/widgets/device_connect_dialog.dart';
 import 'package:veltrix_sports/widgets/edit_profile_dialog.dart';
 
+const _testCoach = CoachProfile(
+  id: 'coach_priya',
+  name: 'Coach Priya Sharma',
+  title: 'Endurance Coach & IRONMAN Certified',
+  rating: '4.9 (10 reviews)',
+  bio: 'Professional endurance coach with 12 years experience.',
+  image: 'assets/images/coach_priya.png',
+  monthlyFee: '\$149/mo',
+  specialities: ['Marathon', 'Triathlon', 'Power Metrics'],
+);
+
 void main() {
   group('Dialogs Interaction Widget Tests', () {
     testWidgets(
@@ -44,7 +55,6 @@ void main() {
         expect(find.textContaining('Pay via Razorpay'), findsOneWidget);
         expect(find.text('Cancel'), findsOneWidget);
 
-        // Tap Cancel button
         await tester.tap(find.text('Cancel'));
         await tester.pumpAndSettle();
       },
@@ -87,7 +97,6 @@ void main() {
       expect(find.text('Pair & Connect'), findsOneWidget);
       expect(find.text('Close'), findsOneWidget);
 
-      // Tap Close button
       await tester.tap(find.text('Close'));
       await tester.pumpAndSettle();
     });
@@ -99,8 +108,6 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      final coach = CoachService.featuredCoaches.first;
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -110,7 +117,9 @@ void main() {
                     onPressed:
                         () => showDialog(
                           context: context,
-                          builder: (_) => CoachBookingDialog(coach: coach),
+                          builder:
+                              (_) =>
+                                  const CoachBookingDialog(coach: _testCoach),
                         ),
                     child: const Text('Open Dialog'),
                   ),
@@ -125,7 +134,6 @@ void main() {
       expect(find.textContaining('Book Call with'), findsOneWidget);
       expect(find.text('Book 1-on-1 Consultation'), findsOneWidget);
 
-      // Tap Cancel
       await tester.tap(find.text('Cancel'));
       await tester.pumpAndSettle();
     });
@@ -137,8 +145,6 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      final coach = CoachService.featuredCoaches.first;
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -148,7 +154,9 @@ void main() {
                     onPressed:
                         () => showDialog(
                           context: context,
-                          builder: (_) => CoachBookingDialog(coach: coach),
+                          builder:
+                              (_) =>
+                                  const CoachBookingDialog(coach: _testCoach),
                         ),
                     child: const Text('Open Dialog'),
                   ),
@@ -173,8 +181,6 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      final coach = CoachService.featuredCoaches.first;
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -184,7 +190,9 @@ void main() {
                     onPressed:
                         () => showDialog(
                           context: context,
-                          builder: (_) => CoachBookingDialog(coach: coach),
+                          builder:
+                              (_) =>
+                                  const CoachBookingDialog(coach: _testCoach),
                         ),
                     child: const Text('Open Dialog'),
                   ),
@@ -196,7 +204,6 @@ void main() {
       await tester.tap(find.text('Open Dialog'));
       await tester.pumpAndSettle();
 
-      // Pre-filled goal text
       expect(find.text('Sub-3:45 Marathon PR'), findsOneWidget);
     });
 
@@ -207,8 +214,6 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      final coach = CoachService.featuredCoaches.first;
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -218,7 +223,9 @@ void main() {
                     onPressed:
                         () => showDialog(
                           context: context,
-                          builder: (_) => CoachBookingDialog(coach: coach),
+                          builder:
+                              (_) =>
+                                  const CoachBookingDialog(coach: _testCoach),
                         ),
                     child: const Text('Open Dialog'),
                   ),
@@ -230,12 +237,10 @@ void main() {
       await tester.tap(find.text('Open Dialog'));
       await tester.pumpAndSettle();
 
-      // Clear goal field
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Primary Target Goal *'),
         '',
       );
-      // Clear message field
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Message for Coach'),
         '',
@@ -253,8 +258,6 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      final coach = CoachService.featuredCoaches.first;
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -264,7 +267,9 @@ void main() {
                     onPressed:
                         () => showDialog(
                           context: context,
-                          builder: (_) => CoachBookingDialog(coach: coach),
+                          builder:
+                              (_) =>
+                                  const CoachBookingDialog(coach: _testCoach),
                         ),
                     child: const Text('Open Dialog'),
                   ),
@@ -324,7 +329,6 @@ void main() {
         expect(find.text('Edit Profile'), findsOneWidget);
         expect(find.text('Save Changes'), findsOneWidget);
 
-        // Tap Cancel
         await tester.tap(find.text('Cancel'));
         await tester.pumpAndSettle();
       },

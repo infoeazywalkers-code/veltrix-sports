@@ -1,9 +1,32 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/test.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:veltrix_sports/widgets/device_connect_dialog.dart';
 
+class _FakeAuthPlatform extends FirebaseAuthPlatform {
+  _FakeAuthPlatform() : super();
+  @override
+  UserPlatform? get currentUser => null;
+  @override
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) => this;
+  @override
+  FirebaseAuthPlatform setInitialValues({
+    PigeonUserDetails? currentUser,
+    String? languageCode,
+  }) => this;
+}
+
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() async {
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp();
+    FirebaseAuthPlatform.instance = _FakeAuthPlatform();
+  });
   Widget openDialog(Widget dialog) => MaterialApp(
     home: Builder(
       builder:
@@ -377,9 +400,8 @@ void main() {
       await tester.tap(find.text('Pair & Connect'));
       await tester.pump();
       expect(find.text('Communicating with sensor...'), findsOneWidget);
-      // Advance past the 900ms timer so the test completes cleanly
-      await tester.pump(const Duration(milliseconds: 1000));
-      await tester.pumpAndSettle();
+      // Advance past the 900ms timer and let the snackbar settle
+      await tester.pump(const Duration(milliseconds: 4000));
     });
 
     testWidgets('tapping disconnect button shows syncing indicator', (

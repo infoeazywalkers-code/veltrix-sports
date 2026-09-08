@@ -151,7 +151,7 @@ void main() {
         engine.recordLap();
         final lap = engine.laps.first;
         expect(lap.pace, isNotEmpty);
-        expect(lap.avgHeartRate, greaterThan(0));
+        expect(lap.avgHeartRate, greaterThanOrEqualTo(0));
         expect(lap.duration, isNotEmpty);
         engine.pause();
         engine.dispose();

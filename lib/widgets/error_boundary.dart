@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class VeltrixErrorBoundary extends StatelessWidget {
-  final FlutterErrorDetails details;
-  const VeltrixErrorBoundary({super.key, required this.details});
+  final FlutterErrorDetails? details;
+  final Widget? child;
+  const VeltrixErrorBoundary({super.key, this.details, this.child});
 
   @override
   Widget build(BuildContext context) {
+    if (child != null) return child!;
     return Material(
       color: navy,
       child: SafeArea(
@@ -60,7 +62,7 @@ class VeltrixErrorBoundary extends StatelessWidget {
                   ),
                   child: SingleChildScrollView(
                     child: Text(
-                      details.exceptionAsString(),
+                      details?.exceptionAsString() ?? 'Unknown error',
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

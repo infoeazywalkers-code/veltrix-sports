@@ -1,110 +1,137 @@
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:veltrix_sports/models/training_plan.dart';
 import 'package:veltrix_sports/services/training_plan_service.dart';
 
 void main() {
-  group('TrainingPlanService.demoPlans', () {
-    test('contains exactly 3 demo plans', () {
-      expect(TrainingPlanService.demoPlans.length, 3);
+  group('TrainingPlanService', () {
+    late FakeFirebaseFirestore firestore;
+    late TrainingPlanService service;
+
+    setUp(() {
+      firestore = FakeFirebaseFirestore();
+      service = TrainingPlanService(db: firestore);
     });
 
-    test('first plan is Marathon Training Pro', () {
-      final plan = TrainingPlanService.demoPlans[0];
-      expect(plan.id, 'marathon_pro');
-      expect(plan.name, 'Marathon Training Pro');
-      expect(plan.userId, 'demo');
-      expect(plan.sport, 'Running');
-      expect(plan.durationWeeks, 16);
-      expect(plan.difficulty, 'Intermediate');
-      expect(plan.targetGoal, 'Sub-3:45 Marathon');
-      expect(plan.price, 29.99);
-      expect(plan.status, 'active');
+    test('class exists and can be instantiated', () {
+      expect(service, isA<TrainingPlanService>());
     });
 
-    test('second plan is Cycling Performance Builder', () {
-      final plan = TrainingPlanService.demoPlans[1];
-      expect(plan.id, 'cycling_performance');
-      expect(plan.name, 'Cycling Performance Builder');
-      expect(plan.sport, 'Cycling');
-      expect(plan.durationWeeks, 12);
-      expect(plan.difficulty, 'Advanced');
-      expect(plan.targetGoal, 'FTP 250W+');
-      expect(plan.price, 24.99);
+    group('getFeaturedPlans', () {
+      test('returns empty list when Firestore is empty', () async {
+        final plans = await service.getFeaturedPlans();
+        expect(plans, isEmpty);
+      });
+
+      test('returns featured plans when they exist', () async {
+        await firestore.collection('training_plans').doc('plan1').set({
+          'userId': 'u1',
+          'name': 'Featured Plan',
+          'description': 'A great plan',
+          'sport': 'Running',
+          'durationWeeks': 12,
+          'difficulty': 'Intermediate',
+          'targetGoal': 'Marathon',
+          'price': 29.99,
+          'status': 'active',
+          'isFeatured': true,
+        });
+
+        final plans = await service.getFeaturedPlans();
+        expect(plans.length, 1);
+        expect(plans.first.name, 'Featured Plan');
+      });
+
+      test('does not return non-featured plans', () async {
+        await firestore.collection('training_plans').doc('plan1').set({
+          'userId': 'u1',
+          'name': 'Regular Plan',
+          'description': 'Not featured',
+          'sport': 'Running',
+          'durationWeeks': 8,
+          'difficulty': 'Beginner',
+          'targetGoal': '5K',
+          'price': 9.99,
+          'status': 'active',
+          'isFeatured': false,
+        });
+
+        final plans = await service.getFeaturedPlans();
+        expect(plans, isEmpty);
+      });
+
+      test('returns at most 10 featured plans', () async {
+        for (var i = 0; i < 15; i++) {
+          await firestore.collection('training_plans').doc('plan$i').set({
+            'userId': 'u1',
+            'name': 'Plan $i',
+            'description': 'Plan $i description',
+            'sport': 'Running',
+            'durationWeeks': 8,
+            'difficulty': 'Intermediate',
+            'targetGoal': 'Goal $i',
+            'price': 19.99,
+            'status': 'active',
+            'isFeatured': true,
+          });
+        }
+
+        final plans = await service.getFeaturedPlans();
+        expect(plans.length, 10);
+      });
     });
 
-    test('third plan is Triathlon Base Builder', () {
-      final plan = TrainingPlanService.demoPlans[2];
-      expect(plan.id, 'triathlon_base');
-      expect(plan.name, 'Triathlon Base Builder');
-      expect(plan.sport, 'Triathlon');
-      expect(plan.durationWeeks, 8);
-      expect(plan.difficulty, 'Beginner');
-      expect(plan.targetGoal, 'Complete First Triathlon');
-      expect(plan.price, 19.99);
+    group('create and get', () {
+      test('create stores plan and get retrieves it', () async {
+        final plan = const TrainingPlan(
+          id: 'test_plan',
+          userId: 'u1',
+          name: 'Test Plan',
+          description: 'A test plan',
+          sport: 'Cycling',
+          durationWeeks: 4,
+          difficulty: 'Beginner',
+          targetGoal: 'Base Fitness',
+          price: 14.99,
+        );
+
+        await service.create(plan);
+        final retrieved = await service.get('test_plan');
+
+        expect(retrieved, isNotNull);
+        expect(retrieved!.name, 'Test Plan');
+        expect(retrieved.sport, 'Cycling');
+      });
+
+      test('get returns null for nonexistent plan', () async {
+        final retrieved = await service.get('nonexistent');
+        expect(retrieved, isNull);
+      });
     });
 
-    test('all demo plans have userId demo', () {
-      for (final plan in TrainingPlanService.demoPlans) {
-        expect(plan.userId, 'demo');
-      }
-    });
+    group('getByUserId', () {
+      test('returns empty list when user has no plans', () async {
+        final plans = await service.getByUserId('unknown_user');
+        expect(plans, isEmpty);
+      });
 
-    test('all demo plans have status active', () {
-      for (final plan in TrainingPlanService.demoPlans) {
-        expect(plan.status, 'active');
-      }
-    });
+      test('returns plans for specific user', () async {
+        await firestore.collection('training_plans').doc('p1').set({
+          'userId': 'u1',
+          'name': 'Plan 1',
+          'description': 'Desc',
+          'sport': 'Running',
+          'durationWeeks': 8,
+          'difficulty': 'Intermediate',
+          'targetGoal': 'Goal',
+          'price': 19.99,
+          'status': 'active',
+        });
 
-    test('all demo plans have non-empty names', () {
-      for (final plan in TrainingPlanService.demoPlans) {
-        expect(plan.name, isNotEmpty);
-      }
-    });
-
-    test('all demo plans have non-empty descriptions', () {
-      for (final plan in TrainingPlanService.demoPlans) {
-        expect(plan.description, isNotEmpty);
-      }
-    });
-
-    test('all demo plans have positive prices', () {
-      for (final plan in TrainingPlanService.demoPlans) {
-        expect(plan.price, greaterThan(0));
-      }
-    });
-
-    test('all demo plans have unique IDs', () {
-      final ids = TrainingPlanService.demoPlans.map((p) => p.id).toSet();
-      expect(ids.length, TrainingPlanService.demoPlans.length);
-    });
-
-    test('all demo plans have createdAt set', () {
-      for (final plan in TrainingPlanService.demoPlans) {
-        expect(plan.createdAt, isNotNull);
-      }
-    });
-
-    test('all demo plans have null optional fields', () {
-      for (final plan in TrainingPlanService.demoPlans) {
-        expect(plan.coachId, isNull);
-        expect(plan.eventName, isNull);
-        expect(plan.startDate, isNull);
-        expect(plan.endDate, isNull);
-        expect(plan.totalDistanceKm, isNull);
-      }
-    });
-
-    test('demoPlans getter returns new list each time (not cached)', () {
-      final list1 = TrainingPlanService.demoPlans;
-      final list2 = TrainingPlanService.demoPlans;
-      expect(identical(list1, list2), isFalse);
-      expect(list1.length, list2.length);
-    });
-  });
-
-  group('TrainingPlanService instantiation', () {
-    test('TrainingPlanService class exists and can be referenced', () {
-      // TrainingPlanService requires Firestore - verify class structure
-      expect(TrainingPlanService, isA<Type>());
+        final plans = await service.getByUserId('u1');
+        expect(plans.length, 1);
+        expect(plans.first.name, 'Plan 1');
+      });
     });
   });
 }

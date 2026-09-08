@@ -26,9 +26,16 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
       children: [
         const Text(
           'Performance',
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: navy),
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.w900,
+            color: navy,
+          ),
         ),
-        const Text('Understand the work behind your progress', style: TextStyle(color: muted)),
+        const Text(
+          'Understand the work behind your progress',
+          style: TextStyle(color: muted),
+        ),
         const SizedBox(height: 18),
         SegmentedButton<int>(
           segments: const [
@@ -49,19 +56,35 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
               children: [
                 const Text(
                   'Fitness, fatigue & form',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: navy),
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                    color: navy,
+                  ),
                 ),
-                const Text('Training load over time (CTL, ATL, TSB)', style: TextStyle(color: muted, fontSize: 11)),
+                const Text(
+                  'Training load over time (CTL, ATL, TSB)',
+                  style: TextStyle(color: muted, fontSize: 11),
+                ),
                 const SizedBox(height: 20),
                 historyAsync.when(
-                  loading: () => const SizedBox(
-                    height: 200,
-                    child: Center(child: CircularProgressIndicator(color: navy)),
-                  ),
-                  error: (e, _) => SizedBox(
-                    height: 200,
-                    child: Center(child: Text('Failed to load chart: $e', style: const TextStyle(color: muted))),
-                  ),
+                  loading:
+                      () => const SizedBox(
+                        height: 200,
+                        child: Center(
+                          child: CircularProgressIndicator(color: navy),
+                        ),
+                      ),
+                  error:
+                      (e, _) => SizedBox(
+                        height: 200,
+                        child: Center(
+                          child: Text(
+                            'Failed to load chart: $e',
+                            style: const TextStyle(color: muted),
+                          ),
+                        ),
+                      ),
                   data: (history) {
                     final latest = perfAsync.valueOrNull;
                     return PerformanceChartWidget(
@@ -84,7 +107,10 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
                       children: [
                         Legend('Fitness ${fit.toStringAsFixed(1)}', blue),
                         Legend('Fatigue ${fat.toStringAsFixed(1)}', purple),
-                        Legend('Form ${form > 0 ? "+${form.toStringAsFixed(1)}" : form.toStringAsFixed(1)}', orange),
+                        Legend(
+                          'Form ${form > 0 ? "+${form.toStringAsFixed(1)}" : form.toStringAsFixed(1)}',
+                          orange,
+                        ),
                       ],
                     );
                   },
@@ -125,13 +151,76 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
         const SizedBox(height: 22),
         const SectionHeading('Personal bests', action: 'View all'),
         const SizedBox(height: 10),
-        const Row(
-          children: [
-            Expanded(child: Best('5K run', '21:42', Icons.directions_run, blue)),
-            SizedBox(width: 10),
-            Expanded(child: Best('20 min power', '278 W', Icons.directions_bike, purple)),
-          ],
-        ),
+        ref
+            .watch(personalBestsProvider)
+            .when(
+              loading:
+                  () => const Row(
+                    children: [
+                      Expanded(
+                        child: Best(
+                          '5K run',
+                          '\u2014',
+                          Icons.directions_run,
+                          blue,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Best(
+                          '20 min power',
+                          '\u2014',
+                          Icons.directions_bike,
+                          purple,
+                        ),
+                      ),
+                    ],
+                  ),
+              error:
+                  (_, __) => const Row(
+                    children: [
+                      Expanded(
+                        child: Best(
+                          '5K run',
+                          '\u2014',
+                          Icons.directions_run,
+                          blue,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Best(
+                          '20 min power',
+                          '\u2014',
+                          Icons.directions_bike,
+                          purple,
+                        ),
+                      ),
+                    ],
+                  ),
+              data:
+                  (pbs) => Row(
+                    children: [
+                      Expanded(
+                        child: Best(
+                          '5K run',
+                          pbs.best5kPace,
+                          Icons.directions_run,
+                          blue,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Best(
+                          '20 min power',
+                          pbs.best20MinPower,
+                          Icons.directions_bike,
+                          purple,
+                        ),
+                      ),
+                    ],
+                  ),
+            ),
       ],
     );
   }

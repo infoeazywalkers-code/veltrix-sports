@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/models/workout.dart';
@@ -257,8 +256,8 @@ void main() {
 
   test('zone calculation covers all zones', () {
     final engine = WorkoutExecutionService(workout: _makeWorkout());
-    // Default BleSensorService HR is 145 → zone 3 (TEMPO)
-    expect(engine.currentZone, 3);
+    // Without personalized zones, currentZone returns 1
+    expect(engine.currentZone, 1);
 
     // Test formatting with hours
     final time = engine.formattedTime;

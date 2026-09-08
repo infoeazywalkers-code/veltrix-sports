@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/screens/home_screen.dart';
 
 void main() {
@@ -7,11 +9,17 @@ void main() {
     Widget child, {
     ValueChanged<int>? onNavigate,
     double width = 800,
-  }) => MaterialApp(
-    home: Scaffold(
-      body: MediaQuery(
-        data: MediaQueryData(size: Size(width, 1200)),
-        child: child,
+  }) => ProviderScope(
+    overrides: [
+      latestPerformanceProvider.overrideWith((ref) => Stream.value(null)),
+      weekWorkoutsProvider.overrideWith((ref, arg) async => []),
+    ],
+    child: MaterialApp(
+      home: Scaffold(
+        body: MediaQuery(
+          data: MediaQueryData(size: Size(width, 1200)),
+          child: child,
+        ),
       ),
     ),
   );

@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth_service.dart';
 import '../../providers.dart';
 import '../../screens/premium_screen.dart';
-import '../../widgets/edit_profile_dialog.dart';
+import '../../screens/profile_edit_screen.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
+import 'mobile_settings.dart';
 
 class MobileProfileScreen extends ConsumerWidget {
   const MobileProfileScreen({super.key});
@@ -131,12 +132,11 @@ class MobileProfileScreen extends ConsumerWidget {
                       ),
                       IconButton(
                         onPressed:
-                            () => showDialog(
-                              context: context,
-                              builder:
-                                  (_) => EditProfileDialog(
-                                    currentProfile: profile,
-                                  ),
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ProfileEditScreen(),
+                              ),
                             ),
                         icon: const Icon(Icons.edit_outlined),
                       ),
@@ -185,13 +185,24 @@ class MobileProfileScreen extends ConsumerWidget {
               MSection(
                 title: 'Account',
                 child: _SettingsGroup(
-                  onSelect:
-                      (item) => _showMessage(context, '$item settings opened.'),
+                  onSelect: (item) {
+                    if (item == 'Settings') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const MobileSettingsScreen(),
+                        ),
+                      );
+                    } else {
+                      _showMessage(context, '$item settings opened.');
+                    }
+                  },
                   items: const [
                     ('Personal details', Icons.person_outline),
                     ('Training zones', Icons.tune),
                     ('Apps & devices', Icons.devices),
                     ('Equipment', Icons.sports),
+                    ('Settings', Icons.settings_outlined),
                   ],
                 ),
               ),
