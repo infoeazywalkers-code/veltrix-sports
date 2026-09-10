@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/services/payment_service.dart';
+import 'package:veltrix_sports/services/payment/payment_service.dart';
 
 void main() {
   group('SubscriptionPlan', () {

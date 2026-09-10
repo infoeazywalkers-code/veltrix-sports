@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/auth_service.dart';
+import 'package:veltrix_sports/services/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 void main() {

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/services/notification_service.dart';
+import 'package:veltrix_sports/services/core/notification_service.dart';
 
 void main() {
   group('NotificationService', () {

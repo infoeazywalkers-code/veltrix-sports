@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/performance_snapshot.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
 
 void main() {
   group('PerformanceSnapshot', () {

@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import '../../core/constants.dart';
+
+class WorkoutCard extends StatelessWidget {
+  final String sport, title, details;
+  final Color color;
+  final IconData icon;
+  final double progress;
+  final VoidCallback? onTap;
+  const WorkoutCard({
+    super.key,
+    required this.sport,
+    required this.title,
+    required this.details,
+    required this.color,
+    required this.icon,
+    this.progress = 0,
+    this.onTap,
+  });
+  @override
+  Widget build(BuildContext context) => Card(
+    child: InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: .12),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(icon, color: color),
+            ),
+            const SizedBox(width: 13),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    sport,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: .8,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  Text(
+                    details,
+                    style: TextStyle(
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
+                      fontSize: 11,
+                    ),
+                  ),
+                  if (progress > 0) ...[
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 4,
+                      color: color,
+                      backgroundColor: color.withValues(alpha: .1),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}

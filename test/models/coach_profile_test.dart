@@ -1,6 +1,6 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/coach_profile.dart';
+import 'package:veltrix_sports/models/user/coach_profile.dart';
 
 void main() {
   group('CoachProfile', () {

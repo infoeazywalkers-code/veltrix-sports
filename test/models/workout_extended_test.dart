@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/workout.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
 
 void main() {
   group('Workout - Extended', () {

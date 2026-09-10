@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:veltrix_sports/screens/calendar_screen.dart';
-import 'package:veltrix_sports/screens/coach_match_screen.dart';
-import 'package:veltrix_sports/screens/progress_screen.dart';
-import 'package:veltrix_sports/screens/strength_screen.dart';
+import 'package:veltrix_sports/screens/training/calendar_screen.dart';
+import 'package:veltrix_sports/screens/coach/coach_match_screen.dart';
+import 'package:veltrix_sports/screens/dashboard/progress_screen.dart';
+import 'package:veltrix_sports/screens/training/strength_screen.dart';
 
 void main() {
   group('Screens Interaction Widget Tests', () {

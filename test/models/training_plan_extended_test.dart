@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/training_plan.dart';
+import 'package:veltrix_sports/models/training/training_plan.dart';
 
 void main() {
   group('TrainingPlan - Extended', () {

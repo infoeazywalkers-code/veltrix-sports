@@ -8,9 +8,9 @@ import 'package:veltrix_sports/mobile/screens/mobile_calendar.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_progress.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_profile.dart';
 import 'package:veltrix_sports/mobile/shell.dart';
-import 'package:veltrix_sports/screens/calendar_screen.dart';
-import 'package:veltrix_sports/screens/profile_screen.dart';
-import 'package:veltrix_sports/screens/progress_screen.dart';
+import 'package:veltrix_sports/screens/training/calendar_screen.dart';
+import 'package:veltrix_sports/screens/profile/profile_screen.dart';
+import 'package:veltrix_sports/screens/dashboard/progress_screen.dart';
 
 /// Override all family providers at the family level so any argument is covered.
 Widget overriddenWrap(Widget child) => ProviderScope(

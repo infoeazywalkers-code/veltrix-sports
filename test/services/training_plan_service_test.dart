@@ -1,7 +1,7 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/training_plan.dart';
-import 'package:veltrix_sports/services/training_plan_service.dart';
+import 'package:veltrix_sports/models/training/training_plan.dart';
+import 'package:veltrix_sports/services/training/training_plan_service.dart';
 
 void main() {
   group('TrainingPlanService', () {

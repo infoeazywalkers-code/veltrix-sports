@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/user_profile.dart';
+import 'package:veltrix_sports/models/user/user_profile.dart';
 import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_profile.dart';
 

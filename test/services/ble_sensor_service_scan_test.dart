@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/services/ble_sensor_service.dart';
+import 'package:veltrix_sports/services/devices/ble_sensor_service.dart';
 
 void main() {
   group('BleSensorService - startWatchScan simulation', () {

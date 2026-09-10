@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:veltrix_sports/screens/premium_screen.dart';
-import 'package:veltrix_sports/screens/coach_match_screen.dart';
-import 'package:veltrix_sports/screens/strength_screen.dart';
+import 'package:veltrix_sports/screens/premium/premium_screen.dart';
+import 'package:veltrix_sports/screens/coach/coach_match_screen.dart';
+import 'package:veltrix_sports/screens/training/strength_screen.dart';
 
 Widget wrap(Widget child) => MaterialApp(
   home: ProviderScope(

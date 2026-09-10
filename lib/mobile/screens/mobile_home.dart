@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../auth_service.dart';
-import '../../constants.dart';
-import '../../models/workout.dart';
+import '../../services/auth/auth_service.dart';
+import '../../core/constants.dart';
+import '../../models/activity/workout.dart';
 import '../../providers.dart';
-import '../../screens/notifications_screen.dart';
-import '../../screens/home_screen.dart';
-import '../../screens/workout_details.dart';
-import '../../widgets/event_details_dialog.dart';
+import '../../core/utils/unit_conversion.dart';
+import '../../services/performance/pmc_service.dart';
+import '../../screens/social/notifications_screen.dart';
+import '../../screens/home/home_screen.dart';
+import '../../screens/activity/workout_details.dart';
+import '../../widgets/dialogs/event_details_dialog.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -21,6 +23,7 @@ class MobileHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(userProfileProvider);
     final workoutsAsync = ref.watch(upcomingWorkoutsProvider);
+    final units = ref.watch(unitSystemProvider);
 
     return CustomScrollView(
       slivers: [
@@ -61,20 +64,20 @@ class MobileHomeScreen extends ConsumerWidget {
                       height: 40,
                       child: Center(child: CircularProgressIndicator()),
                     ),
-                error: (e, _) => Text('Error: $e', style: M.bodyMuted),
+                error: (e, _) => Text('Error: $e', style: M.adaptiveMuted(context)),
                 data: (profile) {
                   final name =
                       profile?.displayName.split(' ').first ?? 'Athlete';
                   return Text(
                     'Hello, $name',
-                    style: M.screenTitle.copyWith(fontSize: 32),
+                    style: M.adaptiveScreenTitle(context).copyWith(fontSize: 32),
                   );
                 },
               ),
               const SizedBox(height: M.sm),
-              const Text(
+              Text(
                 'Built for athletes who want more from every session.',
-                style: M.bodyMuted,
+                style: M.adaptiveMuted(context),
               ),
               const SizedBox(height: M.lg),
               const HomeVideoHero(),
@@ -160,12 +163,12 @@ class MobileHomeScreen extends ConsumerWidget {
                             color: M.lime,
                             borderRadius: BorderRadius.circular(M.rSm),
                           ),
-                          child: const Text(
+                          child: Text(
                             'A RACE',
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 10,
-                              color: M.navy,
+                              color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
                             ),
                           ),
                         ),
@@ -253,7 +256,7 @@ class MobileHomeScreen extends ConsumerWidget {
                       (e, _) => MCard(
                         child: Padding(
                           padding: const EdgeInsets.all(M.base),
-                          child: Text('Error: $e', style: M.bodyMuted),
+                          child: Text('Error: $e', style: M.adaptiveMuted(context)),
                         ),
                       ),
                   data: (workouts) {
@@ -278,7 +281,7 @@ class MobileHomeScreen extends ConsumerWidget {
                         sport: 'RUN',
                         title: demoWorkout.title,
                         details:
-                            '${demoWorkout.duration}  •  ${demoWorkout.distanceKm} km  •  ${demoWorkout.tss} TSS',
+                            '${demoWorkout.duration}  •  ${UnitConversion.formatDistance(units, demoWorkout.distanceKm ?? 7.2)}  •  ${demoWorkout.tss} TSS',
                         color: M.blue,
                         icon: Icons.directions_run_rounded,
                         progress: demoWorkout.progress,
@@ -299,7 +302,8 @@ class MobileHomeScreen extends ConsumerWidget {
                     final sportLabel = w.sport.name.toUpperCase();
                     final details = [
                       w.duration,
-                      if (w.distanceKm != null) '${w.distanceKm} km',
+                      if (w.distanceKm != null)
+                        UnitConversion.formatDistance(units, w.distanceKm!),
                       if (w.tss != null) '${w.tss} TSS',
                     ].join('  •  ');
                     final icon =
@@ -343,67 +347,7 @@ class MobileHomeScreen extends ConsumerWidget {
               ),
 
               const SizedBox(height: M.lg),
-              MSection(
-                title: 'Training status',
-                action: 'Details',
-                child: MCard(
-                  child: Column(
-                    children: [
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          MStatRing(
-                            value: '--',
-                            label: 'Fitness',
-                            color: M.blue,
-                            progress: 0,
-                          ),
-                          MStatRing(
-                            value: '--',
-                            label: 'Fatigue',
-                            color: M.purple,
-                            progress: 0,
-                          ),
-                          MStatRing(
-                            value: '--',
-                            label: 'Form',
-                            color: M.orange,
-                            progress: 0,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: M.base),
-                      Container(
-                        padding: const EdgeInsets.all(M.md),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF0F7EC),
-                          borderRadius: BorderRadius.circular(M.rMd),
-                        ),
-                        child: const Row(
-                          children: [
-                            Icon(
-                              Icons.trending_up,
-                              color: Color(0xFF4C8C2B),
-                              size: 20,
-                            ),
-                            SizedBox(width: M.sm),
-                            Expanded(
-                              child: Text(
-                                'Productive training — fitness is building steadily.',
-                                style: TextStyle(
-                                  color: Color(0xFF3F6F26),
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              const _TrainingStatus(),
 
               const SizedBox(height: M.lg),
               MSection(title: 'This week', child: _WeekSummary()),
@@ -493,8 +437,8 @@ class _WeekSummary extends StatelessWidget {
                   const SizedBox(height: M.xs),
                   Text(
                     ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
-                    style: const TextStyle(
-                      color: M.muted,
+                    style: TextStyle(
+                      color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted),
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
                     ),
@@ -518,9 +462,96 @@ class _WeekStat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(value, style: M.statBig),
-        Text(label, style: M.statLabel),
+        Text(value, style: M.adaptiveStat(context)),
+        Text(label, style: M.adaptiveMuted(context)),
       ],
+    );
+  }
+}
+
+/// Live training-status rings driven by the latest [PerformanceSnapshot].
+///
+/// Shows rounded fitness/fatigue/form values with progress normalized as
+/// value/150 (clamped 0..1). When no snapshot exists yet, each ring shows
+/// '–' with zero progress and the insight line says so honestly.
+class _TrainingStatus extends ConsumerWidget {
+  const _TrainingStatus();
+
+  String _ringValue(double? v) => v == null ? '–' : '${v.round()}';
+
+  double _ringProgress(double? v) =>
+      v == null ? 0 : (v / 150).clamp(0, 1).toDouble();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final snapshot = ref.watch(latestPerformanceProvider).valueOrNull;
+    final formState =
+        snapshot == null ? null : PmcService().getFormState(snapshot.form);
+    final insightText =
+        formState == null
+            ? 'No training data yet — complete a workout to see your status.'
+            : '${formState.label} — ${formState.description}.';
+
+    return MSection(
+      title: 'Training status',
+      action: 'Details',
+      child: MCard(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                MStatRing(
+                  value: _ringValue(snapshot?.fitness),
+                  label: 'Fitness',
+                  color: M.blue,
+                  progress: _ringProgress(snapshot?.fitness),
+                ),
+                MStatRing(
+                  value: _ringValue(snapshot?.fatigue),
+                  label: 'Fatigue',
+                  color: M.purple,
+                  progress: _ringProgress(snapshot?.fatigue),
+                ),
+                MStatRing(
+                  value: _ringValue(snapshot?.form),
+                  label: 'Form',
+                  color: M.orange,
+                  progress: _ringProgress(snapshot?.form),
+                ),
+              ],
+            ),
+            const SizedBox(height: M.base),
+            Container(
+              padding: const EdgeInsets.all(M.md),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0F7EC),
+                borderRadius: BorderRadius.circular(M.rMd),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.trending_up,
+                    color: Color(0xFF4C8C2B),
+                    size: 20,
+                  ),
+                  const SizedBox(width: M.sm),
+                  Expanded(
+                    child: Text(
+                      insightText,
+                      style: const TextStyle(
+                        color: Color(0xFF3F6F26),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/services/user_service.dart';
-import 'package:veltrix_sports/services/workout_service.dart';
-import 'package:veltrix_sports/services/training_plan_service.dart';
-import 'package:veltrix_sports/services/coach_request_service.dart';
-import 'package:veltrix_sports/services/performance_service.dart';
+import 'package:veltrix_sports/services/activity/workout_service.dart';
+import 'package:veltrix_sports/services/training/training_plan_service.dart';
+import 'package:veltrix_sports/services/social/coach_request_service.dart';
+import 'package:veltrix_sports/services/performance/performance_service.dart';
 
 void main() {
   group('Providers - service type checks', () {

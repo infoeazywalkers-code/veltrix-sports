@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/editorial_banner.dart';
-import 'package:veltrix_sports/constants.dart';
+import 'package:veltrix_sports/widgets/common/editorial_banner.dart';
+import 'package:veltrix_sports/core/constants.dart';
 
 Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 

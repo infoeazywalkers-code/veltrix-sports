@@ -4,7 +4,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/auth_service.dart';
+import 'package:veltrix_sports/services/auth/auth_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

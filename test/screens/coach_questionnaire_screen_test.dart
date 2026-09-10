@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/screens/coach_questionnaire_screen.dart';
+import 'package:veltrix_sports/screens/coach/coach_questionnaire_screen.dart';
 
 void main() {
   setUpAll(() async {

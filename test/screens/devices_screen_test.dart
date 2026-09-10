@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:veltrix_sports/screens/devices_screen.dart';
+import 'package:veltrix_sports/screens/devices/devices_screen.dart';
 
 void main() {
   testWidgets('DevicesScreen renders Watch Auto-Sync banner and device categories', (tester) async {

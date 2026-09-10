@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../models/user_preferences.dart';
+import '../../models/user/user_preferences.dart';
 import '../../providers.dart';
+import '../../core/errors/error_handler.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 
@@ -41,7 +42,12 @@ class MobileSettingsScreen extends ConsumerWidget {
                   ],
                   selected: {prefs?.theme.mode ?? ThemeModePreference.system},
                   onSelectionChanged:
-                      (v) => _updateField(ref, 'theme.mode', v.first.name),
+                      (v) => _updateField(
+                        context,
+                        ref,
+                        'theme.mode',
+                        v.first.name,
+                      ),
                 ),
               ],
             ),
@@ -68,8 +74,12 @@ class MobileSettingsScreen extends ConsumerWidget {
                   ],
                   selected: {prefs?.display.unitSystem ?? UnitSystem.metric},
                   onSelectionChanged:
-                      (v) =>
-                          _updateField(ref, 'display.unitSystem', v.first.name),
+                      (v) => _updateField(
+                        context,
+                        ref,
+                        'display.unitSystem',
+                        v.first.name,
+                      ),
                 ),
               ],
             ),
@@ -88,6 +98,7 @@ class MobileSettingsScreen extends ConsumerWidget {
                   value: prefs?.notifications.workoutReminders ?? true,
                   onChanged:
                       (v) => _updateField(
+                        context,
                         ref,
                         'notifications.workoutReminders',
                         v,
@@ -98,16 +109,24 @@ class MobileSettingsScreen extends ConsumerWidget {
                   title: const Text('Coach Messages'),
                   value: prefs?.notifications.coachMessages ?? true,
                   onChanged:
-                      (v) =>
-                          _updateField(ref, 'notifications.coachMessages', v),
+                      (v) => _updateField(
+                        context,
+                        ref,
+                        'notifications.coachMessages',
+                        v,
+                      ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Weekly Summary'),
                   value: prefs?.notifications.weeklySummary ?? true,
                   onChanged:
-                      (v) =>
-                          _updateField(ref, 'notifications.weeklySummary', v),
+                      (v) => _updateField(
+                        context,
+                        ref,
+                        'notifications.weeklySummary',
+                        v,
+                      ),
                   contentPadding: EdgeInsets.zero,
                 ),
               ],
@@ -124,7 +143,7 @@ class MobileSettingsScreen extends ConsumerWidget {
                 const SizedBox(height: 8),
                 _RestDayChips(
                   restDays: prefs?.schedule.restDays ?? const [7],
-                  onChanged: (days) => _updateSchedule(ref, days),
+                  onChanged: (days) => _updateSchedule(context, ref, days),
                 ),
               ],
             ),
@@ -143,6 +162,7 @@ class MobileSettingsScreen extends ConsumerWidget {
                   value: prefs?.privacy.profileVisibleToCoaches ?? true,
                   onChanged:
                       (v) => _updateField(
+                        context,
                         ref,
                         'privacy.profileVisibleToCoaches',
                         v,
@@ -153,8 +173,12 @@ class MobileSettingsScreen extends ConsumerWidget {
                   title: const Text('Activity Feed Visible'),
                   value: prefs?.privacy.activityFeedVisible ?? true,
                   onChanged:
-                      (v) =>
-                          _updateField(ref, 'privacy.activityFeedVisible', v),
+                      (v) => _updateField(
+                        context,
+                        ref,
+                        'privacy.activityFeedVisible',
+                        v,
+                      ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
@@ -162,6 +186,7 @@ class MobileSettingsScreen extends ConsumerWidget {
                   value: prefs?.privacy.shareLocationInWorkouts ?? true,
                   onChanged:
                       (v) => _updateField(
+                        context,
                         ref,
                         'privacy.shareLocationInWorkouts',
                         v,
@@ -172,22 +197,36 @@ class MobileSettingsScreen extends ConsumerWidget {
                   title: const Text('Show on Leaderboards'),
                   value: prefs?.privacy.showOnLeaderboards ?? true,
                   onChanged:
-                      (v) => _updateField(ref, 'privacy.showOnLeaderboards', v),
+                      (v) => _updateField(
+                        context,
+                        ref,
+                        'privacy.showOnLeaderboards',
+                        v,
+                      ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Allow Coach Data Access'),
                   value: prefs?.privacy.allowCoachDataAccess ?? true,
                   onChanged:
-                      (v) =>
-                          _updateField(ref, 'privacy.allowCoachDataAccess', v),
+                      (v) => _updateField(
+                        context,
+                        ref,
+                        'privacy.allowCoachDataAccess',
+                        v,
+                      ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Analytics Enabled'),
                   value: prefs?.privacy.analyticsEnabled ?? true,
                   onChanged:
-                      (v) => _updateField(ref, 'privacy.analyticsEnabled', v),
+                      (v) => _updateField(
+                        context,
+                        ref,
+                        'privacy.analyticsEnabled',
+                        v,
+                      ),
                   contentPadding: EdgeInsets.zero,
                 ),
               ],
@@ -198,20 +237,45 @@ class MobileSettingsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _updateField(WidgetRef ref, String path, dynamic value) async {
+  Future<void> _updateField(
+    BuildContext context,
+    WidgetRef ref,
+    String path,
+    dynamic value,
+  ) async {
     final user = ref.read(currentUserProvider);
     if (user == null) return;
-    await ref
-        .read(preferencesServiceProvider)
-        .updateField(user.uid, path, value);
+    try {
+      await ref
+          .read(preferencesServiceProvider)
+          .updateField(user.uid, path, value);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(ErrorHandler.getUserMessage(e))));
+      }
+    }
   }
 
-  Future<void> _updateSchedule(WidgetRef ref, List<int> restDays) async {
+  Future<void> _updateSchedule(
+    BuildContext context,
+    WidgetRef ref,
+    List<int> restDays,
+  ) async {
     final user = ref.read(currentUserProvider);
     if (user == null) return;
-    await ref.read(preferencesServiceProvider).update(user.uid, {
-      'schedule.restDays': restDays,
-    });
+    try {
+      await ref.read(preferencesServiceProvider).update(user.uid, {
+        'schedule.restDays': restDays,
+      });
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(ErrorHandler.getUserMessage(e))));
+      }
+    }
   }
 }
 

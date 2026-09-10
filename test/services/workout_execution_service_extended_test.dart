@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/workout.dart';
-import 'package:veltrix_sports/services/workout_execution_service.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
+import 'package:veltrix_sports/services/activity/workout_execution_service.dart';
 
 void main() {
   group('WorkoutExecutionService - Extended', () {

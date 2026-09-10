@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/user_profile.dart';
-import 'package:veltrix_sports/models/workout.dart';
-import 'package:veltrix_sports/models/performance_snapshot.dart';
-import 'package:veltrix_sports/models/training_plan.dart';
-import 'package:veltrix_sports/models/coach_request.dart';
-import 'package:veltrix_sports/models/coach_profile.dart';
+import 'package:veltrix_sports/models/user/user_profile.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
+import 'package:veltrix_sports/models/training/training_plan.dart';
+import 'package:veltrix_sports/models/user/coach_request.dart';
+import 'package:veltrix_sports/models/user/coach_profile.dart';
 
 void main() {
   group('UserProfile - edge cases', () {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/screens/coach_match_screen.dart';
-import 'package:veltrix_sports/screens/coach_questionnaire_screen.dart';
-import 'package:veltrix_sports/screens/devices_screen.dart';
-import 'package:veltrix_sports/screens/strength_screen.dart';
-import 'package:veltrix_sports/screens/home_screen.dart';
+import 'package:veltrix_sports/screens/coach/coach_match_screen.dart';
+import 'package:veltrix_sports/screens/coach/coach_questionnaire_screen.dart';
+import 'package:veltrix_sports/screens/devices/devices_screen.dart';
+import 'package:veltrix_sports/screens/training/strength_screen.dart';
+import 'package:veltrix_sports/screens/home/home_screen.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_explore.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_more.dart';
 

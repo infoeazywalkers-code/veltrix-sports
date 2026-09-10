@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:veltrix_sports/models/workout.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
 import 'package:veltrix_sports/providers.dart';
-import 'package:veltrix_sports/screens/calendar_screen.dart';
+import 'package:veltrix_sports/screens/training/calendar_screen.dart';
 
 void main() {
   Widget wrapWithWorkouts(List<Workout> workouts) => ProviderScope(

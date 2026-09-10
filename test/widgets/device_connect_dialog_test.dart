@@ -4,7 +4,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:veltrix_sports/widgets/device_connect_dialog.dart';
+import 'package:veltrix_sports/widgets/dialogs/device_connect_dialog.dart';
 
 class _FakeAuthPlatform extends FirebaseAuthPlatform {
   _FakeAuthPlatform() : super();

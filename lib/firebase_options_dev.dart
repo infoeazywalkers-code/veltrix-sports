@@ -1,5 +1,9 @@
-// Development Firebase Options - For demo purposes only
-// Replace with your actual Firebase project credentials
+// Development Firebase Options.
+// NOTE: dev and prod share the same Firebase project (veltrix-sports) — the
+// android entries are identical to firebase_options.dart. The web entry below
+// must use the real web app registration (same as production); using the
+// Android API key / a mismatched web appId breaks ALL web backend calls.
+// iOS/macOS/Windows entries below are still demo placeholders.
 // ignore_for_file: type=lint
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
@@ -32,12 +36,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAwtl2l3e6m4eKxHP-_-wq2PcDPkom5z_o',
-    appId: '1:25616595982:web:d3aa8cf032ea388fc8d05f',
+    apiKey: 'AIzaSyAmseNI3VGRd1mIonnzO4P9tp8_xdDt8p4',
+    appId: '1:25616595982:web:9858680bae4c42fcc8d05f',
     messagingSenderId: '25616595982',
     projectId: 'veltrix-sports',
     authDomain: 'veltrix-sports.firebaseapp.com',
     storageBucket: 'veltrix-sports.firebasestorage.app',
+    measurementId: 'G-22EME77ENP',
   );
 
   static const FirebaseOptions android = FirebaseOptions(

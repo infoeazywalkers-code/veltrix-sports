@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/services/analytics_service.dart';
+import 'package:veltrix_sports/services/core/analytics_service.dart';
 
 void main() {
   group('AnalyticsService - Extended', () {

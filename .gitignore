@@ -116,3 +116,5 @@ coverage/
 
 # Node
 functions/node_modules/
+web-app/node_modules/
+web-app/dist/

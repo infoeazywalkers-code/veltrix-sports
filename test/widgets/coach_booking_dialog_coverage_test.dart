@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/services/coach_service.dart';
-import 'package:veltrix_sports/widgets/coach_booking_dialog.dart';
+import 'package:veltrix_sports/services/social/coach_service.dart';
+import 'package:veltrix_sports/widgets/dialogs/coach_booking_dialog.dart';
 
 const _testCoach = CoachProfile(
   id: 'coach_priya',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/mobile/theme.dart';
-import 'package:veltrix_sports/constants.dart';
+import 'package:veltrix_sports/core/constants.dart';
 
 void main() {
   group('M.theme', () {

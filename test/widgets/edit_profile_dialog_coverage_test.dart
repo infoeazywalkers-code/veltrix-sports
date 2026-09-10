@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/user_profile.dart';
-import 'package:veltrix_sports/widgets/edit_profile_dialog.dart';
+import 'package:veltrix_sports/models/user/user_profile.dart';
+import 'package:veltrix_sports/widgets/dialogs/edit_profile_dialog.dart';
 
 Widget openDialog(Widget dialog) => MaterialApp(
   home: Builder(

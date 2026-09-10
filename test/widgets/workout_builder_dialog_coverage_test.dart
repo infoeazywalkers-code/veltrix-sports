@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/workout_builder_dialog.dart';
-import 'package:veltrix_sports/models/workout.dart';
+import 'package:veltrix_sports/widgets/workout/workout_builder_dialog.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
 
 Widget openDialog(Widget dialog) => MaterialApp(
   home: Builder(

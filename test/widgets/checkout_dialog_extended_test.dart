@@ -3,8 +3,8 @@ import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/checkout_dialog.dart';
-import 'package:veltrix_sports/services/payment_service.dart';
+import 'package:veltrix_sports/widgets/dialogs/checkout_dialog.dart';
+import 'package:veltrix_sports/services/payment/payment_service.dart';
 
 class _FakeAuthPlatform extends FirebaseAuthPlatform {
   _FakeAuthPlatform() : super();

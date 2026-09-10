@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/services/performance_service.dart';
+import 'package:veltrix_sports/services/performance/performance_service.dart';
 
 void main() {
   group('PerformanceService', () {

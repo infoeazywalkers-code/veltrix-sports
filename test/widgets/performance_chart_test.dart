@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/performance_chart.dart';
-import 'package:veltrix_sports/models/performance_snapshot.dart';
+import 'package:veltrix_sports/widgets/analytics/performance_chart.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
 
 void main() {
   Widget wrap(Widget child) => MaterialApp(

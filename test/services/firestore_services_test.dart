@@ -1,15 +1,15 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/coach_request.dart';
-import 'package:veltrix_sports/models/performance_snapshot.dart';
-import 'package:veltrix_sports/models/training_plan.dart';
-import 'package:veltrix_sports/models/user_profile.dart';
-import 'package:veltrix_sports/models/workout.dart';
-import 'package:veltrix_sports/services/coach_request_service.dart';
-import 'package:veltrix_sports/services/performance_service.dart';
-import 'package:veltrix_sports/services/training_plan_service.dart';
+import 'package:veltrix_sports/models/user/coach_request.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
+import 'package:veltrix_sports/models/training/training_plan.dart';
+import 'package:veltrix_sports/models/user/user_profile.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
+import 'package:veltrix_sports/services/social/coach_request_service.dart';
+import 'package:veltrix_sports/services/performance/performance_service.dart';
+import 'package:veltrix_sports/services/training/training_plan_service.dart';
 import 'package:veltrix_sports/services/user_service.dart';
-import 'package:veltrix_sports/services/workout_service.dart';
+import 'package:veltrix_sports/services/activity/workout_service.dart';
 
 Workout _makeWorkout({
   String id = 'w1',

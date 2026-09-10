@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/event_details_dialog.dart';
-import 'package:veltrix_sports/widgets/checkout_dialog.dart';
-import 'package:veltrix_sports/services/payment_service.dart';
+import 'package:veltrix_sports/widgets/dialogs/event_details_dialog.dart';
+import 'package:veltrix_sports/widgets/dialogs/checkout_dialog.dart';
+import 'package:veltrix_sports/services/payment/payment_service.dart';
 
 Widget openDialog(Widget dialog) => MaterialApp(
   home: Builder(

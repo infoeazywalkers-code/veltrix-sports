@@ -7,9 +7,9 @@ import 'package:veltrix_sports/mobile/screens/mobile_home.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_calendar.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_progress.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_profile.dart';
-import 'package:veltrix_sports/models/user_profile.dart';
-import 'package:veltrix_sports/models/workout.dart';
-import 'package:veltrix_sports/models/performance_snapshot.dart';
+import 'package:veltrix_sports/models/user/user_profile.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
 
 final _testProfile = UserProfile(
   id: 'u1',

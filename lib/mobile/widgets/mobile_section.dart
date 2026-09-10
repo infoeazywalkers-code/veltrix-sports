@@ -23,7 +23,7 @@ class MSection extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Text(title, style: M.sectionTitle),
+              child: Text(title, style: M.adaptiveSectionTitle(context)),
             ),
             if (action != null)
               GestureDetector(
@@ -75,8 +75,8 @@ class MSectionIntro extends StatelessWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: M.navy,
+          style: TextStyle(
+            color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
             fontSize: 26,
             height: 1.1,
             fontWeight: FontWeight.w900,
@@ -86,7 +86,7 @@ class MSectionIntro extends StatelessWidget {
         Text(
           body,
           textAlign: TextAlign.center,
-          style: M.bodyMuted,
+          style: M.adaptiveMuted(context),
         ),
       ],
     );
@@ -107,8 +107,8 @@ class MDivider extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: M.base),
           child: Text(
             label!,
-            style: const TextStyle(
-              color: M.muted,
+            style: TextStyle(
+              color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted),
               fontSize: 10,
               letterSpacing: 1.2,
               fontWeight: FontWeight.w900,

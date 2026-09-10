@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../auth_service.dart';
+import '../../services/auth/auth_service.dart';
+import '../../core/errors/error_handler.dart';
 import '../../providers.dart';
-import '../../screens/premium_screen.dart';
-import '../../screens/profile_edit_screen.dart';
+import '../../screens/premium/premium_screen.dart';
+import '../../screens/profile/profile_edit_screen.dart';
+import '../../screens/analytics/zones_screen.dart';
+import '../../screens/devices/devices_screen.dart';
+import '../../screens/explore/production_pages.dart';
+import '../../screens/gear/gear_vault_screen.dart';
+import '../../screens/settings/help_support_screen.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -35,7 +41,7 @@ class MobileProfileScreen extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           'Error loading profile: $e',
-                          style: M.bodyMuted,
+                          style: M.adaptiveMuted(context),
                         ),
                       ),
                     ),
@@ -44,21 +50,24 @@ class MobileProfileScreen extends ConsumerWidget {
                     return MCard(
                       child: Column(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.person_outline,
-                            color: M.navy,
+                            color:
+                                (Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : M.navy),
                             size: 48,
                           ),
                           const SizedBox(height: M.sm),
-                          const Text(
+                          Text(
                             'Welcome to Veltrix Sports',
-                            style: M.cardTitle,
+                            style: M.adaptiveTitle(context),
                           ),
                           const SizedBox(height: M.xs),
-                          const Text(
+                          Text(
                             'Sign in to access your training plan, settings, and performance data.',
                             textAlign: TextAlign.center,
-                            style: M.bodyMuted,
+                            style: M.adaptiveMuted(context),
                           ),
                           const SizedBox(height: M.md),
                           FilledButton.icon(
@@ -120,13 +129,17 @@ class MobileProfileScreen extends ConsumerWidget {
                           children: [
                             Text(
                               name,
-                              style: const TextStyle(
-                                color: M.navy,
+                              style: TextStyle(
+                                color:
+                                    (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : M.navy),
                                 fontSize: 20,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
-                            Text(sports, style: M.bodyMuted),
+                            Text(sports, style: M.adaptiveMuted(context)),
                           ],
                         ),
                       ),
@@ -160,11 +173,15 @@ class MobileProfileScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Veltrix Premium',
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
-                              color: M.navy,
+                              color:
+                                  (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : M.navy),
                             ),
                           ),
                           Text(
@@ -172,12 +189,18 @@ class MobileProfileScreen extends ConsumerWidget {
                                     null
                                 ? 'Renews ${profileAsync.valueOrNull!.subscriptionRenewsAt!.day} ${_monthName(profileAsync.valueOrNull!.subscriptionRenewsAt!.month)} ${profileAsync.valueOrNull!.subscriptionRenewsAt!.year}'
                                 : 'No active subscription',
-                            style: M.caption,
+                            style: M.adaptiveCardBody(context),
                           ),
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right, color: M.muted),
+                    Icon(
+                      Icons.chevron_right,
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : M.muted),
+                    ),
                   ],
                 ),
               ),
@@ -186,15 +209,42 @@ class MobileProfileScreen extends ConsumerWidget {
                 title: 'Account',
                 child: _SettingsGroup(
                   onSelect: (item) {
-                    if (item == 'Settings') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const MobileSettingsScreen(),
-                        ),
-                      );
-                    } else {
-                      _showMessage(context, '$item settings opened.');
+                    switch (item) {
+                      case 'Personal details':
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProfileEditScreen(),
+                          ),
+                        );
+                      case 'Training zones':
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ZonesScreen(stats: null),
+                          ),
+                        );
+                      case 'Apps & devices':
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const DevicesScreen(),
+                          ),
+                        );
+                      case 'Equipment':
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const GearVaultScreen(),
+                          ),
+                        );
+                      case 'Settings':
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const MobileSettingsScreen(),
+                          ),
+                        );
                     }
                   },
                   items: const [
@@ -210,9 +260,23 @@ class MobileProfileScreen extends ConsumerWidget {
               MSection(
                 title: 'Support',
                 child: _SettingsGroup(
-                  onSelect:
-                      (item) =>
-                          _showMessage(context, '$item is ready to help.'),
+                  onSelect: (item) {
+                    switch (item) {
+                      case 'Help center':
+                      case 'Contact support':
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HelpSupportScreen(),
+                          ),
+                        );
+                      case 'About Veltrix':
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => aboutScreen()),
+                        );
+                    }
+                  },
                   items: const [
                     ('Help center', Icons.help_outline),
                     ('Contact support', Icons.chat_bubble_outline),
@@ -239,11 +303,18 @@ class MobileProfileScreen extends ConsumerWidget {
                               FilledButton(
                                 onPressed: () async {
                                   Navigator.pop(dialogContext);
-                                  await AuthService().signOut();
-                                  _showMessage(
-                                    context,
-                                    'You have been signed out.',
-                                  );
+                                  try {
+                                    await AuthService().signOut();
+                                    _showMessage(
+                                      context,
+                                      'You have been signed out.',
+                                    );
+                                  } catch (e) {
+                                    _showMessage(
+                                      context,
+                                      ErrorHandler.getUserMessage(e),
+                                    );
+                                  }
                                 },
                                 child: const Text('Sign out'),
                               ),
@@ -300,14 +371,23 @@ class _SettingsGroup extends StatelessWidget {
           (i) => Column(
             children: [
               ListTile(
-                leading: Icon(items[i].$2, color: M.navy),
+                leading: Icon(
+                  items[i].$2,
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : M.navy),
+                ),
                 title: Text(
                   items[i].$1,
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
-                trailing: const Icon(
+                trailing: Icon(
                   Icons.chevron_right,
-                  color: M.muted,
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : M.muted),
                   size: 20,
                 ),
                 onTap: () => onSelect(items[i].$1),

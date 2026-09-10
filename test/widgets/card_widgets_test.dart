@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/best.dart';
-import 'package:veltrix_sports/widgets/insight.dart';
-import 'package:veltrix_sports/widgets/legend.dart';
-import 'package:veltrix_sports/widgets/pillar_card.dart';
-import 'package:veltrix_sports/widgets/section_intro.dart';
+import 'package:veltrix_sports/widgets/common/best.dart';
+import 'package:veltrix_sports/widgets/common/insight.dart';
+import 'package:veltrix_sports/widgets/common/legend.dart';
+import 'package:veltrix_sports/widgets/common/pillar_card.dart';
+import 'package:veltrix_sports/widgets/common/section_intro.dart';
 
 Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 

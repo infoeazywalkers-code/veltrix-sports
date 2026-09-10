@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/workout.dart';
-import 'package:veltrix_sports/screens/live_workout_screen.dart';
-import 'package:veltrix_sports/services/workout_execution_service.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
+import 'package:veltrix_sports/screens/activity/live_workout_screen.dart';
+import 'package:veltrix_sports/services/activity/workout_execution_service.dart';
 
 Workout _makeWorkout({String title = 'Tempo Run'}) => Workout(
   id: 'lw_cov_${title.hashCode}',

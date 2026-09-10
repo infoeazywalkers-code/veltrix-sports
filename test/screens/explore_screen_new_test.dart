@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/screens/explore_screen.dart';
+import 'package:veltrix_sports/screens/explore/explore_screen.dart';
 
 void main() {
   Widget wrap(Widget child, {ValueChanged<int>? onNavigate}) =>

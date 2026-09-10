@@ -36,12 +36,12 @@ class MStatRing extends StatelessWidget {
                   backgroundColor: color.withValues(alpha: 0.12),
                 ),
               ),
-              Text(value, style: M.statBig),
+              Text(value, style: M.adaptiveStat(context)),
             ],
           ),
         ),
         const SizedBox(height: M.xs),
-        Text(label, style: M.statLabel),
+        Text(label, style: M.adaptiveMuted(context)),
       ],
     );
   }

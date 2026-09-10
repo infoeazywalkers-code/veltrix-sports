@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:veltrix_sports/services/device_service.dart';
+import 'package:veltrix_sports/services/devices/device_service.dart';
 
 void main() {
   setUp(() {

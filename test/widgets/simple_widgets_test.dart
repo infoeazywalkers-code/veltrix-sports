@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/trust_badge.dart';
-import 'package:veltrix_sports/widgets/brand.dart';
-import 'package:veltrix_sports/widgets/device_chip.dart';
-import 'package:veltrix_sports/widgets/metric.dart';
-import 'package:veltrix_sports/widgets/heading.dart';
+import 'package:veltrix_sports/widgets/common/trust_badge.dart';
+import 'package:veltrix_sports/widgets/common/brand.dart';
+import 'package:veltrix_sports/widgets/dialogs/device_chip.dart';
+import 'package:veltrix_sports/widgets/common/metric.dart';
+import 'package:veltrix_sports/widgets/common/heading.dart';
 
 Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 

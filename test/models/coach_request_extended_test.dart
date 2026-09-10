@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/coach_request.dart';
+import 'package:veltrix_sports/models/user/coach_request.dart';
 
 void main() {
   group('CoachRequest - Extended', () {

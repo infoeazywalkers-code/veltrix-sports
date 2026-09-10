@@ -2,21 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'services/user_service.dart';
-import 'services/workout_service.dart';
-import 'services/training_plan_service.dart';
-import 'services/coach_request_service.dart';
-import 'services/performance_service.dart';
-import 'services/preferences_service.dart';
-import 'models/user_profile.dart';
-import 'models/user_preferences.dart';
-import 'models/workout.dart';
-import 'models/training_plan.dart';
-import 'models/performance_snapshot.dart';
+import 'services/activity/activity_service.dart';
+import 'services/activity/workout_service.dart';
+import 'services/training/training_plan_service.dart';
+import 'services/social/coach_request_service.dart';
+import 'services/performance/performance_service.dart';
+import 'services/core/preferences_service.dart';
+import 'models/user/user_profile.dart';
+import 'models/user/user_preferences.dart';
+import 'models/activity/workout.dart';
+import 'models/training/training_plan.dart';
+import 'models/performance/performance_snapshot.dart';
 
 // Services
 final userServiceProvider = Provider<UserService>((ref) => UserService());
 final workoutServiceProvider = Provider<WorkoutService>(
   (ref) => WorkoutService(),
+);
+final activityServiceProvider = Provider<ActivityService>(
+  (ref) => ActivityService(),
 );
 final trainingPlanServiceProvider = Provider<TrainingPlanService>(
   (ref) => TrainingPlanService(),
@@ -46,6 +50,19 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) {
   final user = ref.watch(currentUserProvider);
   if (user == null) return Stream.value(null);
   return ref.watch(userServiceProvider).watch(user.uid);
+});
+
+/// Onboarding status derived from [userProfileProvider].
+///
+/// Exposes the raw `onboardingStatus` string (`'completed'` vs anything else
+/// including null) as an [AsyncValue] so callers can distinguish
+/// loading/error (keep current UI, show progress) from definitively
+/// incomplete (show [OnboardingFlow]). Callers must NOT default
+/// loading/error to `false`.
+final onboardingStatusProvider = Provider<AsyncValue<String?>>((ref) {
+  return ref
+      .watch(userProfileProvider)
+      .whenData((profile) => profile?.onboardingStatus);
 });
 
 // Workouts
@@ -121,10 +138,41 @@ final personalBestsProvider = FutureProvider<PersonalBests>((ref) async {
     }
   }
 
-  // Best 20-min power — no power field in Workout model, so show placeholder
-  const best20MinPower = 'No PR set yet';
+  // Best 20-min power — the Workout model carries no power data, so this is
+  // computed from the activity feed: max normalizedPower ?? avgPower among
+  // activities lasting 15–25 minutes.
+  final best20MinPower = await ref.watch(bestPowerProvider.future);
 
   return PersonalBests(best5kPace: best5kPace, best20MinPower: best20MinPower);
+});
+
+/// Best 20-minute power derived from real activity data.
+///
+/// Returns e.g. '245 W', or 'No PR set yet' when no qualifying activity
+/// (15–25 min with power data) exists.
+final bestPowerProvider = FutureProvider<String>((ref) async {
+  final user = ref.watch(currentUserProvider);
+  if (user == null) return 'No PR set yet';
+  try {
+    final activities =
+        await ref
+            .watch(activityServiceProvider)
+            .watchUserActivities(user.uid, limit: 50)
+            .first;
+    int? best;
+    for (final activity in activities) {
+      final minutes = activity.durationSeconds / 60;
+      if (minutes < 15 || minutes > 25) continue;
+      final power = activity.normalizedPower ?? activity.avgPower;
+      if (power != null && (best == null || power > best)) {
+        best = power;
+      }
+    }
+    if (best == null) return 'No PR set yet';
+    return '$best W';
+  } catch (_) {
+    return 'No PR set yet';
+  }
 });
 
 /// Parses a duration string into total minutes.

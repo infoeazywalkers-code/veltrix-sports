@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/providers.dart';
-import 'package:veltrix_sports/widgets/workout_card.dart';
-import 'package:veltrix_sports/widgets/week_row.dart';
-import 'package:veltrix_sports/widgets/footer_social.dart';
-import 'package:veltrix_sports/widgets/footer_group.dart';
-import 'package:veltrix_sports/widgets/marketing_feature_card.dart';
-import 'package:veltrix_sports/widgets/week_card.dart';
+import 'package:veltrix_sports/widgets/workout/workout_card.dart';
+import 'package:veltrix_sports/widgets/workout/week_row.dart';
+import 'package:veltrix_sports/widgets/common/footer_social.dart';
+import 'package:veltrix_sports/widgets/common/footer_group.dart';
+import 'package:veltrix_sports/widgets/common/marketing_feature_card.dart';
+import 'package:veltrix_sports/widgets/workout/week_card.dart';
 
 Widget wrap(Widget child) => ProviderScope(
   overrides: [

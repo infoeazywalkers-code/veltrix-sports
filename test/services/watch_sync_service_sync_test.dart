@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/services/watch_sync_service.dart';
+import 'package:veltrix_sports/services/activity/watch_sync_service.dart';
 
 /// Minimal fake that extends FirebaseAuthPlatform.
 /// Only overrides what our code actually needs: currentUser (null),

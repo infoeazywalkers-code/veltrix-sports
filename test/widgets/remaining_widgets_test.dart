@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/providers.dart';
-import 'package:veltrix_sports/widgets/ring.dart';
-import 'package:veltrix_sports/widgets/status_card.dart';
-import 'package:veltrix_sports/widgets/nav_menu.dart';
-import 'package:veltrix_sports/widgets/responsive_cards.dart';
-import 'package:veltrix_sports/widgets/veltrix_footer.dart';
+import 'package:veltrix_sports/widgets/common/ring.dart';
+import 'package:veltrix_sports/widgets/common/status_card.dart';
+import 'package:veltrix_sports/widgets/common/nav_menu.dart';
+import 'package:veltrix_sports/widgets/common/responsive_cards.dart';
+import 'package:veltrix_sports/widgets/common/veltrix_footer.dart';
 
 void main() {
   Widget wrap(Widget child) => ProviderScope(

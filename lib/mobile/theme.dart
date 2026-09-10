@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants.dart' as web;
+import '../core/constants.dart' as web;
 
 class M {
   M._();

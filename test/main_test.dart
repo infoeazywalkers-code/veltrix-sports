@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:veltrix_sports/main.dart';
 import 'package:veltrix_sports/shell.dart';
 import 'package:veltrix_sports/mobile/shell.dart';
-import 'package:veltrix_sports/widgets/error_boundary.dart';
+import 'package:veltrix_sports/widgets/common/error_boundary.dart';
 
 void main() {
   setUpAll(() {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers.dart';
-import '../../widgets/performance_chart.dart';
+import '../../widgets/analytics/performance_chart.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -29,9 +29,9 @@ class _MobileProgressScreenState extends ConsumerState<MobileProgressScreen> {
           padding: M.pagePadding(context),
           sliver: SliverList.list(
             children: [
-              const Text(
+              Text(
                 'Understand the work behind your progress',
-                style: M.bodyMuted,
+                style: M.adaptiveMuted(context),
               ),
               const SizedBox(height: M.base),
               SegmentedButton<int>(
@@ -49,11 +49,11 @@ class _MobileProgressScreenState extends ConsumerState<MobileProgressScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Fitness, fatigue & form', style: M.cardTitle),
+                    Text('Fitness, fatigue & form', style: M.adaptiveTitle(context)),
                     const SizedBox(height: 2),
-                    const Text(
+                    Text(
                       'Training load over time (CTL, ATL, TSB)',
-                      style: M.caption,
+                      style: M.adaptiveCardBody(context),
                     ),
                     const SizedBox(height: M.md),
                     historyAsync.when(
@@ -68,7 +68,7 @@ class _MobileProgressScreenState extends ConsumerState<MobileProgressScreen> {
                             child: Center(
                               child: Text(
                                 'Failed to load chart: $e',
-                                style: M.caption,
+                                style: M.adaptiveCardBody(context),
                               ),
                             ),
                           ),
@@ -288,7 +288,7 @@ class _StatValue extends StatelessWidget {
           ),
         ),
         const SizedBox(height: M.xs),
-        Text(label, style: M.caption),
+        Text(label, style: M.adaptiveCardBody(context)),
       ],
     );
   }
@@ -310,7 +310,7 @@ class _Legend extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: M.xs),
-        Text(text, style: M.caption),
+        Text(text, style: M.adaptiveCardBody(context)),
       ],
     );
   }
@@ -345,13 +345,13 @@ class _InsightCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color: M.navy,
+                    color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
                   ),
                 ),
                 const SizedBox(height: 2),
-                Text(body, style: M.caption),
+                Text(body, style: M.adaptiveCardBody(context)),
               ],
             ),
           ),
@@ -377,8 +377,8 @@ class _BestCard extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: M.iconLg),
           const SizedBox(height: M.md),
-          Text(title, style: M.caption),
-          Text(value, style: M.statBig),
+          Text(title, style: M.adaptiveCardBody(context)),
+          Text(value, style: M.adaptiveStat(context)),
         ],
       ),
     );

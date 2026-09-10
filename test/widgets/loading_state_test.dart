@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/loading_state.dart';
+import 'package:veltrix_sports/widgets/common/loading_state.dart';
 
 void main() {
   Widget wrap(Widget child) => MaterialApp(

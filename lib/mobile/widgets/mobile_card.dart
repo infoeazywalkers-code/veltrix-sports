@@ -73,10 +73,10 @@ class MInfoCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: M.cardTitle),
+                Text(title, style: M.adaptiveTitle(context)),
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
-                  Text(subtitle!, style: M.cardBody),
+                  Text(subtitle!, style: M.adaptiveCardBody(context)),
                 ],
               ],
             ),
@@ -84,7 +84,7 @@ class MInfoCard extends StatelessWidget {
           if (trailing != null) trailing!,
           if (onTap != null) ...[
             const SizedBox(width: M.sm),
-            const Icon(Icons.chevron_right, color: M.muted, size: 20),
+            Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted), size: 20),
           ],
         ],
       ),

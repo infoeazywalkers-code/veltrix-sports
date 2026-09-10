@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/screens/premium_screen.dart';
-import 'package:veltrix_sports/screens/live_workout_screen.dart';
-import 'package:veltrix_sports/screens/workout_details.dart';
-import 'package:veltrix_sports/models/workout.dart';
+import 'package:veltrix_sports/screens/premium/premium_screen.dart';
+import 'package:veltrix_sports/screens/activity/live_workout_screen.dart';
+import 'package:veltrix_sports/screens/activity/workout_details.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
 
 Workout makeWorkout({
   String id = 'test1',

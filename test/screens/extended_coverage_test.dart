@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/providers.dart';
-import 'package:veltrix_sports/screens/profile_screen.dart';
-import 'package:veltrix_sports/screens/calendar_screen.dart';
-import 'package:veltrix_sports/screens/explore_screen.dart';
+import 'package:veltrix_sports/screens/profile/profile_screen.dart';
+import 'package:veltrix_sports/screens/training/calendar_screen.dart';
+import 'package:veltrix_sports/screens/explore/explore_screen.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_explore.dart';
-import 'package:veltrix_sports/models/user_profile.dart';
-import 'package:veltrix_sports/models/workout.dart';
-import 'package:veltrix_sports/models/performance_snapshot.dart';
+import 'package:veltrix_sports/models/user/user_profile.dart';
+import 'package:veltrix_sports/models/activity/workout.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
 
 final _testProfile = UserProfile(
   id: 'u1',

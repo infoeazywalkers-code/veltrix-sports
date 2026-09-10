@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/providers.dart';
-import 'package:veltrix_sports/screens/home_screen.dart';
+import 'package:veltrix_sports/screens/home/home_screen.dart';
 
 void main() {
   Widget wrap(

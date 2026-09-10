@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../screens/coach_match_screen.dart';
-import '../../screens/devices_screen.dart';
-import '../../screens/feature_collection_screen.dart';
-import '../../screens/premium_screen.dart';
-import '../../widgets/event_details_dialog.dart';
+import '../../screens/coach/coach_match_screen.dart';
+import '../../screens/devices/devices_screen.dart';
+import '../../screens/explore/feature_collection_screen.dart';
+import '../../screens/premium/premium_screen.dart';
+import '../../widgets/dialogs/event_details_dialog.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
@@ -295,9 +295,9 @@ class _ExploreTile extends StatelessWidget {
           const Spacer(),
           Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w900,
-              color: M.navy,
+              color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
               fontSize: 13,
             ),
           ),
@@ -363,16 +363,16 @@ class _EventRow extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color: M.navy,
+                    color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
                   ),
                 ),
-                Text(sub, style: M.caption),
+                Text(sub, style: M.adaptiveCardBody(context)),
               ],
             ),
           ),
-          const Icon(Icons.chevron_right, color: M.muted, size: 20),
+          Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted), size: 20),
         ],
       ),
     );

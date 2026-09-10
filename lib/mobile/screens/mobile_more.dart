@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
-import '../../screens/coach_match_screen.dart';
-import '../../screens/devices_screen.dart';
-import '../../screens/feature_collection_screen.dart';
-import '../../screens/premium_screen.dart';
-import '../../screens/production_pages.dart';
-import '../../screens/strength_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/constants.dart';
+import '../../providers.dart';
+import '../../widgets/common/role_gate.dart';
+import '../../screens/coach/coach_match_screen.dart';
+import '../../screens/devices/devices_screen.dart';
+import '../../screens/explore/feature_collection_screen.dart';
+import '../../screens/premium/premium_screen.dart';
+import '../../screens/explore/production_pages.dart';
+import '../../screens/training/strength_screen.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
 import '../widgets/mobile_section.dart';
 
-class MobileMoreScreen extends StatelessWidget {
+class MobileMoreScreen extends ConsumerWidget {
   const MobileMoreScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Coach-only entries are hidden when logged out; non-coach roles get
+    // a snackbar instead of navigation (RoleGate defaults to deny).
+    final isLoggedIn = ref.watch(authStateProvider).valueOrNull != null;
     return CustomScrollView(
       slivers: [
         const SliverAppBar(pinned: true, title: Text('More features')),
@@ -21,9 +28,9 @@ class MobileMoreScreen extends StatelessWidget {
           padding: M.pagePadding(context),
           sliver: SliverList.list(
             children: [
-              const Text(
+              Text(
                 'Everything around your training, in one place.',
-                style: M.bodyMuted,
+                style: M.adaptiveMuted(context),
               ),
               const SizedBox(height: M.lg),
               MSection(
@@ -152,34 +159,54 @@ class MobileMoreScreen extends StatelessWidget {
                 title: 'Operations',
                 child: Column(
                   children: [
-                    _MoreFeature(
-                      'Coach platform',
-                      'Manage athletes and training workflows',
-                      Icons.dashboard_customize,
-                      M.purple,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => coachPlatformScreen(),
-                            ),
-                          ),
-                    ),
-                    const SizedBox(height: M.sm),
-                    _MoreFeature(
-                      'Coach resources',
-                      'Guides for professional coaching',
-                      Icons.menu_book_outlined,
-                      M.navy,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => coachResourcesScreen(),
-                            ),
-                          ),
-                    ),
-                    const SizedBox(height: M.sm),
+                    if (isLoggedIn)
+                      CoachOnly(
+                        child: _MoreFeature(
+                          'Coach platform',
+                          'Manage athletes and training workflows',
+                          Icons.dashboard_customize,
+                          M.purple,
+                          onTap:
+                              () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => coachPlatformScreen(),
+                                ),
+                              ),
+                        ),
+                        fallback: _LockedFeature(
+                          context,
+                          'Coach platform',
+                          'Manage athletes and training workflows',
+                          Icons.dashboard_customize,
+                          M.purple,
+                        ),
+                      ),
+                    if (isLoggedIn) const SizedBox(height: M.sm),
+                    if (isLoggedIn)
+                      CoachOnly(
+                        child: _MoreFeature(
+                          'Coach resources',
+                          'Guides for professional coaching',
+                          Icons.menu_book_outlined,
+                          M.navy,
+                          onTap:
+                              () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => coachResourcesScreen(),
+                                ),
+                              ),
+                        ),
+                        fallback: _LockedFeature(
+                          context,
+                          'Coach resources',
+                          'Guides for professional coaching',
+                          Icons.menu_book_outlined,
+                          M.navy,
+                        ),
+                      ),
+                    if (isLoggedIn) const SizedBox(height: M.sm),
                     _MoreFeature(
                       'Support center',
                       'Resolve device, billing, and account issues',
@@ -254,4 +281,25 @@ class _MoreFeature extends StatelessWidget {
       onTap: onTap,
     );
   }
+}
+
+/// Locked coach-only entry: reduced opacity so it does not look fully
+/// tappable; tapping shows the access-required snackbar.
+Widget _LockedFeature(
+  BuildContext context,
+  String title,
+  String subtitle,
+  IconData icon,
+  Color color,
+) {
+  return Opacity(
+    opacity: 0.55,
+    child: _MoreFeature(
+      title,
+      subtitle,
+      icon,
+      color,
+      onTap: () => showFeatureMessage(context, 'Coach access required'),
+    ),
+  );
 }

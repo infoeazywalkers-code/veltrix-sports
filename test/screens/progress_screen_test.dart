@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:veltrix_sports/models/performance_snapshot.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
 import 'package:veltrix_sports/providers.dart';
-import 'package:veltrix_sports/screens/progress_screen.dart';
+import 'package:veltrix_sports/screens/dashboard/progress_screen.dart';
 
 void main() {
   Widget wrapWithProviders({

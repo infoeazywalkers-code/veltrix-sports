@@ -52,9 +52,9 @@ class MWorkoutCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 2),
-                Text(title, style: M.cardTitle),
+                Text(title, style: M.adaptiveTitle(context)),
                 const SizedBox(height: 2),
-                Text(details, style: M.caption),
+                Text(details, style: M.adaptiveCardBody(context)),
                 if (progress > 0) ...[
                   const SizedBox(height: M.sm),
                   LinearProgressIndicator(
@@ -69,7 +69,7 @@ class MWorkoutCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: M.sm),
-          const Icon(Icons.chevron_right, color: M.muted, size: 20),
+          Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted), size: 20),
         ],
       ),
     );

@@ -33,6 +33,17 @@
   <link rel="manifest" href="manifest.json">
   <!-- Razorpay Web Checkout SDK -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <style>
+    /*
+     * The hero <video> platform view floats above the Flutter canvas and
+     * would otherwise swallow mouse-wheel events, freezing page scroll over
+     * it. Making it click-through lets wheel/trackpad scroll pass through
+     * to the page while the video keeps playing underneath.
+     */
+    video {
+      pointer-events: none !important;
+    }
+  </style>
 </head>
 <body>
   <!--

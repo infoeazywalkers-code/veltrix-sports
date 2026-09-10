@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/status_card.dart';
-import 'package:veltrix_sports/widgets/legend.dart';
-import 'package:veltrix_sports/widgets/ring.dart';
-import 'package:veltrix_sports/widgets/section_intro.dart';
-import 'package:veltrix_sports/widgets/heading.dart';
-import 'package:veltrix_sports/constants.dart';
-import 'package:veltrix_sports/models/performance_snapshot.dart';
+import 'package:veltrix_sports/widgets/common/status_card.dart';
+import 'package:veltrix_sports/widgets/common/legend.dart';
+import 'package:veltrix_sports/widgets/common/ring.dart';
+import 'package:veltrix_sports/widgets/common/section_intro.dart';
+import 'package:veltrix_sports/widgets/common/heading.dart';
+import 'package:veltrix_sports/core/constants.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
 import 'package:veltrix_sports/providers.dart';
 
 Widget wrap(Widget child) => ProviderScope(

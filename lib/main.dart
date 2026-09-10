@@ -9,16 +9,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'models/user_preferences.dart';
+import 'models/user/user_preferences.dart';
+import 'core/constants.dart';
 import 'providers.dart';
 import 'shell.dart';
 import 'mobile/shell.dart';
 import 'mobile/theme.dart';
 import 'firebase_options_dev.dart' as firebase_options;
 import 'firebase_options.dart' as production_firebase_options;
-import 'services/notification_service.dart';
-import 'services/razorpay_service.dart';
-import 'widgets/error_boundary.dart';
+import 'services/core/notification_service.dart';
+import 'services/payment/razorpay_service.dart';
+import 'widgets/common/auth_wrapper.dart';
+import 'widgets/common/error_boundary.dart';
 
 class VeltrixScrollBehavior extends MaterialScrollBehavior {
   const VeltrixScrollBehavior();
@@ -26,14 +28,26 @@ class VeltrixScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
     PointerDeviceKind.touch,
-    PointerDeviceKind.mouse,
     PointerDeviceKind.trackpad,
     PointerDeviceKind.stylus,
   };
 
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
-    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+    // Bouncing physics feels like dragging (fast then slow) with a mouse
+    // wheel, so only use it on Apple platforms. Everywhere else (web,
+    // Android, Windows, Linux) use clamping for a smooth, even scroll.
+    switch (getPlatform(context)) {
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        );
+      default:
+        return const ClampingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        );
+    }
   }
 }
 
@@ -126,7 +140,7 @@ class VeltrixRoot extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final useMobileLayout = screenWidth < 900;
+    final useMobileLayout = screenWidth < kMobileBreakpoint;
     final themeModePref = ref.watch(themeModeProvider);
 
     return VeltrixErrorBoundary(
@@ -137,7 +151,9 @@ class VeltrixRoot extends ConsumerWidget {
         theme: M.lightTheme,
         darkTheme: M.darkTheme,
         themeMode: _resolveThemeMode(themeModePref),
-        home: useMobileLayout ? const MobileShell() : const Shell(),
+        home: AuthWrapper(
+          child: useMobileLayout ? const MobileShell() : const Shell(),
+        ),
       ),
     );
   }

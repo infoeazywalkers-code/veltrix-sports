@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/models/user_profile.dart';
-import 'package:veltrix_sports/services/coach_service.dart';
-import 'package:veltrix_sports/services/payment_service.dart';
-import 'package:veltrix_sports/widgets/checkout_dialog.dart';
-import 'package:veltrix_sports/widgets/coach_booking_dialog.dart';
-import 'package:veltrix_sports/widgets/device_connect_dialog.dart';
-import 'package:veltrix_sports/widgets/edit_profile_dialog.dart';
+import 'package:veltrix_sports/models/user/user_profile.dart';
+import 'package:veltrix_sports/services/social/coach_service.dart';
+import 'package:veltrix_sports/services/payment/payment_service.dart';
+import 'package:veltrix_sports/widgets/dialogs/checkout_dialog.dart';
+import 'package:veltrix_sports/widgets/dialogs/coach_booking_dialog.dart';
+import 'package:veltrix_sports/widgets/dialogs/device_connect_dialog.dart';
+import 'package:veltrix_sports/widgets/dialogs/edit_profile_dialog.dart';
 
 const _testCoach = CoachProfile(
   id: 'coach_priya',

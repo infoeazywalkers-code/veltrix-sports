@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:veltrix_sports/widgets/error_boundary.dart';
+import 'package:veltrix_sports/widgets/common/error_boundary.dart';
 
 void main() {
   testWidgets('VeltrixErrorBoundary renders error message and reload button', (tester) async {
