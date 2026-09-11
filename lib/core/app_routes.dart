@@ -93,4 +93,7 @@ const List<String> mobileIndexToRoute = <String>[
 ///
 /// Phase 1: [AppRoutes.athleteDiscovery] is live (AthleteDiscoveryScreen is
 /// pushed from desktop/mobile Explore, mobile More, and the desktop shell
-/// "Athletes" menu). [AppRoutes.leaderboard] stays stubbed for Phase 2.
+/// "Athletes" menu). Phase 2: [AppRoutes.leaderboard] is live
+/// (LeaderboardScreen: real monthly activities + athlete_directory cards
+/// via monthlyBoardProvider; the Challenges tab shows the same live board
+/// with a "Full board" push to LeaderboardScreen).

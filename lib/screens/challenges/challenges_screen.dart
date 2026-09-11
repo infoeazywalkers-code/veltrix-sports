@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../core/errors/error_handler.dart';
+import '../../providers.dart';
+import '../../services/social/leaderboard_service.dart';
+import '../athletes/athlete_profile_screen.dart';
+import '../athletes/leaderboard_screen.dart';
 
 class ChallengesScreen extends StatefulWidget {
   const ChallengesScreen({super.key});
@@ -47,7 +53,7 @@ class _ChallengesScreenState extends State<ChallengesScreen>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [_ChallengesList(), _LeaderboardList()],
+              children: [_ChallengesList(), const _LeaderboardList()],
             ),
           ),
         ],
@@ -254,174 +260,224 @@ class _ChallengesList extends StatelessWidget {
   }
 }
 
-class _LeaderboardList extends StatelessWidget {
-  final List<_MockLeader> leaders = const [
-    _MockLeader(
-      rank: 1,
-      name: 'Elena Vos',
-      flag: '🇪🇸',
-      tss: 3120,
-      elevation: 38400,
-      km: 1845,
-      isPro: true,
-    ),
-    _MockLeader(
-      rank: 2,
-      name: 'Marcus Lindqvist',
-      flag: '🇳🇴',
-      tss: 2940,
-      elevation: 31200,
-      km: 1620,
-      isPro: true,
-    ),
-    _MockLeader(
-      rank: 3,
-      name: 'Kilian Jornet',
-      flag: '🇫🇷',
-      tss: 2780,
-      elevation: 46200,
-      km: 780,
-      isPro: true,
-    ),
-    _MockLeader(
-      rank: 4,
-      name: 'Mateo Rossi',
-      flag: '🇮🇹',
-      tss: 2650,
-      elevation: 42100,
-      km: 1380,
-      isPro: true,
-    ),
-    _MockLeader(
-      rank: 5,
-      name: 'Sarah Jenkins',
-      flag: '🇺🇸',
-      tss: 2510,
-      elevation: 22400,
-      km: 940,
-      isPro: true,
-    ),
-    _MockLeader(
-      rank: 6,
-      name: 'You',
-      flag: '🇺🇸',
-      tss: 2240,
-      elevation: 28900,
-      km: 1180,
-      isPro: true,
-      isCurrentUser: true,
-    ),
-  ];
+/// Live monthly leaderboard tab (Phase 2).
+///
+/// Every row traces to real `activities` docs from the current month joined
+/// to a real `athlete_directory` card via [monthlyBoardProvider]. No mocks.
+class _LeaderboardList extends ConsumerWidget {
+  const _LeaderboardList();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final boardAsync = ref.watch(monthlyBoardProvider);
+    final me = ref.watch(currentUserProvider);
+
+    return boardAsync.when(
+      loading:
+          () => const Center(
+            child: CircularProgressIndicator(color: Color(0xFFF97316)),
+          ),
+      error:
+          (e, _) => Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    ErrorHandler.getUserMessage(e),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 16),
+                  FilledButton(
+                    onPressed: () => ref.invalidate(monthlyBoardProvider),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      data: (rows) {
+        if (rows.isEmpty) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Text(
+                'No activities logged this month yet.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white70),
+              ),
+            ),
+          );
+        }
+        final visible = rows.take(10).toList();
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'Monthly TSS board',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () => _openFullBoard(context),
+                  child: const Text(
+                    'Full board',
+                    style: TextStyle(
+                      color: Color(0xFFF97316),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ...visible.asMap().entries.map(
+              (entry) => _LiveLeaderRow(
+                rank: entry.key + 1,
+                row: entry.value,
+                isCurrentUser: me != null && entry.value.userId == me.uid,
+                onTap: () => _openProfile(context, entry.value.userId),
+              ),
+            ),
+            if (rows.length > visible.length)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: OutlinedButton(
+                  onPressed: () => _openFullBoard(context),
+                  child: Text(
+                    'View all ${rows.length} athletes',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _openProfile(BuildContext context, String uid) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => AthleteProfileScreen(uid: uid)),
+    );
+  }
+
+  void _openFullBoard(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
+    );
+  }
+}
+
+class _LiveLeaderRow extends StatelessWidget {
+  final int rank;
+  final LeaderboardRow row;
+  final bool isCurrentUser;
+  final VoidCallback onTap;
+
+  const _LiveLeaderRow({
+    required this.rank,
+    required this.row,
+    required this.isCurrentUser,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: leaders.length,
-      itemBuilder: (context, index) {
-        final l = leaders[index];
-        final isTop3 = l.rank <= 3;
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          decoration: BoxDecoration(
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color:
+              isCurrentUser
+                  ? const Color(0xFFF97316).withValues(alpha: 0.1)
+                  : const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
             color:
-                l.isCurrentUser
-                    ? const Color(0xFFF97316).withValues(alpha: 0.1)
-                    : const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color:
-                  l.isCurrentUser
-                      ? const Color(0xFFF97316).withValues(alpha: 0.3)
-                      : Colors.white.withValues(alpha: 0.06),
+                isCurrentUser
+                    ? const Color(0xFFF97316).withValues(alpha: 0.3)
+                    : Colors.white.withValues(alpha: 0.06),
+          ),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 30,
+              child: Text(
+                '#$rank',
+                style: const TextStyle(
+                  color: Colors.white54,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          ),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 30,
-                child: Text(
-                  isTop3 ? ['🥇', '🥈', '🥉'][l.rank - 1] : '#${l.rank}',
-                  style: TextStyle(
-                    color: isTop3 ? null : Colors.white54,
-                    fontSize: isTop3 ? 20 : 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: const Color(0xFFF97316).withValues(alpha: 0.2),
-                child: Text(
-                  l.name[0],
-                  style: const TextStyle(
-                    color: Color(0xFFF97316),
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          l.name,
-                          style: TextStyle(
-                            color:
-                                l.isCurrentUser
-                                    ? const Color(0xFFF97316)
-                                    : Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          ),
+            const SizedBox(width: 10),
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: const Color(0xFFF97316).withValues(alpha: 0.2),
+              backgroundImage:
+                  row.photoUrl != null && row.photoUrl!.isNotEmpty
+                      ? NetworkImage(row.photoUrl!)
+                      : null,
+              child:
+                  row.photoUrl == null || row.photoUrl!.isEmpty
+                      ? Text(
+                        row.displayName.isNotEmpty
+                            ? row.displayName[0].toUpperCase()
+                            : 'A',
+                        style: const TextStyle(
+                          color: Color(0xFFF97316),
+                          fontSize: 13,
                         ),
-                        if (l.isPro) ...[
-                          const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 5,
-                              vertical: 1,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                0xFFFBBF24,
-                              ).withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: const Text(
-                              'PRO',
-                              style: TextStyle(
-                                color: Color(0xFFFBBF24),
-                                fontSize: 8,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ],
-                        const SizedBox(width: 4),
-                        Text(l.flag, style: const TextStyle(fontSize: 12)),
-                      ],
+                      )
+                      : null,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    row.displayName,
+                    style: TextStyle(
+                      color:
+                          isCurrentUser
+                              ? const Color(0xFFF97316)
+                              : Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${l.tss} TSS · +${(l.elevation / 1000).toStringAsFixed(1)}k m · ${l.km} km',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.4),
-                        fontSize: 10,
-                      ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${row.monthlyTss} TSS · +${(row.monthlyElevationM / 1000).toStringAsFixed(1)}k m · ${row.monthlyDistanceKm.toStringAsFixed(0)} km',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.4),
+                      fontSize: 10,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        );
-      },
+            ),
+            const Icon(Icons.chevron_right, color: Colors.white38, size: 18),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -451,27 +507,5 @@ class _MockChallenge {
     required this.gradient,
     required this.daysLeft,
     this.completed = false,
-  });
-}
-
-class _MockLeader {
-  final int rank;
-  final String name;
-  final String flag;
-  final int tss;
-  final int elevation;
-  final int km;
-  final bool isPro;
-  final bool isCurrentUser;
-
-  const _MockLeader({
-    required this.rank,
-    required this.name,
-    required this.flag,
-    required this.tss,
-    required this.elevation,
-    required this.km,
-    this.isPro = false,
-    this.isCurrentUser = false,
   });
 }

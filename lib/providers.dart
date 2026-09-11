@@ -8,6 +8,7 @@ import 'services/training/training_plan_service.dart';
 import 'services/social/coach_request_service.dart';
 import 'services/social/follow_service.dart';
 import 'services/social/athlete_directory_service.dart';
+import 'services/social/leaderboard_service.dart';
 import 'services/performance/performance_service.dart';
 import 'services/core/preferences_service.dart';
 import 'models/social/athlete_card.dart';
@@ -41,6 +42,16 @@ final followServiceProvider = Provider<FollowService>((ref) => FollowService());
 final athleteDirectoryServiceProvider = Provider<AthleteDirectoryService>(
   (ref) => AthleteDirectoryService(),
 );
+final leaderboardServiceProvider = Provider<LeaderboardService>(
+  (ref) => LeaderboardService(),
+);
+
+/// Live monthly leaderboard (Phase 2): real activities + directory cards.
+final monthlyBoardProvider = StreamProvider.autoDispose<List<LeaderboardRow>>((
+  ref,
+) {
+  return ref.watch(leaderboardServiceProvider).watchMonthlyBoard();
+});
 
 // ---------------------------------------------------------------------------
 // Athlete directory + follow graph (Phase 1)
