@@ -581,31 +581,59 @@ class HomeVideoHero extends StatefulWidget {
 }
 
 class _HomeVideoHeroState extends State<HomeVideoHero> {
-  late final VideoPlayerController controller;
+  VideoPlayerController? _controller;
   bool muted = true;
+  bool _hasError = false;
+
+  VideoPlayerController get controller => _controller!;
 
   @override
   void initState() {
     super.initState();
-    controller = VideoPlayerController.networkUrl(
+    _initVideo();
+  }
+
+  void _initVideo() {
+    _controller?.dispose();
+    final c = VideoPlayerController.networkUrl(
       Uri.parse(
         'https://res.cloudinary.com/mgf6mndb/video/upload/v1789119988/home-training.mp4',
       ),
     );
-    controller.setLooping(true);
-    controller.setVolume(0);
-    controller
+    _controller = c;
+    setState(() => _hasError = false);
+    c.setLooping(true);
+    c.setVolume(0);
+    c
         .initialize()
         .then((_) {
-          if (mounted) setState(() {});
-          controller.play();
+          if (!mounted) return;
+          setState(() {});
+          // Autoplay may be rejected by the browser (no user gesture yet);
+          // the overlay play button below covers that case.
+          c
+              .play()
+              .then((_) {
+                if (mounted) setState(() {});
+              })
+              .catchError((_) {
+                if (mounted) setState(() {});
+              });
         })
-        .catchError((_) {});
+        .catchError((_) {
+          if (mounted) setState(() => _hasError = true);
+        });
+    c.addListener(_onVideoUpdate);
+  }
+
+  void _onVideoUpdate() {
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller?.removeListener(_onVideoUpdate);
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -620,37 +648,18 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (controller.value.isInitialized && !controller.value.hasError)
-              FittedBox(
-                fit: BoxFit.cover,
-                child: SizedBox(
-                  width: controller.value.size.width,
-                  height: controller.value.size.height,
-                  child: RepaintBoundary(child: VideoPlayer(controller)),
-                ),
-              )
-            else
-              Image.asset(
-                'assets/images/forest-run.png',
-                fit: BoxFit.cover,
-                errorBuilder:
-                    (ctx, err, stack) => Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [navy, Color(0xff1e3a5f)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.fitness_center_rounded,
-                          color: lime,
-                          size: 48,
-                        ),
-                      ),
-                    ),
-              ),
+            _VideoLayer(
+              controller: _controller,
+              hasError: _hasError,
+              onRetry: _initVideo,
+              onPlay:
+                  () => _controller
+                      ?.play()
+                      .then((_) {
+                        if (mounted) setState(() {});
+                      })
+                      .catchError((_) {}),
+            ),
             const DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -709,6 +718,105 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Bottom video/poster layer of the hero with explicit states:
+/// spinner while buffering, poster + retry on error, tap-to-play overlay
+/// when autoplay was blocked (covers browser autoplay policies).
+class _VideoLayer extends StatelessWidget {
+  final VideoPlayerController? controller;
+  final bool hasError;
+  final VoidCallback onRetry;
+  final VoidCallback onPlay;
+
+  const _VideoLayer({
+    this.controller,
+    required this.hasError,
+    required this.onRetry,
+    required this.onPlay,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = controller;
+    final ready =
+        !hasError && c != null && c.value.isInitialized && !c.value.hasError;
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        if (ready)
+          FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: c.value.size.width,
+              height: c.value.size.height,
+              child: RepaintBoundary(child: VideoPlayer(c)),
+            ),
+          )
+        else
+          Image.asset(
+            'assets/images/forest-run.png',
+            fit: BoxFit.cover,
+            errorBuilder:
+                (ctx, err, stack) => Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [navy, Color(0xff1e3a5f)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.fitness_center_rounded,
+                      color: lime,
+                      size: 48,
+                    ),
+                  ),
+                ),
+          ),
+        if (!ready)
+          Center(
+            child:
+                hasError
+                    ? FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.white.withValues(alpha: .92),
+                        foregroundColor: navy,
+                      ),
+                      onPressed: onRetry,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text(
+                        'Retry video',
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                    )
+                    : const SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
+                    ),
+          ),
+        if (ready && c != null && !c.value.isPlaying)
+          Center(
+            child: IconButton.filled(
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black.withValues(alpha: .55),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.all(16),
+              ),
+              tooltip: 'Play video',
+              onPressed: onPlay,
+              icon: const Icon(Icons.play_arrow_rounded, size: 40),
+            ),
+          ),
+      ],
     );
   }
 }
