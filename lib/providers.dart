@@ -6,8 +6,11 @@ import 'services/activity/activity_service.dart';
 import 'services/activity/workout_service.dart';
 import 'services/training/training_plan_service.dart';
 import 'services/social/coach_request_service.dart';
+import 'services/social/follow_service.dart';
+import 'services/social/athlete_directory_service.dart';
 import 'services/performance/performance_service.dart';
 import 'services/core/preferences_service.dart';
+import 'models/social/athlete_card.dart';
 import 'models/user/user_profile.dart';
 import 'models/user/user_preferences.dart';
 import 'models/activity/workout.dart';
@@ -34,6 +37,55 @@ final performanceServiceProvider = Provider<PerformanceService>(
 final preferencesServiceProvider = Provider<PreferencesService>(
   (ref) => PreferencesService(),
 );
+final followServiceProvider = Provider<FollowService>((ref) => FollowService());
+final athleteDirectoryServiceProvider = Provider<AthleteDirectoryService>(
+  (ref) => AthleteDirectoryService(),
+);
+
+// ---------------------------------------------------------------------------
+// Athlete directory + follow graph (Phase 1)
+// ---------------------------------------------------------------------------
+
+/// Single public athlete card for [uid]; null when not published.
+final athleteCardProvider = StreamProvider.autoDispose
+    .family<AthleteCard?, String>((ref, uid) {
+      return ref
+          .watch(athleteDirectoryServiceProvider)
+          .watchAthleteDirectory(uid);
+    });
+
+/// All published athlete cards (capped) for discovery.
+final athleteDirectoryProvider = StreamProvider.autoDispose
+    .family<List<AthleteCard>, int>((ref, limit) {
+      return ref
+          .watch(athleteDirectoryServiceProvider)
+          .watchDirectory(limit: limit);
+    });
+
+/// Whether [follower] currently follows [following].
+final isFollowingProvider = StreamProvider.autoDispose
+    .family<bool, ({String follower, String following})>((ref, pair) {
+      if (pair.follower.isEmpty || pair.following.isEmpty) {
+        return Stream.value(false);
+      }
+      return ref
+          .watch(followServiceProvider)
+          .isFollowing(pair.follower, pair.following);
+    });
+
+final followerCountProvider = StreamProvider.autoDispose.family<int, String>((
+  ref,
+  uid,
+) {
+  return ref.watch(followServiceProvider).followerCount(uid);
+});
+
+final followingCountProvider = StreamProvider.autoDispose.family<int, String>((
+  ref,
+  uid,
+) {
+  return ref.watch(followServiceProvider).followingCount(uid);
+});
 
 // Auth
 final authStateProvider = StreamProvider<User?>((ref) {

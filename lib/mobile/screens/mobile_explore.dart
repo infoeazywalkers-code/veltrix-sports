@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../screens/activity/activity_feed_screen.dart';
+import '../../screens/athletes/athlete_discovery_screen.dart';
 import '../../screens/challenges/challenges_screen.dart';
 import '../../screens/coach/coach_match_screen.dart';
 import '../../screens/devices/devices_screen.dart';
@@ -193,6 +194,18 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => const ChallengesScreen(),
+                            ),
+                          ),
+                    ),
+                    _ExploreTile(
+                      'Find Athletes',
+                      Icons.people_outline,
+                      M.purple,
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const AthleteDiscoveryScreen(),
                             ),
                           ),
                     ),

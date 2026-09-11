@@ -21,6 +21,7 @@ import 'screens/training/training_plan_marketplace_screen.dart';
 import 'screens/explore/production_pages.dart';
 import 'screens/onboarding/onboarding_flow.dart';
 import 'screens/coach/coach_dashboard_screen.dart';
+import 'screens/athletes/athlete_discovery_screen.dart';
 
 import 'widgets/workout/workout_builder_dialog.dart';
 import 'widgets/common/connectivity_banner.dart';
@@ -195,17 +196,28 @@ class _ShellState extends ConsumerState<Shell> {
                     'Training Plans',
                     'Find a Coach',
                     'Premium',
+                    'Find Athletes',
                   ],
-                  onSelected:
-                      (i) => goPage(
-                        i == 0
-                            ? ShellPage.progress
-                            : i == 1
-                            ? ShellPage.trainingPlans
-                            : i == 2
-                            ? ShellPage.coachMatch
-                            : ShellPage.premium,
-                      ),
+                  onSelected: (i) {
+                    if (i == 4) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AthleteDiscoveryScreen(),
+                        ),
+                      );
+                      return;
+                    }
+                    goPage(
+                      i == 0
+                          ? ShellPage.progress
+                          : i == 1
+                          ? ShellPage.trainingPlans
+                          : i == 2
+                          ? ShellPage.coachMatch
+                          : ShellPage.premium,
+                    );
+                  },
                 ),
                 NavMenu(
                   label: 'Coaches',

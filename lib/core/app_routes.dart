@@ -90,3 +90,7 @@ const List<String> mobileIndexToRoute = <String>[
 /// `Navigator.push` from Explore/More tiles, never via index navigation:
 /// [AppRoutes.activityFeed], [AppRoutes.challenges], [AppRoutes.leaderboard],
 /// [AppRoutes.athleteDiscovery].
+///
+/// Phase 1: [AppRoutes.athleteDiscovery] is live (AthleteDiscoveryScreen is
+/// pushed from desktop/mobile Explore, mobile More, and the desktop shell
+/// "Athletes" menu). [AppRoutes.leaderboard] stays stubbed for Phase 2.

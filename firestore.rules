@@ -173,6 +173,24 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Athlete directory — public athlete cards readable by signed-in users,
+    // writable only by the owner (Phase 1: profiles + follow + discovery).
+    match /athlete_directory/{uid} {
+      allow read: if isAuthenticated();
+      allow create, update: if isOwner(uid);
+      allow delete: if false;
+    }
+
+    // Follows — readable by signed-in users; a user may only
+    // create/delete rows where they are the follower.
+    match /follows/{id} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() &&
+        request.resource.data.followerId == request.auth.uid;
+      allow delete: if isAuthenticated() &&
+        resource.data.followerId == request.auth.uid;
+    }
+
     // Coach-athlete assignments — readable by both parties, writable by coach.
     match /coach_athletes/{athleteId} {
       allow create: if isCoach();

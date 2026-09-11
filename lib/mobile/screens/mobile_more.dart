@@ -4,6 +4,7 @@ import '../../core/constants.dart';
 import '../../providers.dart';
 import '../../widgets/common/role_gate.dart';
 import '../../screens/activity/activity_feed_screen.dart';
+import '../../screens/athletes/athlete_discovery_screen.dart';
 import '../../screens/challenges/challenges_screen.dart';
 import '../../screens/training/training_plan_marketplace_screen.dart';
 import '../../screens/coach/coach_match_screen.dart';
@@ -180,6 +181,20 @@ class MobileMoreScreen extends ConsumerWidget {
                             context,
                             MaterialPageRoute(
                               builder: (_) => const ChallengesScreen(),
+                            ),
+                          ),
+                    ),
+                    const SizedBox(height: M.sm),
+                    _MoreFeature(
+                      'Find Athletes',
+                      'Discover athletes and follow their training',
+                      Icons.people_outline,
+                      M.purple,
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const AthleteDiscoveryScreen(),
                             ),
                           ),
                     ),

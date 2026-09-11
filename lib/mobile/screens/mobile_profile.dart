@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../services/auth/auth_service.dart';
 import '../../core/errors/error_handler.dart';
 import '../../providers.dart';
+import '../../screens/athletes/athlete_card_actions.dart';
 import '../../screens/premium/premium_screen.dart';
 import '../../screens/profile/profile_edit_screen.dart';
 import '../../screens/analytics/zones_screen.dart';
@@ -238,6 +239,8 @@ class MobileProfileScreen extends ConsumerWidget {
                             builder: (_) => const GearVaultScreen(),
                           ),
                         );
+                      case 'Athlete card':
+                        publishAndOpenAthleteCard(context, ref);
                       case 'Settings':
                         Navigator.push(
                           context,
@@ -252,6 +255,7 @@ class MobileProfileScreen extends ConsumerWidget {
                     ('Training zones', Icons.tune),
                     ('Apps & devices', Icons.devices),
                     ('Equipment', Icons.sports),
+                    ('Athlete card', Icons.people_outline),
                     ('Settings', Icons.settings_outlined),
                   ],
                 ),

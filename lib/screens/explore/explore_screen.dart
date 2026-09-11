@@ -4,6 +4,7 @@ import '../../shell.dart' show ShellPage;
 import '../../widgets/common/heading.dart';
 import '../../widgets/dialogs/event_details_dialog.dart';
 import '../activity/activity_feed_screen.dart';
+import '../athletes/athlete_discovery_screen.dart';
 import '../challenges/challenges_screen.dart';
 import '../training/training_plan_marketplace_screen.dart';
 import 'feature_collection_screen.dart';
@@ -261,6 +262,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => const ChallengesScreen(),
+                        ),
+                      ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _ExploreTile(
+                  'Find Athletes',
+                  Icons.people_outline,
+                  purple,
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AthleteDiscoveryScreen(),
                         ),
                       ),
                 ),

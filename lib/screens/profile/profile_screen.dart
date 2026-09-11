@@ -9,6 +9,7 @@ import '../../providers.dart';
 import '../../services/auth/auth_service.dart';
 
 import 'profile_edit_screen.dart';
+import '../athletes/athlete_card_actions.dart';
 import '../analytics/zones_screen.dart';
 import '../devices/devices_screen.dart';
 import '../explore/production_pages.dart';
@@ -346,6 +347,7 @@ class ProfileScreen extends ConsumerWidget {
           ('Training zones', Icons.tune),
           ('Apps & devices', Icons.devices),
           ('Equipment', Icons.sports),
+          ('Athlete card', Icons.people_outline),
           ('Settings', Icons.settings_outlined),
         ]),
         const SizedBox(height: 20),
@@ -383,11 +385,11 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-class _Settings extends StatelessWidget {
+class _Settings extends ConsumerWidget {
   final List<(String, IconData)> items;
   const _Settings(this.items);
   @override
-  Widget build(BuildContext context) => Card(
+  Widget build(BuildContext context, WidgetRef ref) => Card(
     child: Column(
       children: List.generate(items.length, (i) {
         final tile = ListTile(
@@ -409,7 +411,7 @@ class _Settings extends StatelessWidget {
                     ? const Color(0xFF78909C)
                     : muted),
           ),
-          onTap: () => _open(context, items[i].$1),
+          onTap: () => _open(context, ref, items[i].$1),
         );
         return Column(
           children: [
@@ -421,7 +423,7 @@ class _Settings extends StatelessWidget {
     ),
   );
 
-  void _open(BuildContext context, String title) {
+  void _open(BuildContext context, WidgetRef ref, String title) {
     switch (title) {
       case 'Personal details':
         Navigator.push(
@@ -443,6 +445,8 @@ class _Settings extends StatelessWidget {
           context,
           MaterialPageRoute(builder: (_) => const GearVaultScreen()),
         );
+      case 'Athlete card':
+        publishAndOpenAthleteCard(context, ref);
       case 'Settings':
         Navigator.push(
           context,
