@@ -95,6 +95,8 @@ class CoachDashboardService {
     : _db = db ?? FirebaseFirestore.instance;
 
   /// Streams the list of athletes assigned to the current coach.
+  /// Single-where (coachId only) with client-side status filtering so no
+  /// composite index is required.
   Stream<List<AssignedAthlete>> watchAssignedAthletes() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return Stream.value([]);
@@ -102,7 +104,6 @@ class CoachDashboardService {
     return _db
         .collection('coach_athletes')
         .where('coachId', isEqualTo: user.uid)
-        .where('status', isEqualTo: 'active')
         .snapshots()
         .map((snap) => snap.docs.map(AssignedAthlete.fromFirestore).toList())
         .handleError((e) {

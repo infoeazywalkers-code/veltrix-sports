@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../core/constants.dart';
 import '../../services/social/coach_service.dart';
@@ -12,11 +13,8 @@ class CoachBookingDialog extends StatefulWidget {
 
 class _CoachBookingDialogState extends State<CoachBookingDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _goalController = TextEditingController(text: 'Sub-3:45 Marathon PR');
-  final _messageController = TextEditingController(
-    text:
-        'Hi! Looking to optimize my weekly mileage and strength work for upcoming races.',
-  );
+  final _goalController = TextEditingController();
+  final _messageController = TextEditingController();
   DateTime _preferredDate = DateTime.now().add(const Duration(days: 3));
   bool _submitting = false;
 
@@ -72,17 +70,44 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
 
   @override
   Widget build(BuildContext context) {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return AlertDialog(
+        title: const Text('Sign in required'),
+        content: const Text(
+          'Please sign in to book a discovery call with this coach.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, 'signIn'),
+            child: const Text('Sign in'),
+          ),
+        ],
+      );
+    }
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.groups, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+          Icon(
+            Icons.groups,
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               'Book Call with ${widget.coach.name.split(' ').length > 1 ? widget.coach.name.split(' ').elementAt(1) : widget.coach.name}',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                 fontSize: 18,
               ),
             ),
@@ -127,12 +152,21 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
                 button: true,
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.calendar_month, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+                  leading: Icon(
+                    Icons.calendar_month,
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : navy),
+                  ),
                   title: Text(
                     'Call Date: ${_preferredDate.year}-${_preferredDate.month.toString().padLeft(2, '0')}-${_preferredDate.day.toString().padLeft(2, '0')}',
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
                       fontSize: 13,
                     ),
                   ),
@@ -144,13 +178,13 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
               ),
               const SizedBox(height: 8),
               Semantics(
-                label: 'Message for coach, optional',
+                label: 'Message for coach, required',
                 child: TextFormField(
                   controller: _messageController,
                   maxLines: 3,
                   maxLength: 1000,
                   decoration: const InputDecoration(
-                    labelText: 'Message for Coach',
+                    labelText: 'Message for Coach *',
                     hintText:
                         'Share your background, injury history, and schedule availability...',
                     border: OutlineInputBorder(),

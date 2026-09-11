@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../../core/constants.dart';
 import '../../services/social/coach_request_service.dart';
 import '../../models/user/coach_request.dart';
+import 'my_coach_requests_screen.dart';
 
 class CoachQuestionnaireScreen extends StatefulWidget {
   const CoachQuestionnaireScreen({super.key});
@@ -82,7 +83,7 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
         // Single-pop flow: dialog pops itself with a result; the
         // questionnaire then pops once carrying that result for the
         // push site in CoachMatchScreen to handle.
-        final done = await showDialog<bool>(
+        final done = await showDialog<dynamic>(
           context: context,
           builder:
               (dialogContext) => AlertDialog(
@@ -103,11 +104,21 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
                     const SizedBox(height: 12),
                     Text(
                       'Our team will review your answers and contact you within 24-48 hours with a recommended coach match.',
-                      style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 13),
+                      style: TextStyle(
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF78909C)
+                                : muted),
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
                 actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext, 'requests'),
+                    child: const Text('View my requests'),
+                  ),
                   FilledButton(
                     onPressed: () => Navigator.pop(dialogContext, true),
                     child: const Text('Done'),
@@ -115,7 +126,14 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
                 ],
               ),
         );
-        if (done == true && context.mounted) {
+        if (!context.mounted) return;
+        if (done == 'requests') {
+          Navigator.pop(context, true);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const MyCoachRequestsScreen()),
+          );
+        } else if (done == true) {
           Navigator.pop(context, true);
         }
       }
@@ -151,13 +169,22 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w900,
-                color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'We use your answers to recommend coaches who fit your goals and communication style.',
-              style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), height: 1.4),
+              style: TextStyle(
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
+                height: 1.4,
+              ),
             ),
             const SizedBox(height: 28),
             DropdownButtonFormField<String>(

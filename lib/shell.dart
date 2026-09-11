@@ -20,6 +20,7 @@ import 'screens/explore/feature_collection_screen.dart';
 import 'screens/training/training_plan_marketplace_screen.dart';
 import 'screens/explore/production_pages.dart';
 import 'screens/onboarding/onboarding_flow.dart';
+import 'screens/coach/coach_dashboard_screen.dart';
 
 import 'widgets/workout/workout_builder_dialog.dart';
 import 'widgets/common/connectivity_banner.dart';
@@ -491,6 +492,34 @@ class _ShellState extends ConsumerState<Shell> {
                             fallback: _disabledDrawerItem(
                               Icons.menu_book,
                               'Coach resources',
+                              'Coach access required',
+                            ),
+                          ),
+                        if (isLoggedIn)
+                          CoachOnly(
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              leading: const Icon(Icons.groups_outlined),
+                              title: const Text(
+                                'My athletes',
+                                style: TextStyle(fontWeight: FontWeight.w800),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => const CoachDashboardScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            fallback: _disabledDrawerItem(
+                              Icons.groups_outlined,
+                              'My athletes',
                               'Coach access required',
                             ),
                           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants.dart';
 import '../premium/premium_screen.dart';
 import '../../services/core/onboarding_service.dart';
+import '../coach/coach_dashboard_screen.dart';
 
 class ProductionInfoScreen extends StatelessWidget {
   final String title;
@@ -92,7 +93,11 @@ class ProductionInfoScreen extends StatelessWidget {
                             Text(
                               block.title,
                               style: TextStyle(
-                                color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                                color:
+                                    (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : navy),
                                 fontWeight: FontWeight.w900,
                                 fontSize: 16,
                               ),
@@ -101,7 +106,11 @@ class ProductionInfoScreen extends StatelessWidget {
                             Text(
                               block.body,
                               style: TextStyle(
-                                color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted),
+                                color:
+                                    (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? const Color(0xFF78909C)
+                                        : muted),
                                 height: 1.45,
                               ),
                             ),
@@ -207,7 +216,10 @@ class _AthleteOnboardingScreenState extends State<AthleteOnboardingScreen> {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w900,
-            color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
           ),
         ),
         const SizedBox(height: 8),
@@ -297,13 +309,33 @@ class _AthleteOnboardingScreenState extends State<AthleteOnboardingScreen> {
   );
 }
 
-ProductionInfoScreen coachPlatformScreen() => const ProductionInfoScreen(
+ProductionInfoScreen coachPlatformScreen() => ProductionInfoScreen(
   title: 'Coach platform',
   subtitle:
       'Manage athletes, prescribe training, review readiness, and keep communication tied to the work.',
   icon: Icons.groups_rounded,
   accent: purple,
-  blocks: [
+  actions: [
+    Builder(
+      builder:
+          (context) => FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: lime,
+              foregroundColor: navy,
+            ),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CoachDashboardScreen(),
+                  ),
+                ),
+            icon: const Icon(Icons.dashboard_customize),
+            label: const Text('Open dashboard'),
+          ),
+    ),
+  ],
+  blocks: const [
     InfoBlock(
       Icons.dashboard_customize,
       purple,

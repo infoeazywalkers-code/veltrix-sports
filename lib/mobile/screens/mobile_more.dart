@@ -7,6 +7,7 @@ import '../../screens/activity/activity_feed_screen.dart';
 import '../../screens/challenges/challenges_screen.dart';
 import '../../screens/training/training_plan_marketplace_screen.dart';
 import '../../screens/coach/coach_match_screen.dart';
+import '../../screens/coach/coach_dashboard_screen.dart';
 import '../../screens/devices/devices_screen.dart';
 import '../../screens/explore/feature_collection_screen.dart';
 import '../../screens/premium/premium_screen.dart';
@@ -235,6 +236,30 @@ class MobileMoreScreen extends ConsumerWidget {
                           'Guides for professional coaching',
                           Icons.menu_book_outlined,
                           M.navy,
+                        ),
+                      ),
+                    if (isLoggedIn) const SizedBox(height: M.sm),
+                    if (isLoggedIn)
+                      CoachOnly(
+                        child: _MoreFeature(
+                          'My athletes',
+                          'Review assigned athletes and readiness',
+                          Icons.groups_outlined,
+                          M.purple,
+                          onTap:
+                              () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const CoachDashboardScreen(),
+                                ),
+                              ),
+                        ),
+                        fallback: _LockedFeature(
+                          context,
+                          'My athletes',
+                          'Review assigned athletes and readiness',
+                          Icons.groups_outlined,
+                          M.purple,
                         ),
                       ),
                     if (isLoggedIn) const SizedBox(height: M.sm),

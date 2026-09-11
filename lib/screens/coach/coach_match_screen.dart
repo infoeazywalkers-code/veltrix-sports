@@ -5,6 +5,7 @@ import '../../widgets/common/veltrix_footer.dart';
 import '../../services/social/coach_service.dart';
 import '../../widgets/dialogs/coach_booking_dialog.dart';
 import 'coach_questionnaire_screen.dart';
+import 'my_coach_requests_screen.dart';
 
 class CoachMatchScreen extends StatelessWidget {
   const CoachMatchScreen({super.key});
@@ -15,7 +16,26 @@ class CoachMatchScreen extends StatelessWidget {
     // Scaffold + AppBar so pushed routes get system back and an in-app
     // back button. When hosted in the shell, the back button auto-hides.
     return Scaffold(
-      appBar: AppBar(title: const Text('Coach Match')),
+      appBar: AppBar(
+        title: const Text('Coach Match'),
+        actions: [
+          Builder(
+            builder:
+                (actionContext) => TextButton(
+                  onPressed:
+                      () => Navigator.of(actionContext).push(
+                        MaterialPageRoute(
+                          builder: (_) => const MyCoachRequestsScreen(),
+                        ),
+                      ),
+                  child: const Text(
+                    'My requests',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+          ),
+        ],
+      ),
       body: ListView(
         padding: EdgeInsets.fromLTRB(
           desktop ? 40 : 18,
@@ -41,12 +61,25 @@ class CoachMatchScreen extends StatelessWidget {
                   vertical: 18,
                 ),
               ),
-              onPressed:
-                  () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const CoachQuestionnaireScreen(),
-                    ),
+              onPressed: () async {
+                final result = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const CoachQuestionnaireScreen(),
                   ),
+                );
+                if (!context.mounted) return;
+                if (result == true) {
+                  showFeatureMessage(
+                    context,
+                    'Questionnaire submitted. We will match you shortly.',
+                  );
+                } else if (result == 'signIn') {
+                  showFeatureMessage(
+                    context,
+                    'Please sign in to submit your coach questionnaire.',
+                  );
+                }
+              },
               icon: const Icon(Icons.arrow_forward),
               label: const Text(
                 'Start Questionnaire',
@@ -145,8 +178,43 @@ class CoachMatchScreen extends StatelessWidget {
   }
 }
 
-class _FeaturedCoachesList extends StatelessWidget {
+class _FeaturedCoachesList extends StatefulWidget {
   const _FeaturedCoachesList();
+
+  @override
+  State<_FeaturedCoachesList> createState() => _FeaturedCoachesListState();
+}
+
+class _FeaturedCoachesListState extends State<_FeaturedCoachesList> {
+  Future<List<CoachProfile>>? _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = CoachService.fetchFeaturedCoaches();
+  }
+
+  void _retry() {
+    setState(() => _future = CoachService.fetchFeaturedCoaches());
+  }
+
+  Future<void> _openQuestionnaire() async {
+    final result = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const CoachQuestionnaireScreen()));
+    if (!mounted) return;
+    if (result == true) {
+      showFeatureMessage(
+        context,
+        'Questionnaire submitted. We will match you shortly.',
+      );
+    } else if (result == 'signIn') {
+      showFeatureMessage(
+        context,
+        'Please sign in to submit your coach questionnaire.',
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,9 +246,55 @@ class _FeaturedCoachesList extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         FutureBuilder<List<CoachProfile>>(
-          future: CoachService.fetchFeaturedCoaches(),
+          future: _future,
           builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.error_outline, size: 40, color: orange),
+                    const SizedBox(height: 12),
+                    const Text('Could not load coaches.'),
+                    const SizedBox(height: 12),
+                    OutlinedButton(
+                      onPressed: _retry,
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
+            }
             final coaches = snapshot.data ?? [];
+            if (coaches.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.groups_outlined, size: 40, color: muted),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'No featured coaches yet — tell us what you need',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 12),
+                    FilledButton(
+                      onPressed: _openQuestionnaire,
+                      child: const Text('Start Questionnaire'),
+                    ),
+                  ],
+                ),
+              );
+            }
             if (desktop) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,6 +329,83 @@ class _FeaturedCoachesList extends StatelessWidget {
   }
 }
 
+/// Avatar with network-with-fallback: http(s) uses NetworkImage,
+/// asset paths use AssetImage, empty/unknown falls back to initials.
+/// Never crashes on URL/empty strings.
+class _CoachAvatar extends StatelessWidget {
+  final String image;
+  final String name;
+  const _CoachAvatar({required this.image, required this.name});
+
+  String get _initials {
+    final parts =
+        name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    if (parts.isEmpty) return '?';
+    if (parts.length == 1) return parts.first[0].toUpperCase();
+    return '${parts.first[0]}${parts[1][0]}'.toUpperCase();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final trimmed = image.trim();
+    if (trimmed.isEmpty) {
+      return CircleAvatar(
+        radius: 26,
+        backgroundColor: navy,
+        child: Text(
+          _initials,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+      );
+    }
+    if (trimmed.startsWith('http')) {
+      return CircleAvatar(
+        radius: 26,
+        backgroundColor: navy,
+        child: ClipOval(
+          child: Image.network(
+            trimmed,
+            width: 52,
+            height: 52,
+            fit: BoxFit.cover,
+            errorBuilder:
+                (_, __, ___) => Text(
+                  _initials,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+          ),
+        ),
+      );
+    }
+    return CircleAvatar(
+      radius: 26,
+      backgroundColor: navy,
+      child: ClipOval(
+        child: Image.asset(
+          trimmed,
+          width: 52,
+          height: 52,
+          fit: BoxFit.cover,
+          errorBuilder:
+              (_, __, ___) => Text(
+                _initials,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+        ),
+      ),
+    );
+  }
+}
+
 class _CoachCard extends StatelessWidget {
   final CoachProfile coach;
   const _CoachCard({required this.coach});
@@ -229,11 +420,7 @@ class _CoachCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 26,
-                  backgroundColor: navy,
-                  backgroundImage: AssetImage(coach.image),
-                ),
+                _CoachAvatar(image: coach.image, name: coach.name),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -815,12 +1002,25 @@ class _PackageCard extends StatelessWidget {
                 foregroundColor: isGold ? navy : Colors.white,
                 minimumSize: const Size.fromHeight(48),
               ),
-              onPressed:
-                  () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const CoachQuestionnaireScreen(),
-                    ),
+              onPressed: () async {
+                final result = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const CoachQuestionnaireScreen(),
                   ),
+                );
+                if (!context.mounted) return;
+                if (result == true) {
+                  showFeatureMessage(
+                    context,
+                    'Questionnaire submitted. We will match you shortly.',
+                  );
+                } else if (result == 'signIn') {
+                  showFeatureMessage(
+                    context,
+                    'Please sign in to submit your coach questionnaire.',
+                  );
+                }
+              },
               child: const Text(
                 'Get started',
                 style: TextStyle(fontWeight: FontWeight.w900),

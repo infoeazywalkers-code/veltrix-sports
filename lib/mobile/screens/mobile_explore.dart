@@ -69,7 +69,7 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                 controller: _searchController,
                 onChanged: (val) => setState(() => _searchQuery = val.trim()),
                 decoration: InputDecoration(
-                  hintText: 'Search plans, events, coaches',
+                  hintText: 'Search plans, events',
                   prefixIcon: const Icon(Icons.search, size: M.iconMd),
                   suffixIcon:
                       _searchQuery.isNotEmpty
