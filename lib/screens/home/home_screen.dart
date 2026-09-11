@@ -584,6 +584,9 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
   VideoPlayerController? _controller;
   bool muted = true;
   bool _hasError = false;
+  bool _lastPlaying = false;
+  bool _lastInit = false;
+  bool _lastBuffering = false;
 
   VideoPlayerController get controller => _controller!;
 
@@ -627,7 +630,23 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
   }
 
   void _onVideoUpdate() {
-    if (mounted) setState(() {});
+    // Rebuild ONLY on real state transitions (init done / play / pause /
+    // buffering flips). The controller notifies on every position tick —
+    // rebuilding the hero that often drops scroll frames and makes the
+    // page feel jumpy near the video.
+    final c = _controller;
+    if (c == null) return;
+    final playing = c.value.isPlaying;
+    final init = c.value.isInitialized && !c.value.hasError;
+    final buffering = c.value.isBuffering;
+    if (playing != _lastPlaying ||
+        init != _lastInit ||
+        buffering != _lastBuffering) {
+      _lastPlaying = playing;
+      _lastInit = init;
+      _lastBuffering = buffering;
+      if (mounted) setState(() {});
+    }
   }
 
   @override

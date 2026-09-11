@@ -43,6 +43,16 @@
     video {
       pointer-events: none !important;
     }
+    /*
+     * The platform video element is inserted into the DOM seconds after
+     * load; without this, Chrome's scroll anchoring compensates for the DOM
+     * mutation by jumping the page scroll position. Flutter owns its scroll
+     * offset, so browser anchoring must stay off.
+     */
+    html,
+    body {
+      overflow-anchor: none;
+    }
   </style>
 </head>
 <body>
