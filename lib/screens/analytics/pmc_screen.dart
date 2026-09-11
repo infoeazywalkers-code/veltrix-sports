@@ -210,29 +210,32 @@ class _PmcScreenState extends ConsumerState<PmcScreen> {
             final isSelected = _timeRange == range;
             return Padding(
               padding: const EdgeInsets.only(right: 8),
-              child: GestureDetector(
-                onTap: () => setState(() => _timeRange = range),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? const Color(0xFF262626)
-                            : Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: isSelected ? Colors.white24 : Colors.white12,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => setState(() => _timeRange = range),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
                     ),
-                  ),
-                  child: Text(
-                    range == 'all' ? 'All (90d)' : '$range Days',
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.white54,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                    decoration: BoxDecoration(
+                      color:
+                          isSelected
+                              ? const Color(0xFF262626)
+                              : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isSelected ? Colors.white24 : Colors.white12,
+                      ),
+                    ),
+                    child: Text(
+                      range == 'all' ? 'All (90d)' : '$range Days',
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.white54,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -257,32 +260,37 @@ class _PmcScreenState extends ConsumerState<PmcScreen> {
                     : 'Overload';
             return Padding(
               padding: const EdgeInsets.only(right: 6),
-              child: GestureDetector(
-                onTap: () => setState(() => _forecastScenario = scenario),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? const Color(0xFFF59E0B).withValues(alpha: 0.2)
-                            : Colors.transparent,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => setState(() => _forecastScenario = scenario),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
                       color:
                           isSelected
-                              ? const Color(0xFFF59E0B).withValues(alpha: 0.4)
-                              : Colors.white12,
+                              ? const Color(0xFFF59E0B).withValues(alpha: 0.2)
+                              : Colors.transparent,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color:
+                            isSelected
+                                ? const Color(0xFFF59E0B).withValues(alpha: 0.4)
+                                : Colors.white12,
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    label,
-                    style: TextStyle(
-                      color:
-                          isSelected ? const Color(0xFFF59E0B) : Colors.white54,
-                      fontSize: 11,
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        color:
+                            isSelected
+                                ? const Color(0xFFF59E0B)
+                                : Colors.white54,
+                        fontSize: 11,
+                      ),
                     ),
                   ),
                 ),

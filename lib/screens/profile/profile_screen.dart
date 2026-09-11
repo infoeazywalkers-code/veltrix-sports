@@ -285,40 +285,43 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 22),
-        GestureDetector(
-          onTap: onNavigateToPremium,
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF0F2030)
-                      : const Color(0xffeaf2f8),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.workspace_premium, color: blue),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Veltrix Premium',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color:
-                              (Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : navy),
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: onNavigateToPremium,
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF0F2030)
+                        : const Color(0xffeaf2f8),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.workspace_premium, color: blue),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Veltrix Premium',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color:
+                                (Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : navy),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Icon(Icons.chevron_right),
-              ],
+                  Icon(Icons.chevron_right),
+                ],
+              ),
             ),
           ),
         ),

@@ -15,23 +15,28 @@ class SectionHeading extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w900,
-            color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
           ),
         ),
       ),
       if (action != null)
-        GestureDetector(
-          onTap: onActionTap,
-          child: Text(
-            action!,
-            style: const TextStyle(
-              color: blue,
-              fontWeight: FontWeight.w800,
-              fontSize: 12,
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: onActionTap,
+            child: Text(
+              action!,
+              style: const TextStyle(
+                color: blue,
+                fontWeight: FontWeight.w800,
+                fontSize: 12,
+              ),
             ),
+          ),
         ),
-      ),
     ],
   );
 }
-

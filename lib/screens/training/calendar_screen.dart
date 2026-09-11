@@ -101,51 +101,54 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(7, (i) {
             final date = _weekStart.add(Duration(days: i));
-            return GestureDetector(
-              onTap: () => setState(() => day = i),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 180),
-                width: 42,
-                padding: const EdgeInsets.symmetric(vertical: 9),
-                decoration: BoxDecoration(
-                  color:
-                      day == i
-                          ? navy
-                          : (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF0F2030)
-                              : Colors.white),
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
-                      style: TextStyle(
-                        color:
-                            day == i
-                                ? Colors.white70
-                                : (Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? const Color(0xFF78909C)
-                                    : muted),
-                        fontSize: 10,
+            return MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () => setState(() => day = i),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  width: 42,
+                  padding: const EdgeInsets.symmetric(vertical: 9),
+                  decoration: BoxDecoration(
+                    color:
+                        day == i
+                            ? navy
+                            : (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF0F2030)
+                                : Colors.white),
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
+                        style: TextStyle(
+                          color:
+                              day == i
+                                  ? Colors.white70
+                                  : (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? const Color(0xFF78909C)
+                                      : muted),
+                          fontSize: 10,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${date.day}',
-                      style: TextStyle(
-                        color:
-                            day == i
-                                ? Colors.white
-                                : (Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : navy),
-                        fontWeight: FontWeight.w900,
+                      const SizedBox(height: 4),
+                      Text(
+                        '${date.day}',
+                        style: TextStyle(
+                          color:
+                              day == i
+                                  ? Colors.white
+                                  : (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : navy),
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );

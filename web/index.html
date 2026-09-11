@@ -53,6 +53,15 @@
     body {
       overflow-anchor: none;
     }
+    /*
+     * On-brand site-wide cursor: lime ring with navy center dot.
+     * Applied on `html` so it inherits into the Flutter canvas.
+     * No `*` selector: UA form styles must keep winning in text fields
+     * so the I-beam caret still shows while typing.
+     */
+    html {
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><circle cx='14' cy='14' r='9' fill='none' stroke='%23c8f169' stroke-width='2.5'/><circle cx='14' cy='14' r='3.5' fill='%23123047'/></svg>") 14 14, auto;
+    }
   </style>
 </head>
 <body>

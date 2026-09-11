@@ -402,48 +402,54 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
     required String subtitle,
   }) {
     final isSelected = _selectedRole == role;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedRole = role),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? blue.withValues(alpha: 0.15)
-                  : Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? blue : Colors.white24,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 40, color: isSelected ? blue : Colors.white54),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(color: Colors.white54, fontSize: 13),
-                  ),
-                ],
-              ),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedRole = role),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color:
+                isSelected
+                    ? blue.withValues(alpha: 0.15)
+                    : Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isSelected ? blue : Colors.white24,
+              width: isSelected ? 2 : 1,
             ),
-            if (isSelected) const Icon(Icons.check_circle, color: blue),
-          ],
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 40, color: isSelected ? blue : Colors.white54),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (isSelected) const Icon(Icons.check_circle, color: blue),
+            ],
+          ),
         ),
       ),
     );
@@ -545,38 +551,43 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           const SizedBox(height: 16),
           const Text('Date of Birth', style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 8),
-          GestureDetector(
-            onTap: () async {
-              final date = await showDatePicker(
-                context: context,
-                initialDate: _dateOfBirth ?? DateTime(1995),
-                firstDate: DateTime(1940),
-                lastDate: DateTime.now().subtract(
-                  const Duration(days: 365 * 13),
-                ),
-              );
-              if (date != null) setState(() => _dateOfBirth = date);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white10,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.calendar_today, color: Colors.white54),
-                  const SizedBox(width: 12),
-                  Text(
-                    _dateOfBirth != null
-                        ? _formatDate(_dateOfBirth!)
-                        : 'Select date',
-                    style: TextStyle(
-                      color:
-                          _dateOfBirth != null ? Colors.white : Colors.white54,
-                    ),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () async {
+                final date = await showDatePicker(
+                  context: context,
+                  initialDate: _dateOfBirth ?? DateTime(1995),
+                  firstDate: DateTime(1940),
+                  lastDate: DateTime.now().subtract(
+                    const Duration(days: 365 * 13),
                   ),
-                ],
+                );
+                if (date != null) setState(() => _dateOfBirth = date);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_today, color: Colors.white54),
+                    const SizedBox(width: 12),
+                    Text(
+                      _dateOfBirth != null
+                          ? _formatDate(_dateOfBirth!)
+                          : 'Select date',
+                      style: TextStyle(
+                        color:
+                            _dateOfBirth != null
+                                ? Colors.white
+                                : Colors.white54,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -687,35 +698,38 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
             children:
                 days
                     .map(
-                      (day) => GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (_selectedDays.contains(day)) {
-                              _selectedDays.remove(day);
-                            } else {
-                              _selectedDays = [..._selectedDays, day];
-                            }
-                          });
-                        },
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color:
-                                _selectedDays.contains(day)
-                                    ? blue
-                                    : Colors.white10,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            day.substring(0, 2),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight:
+                      (day) => MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (_selectedDays.contains(day)) {
+                                _selectedDays.remove(day);
+                              } else {
+                                _selectedDays = [..._selectedDays, day];
+                              }
+                            });
+                          },
+                          child: Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color:
                                   _selectedDays.contains(day)
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
+                                      ? blue
+                                      : Colors.white10,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              day.substring(0, 2),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight:
+                                    _selectedDays.contains(day)
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                              ),
                             ),
                           ),
                         ),
