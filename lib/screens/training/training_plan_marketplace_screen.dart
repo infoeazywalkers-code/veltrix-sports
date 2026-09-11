@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ai_plan_generator_screen.dart';
 
 class TrainingPlanMarketplaceScreen extends StatelessWidget {
   final List<_Plan> plans = const [
@@ -101,7 +102,11 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AiPlanGeneratorScreen()),
+            ),
         backgroundColor: const Color(0xFF8B5CF6),
         icon: const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
         label: const Text(

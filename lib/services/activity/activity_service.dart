@@ -43,22 +43,23 @@ class ActivityService {
   }
 
   Future<void> toggleKudos(String activityId, String userId) async {
-    final doc = await _col.doc(activityId).get();
-    if (!doc.exists) return;
-    final data = doc.data() as Map<String, dynamic>;
-    final kudoedBy = List<String>.from(data['kudoedBy'] ?? []);
-    final hasKudoed = kudoedBy.contains(userId);
-
-    if (hasKudoed) {
-      kudoedBy.remove(userId);
-    } else {
-      kudoedBy.add(userId);
-    }
-
-    await _col.doc(activityId).update({
-      'kudoedBy': kudoedBy,
-      'kudosCount': kudoedBy.length,
-      'userHasKudoed': !hasKudoed,
+    final ref = _col.doc(activityId);
+    await FirebaseFirestore.instance.runTransaction((txn) async {
+      final snap = await txn.get(ref);
+      if (!snap.exists) return;
+      final data = snap.data() as Map<String, dynamic>;
+      final kudoedBy = List<String>.from(data['kudoedBy'] ?? []);
+      if (kudoedBy.contains(userId)) {
+        txn.update(ref, {
+          'kudoedBy': FieldValue.arrayRemove([userId]),
+          'kudosCount': FieldValue.increment(-1),
+        });
+      } else {
+        txn.update(ref, {
+          'kudoedBy': FieldValue.arrayUnion([userId]),
+          'kudosCount': FieldValue.increment(1),
+        });
+      }
     });
   }
 

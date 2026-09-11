@@ -17,6 +17,7 @@ import 'screens/devices/devices_screen.dart';
 import 'screens/training/strength_screen.dart';
 import 'screens/social/notifications_screen.dart';
 import 'screens/explore/feature_collection_screen.dart';
+import 'screens/training/training_plan_marketplace_screen.dart';
 import 'screens/explore/production_pages.dart';
 import 'screens/onboarding/onboarding_flow.dart';
 
@@ -82,7 +83,7 @@ class _ShellState extends ConsumerState<Shell> {
       case 9:
         return const NotificationsScreen();
       case 10:
-        return trainingPlansScreen();
+        return TrainingPlanMarketplaceScreen();
       case 11:
         return eventsScreen();
       case 12:

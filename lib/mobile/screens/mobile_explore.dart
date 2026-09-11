@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../screens/activity/activity_feed_screen.dart';
+import '../../screens/challenges/challenges_screen.dart';
 import '../../screens/coach/coach_match_screen.dart';
 import '../../screens/devices/devices_screen.dart';
 import '../../screens/explore/feature_collection_screen.dart';
 import '../../screens/premium/premium_screen.dart';
+import '../../screens/training/training_plan_marketplace_screen.dart';
 import '../../widgets/dialogs/event_details_dialog.dart';
 import '../theme.dart';
 import '../widgets/mobile_card.dart';
@@ -109,7 +112,7 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                           () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => trainingPlansScreen(),
+                              builder: (_) => TrainingPlanMarketplaceScreen(),
                             ),
                           ),
                     ),
@@ -169,6 +172,30 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                             ),
                           ),
                     ),
+                    _ExploreTile(
+                      'Activity Feed',
+                      Icons.dynamic_feed,
+                      M.teal,
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ActivityFeedScreen(),
+                            ),
+                          ),
+                    ),
+                    _ExploreTile(
+                      'Challenges',
+                      Icons.emoji_events_outlined,
+                      M.orange,
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ChallengesScreen(),
+                            ),
+                          ),
+                    ),
                   ],
                 ),
               ),
@@ -219,7 +246,8 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                               () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => trainingPlansScreen(),
+                                  builder:
+                                      (_) => TrainingPlanMarketplaceScreen(),
                                 ),
                               ),
                           child: const Text(
@@ -297,7 +325,10 @@ class _ExploreTile extends StatelessWidget {
             text,
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : M.navy),
               fontSize: 13,
             ),
           ),
@@ -365,14 +396,24 @@ class _EventRow extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : M.navy),
                   ),
                 ),
                 Text(sub, style: M.adaptiveCardBody(context)),
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted), size: 20),
+          Icon(
+            Icons.chevron_right,
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : M.muted),
+            size: 20,
+          ),
         ],
       ),
     );

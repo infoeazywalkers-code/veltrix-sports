@@ -3,6 +3,9 @@ import '../../core/constants.dart';
 import '../../shell.dart' show ShellPage;
 import '../../widgets/common/heading.dart';
 import '../../widgets/dialogs/event_details_dialog.dart';
+import '../activity/activity_feed_screen.dart';
+import '../challenges/challenges_screen.dart';
+import '../training/training_plan_marketplace_screen.dart';
 import 'feature_collection_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -102,7 +105,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 onTap:
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => trainingPlansScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => TrainingPlanMarketplaceScreen(),
+                      ),
                     ),
               ),
             ),
@@ -217,7 +222,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => trainingPlansScreen(),
+                          builder: (_) => TrainingPlanMarketplaceScreen(),
                         ),
                       ),
                   child: const Text(
@@ -227,6 +232,40 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _ExploreTile(
+                  'Activity Feed',
+                  Icons.dynamic_feed,
+                  teal,
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ActivityFeedScreen(),
+                        ),
+                      ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _ExploreTile(
+                  'Challenges',
+                  Icons.emoji_events_outlined,
+                  orange,
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ChallengesScreen(),
+                        ),
+                      ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 24),
         ],
@@ -241,7 +280,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
             child: Center(
               child: Text(
                 'No matching events found.',
-                style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontWeight: FontWeight.w700),
+                style: TextStyle(
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           )
@@ -295,9 +340,22 @@ class _ExploreTile extends StatelessWidget {
             const SizedBox(height: 15),
             Text(
               text,
-              style: TextStyle(fontWeight: FontWeight.w900, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
+              ),
             ),
-            Icon(Icons.arrow_forward, size: 16, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+            Icon(
+              Icons.arrow_forward,
+              size: 16,
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
+            ),
           ],
         ),
       ),
@@ -361,14 +419,32 @@ class _EventRow extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
                     ),
                   ),
-                  Text(sub, style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 11)),
+                  Text(
+                    sub,
+                    style: TextStyle(
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
+                      fontSize: 11,
+                    ),
+                  ),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+            Icon(
+              Icons.chevron_right,
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
+            ),
           ],
         ),
       ),

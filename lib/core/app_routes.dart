@@ -34,6 +34,10 @@ class AppRoutes {
   static const String analyticsPower = '/analytics-power';
   static const String analyticsZones = '/analytics-zones';
   static const String accountDeletion = '/account-deletion';
+  static const String activityFeed = '/activity-feed';
+  static const String challenges = '/challenges';
+  static const String leaderboard = '/leaderboard';
+  static const String athleteDiscovery = '/athlete-discovery';
 
   /// Mobile-only "More features" hub (index 5 in [MobileShell]).
   static const String more = '/more';
@@ -81,3 +85,8 @@ const List<String> mobileIndexToRoute = <String>[
   AppRoutes.more, // 5
   AppRoutes.notifications, // 6
 ];
+
+/// Pushed routes with no shell/mobile tab index — reached via
+/// `Navigator.push` from Explore/More tiles, never via index navigation:
+/// [AppRoutes.activityFeed], [AppRoutes.challenges], [AppRoutes.leaderboard],
+/// [AppRoutes.athleteDiscovery].

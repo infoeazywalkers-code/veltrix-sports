@@ -146,6 +146,7 @@ class Activity {
   final List<LapSplit> laps;
   final int kudosCount;
   final bool userHasKudoed;
+  final List<String> kudoedBy;
   final int commentsCount;
   final String athleteName;
   final String athleteAvatar;
@@ -183,6 +184,7 @@ class Activity {
     this.laps = const [],
     this.kudosCount = 0,
     this.userHasKudoed = false,
+    this.kudoedBy = const [],
     this.commentsCount = 0,
     required this.athleteName,
     required this.athleteAvatar,
@@ -237,6 +239,7 @@ class Activity {
           [],
       kudosCount: m['kudosCount'] ?? 0,
       userHasKudoed: m['userHasKudoed'] ?? false,
+      kudoedBy: List<String>.from(m['kudoedBy'] ?? []),
       commentsCount: m['commentsCount'] ?? 0,
       athleteName: m['athleteName'] ?? '',
       athleteAvatar: m['athleteAvatar'] ?? '',
@@ -277,7 +280,7 @@ class Activity {
     'gpsTrack': gpsTrack.map((e) => e.toMap()).toList(),
     'laps': laps.map((e) => e.toMap()).toList(),
     'kudosCount': kudosCount,
-    'userHasKudoed': userHasKudoed,
+    'kudoedBy': kudoedBy,
     'commentsCount': commentsCount,
     'athleteName': athleteName,
     'athleteAvatar': athleteAvatar,
@@ -317,6 +320,7 @@ class Activity {
     List<LapSplit>? laps,
     int? kudosCount,
     bool? userHasKudoed,
+    List<String>? kudoedBy,
     int? commentsCount,
     List<String>? prBadges,
     ActivityWeather? weather,
@@ -348,6 +352,7 @@ class Activity {
     laps: laps ?? this.laps,
     kudosCount: kudosCount ?? this.kudosCount,
     userHasKudoed: userHasKudoed ?? this.userHasKudoed,
+    kudoedBy: kudoedBy ?? this.kudoedBy,
     commentsCount: commentsCount ?? this.commentsCount,
     athleteName: athleteName,
     athleteAvatar: athleteAvatar,

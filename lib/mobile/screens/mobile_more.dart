@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants.dart';
 import '../../providers.dart';
 import '../../widgets/common/role_gate.dart';
+import '../../screens/activity/activity_feed_screen.dart';
+import '../../screens/challenges/challenges_screen.dart';
+import '../../screens/training/training_plan_marketplace_screen.dart';
 import '../../screens/coach/coach_match_screen.dart';
 import '../../screens/devices/devices_screen.dart';
 import '../../screens/explore/feature_collection_screen.dart';
@@ -88,7 +91,7 @@ class MobileMoreScreen extends ConsumerWidget {
                           () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => trainingPlansScreen(),
+                              builder: (_) => TrainingPlanMarketplaceScreen(),
                             ),
                           ),
                     ),
@@ -148,6 +151,34 @@ class MobileMoreScreen extends ConsumerWidget {
                             context,
                             MaterialPageRoute(
                               builder: (_) => workoutLibraryScreen(),
+                            ),
+                          ),
+                    ),
+                    const SizedBox(height: M.sm),
+                    _MoreFeature(
+                      'Activity Feed',
+                      'See what athletes around you are doing',
+                      Icons.dynamic_feed,
+                      M.teal,
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ActivityFeedScreen(),
+                            ),
+                          ),
+                    ),
+                    const SizedBox(height: M.sm),
+                    _MoreFeature(
+                      'Challenges',
+                      'Join challenges and climb the leaderboard',
+                      Icons.emoji_events_outlined,
+                      M.orange,
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ChallengesScreen(),
                             ),
                           ),
                     ),
