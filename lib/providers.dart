@@ -8,10 +8,12 @@ import 'services/training/training_plan_service.dart';
 import 'services/social/coach_request_service.dart';
 import 'services/social/follow_service.dart';
 import 'services/social/athlete_directory_service.dart';
+import 'services/social/challenge_service.dart';
 import 'services/social/leaderboard_service.dart';
 import 'services/performance/performance_service.dart';
 import 'services/core/preferences_service.dart';
 import 'models/social/athlete_card.dart';
+import 'models/social/social_challenge.dart';
 import 'models/user/user_profile.dart';
 import 'models/user/user_preferences.dart';
 import 'models/activity/workout.dart';
@@ -45,6 +47,27 @@ final athleteDirectoryServiceProvider = Provider<AthleteDirectoryService>(
 final leaderboardServiceProvider = Provider<LeaderboardService>(
   (ref) => LeaderboardService(),
 );
+final challengeServiceProvider = Provider<ChallengeService>(
+  (ref) => ChallengeService(),
+);
+
+/// Live challenge catalog (Phase 3): real `challenges` docs.
+final challengesProvider = StreamProvider.autoDispose<List<SocialChallenge>>((
+  ref,
+) {
+  return ref.watch(challengeServiceProvider).watchChallenges();
+});
+
+/// Signed-in user's challenge entries `{challengeId: entry}`.
+///
+/// Signed-out (empty uid) yields an empty stream value, never an error.
+final myChallengeEntriesProvider = StreamProvider.autoDispose
+    .family<Map<String, ChallengeEntry>, String>((ref, uid) {
+      if (uid.isEmpty) {
+        return Stream.value(const <String, ChallengeEntry>{});
+      }
+      return ref.watch(challengeServiceProvider).watchMyEntries(uid);
+    });
 
 /// Live monthly leaderboard (Phase 2): real activities + directory cards.
 final monthlyBoardProvider = StreamProvider.autoDispose<List<LeaderboardRow>>((

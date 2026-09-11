@@ -10,6 +10,7 @@ import '../../services/auth/auth_service.dart';
 
 import 'profile_edit_screen.dart';
 import '../athletes/athlete_card_actions.dart';
+import '../athletes/widgets/achievements_row.dart';
 import '../analytics/zones_screen.dart';
 import '../devices/devices_screen.dart';
 import '../explore/production_pages.dart';
@@ -340,6 +341,10 @@ class ProfileScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 22),
+        const _SelfPrCard(),
+        const SizedBox(height: 16),
+        const AchievementsRow(),
+        const SizedBox(height: 22),
         const SectionHeading('Account'),
         const SizedBox(height: 9),
         const _Settings([
@@ -378,6 +383,84 @@ class ProfileScreen extends ConsumerWidget {
           child: const Text(
             'Sign out',
             style: TextStyle(fontWeight: FontWeight.w800),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SelfPrCard extends ConsumerWidget {
+  const _SelfPrCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final prAsync = ref.watch(personalBestsProvider);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Personal bests',
+              style: TextStyle(
+                color: isDark ? Colors.white : navy,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 10),
+            prAsync.when(
+              loading:
+                  () => const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              error: (_, _) => const _SelfPrRow('Best 5K', 'No PR yet'),
+              data:
+                  (pr) => Column(
+                    children: [
+                      _SelfPrRow('Best 5K pace', pr.best5kPace),
+                      const SizedBox(height: 8),
+                      _SelfPrRow('Best 20-min power', pr.best20MinPower),
+                    ],
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SelfPrRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _SelfPrRow(this.label, this.value);
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isDark ? const Color(0xFF78909C) : muted,
+              fontSize: 13,
+            ),
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            color: isDark ? Colors.white : navy,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ],

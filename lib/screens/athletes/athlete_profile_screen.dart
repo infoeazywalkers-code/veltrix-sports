@@ -5,6 +5,7 @@ import '../../core/errors/error_handler.dart';
 import '../../models/activity/activity.dart';
 import '../../models/social/athlete_card.dart';
 import '../../providers.dart';
+import 'widgets/achievements_row.dart';
 
 /// Public athlete profile (Phase 1).
 ///
@@ -55,6 +56,8 @@ class AthleteProfileScreen extends ConsumerWidget {
               _CountsRow(uid: uid),
               const SizedBox(height: 20),
               _PrShowcase(uid: uid, isSelf: isSelf),
+              const SizedBox(height: 16),
+              AthleteAchievementsRow(uid: uid),
               const SizedBox(height: 20),
               Text(
                 'Recent activities',

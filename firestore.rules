@@ -131,6 +131,17 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // Challenges catalog is readable by signed-in users; managed server-side.
+    match /challenges/{id} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // Per-user challenge entries — strictly owned by the user.
+    match /users/{userId}/challenge_entries/{entryId} {
+      allow read, write: if isOwner(userId);
+    }
+
     // Social activity feed — readable by all signed-in users (global feed),
     // creations owned; updates open to signed-in users for kudos/comment counters.
     match /activities/{activityId} {
