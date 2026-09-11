@@ -2,6 +2,7 @@ import 'dart:ui' show PlatformDispatcher;
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,6 +28,7 @@ class VeltrixScrollBehavior extends MaterialScrollBehavior {
 
   @override
   Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.mouse,
     PointerDeviceKind.touch,
     PointerDeviceKind.trackpad,
     PointerDeviceKind.stylus,
@@ -151,8 +153,26 @@ class VeltrixRoot extends ConsumerWidget {
         theme: M.lightTheme,
         darkTheme: M.darkTheme,
         themeMode: _resolveThemeMode(themeModePref),
-        home: AuthWrapper(
-          child: useMobileLayout ? const MobileShell() : const Shell(),
+        home: Shortcuts(
+          shortcuts: <ShortcutActivator, Intent>{
+            SingleActivator(LogicalKeyboardKey.arrowUp): const ScrollIntent(
+              direction: AxisDirection.up,
+            ),
+            SingleActivator(LogicalKeyboardKey.arrowDown): const ScrollIntent(
+              direction: AxisDirection.down,
+            ),
+            SingleActivator(LogicalKeyboardKey.pageUp): const ScrollIntent(
+              direction: AxisDirection.up,
+              type: ScrollIncrementType.page,
+            ),
+            SingleActivator(LogicalKeyboardKey.pageDown): const ScrollIntent(
+              direction: AxisDirection.down,
+              type: ScrollIncrementType.page,
+            ),
+          },
+          child: AuthWrapper(
+            child: useMobileLayout ? const MobileShell() : const Shell(),
+          ),
         ),
       ),
     );
