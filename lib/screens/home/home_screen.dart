@@ -587,7 +587,11 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
   @override
   void initState() {
     super.initState();
-    controller = VideoPlayerController.asset('assets/video/home-training.mp4');
+    controller = VideoPlayerController.networkUrl(
+      Uri.parse(
+        'https://res.cloudinary.com/mgf6mndb/video/upload/v1789119988/home-training.mp4',
+      ),
+    );
     controller.setLooping(true);
     controller.setVolume(0);
     controller
