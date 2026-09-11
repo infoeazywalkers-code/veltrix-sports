@@ -10,8 +10,13 @@ final activityServiceProvider = Provider<ActivityService>(
   (_) => ActivityService(),
 );
 
+/// Feed page size. Doubled by "Load more" (25 → 50 → 100, capped at 100).
+final feedLimitProvider = StateProvider<int>((_) => 25);
+
 final activitiesStreamProvider = StreamProvider<List<Activity>>((ref) {
-  return ref.watch(activityServiceProvider).watchActivities();
+  return ref
+      .watch(activityServiceProvider)
+      .watchActivities(limit: ref.watch(feedLimitProvider));
 });
 
 class ActivityFeedScreen extends ConsumerStatefulWidget {
@@ -37,15 +42,29 @@ class _ActivityFeedScreenState extends ConsumerState<ActivityFeedScreen> {
     return activity.sport.name == _sportFilter;
   }
 
+  Future<void> _refresh() async {
+    ref.invalidate(activitiesStreamProvider);
+    try {
+      await ref.read(activitiesStreamProvider.future);
+    } catch (_) {
+      // Error state surfaces via the provider's AsyncValue below.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final activitiesAsync = ref.watch(activitiesStreamProvider);
+    final limit = ref.watch(feedLimitProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       body: activitiesAsync.when(
         data: (activities) {
           final filtered = activities.where(_matchesFilter).toList();
+          // Show "Load more" only while the backend may hold more rows:
+          // at cap (100) or a short page means everything is loaded.
+          final showLoadMore = limit < 100 && activities.length >= limit;
+          final itemCount = filtered.length + (showLoadMore ? 1 : 0);
           return Column(
             children: [
               SizedBox(
@@ -86,45 +105,69 @@ class _ActivityFeedScreenState extends ConsumerState<ActivityFeedScreen> {
                 ),
               ),
               Expanded(
-                child:
-                    filtered.isEmpty
-                        ? Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
+                child: RefreshIndicator(
+                  color: const Color(0xFFF97316),
+                  onRefresh: _refresh,
+                  child:
+                      filtered.isEmpty
+                          ? ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
                             children: [
-                              const Icon(
-                                Icons.run_circle_outlined,
-                                size: 64,
-                                color: Colors.white24,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                activities.isEmpty
-                                    ? 'No activities yet'
-                                    : 'No activities for this filter',
-                                style: const TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'Record your first workout to see it here',
-                                style: TextStyle(
-                                  color: Colors.white38,
-                                  fontSize: 13,
+                              Padding(
+                                padding: const EdgeInsets.only(top: 72),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.run_circle_outlined,
+                                        size: 64,
+                                        color: Colors.white24,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        activities.isEmpty
+                                            ? 'No activities yet'
+                                            : 'No activities for this filter',
+                                        style: const TextStyle(
+                                          color: Colors.white54,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Record your first workout to see it here',
+                                        style: TextStyle(
+                                          color: Colors.white38,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
+                          )
+                          : ListView.builder(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            itemCount: itemCount,
+                            itemBuilder: (context, index) {
+                              if (index >= filtered.length) {
+                                return _LoadMoreButton(
+                                  loadedCount: activities.length,
+                                  onLoadMore:
+                                      () =>
+                                          ref
+                                              .read(feedLimitProvider.notifier)
+                                              .state = limit >= 50
+                                                  ? 100
+                                                  : limit * 2,
+                                );
+                              }
+                              return _ActivityCard(activity: filtered[index]);
+                            },
                           ),
-                        )
-                        : ListView.builder(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          itemCount: filtered.length,
-                          itemBuilder:
-                              (context, index) =>
-                                  _ActivityCard(activity: filtered[index]),
-                        ),
+                ),
               ),
             ],
           );
@@ -140,6 +183,33 @@ class _ActivityFeedScreenState extends ConsumerState<ActivityFeedScreen> {
                 style: const TextStyle(color: Colors.red),
               ),
             ),
+      ),
+    );
+  }
+}
+
+class _LoadMoreButton extends StatelessWidget {
+  final int loadedCount;
+  final VoidCallback onLoadMore;
+
+  const _LoadMoreButton({required this.loadedCount, required this.onLoadMore});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      child: Center(
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+            foregroundColor: const Color(0xFFF97316),
+          ),
+          onPressed: onLoadMore,
+          child: Text(
+            'Load more ($loadedCount loaded)',
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+        ),
       ),
     );
   }

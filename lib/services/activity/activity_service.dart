@@ -100,4 +100,24 @@ class ActivityService {
             .get();
     return snap.docs.map(Activity.fromFirestore).toList();
   }
+
+  /// Per-athlete variant of [getActivitiesByDateRange].
+  ///
+  /// The base method has no user filter and [Activity] carries no userId, so
+  /// side-by-side comparison needs a scoped query. Uses the existing
+  /// `activities (userId ASC, date DESC)` composite index — no new index.
+  Future<List<Activity>> getUserActivitiesByDateRange(
+    String userId,
+    DateTime start,
+    DateTime end,
+  ) async {
+    final snap =
+        await _col
+            .where('userId', isEqualTo: userId)
+            .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+            .where('date', isLessThanOrEqualTo: Timestamp.fromDate(end))
+            .orderBy('date', descending: true)
+            .get();
+    return snap.docs.map(Activity.fromFirestore).toList();
+  }
 }

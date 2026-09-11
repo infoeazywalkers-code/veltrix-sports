@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../core/constants.dart';
+import '../../services/payment/payment_service.dart';
+import '../../widgets/dialogs/checkout_dialog.dart';
 import 'ai_plan_generator_screen.dart';
 
 class TrainingPlanMarketplaceScreen extends StatelessWidget {
@@ -173,7 +176,7 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            ...inLibrary.map((p) => _planCard(p, isInLibrary: true)),
+            ...inLibrary.map((p) => _planCard(context, p, isInLibrary: true)),
 
             const SizedBox(height: 24),
 
@@ -188,14 +191,41 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            ...explore.map((p) => _planCard(p, isInLibrary: false)),
+            ...explore.map((p) => _planCard(context, p, isInLibrary: false)),
           ],
         ),
       ),
     );
   }
 
-  Widget _planCard(_Plan plan, {required bool isInLibrary}) {
+  /// Opens the existing [CheckoutDialog] for [plan].
+  ///
+  /// [CheckoutDialog] only accepts a [SubscriptionPlan], so the marketplace
+  /// card is mapped onto one (period defaults to 'one-time', features reuse
+  /// the plan tags). No pricing or payment logic is duplicated here.
+  Future<void> _openCheckout(BuildContext context, _Plan plan) async {
+    final checkoutPlan = SubscriptionPlan(
+      id: 'marketplace_${plan.id}',
+      title: plan.title,
+      price: plan.price,
+      period: 'one-time',
+      description: plan.description,
+      features: plan.tags,
+    );
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (_) => CheckoutDialog(plan: checkoutPlan),
+    );
+    if (result == true && context.mounted) {
+      showFeatureMessage(context, '${plan.title} added to your library.');
+    }
+  }
+
+  Widget _planCard(
+    BuildContext context,
+    _Plan plan, {
+    required bool isInLibrary,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -342,21 +372,25 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
                   ),
                 )
               else
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: plan.gradient[0],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '\$${plan.price}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () => _openCheckout(context, plan),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: plan.gradient[0],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '\$${plan.price}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),

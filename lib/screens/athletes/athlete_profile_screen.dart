@@ -5,6 +5,7 @@ import '../../core/errors/error_handler.dart';
 import '../../models/activity/activity.dart';
 import '../../models/social/athlete_card.dart';
 import '../../providers.dart';
+import 'athlete_compare_screen.dart';
 import 'widgets/achievements_row.dart';
 
 /// Public athlete profile (Phase 1).
@@ -170,6 +171,28 @@ class _Header extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: _FollowButton(targetUid: card.uid, viewerUid: viewerUid),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => AthleteCompareScreen(
+                                otherUid: card.uid,
+                                otherName: card.displayName,
+                              ),
+                        ),
+                      ),
+                  icon: const Icon(Icons.compare_arrows_outlined),
+                  label: const Text(
+                    'Compare',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                ),
               ),
             ],
           ],
