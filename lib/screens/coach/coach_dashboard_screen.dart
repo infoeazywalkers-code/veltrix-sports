@@ -6,6 +6,7 @@ import '../../services/social/chat_service.dart';
 import '../../widgets/common/role_gate.dart';
 import '../social/chat_inbox_screen.dart';
 import '../social/chat_screen.dart';
+import 'coach_inquiries_inbox_screen.dart';
 import 'coach_match_screen.dart';
 import 'coach_requests_inbox_screen.dart';
 
@@ -51,6 +52,17 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (_) => const CoachRequestsInboxScreen(),
+                  ),
+                ),
+          ),
+          IconButton(
+            tooltip: 'Call inquiries',
+            icon: const Icon(Icons.call_outlined),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CoachInquiriesInboxScreen(),
                   ),
                 ),
           ),

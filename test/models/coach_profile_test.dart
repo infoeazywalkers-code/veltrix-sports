@@ -83,7 +83,19 @@ void main() {
       };
       final parsed = CoachProfile.fromMap('x', original);
       final serialized = parsed.toMap();
-      expect(serialized, original);
+      for (final entry in original.entries) {
+        expect(serialized[entry.key], entry.value);
+      }
+      // New backward-compatible fields default gracefully on old docs.
+      expect(parsed.credentials, '');
+      expect(parsed.philosophy, '');
+      expect(parsed.avatarUrl, '');
+      expect(parsed.sports, isEmpty);
+      expect(parsed.reviewCount, 0);
+      expect(parsed.avgRating, 0.0);
+      expect(parsed.verified, isFalse);
+      expect(parsed.coachUserId, '');
+      expect(parsed.displayRating, '5.0');
     });
 
     test('copyWith overrides specified fields', () {

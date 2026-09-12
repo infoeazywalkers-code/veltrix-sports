@@ -309,6 +309,8 @@ class _RequestCard extends StatelessWidget {
                 _InfoChip(request.sport),
                 _InfoChip(request.experience),
                 _InfoChip(request.goal),
+                if (request.package.isNotEmpty)
+                  _InfoChip('Package: ${request.package}'),
               ],
             ),
             if (request.notes.isNotEmpty) ...[

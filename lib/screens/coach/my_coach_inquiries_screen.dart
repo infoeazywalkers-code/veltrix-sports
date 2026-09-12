@@ -3,31 +3,10 @@ import 'package:flutter/material.dart';
 import '../../core/constants.dart';
 import '../../services/social/coach_service.dart';
 
-/// Read-only athlete outbox: `coach_inquiries` where userId == current uid.
-class MyCoachInquiriesScreen extends StatefulWidget {
+/// Live athlete outbox: `coach_inquiries` where userId == current uid,
+/// with live pending/accepted/declined status chips.
+class MyCoachInquiriesScreen extends StatelessWidget {
   const MyCoachInquiriesScreen({super.key});
-
-  @override
-  State<MyCoachInquiriesScreen> createState() => _MyCoachInquiriesScreenState();
-}
-
-class _MyCoachInquiriesScreenState extends State<MyCoachInquiriesScreen> {
-  Future<List<CoachInquiry>>? _future;
-
-  @override
-  void initState() {
-    super.initState();
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      _future = CoachService.fetchMyInquiries(user.uid);
-    }
-  }
-
-  void _retry() {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-    setState(() => _future = CoachService.fetchMyInquiries(user.uid));
-  }
 
   String _formatDate(String iso) {
     try {
@@ -68,22 +47,20 @@ class _MyCoachInquiriesScreenState extends State<MyCoachInquiriesScreen> {
     }
     return Scaffold(
       appBar: AppBar(title: const Text('My inquiries')),
-      body: FutureBuilder<List<CoachInquiry>>(
-        future: _future,
+      body: StreamBuilder<List<CoachInquiry>>(
+        stream: CoachService.watchInquiriesForUser(user.uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(
+            return const Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.error_outline, size: 48, color: orange),
-                  const SizedBox(height: 12),
-                  const Text('Could not load your inquiries.'),
-                  const SizedBox(height: 12),
-                  FilledButton(onPressed: _retry, child: const Text('Retry')),
+                  Icon(Icons.error_outline, size: 48, color: orange),
+                  SizedBox(height: 12),
+                  Text('Could not load your inquiries.'),
                 ],
               ),
             );
@@ -114,6 +91,12 @@ class _MyCoachInquiriesScreenState extends State<MyCoachInquiriesScreen> {
                   inquiry.preferredDate.isEmpty
                       ? ''
                       : 'Preferred: ${_formatDate(inquiry.preferredDate)}';
+              final body =
+                  inquiry.message.isEmpty
+                      ? date
+                      : date.isEmpty
+                      ? inquiry.message
+                      : '${inquiry.message}\n$date';
               return Card(
                 child: ListTile(
                   leading: const Icon(
@@ -124,20 +107,71 @@ class _MyCoachInquiriesScreenState extends State<MyCoachInquiriesScreen> {
                     '${inquiry.coachName} • $goal',
                     style: const TextStyle(fontWeight: FontWeight.w800),
                   ),
-                  subtitle: Text(
-                    inquiry.message.isEmpty
-                        ? date
-                        : date.isEmpty
-                        ? inquiry.message
-                        : '${inquiry.message}\n$date',
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (body.isNotEmpty) Text(body),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: [
+                          _StatusChip(status: inquiry.status),
+                          if (inquiry.package.isNotEmpty)
+                            Chip(
+                              label: Text(
+                                inquiry.package,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              backgroundColor: bg,
+                              padding: EdgeInsets.zero,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                            ),
+                        ],
+                      ),
+                    ],
                   ),
-                  isThreeLine: inquiry.message.isNotEmpty && date.isNotEmpty,
+                  isThreeLine: true,
                 ),
               );
             },
           );
         },
       ),
+    );
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  final String status;
+  const _StatusChip({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final normalized = status.isEmpty ? 'pending' : status;
+    final Color color =
+        normalized == 'accepted'
+            ? Colors.green
+            : normalized == 'declined'
+            ? muted
+            : orange;
+    return Chip(
+      label: Text(
+        normalized,
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: color,
+      padding: EdgeInsets.zero,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

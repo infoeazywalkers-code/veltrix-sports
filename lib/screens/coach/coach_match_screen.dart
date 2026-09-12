@@ -4,6 +4,7 @@ import '../../widgets/common/section_intro.dart';
 import '../../widgets/common/veltrix_footer.dart';
 import '../../services/social/coach_service.dart';
 import '../../widgets/dialogs/coach_booking_dialog.dart';
+import 'coach_detail_screen.dart';
 import 'coach_questionnaire_screen.dart';
 import 'my_coach_requests_screen.dart';
 
@@ -412,128 +413,144 @@ class _CoachCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                _CoachAvatar(image: coach.image, name: coach.name),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        coach.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color:
-                              (Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : navy),
-                          fontSize: 16,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 14),
-                          const SizedBox(width: 4),
-                          Text(
-                            coach.rating,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color:
-                                  (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? const Color(0xFF78909C)
-                                      : muted),
-                            ),
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap:
+          () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => CoachDetailScreen(coachId: coach.id),
+            ),
+          ),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  _CoachAvatar(image: coach.image, name: coach.name),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          coach.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color:
+                                (Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : navy),
+                            fontSize: 16,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              coach.title,
-              style: const TextStyle(
-                color: blue,
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              coach.bio,
-              style: TextStyle(
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF78909C)
-                        : muted),
-                fontSize: 12,
-                height: 1.4,
-              ),
-            ),
-            const SizedBox(height: 14),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children:
-                  coach.specialities.map((spec) {
-                    return Chip(
-                      label: Text(
-                        spec,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
                         ),
-                      ),
-                      backgroundColor: bg,
-                      padding: EdgeInsets.zero,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    );
-                  }).toList(),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  coach.monthlyFee,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
-                    fontSize: 16,
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              coach.rating,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color:
+                                    (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? const Color(0xFF78909C)
+                                        : muted),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                coach.title,
+                style: const TextStyle(
+                  color: blue,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
                 ),
-                FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: lime,
-                    foregroundColor: navy,
-                  ),
-                  onPressed:
-                      () => showDialog(
-                        context: context,
-                        builder: (_) => CoachBookingDialog(coach: coach),
-                      ),
-                  child: const Text(
-                    'Book Call',
-                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12),
-                  ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                coach.bio,
+                style: TextStyle(
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
+                  fontSize: 12,
+                  height: 1.4,
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 14),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children:
+                    coach.specialities.map((spec) {
+                      return Chip(
+                        label: Text(
+                          spec,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        backgroundColor: bg,
+                        padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      );
+                    }).toList(),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    coach.monthlyFee,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
+                      fontSize: 16,
+                    ),
+                  ),
+                  FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: lime,
+                      foregroundColor: navy,
+                    ),
+                    onPressed:
+                        () => showDialog(
+                          context: context,
+                          builder: (_) => CoachBookingDialog(coach: coach),
+                        ),
+                    child: const Text(
+                      'Book Call',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1005,7 +1022,10 @@ class _PackageCard extends StatelessWidget {
               onPressed: () async {
                 final result = await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const CoachQuestionnaireScreen(),
+                    builder:
+                        (_) => CoachQuestionnaireScreen(
+                          package: name.toLowerCase(),
+                        ),
                   ),
                 );
                 if (!context.mounted) return;

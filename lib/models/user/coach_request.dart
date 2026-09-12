@@ -9,6 +9,7 @@ class CoachRequest {
   final String notes;
   final String status;
   final String? matchedCoachId;
+  final String package;
   final DateTime createdAt;
 
   const CoachRequest({
@@ -20,6 +21,7 @@ class CoachRequest {
     this.notes = '',
     this.status = 'pending',
     this.matchedCoachId,
+    this.package = '',
     required this.createdAt,
   });
 
@@ -33,18 +35,20 @@ class CoachRequest {
       notes: map['notes'] as String? ?? '',
       status: map['status'] as String? ?? 'pending',
       matchedCoachId: map['matchedCoachId'] as String?,
+      package: map['package'] as String? ?? '',
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'sport': sport,
-        'experience': experience,
-        'goal': goal,
-        'notes': notes,
-        'status': status,
-        'matchedCoachId': matchedCoachId,
-        'createdAt': createdAt,
-      };
+    'userId': userId,
+    'sport': sport,
+    'experience': experience,
+    'goal': goal,
+    'notes': notes,
+    'status': status,
+    'matchedCoachId': matchedCoachId,
+    'package': package,
+    'createdAt': createdAt,
+  };
 }

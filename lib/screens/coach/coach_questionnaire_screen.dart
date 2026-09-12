@@ -7,7 +7,8 @@ import '../../models/user/coach_request.dart';
 import 'my_coach_requests_screen.dart';
 
 class CoachQuestionnaireScreen extends StatefulWidget {
-  const CoachQuestionnaireScreen({super.key});
+  final String package;
+  const CoachQuestionnaireScreen({super.key, this.package = ''});
 
   @override
   State<CoachQuestionnaireScreen> createState() =>
@@ -21,7 +22,14 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
   String sport = 'Running';
   String experience = 'Intermediate';
   String goal = 'Improve performance';
+  late String package;
   bool _submitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    package = widget.package;
+  }
 
   @override
   void dispose() {
@@ -74,6 +82,7 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
         experience: experience,
         goal: goal,
         notes: _notesController.text,
+        package: package,
         createdAt: DateTime.now(),
       );
 
@@ -235,6 +244,28 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
                       .map((v) => DropdownMenuItem(value: v, child: Text(v)))
                       .toList(),
               onChanged: (v) => setState(() => goal = v!),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              initialValue: package,
+              decoration: const InputDecoration(
+                labelText: 'Pricing package',
+                border: OutlineInputBorder(),
+              ),
+              items:
+                  const ['', 'bronze', 'silver', 'gold']
+                      .map(
+                        (v) => DropdownMenuItem(
+                          value: v,
+                          child: Text(
+                            v.isEmpty
+                                ? 'No preference'
+                                : '${v[0].toUpperCase()}${v.substring(1)}',
+                          ),
+                        ),
+                      )
+                      .toList(),
+              onChanged: (v) => setState(() => package = v ?? ''),
             ),
             const SizedBox(height: 16),
             TextFormField(

@@ -13,6 +13,14 @@ class CoachProfile {
   final String image;
   final String monthlyFee;
   final List<String> specialities;
+  final String credentials;
+  final String philosophy;
+  final String avatarUrl;
+  final List<String> sports;
+  final int reviewCount;
+  final double avgRating;
+  final bool verified;
+  final String coachUserId;
 
   const CoachProfile({
     required this.id,
@@ -23,24 +31,36 @@ class CoachProfile {
     required this.image,
     required this.monthlyFee,
     required this.specialities,
+    this.credentials = '',
+    this.philosophy = '',
+    this.avatarUrl = '',
+    this.sports = const [],
+    this.reviewCount = 0,
+    this.avgRating = 0.0,
+    this.verified = false,
+    this.coachUserId = '',
   });
+
+  /// Prefers the aggregated [avgRating] when reviews exist,
+  /// falling back to the legacy [rating] string for old docs.
+  String get displayRating {
+    if (reviewCount > 0 && avgRating > 0) {
+      return avgRating.toStringAsFixed(1);
+    }
+    return rating;
+  }
+
+  /// Best available avatar: new [avatarUrl] first, legacy [image] fallback.
+  String get displayAvatar => avatarUrl.isNotEmpty ? avatarUrl : image;
 
   /// Creates a [CoachProfile] from a Firestore document snapshot.
   factory CoachProfile.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>? ?? {};
-    return CoachProfile(
-      id: doc.id,
-      name: data['name'] as String? ?? '',
-      title: data['title'] as String? ?? '',
-      rating: data['rating'] as String? ?? '0.0',
-      bio: data['bio'] as String? ?? '',
-      image: data['image'] as String? ?? '',
-      monthlyFee: data['monthlyFee'] as String? ?? '\$0/mo',
-      specialities: List<String>.from(data['specialities'] as List? ?? []),
-    );
+    return CoachProfile.fromMap(doc.id, data);
   }
 
   /// Creates a [CoachProfile] from a raw map (e.g., Firestore data or JSON).
+  /// Old docs without the newer fields still parse via defaults.
   factory CoachProfile.fromMap(String id, Map<String, dynamic> map) {
     return CoachProfile(
       id: id,
@@ -51,6 +71,14 @@ class CoachProfile {
       image: map['image'] as String? ?? '',
       monthlyFee: map['monthlyFee'] as String? ?? '\$0/mo',
       specialities: List<String>.from(map['specialities'] as List? ?? []),
+      credentials: map['credentials'] as String? ?? '',
+      philosophy: map['philosophy'] as String? ?? '',
+      avatarUrl: map['avatarUrl'] as String? ?? '',
+      sports: List<String>.from(map['sports'] as List? ?? []),
+      reviewCount: (map['reviewCount'] as num?)?.toInt() ?? 0,
+      avgRating: (map['avgRating'] as num?)?.toDouble() ?? 0.0,
+      verified: map['verified'] as bool? ?? false,
+      coachUserId: map['coachUserId'] as String? ?? '',
     );
   }
 
@@ -63,6 +91,14 @@ class CoachProfile {
     'image': image,
     'monthlyFee': monthlyFee,
     'specialities': specialities,
+    'credentials': credentials,
+    'philosophy': philosophy,
+    'avatarUrl': avatarUrl,
+    'sports': sports,
+    'reviewCount': reviewCount,
+    'avgRating': avgRating,
+    'verified': verified,
+    'coachUserId': coachUserId,
   };
 
   /// Returns a copy of this profile with optional field overrides.
@@ -75,6 +111,14 @@ class CoachProfile {
     String? image,
     String? monthlyFee,
     List<String>? specialities,
+    String? credentials,
+    String? philosophy,
+    String? avatarUrl,
+    List<String>? sports,
+    int? reviewCount,
+    double? avgRating,
+    bool? verified,
+    String? coachUserId,
   }) {
     return CoachProfile(
       id: id ?? this.id,
@@ -85,6 +129,14 @@ class CoachProfile {
       image: image ?? this.image,
       monthlyFee: monthlyFee ?? this.monthlyFee,
       specialities: specialities ?? this.specialities,
+      credentials: credentials ?? this.credentials,
+      philosophy: philosophy ?? this.philosophy,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      sports: sports ?? this.sports,
+      reviewCount: reviewCount ?? this.reviewCount,
+      avgRating: avgRating ?? this.avgRating,
+      verified: verified ?? this.verified,
+      coachUserId: coachUserId ?? this.coachUserId,
     );
   }
 
