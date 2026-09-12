@@ -293,6 +293,62 @@ final activePlansProvider = StreamProvider<List<TrainingPlan>>((ref) {
   return ref.watch(trainingPlanServiceProvider).watchActive(user.uid);
 });
 
+/// Plan ids that never represent a real training plan.
+///
+/// Workouts carrying these ids predate plan enrollment (or are demos) and
+/// are shown under "All" only: they are excluded from plan filter chips
+/// and never get a plan chip.
+const Set<String> kLegacyPlanIds = {'', 'user_created', 'demo'};
+
+bool isRealPlanId(String planId) => !kLegacyPlanIds.contains(planId);
+
+/// Live workouts for one plan, ordered by scheduled date.
+final planWorkoutsProvider = StreamProvider.autoDispose
+    .family<List<Workout>, ({String userId, String planId})>((ref, args) {
+      if (args.userId.isEmpty || args.planId.isEmpty) {
+        return Stream.value(const <Workout>[]);
+      }
+      return ref
+          .watch(workoutServiceProvider)
+          .watchByPlanId(args.userId, args.planId);
+    });
+
+/// Completed/total progress for one plan (0 when the plan has no workouts).
+final planProgressProvider = StreamProvider.autoDispose
+    .family<double, ({String userId, String planId})>((ref, args) {
+      if (args.userId.isEmpty || args.planId.isEmpty) {
+        return Stream.value(0.0);
+      }
+      return ref
+          .watch(workoutServiceProvider)
+          .watchByPlanId(args.userId, args.planId)
+          .map((workouts) {
+            if (workouts.isEmpty) return 0.0;
+            final done = workouts.where((w) => w.completed).length;
+            return done / workouts.length;
+          });
+    });
+
+/// Currently selected plan filter for the calendar; null means "All".
+final calendarPlanFilterProvider = StateProvider<String?>((ref) => null);
+
+/// Display name for a plan id, falling back to 'Training plan'.
+///
+/// Never throws: any lookup failure resolves to the fallback string.
+final planNameProvider = FutureProvider.autoDispose.family<String, String>((
+  ref,
+  planId,
+) async {
+  try {
+    if (!isRealPlanId(planId)) return 'Training plan';
+    final plan = await ref.watch(trainingPlanServiceProvider).get(planId);
+    final name = plan?.name.trim() ?? '';
+    return name.isEmpty ? 'Training plan' : name;
+  } catch (_) {
+    return 'Training plan';
+  }
+});
+
 // Performance
 final latestPerformanceProvider = StreamProvider<PerformanceSnapshot?>((ref) {
   final user = ref.watch(currentUserProvider);

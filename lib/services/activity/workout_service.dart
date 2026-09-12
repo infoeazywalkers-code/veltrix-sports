@@ -66,6 +66,27 @@ class WorkoutService {
     }
   }
 
+  /// Live stream of a plan's workouts, ordered by scheduled date.
+  ///
+  /// Uses the same already-indexed `userId + planId + scheduledFor` query
+  /// as [getByPlanId].
+  Stream<List<Workout>> watchByPlanId(String userId, String planId) {
+    return _workouts
+        .where('userId', isEqualTo: userId)
+        .where('planId', isEqualTo: planId)
+        .orderBy('scheduledFor')
+        .snapshots()
+        .map(
+          (snap) =>
+              snap.docs
+                  .map((doc) => Workout.fromMap(doc.id, doc.data()))
+                  .toList(),
+        )
+        .handleError((e) {
+          throw Exception('Failed to watch workouts by plan: $e');
+        });
+  }
+
   Stream<List<Workout>> watchByDateRange(
     String userId,
     DateTime start,

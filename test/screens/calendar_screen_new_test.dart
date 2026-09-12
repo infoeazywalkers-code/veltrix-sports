@@ -143,8 +143,9 @@ void main() {
       await tester.pumpWidget(wrapWithWorkouts(workouts));
       await tester.pumpAndSettle();
 
-      expect(find.text('Morning run'), findsOneWidget);
-      expect(find.text('Evening bike'), findsOneWidget);
+      // Titles render both in the day card and the week overview.
+      expect(find.text('Morning run'), findsWidgets);
+      expect(find.text('Evening bike'), findsWidgets);
     });
 
     testWidgets('shows No workouts today when no match for selected day', (
@@ -227,7 +228,7 @@ void main() {
       await tester.pumpWidget(wrapWithWorkouts(workouts));
       await tester.pumpAndSettle();
 
-      expect(find.text('Swim session'), findsOneWidget);
+      expect(find.text('Swim session'), findsWidgets);
       expect(find.byIcon(Icons.pool), findsWidgets);
     });
 
@@ -245,7 +246,7 @@ void main() {
       await tester.pumpWidget(wrapWithWorkouts(workouts));
       await tester.pumpAndSettle();
 
-      expect(find.text('Strength day'), findsOneWidget);
+      expect(find.text('Strength day'), findsWidgets);
       expect(find.byIcon(Icons.fitness_center), findsWidgets);
     });
 
@@ -263,7 +264,7 @@ void main() {
       await tester.pumpWidget(wrapWithWorkouts(workouts));
       await tester.pumpAndSettle();
 
-      expect(find.text('Rest day'), findsOneWidget);
+      expect(find.text('Rest day'), findsWidgets);
       expect(find.byIcon(Icons.self_improvement), findsWidgets);
     });
 
@@ -294,7 +295,7 @@ void main() {
       await tester.pumpWidget(wrapWithWorkouts(workouts));
       await tester.pumpAndSettle();
 
-      expect(find.text('Easy jog'), findsOneWidget);
+      expect(find.text('Easy jog'), findsWidgets);
     });
 
     testWidgets('has ListView as root', (tester) async {
@@ -313,7 +314,7 @@ void main() {
       await tester.pumpWidget(wrapWithWorkouts(workouts));
       await tester.pumpAndSettle();
 
-      expect(find.text('Long run'), findsOneWidget);
+      expect(find.text('Long run'), findsWidgets);
     });
 
     testWidgets('week overview sorts workouts by date', (tester) async {

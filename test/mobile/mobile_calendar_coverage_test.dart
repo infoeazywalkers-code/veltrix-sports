@@ -100,28 +100,32 @@ void main() {
       expect(find.textContaining('–'), findsOneWidget);
     });
 
-    testWidgets('shows demo workout when no workouts match selected day', (
+    testWidgets(
+      'shows honest empty state when no workouts match selected day',
+      (tester) async {
+        await tester.pumpWidget(wrapCalendar(workoutStream: Stream.value([])));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 200));
+        expect(find.text('No workouts today'), findsOneWidget);
+        expect(find.text('Easy Recovery Run'), findsNothing);
+      },
+    );
+
+    testWidgets('shows no sport label when no workouts exist', (tester) async {
+      await tester.pumpWidget(wrapCalendar(workoutStream: Stream.value([])));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(find.text('RUN'), findsNothing);
+    });
+
+    testWidgets('shows empty-state card instead of demo details', (
       tester,
     ) async {
       await tester.pumpWidget(wrapCalendar(workoutStream: Stream.value([])));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 200));
-      expect(find.text('Easy Recovery Run'), findsOneWidget);
-    });
-
-    testWidgets('shows demo RUN sport label', (tester) async {
-      await tester.pumpWidget(wrapCalendar(workoutStream: Stream.value([])));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
-      expect(find.text('RUN'), findsOneWidget);
-    });
-
-    testWidgets('shows demo workout details', (tester) async {
-      await tester.pumpWidget(wrapCalendar(workoutStream: Stream.value([])));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
-      expect(find.textContaining('30 min'), findsOneWidget);
-      expect(find.textContaining('4.5 km'), findsOneWidget);
+      expect(find.text('No workouts today'), findsOneWidget);
+      expect(find.textContaining('4.5 km'), findsNothing);
     });
 
     testWidgets('shows Run workout when scheduled on selected day', (

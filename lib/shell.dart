@@ -624,7 +624,10 @@ class _ShellState extends ConsumerState<Shell> {
                   onPressed:
                       () => showDialog(
                         context: context,
-                        builder: (_) => const WorkoutBuilderDialog(),
+                        builder:
+                            (_) => WorkoutBuilderDialog(
+                              planId: ref.read(calendarPlanFilterProvider),
+                            ),
                       ),
                   icon: const Icon(Icons.add),
                   label: const Text(

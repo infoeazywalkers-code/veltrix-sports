@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants.dart';
+import '../../models/training/training_plan.dart';
+import '../../providers.dart';
 import '../../services/payment/payment_service.dart';
+import '../../services/training/plan_templates.dart';
 import '../../widgets/dialogs/checkout_dialog.dart';
 import 'ai_plan_generator_screen.dart';
+import 'plan_detail_screen.dart';
 
-class TrainingPlanMarketplaceScreen extends StatelessWidget {
+class TrainingPlanMarketplaceScreen extends ConsumerWidget {
   final List<_Plan> plans = const [
     _Plan(
       id: '1',
@@ -15,14 +20,8 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
       coach: 'Veltrix AI',
       coachAvatar: '🤖',
       price: 39.99,
-      originalPrice: 59.99,
-      rating: 4.8,
-      reviewCount: 284,
-      downloads: 12400,
-      gradient: const [Color(0xFFF97316), Color(0xFFFBBF24)],
+      gradient: [Color(0xFFF97316), Color(0xFFFBBF24)],
       tags: ['Endurance', 'Cycling', 'Altitude'],
-      isInLibrary: true,
-      progress: 0.62,
     ),
     _Plan(
       id: '2',
@@ -33,14 +32,8 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
       coach: 'Coach Elena',
       coachAvatar: '🏃‍♀️',
       price: 49.99,
-      originalPrice: 74.99,
-      rating: 4.9,
-      reviewCount: 520,
-      downloads: 28900,
-      gradient: const [Color(0xFF3B82F6), Color(0xFF6366F1)],
+      gradient: [Color(0xFF3B82F6), Color(0xFF6366F1)],
       tags: ['Running', 'Marathon', 'Advanced'],
-      isInLibrary: true,
-      progress: 0.34,
     ),
     _Plan(
       id: '3',
@@ -51,13 +44,8 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
       coach: 'Coach Kilian',
       coachAvatar: '⛰️',
       price: 69.99,
-      originalPrice: null,
-      rating: 4.7,
-      reviewCount: 142,
-      downloads: 5800,
-      gradient: const [Color(0xFF10B981), Color(0xFF14B8A6)],
+      gradient: [Color(0xFF10B981), Color(0xFF14B8A6)],
       tags: ['Trail', 'Ultra', 'Mountain'],
-      isInLibrary: false,
     ),
     _Plan(
       id: '4',
@@ -68,13 +56,8 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
       coach: 'Veltrix AI',
       coachAvatar: '🤖',
       price: 29.99,
-      originalPrice: 44.99,
-      rating: 4.6,
-      reviewCount: 380,
-      downloads: 19200,
-      gradient: const [Color(0xFF8B5CF6), Color(0xFFA855F7)],
+      gradient: [Color(0xFF8B5CF6), Color(0xFFA855F7)],
       tags: ['Cycling', 'Power', 'Zones'],
-      isInLibrary: false,
     ),
     _Plan(
       id: '5',
@@ -85,22 +68,22 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
       coach: 'Coach Marcus',
       coachAvatar: '🚴',
       price: 19.99,
-      originalPrice: null,
-      rating: 4.5,
-      reviewCount: 890,
-      downloads: 45200,
-      gradient: const [Color(0xFFF59E0B), Color(0xFFEAB308)],
+      gradient: [Color(0xFFF59E0B), Color(0xFFEAB308)],
       tags: ['Beginner', 'Cycling', 'Base'],
-      isInLibrary: false,
     ),
   ];
 
   TrainingPlanMarketplaceScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final inLibrary = plans.where((p) => p.isInLibrary).toList();
-    final explore = plans.where((p) => !p.isInLibrary).toList();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activePlansAsync = ref.watch(activePlansProvider);
+    final enrolledNames =
+        activePlansAsync.valueOrNull?.map((p) => p.name).toSet() ??
+        const <String>{};
+
+    final explore =
+        plans.where((p) => !enrolledNames.contains(p.title)).toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
@@ -176,7 +159,42 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            ...inLibrary.map((p) => _planCard(context, p, isInLibrary: true)),
+            activePlansAsync.when(
+              loading:
+                  () => const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF8B5CF6),
+                      ),
+                    ),
+                  ),
+              error:
+                  (_, _) => const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text(
+                      'Sign in to see your training plans.',
+                      style: TextStyle(color: Colors.white54, fontSize: 12),
+                    ),
+                  ),
+              data: (activePlans) {
+                if (activePlans.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text(
+                      'No enrolled plans yet — pick one below or generate an AI plan.',
+                      style: TextStyle(color: Colors.white54, fontSize: 12),
+                    ),
+                  );
+                }
+                return Column(
+                  children: [
+                    for (final plan in activePlans)
+                      _activePlanCard(context, ref, plan),
+                  ],
+                );
+              },
+            ),
 
             const SizedBox(height: 24),
 
@@ -191,19 +209,24 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            ...explore.map((p) => _planCard(context, p, isInLibrary: false)),
+            ...explore.map((p) => _planCard(context, ref, p)),
           ],
         ),
       ),
     );
   }
 
-  /// Opens the existing [CheckoutDialog] for [plan].
+  /// Opens the existing [CheckoutDialog] for [plan], then enrolls the user
+  /// and schedules Week 1+ workouts when payment succeeds.
   ///
   /// [CheckoutDialog] only accepts a [SubscriptionPlan], so the marketplace
   /// card is mapped onto one (period defaults to 'one-time', features reuse
   /// the plan tags). No pricing or payment logic is duplicated here.
-  Future<void> _openCheckout(BuildContext context, _Plan plan) async {
+  Future<void> _openCheckout(
+    BuildContext context,
+    WidgetRef ref,
+    _Plan plan,
+  ) async {
     final checkoutPlan = SubscriptionPlan(
       id: 'marketplace_${plan.id}',
       title: plan.title,
@@ -216,16 +239,341 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
       context: context,
       builder: (_) => CheckoutDialog(plan: checkoutPlan),
     );
-    if (result == true && context.mounted) {
-      showFeatureMessage(context, '${plan.title} added to your library.');
+    if (result != true || !context.mounted) return;
+    final user = ref.read(currentUserProvider);
+    if (user == null) {
+      if (context.mounted) {
+        showFeatureMessage(context, 'Sign in to add plans');
+      }
+      return;
+    }
+    final template = kPlanTemplates[plan.id];
+    if (template == null) {
+      if (context.mounted) {
+        showFeatureMessage(context, 'This plan is currently unavailable.');
+      }
+      return;
+    }
+    try {
+      final service = ref.read(trainingPlanServiceProvider);
+      final startMonday = nextMonday(DateTime.now());
+      final planId = await service.enrollFromMarketplace(
+        userId: user.uid,
+        catalogId: plan.id,
+        name: template.name,
+        description: template.description,
+        sport: template.sport,
+        durationWeeks: template.durationWeeks,
+        difficulty: template.difficulty,
+        price: plan.price,
+        startDate: startMonday,
+      );
+      await service.materializeWeeklyWorkouts(
+        userId: user.uid,
+        planId: planId,
+        startMonday: startMonday,
+        template: template.workouts,
+      );
+      if (context.mounted) {
+        showFeatureMessage(context, 'Added — find Week 1 in Calendar');
+      }
+    } catch (_) {
+      if (context.mounted) {
+        showFeatureMessage(
+          context,
+          'Payment succeeded but scheduling failed; retry from My Plans',
+        );
+      }
     }
   }
 
-  Widget _planCard(
+  void _openPlanDetail(BuildContext context, String planId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => PlanDetailScreen(planId: planId)),
+    );
+  }
+
+  /// Library card for one enrolled plan: catalog-styled when the plan name
+  /// matches the static catalog, generic otherwise. Both show live progress
+  /// and navigate to [PlanDetailScreen] on tap.
+  Widget _activePlanCard(
     BuildContext context,
-    _Plan plan, {
-    required bool isInLibrary,
-  }) {
+    WidgetRef ref,
+    TrainingPlan plan,
+  ) {
+    final matches = plans.where((p) => p.title == plan.name).toList();
+    if (matches.isNotEmpty) {
+      return _catalogLibraryCard(context, ref, matches.first, plan.id);
+    }
+    return _genericLibraryCard(context, ref, plan);
+  }
+
+  /// Live library card for an enrolled plan, with real progress.
+  Widget _genericLibraryCard(
+    BuildContext context,
+    WidgetRef ref,
+    TrainingPlan plan,
+  ) {
+    final user = ref.watch(currentUserProvider);
+    final progressAsync = ref.watch(
+      planProgressProvider((userId: user?.uid ?? '', planId: plan.id)),
+    );
+    final progress = progressAsync.valueOrNull;
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () => _openPlanDetail(context, plan.id),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF8B5CF6), Color(0xFF6366F1)],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Center(
+                    child: Text('📋', style: TextStyle(fontSize: 22)),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        plan.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${plan.durationWeeks} weeks · ${plan.difficulty}',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.5),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (progress != null)
+                  _circularProgress(progress, const Color(0xFF8B5CF6)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (plan.description.isNotEmpty)
+              Text(
+                plan.description,
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.6),
+                  fontSize: 12,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const Spacer(),
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () => _openPlanDetail(context, plan.id),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'In Library',
+                      style: TextStyle(
+                        color: Color(0xFF10B981),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Catalog-styled library card (gradient avatar + tags) for plans that
+  /// match the static catalog, with live progress instead of static values.
+  Widget _catalogLibraryCard(
+    BuildContext context,
+    WidgetRef ref,
+    _Plan plan,
+    String enrolledId,
+  ) {
+    final user = ref.watch(currentUserProvider);
+    final progressAsync = ref.watch(
+      planProgressProvider((userId: user?.uid ?? '', planId: enrolledId)),
+    );
+    final progress = progressAsync.valueOrNull;
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () => _openPlanDetail(context, enrolledId),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A1A),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: plan.gradient),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      plan.coachAvatar,
+                      style: const TextStyle(fontSize: 22),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        plan.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        plan.subtitle,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.5),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (progress != null)
+                  _circularProgress(progress, plan.gradient[0]),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              plan.description,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.6),
+                fontSize: 12,
+              ),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children:
+                  plan.tags
+                      .map(
+                        (t) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: plan.gradient[0].withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            t,
+                            style: TextStyle(
+                              color: plan.gradient[0],
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Text(
+                  '\$${plan.price}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const Spacer(),
+                InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () => _openPlanDetail(context, enrolledId),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'In Library',
+                      style: TextStyle(
+                        color: Color(0xFF10B981),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _planCard(BuildContext context, WidgetRef ref, _Plan plan) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -277,8 +625,6 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              if (isInLibrary && plan.progress != null)
-                _circularProgress(plan.progress!, plan.gradient[0]),
             ],
           ),
           const SizedBox(height: 12),
@@ -328,72 +674,36 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
           Row(
             children: [
               Text(
-                '⭐ ${plan.rating}',
+                '\$${plan.price}',
                 style: const TextStyle(
-                  color: Color(0xFFFBBF24),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                '(${plan.reviewCount})',
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4),
-                  fontSize: 10,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '${(plan.downloads / 1000).toStringAsFixed(1)}k downloads',
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  fontSize: 10,
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
               const Spacer(),
-              if (isInLibrary)
-                Container(
+              InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () => _openCheckout(context, ref, plan),
+                child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                    color: plan.gradient[0],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text(
-                    'In Library',
-                    style: TextStyle(
-                      color: Color(0xFF10B981),
-                      fontSize: 10,
+                  child: Text(
+                    '\$${plan.price}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                )
-              else
-                InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () => _openCheckout(context, plan),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: plan.gradient[0],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '\$${plan.price}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
                 ),
+              ),
             ],
           ),
         ],
@@ -412,14 +722,14 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
             width: 44,
             height: 44,
             child: CircularProgressIndicator(
-              value: progress,
+              value: progress.clamp(0.0, 1.0),
               strokeWidth: 4,
               backgroundColor: Colors.white.withValues(alpha: 0.06),
               valueColor: AlwaysStoppedAnimation(color),
             ),
           ),
           Text(
-            '${(progress * 100).round()}%',
+            '${(progress.clamp(0.0, 1.0) * 100).round()}%',
             style: TextStyle(
               color: color,
               fontSize: 10,
@@ -435,13 +745,8 @@ class TrainingPlanMarketplaceScreen extends StatelessWidget {
 class _Plan {
   final String id, title, subtitle, description, coach, coachAvatar;
   final double price;
-  final double? originalPrice;
-  final double rating;
-  final int reviewCount, downloads;
   final List<Color> gradient;
   final List<String> tags;
-  final bool isInLibrary;
-  final double? progress;
 
   const _Plan({
     required this.id,
@@ -451,13 +756,7 @@ class _Plan {
     required this.coach,
     required this.coachAvatar,
     required this.price,
-    this.originalPrice,
-    required this.rating,
-    required this.reviewCount,
-    required this.downloads,
     required this.gradient,
     required this.tags,
-    required this.isInLibrary,
-    this.progress,
   });
 }

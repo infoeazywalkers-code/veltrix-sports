@@ -9,6 +9,7 @@ class MWorkoutCard extends StatelessWidget {
   final Color color;
   final IconData icon;
   final double progress;
+  final String? planLabel;
   final VoidCallback? onTap;
 
   const MWorkoutCard({
@@ -19,6 +20,7 @@ class MWorkoutCard extends StatelessWidget {
     required this.color,
     required this.icon,
     this.progress = 0,
+    this.planLabel,
     this.onTap,
   });
 
@@ -53,6 +55,27 @@ class MWorkoutCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(title, style: M.adaptiveTitle(context)),
+                if (planLabel != null) ...[
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      planLabel!,
+                      style: TextStyle(
+                        color: color,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 2),
                 Text(details, style: M.adaptiveCardBody(context)),
                 if (progress > 0) ...[
@@ -69,10 +92,16 @@ class MWorkoutCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: M.sm),
-          Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted), size: 20),
+          Icon(
+            Icons.chevron_right,
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : M.muted),
+            size: 20,
+          ),
         ],
       ),
     );
   }
 }
-

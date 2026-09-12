@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/screens/premium/premium_screen.dart';
 import 'package:veltrix_sports/screens/activity/live_workout_screen.dart';
@@ -220,7 +221,9 @@ void main() {
         ],
       );
       await tester.pumpWidget(
-        MaterialApp(home: WorkoutDetailsScreen(workout: workout)),
+        ProviderScope(
+          child: MaterialApp(home: WorkoutDetailsScreen(workout: workout)),
+        ),
       );
       expect(find.text('Long Run'), findsWidgets);
       expect(find.text('15.0 km'), findsOneWidget);
@@ -242,7 +245,9 @@ void main() {
         tss: 50,
       );
       await tester.pumpWidget(
-        MaterialApp(home: WorkoutDetailsScreen(workout: workout)),
+        ProviderScope(
+          child: MaterialApp(home: WorkoutDetailsScreen(workout: workout)),
+        ),
       );
       expect(find.text('Bike Ride'), findsWidgets);
     });
@@ -262,7 +267,9 @@ void main() {
         ],
       );
       await tester.pumpWidget(
-        MaterialApp(home: WorkoutDetailsScreen(workout: workout)),
+        ProviderScope(
+          child: MaterialApp(home: WorkoutDetailsScreen(workout: workout)),
+        ),
       );
       expect(find.text('Testing metadata display'), findsOneWidget);
       expect(find.text('6:00 /km'), findsOneWidget);

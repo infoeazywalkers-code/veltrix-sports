@@ -61,9 +61,21 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
     }
   }
 
+  /// Plan chip label for a workout, or null when no chip should be shown.
+  ///
+  /// Legacy and empty plan ids are never chipped; anything else resolves via
+  /// [planNameProvider] (which falls back to 'Training plan' and never
+  /// throws), returning null only while the name is still loading.
+  String? _planLabel(String planId) {
+    if (!isRealPlanId(planId)) return null;
+    return ref.watch(planNameProvider(planId)).valueOrNull;
+  }
+
   @override
   Widget build(BuildContext context) {
     final workoutsAsync = ref.watch(workoutsByDateRangeProvider(_weekStart));
+    final activePlans = ref.watch(activePlansProvider).valueOrNull ?? const [];
+    final planFilter = ref.watch(calendarPlanFilterProvider);
 
     final selectedDate = _weekStart.add(Duration(days: day));
 
@@ -155,6 +167,33 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
           }),
         ),
         const SizedBox(height: 22),
+        if (activePlans.isNotEmpty) ...[
+          SizedBox(
+            height: 36,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: activePlans.length + 1,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final isAll = index == 0;
+                final selected =
+                    isAll
+                        ? planFilter == null
+                        : planFilter == activePlans[index - 1].id;
+                final label = isAll ? 'All' : activePlans[index - 1].name;
+                return ChoiceChip(
+                  label: Text(label),
+                  selected: selected,
+                  onSelected:
+                      (_) =>
+                          ref.read(calendarPlanFilterProvider.notifier).state =
+                              isAll ? null : activePlans[index - 1].id,
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
         SectionHeading(
           '${_dayLabel(selectedDate.weekday)}, ${selectedDate.day} ${monthName(selectedDate.month)}',
         ),
@@ -181,7 +220,11 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                 ),
               ),
           data: (workouts) {
-            if (workouts.isEmpty) {
+            final visible =
+                planFilter == null
+                    ? workouts
+                    : workouts.where((w) => w.planId == planFilter).toList();
+            if (visible.isEmpty) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 30),
                 child: Center(
@@ -222,7 +265,7 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
               );
             }
             final dayWorkouts =
-                workouts
+                visible
                     .where(
                       (w) =>
                           w.scheduledFor.day == selectedDate.day &&
@@ -274,6 +317,7 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                             color: _sportColor(w.sport),
                             icon: _sportIcon(w.sport),
                             progress: w.progress,
+                            planLabel: _planLabel(w.planId),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -310,7 +354,11 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                 ),
               ),
           data: (workouts) {
-            if (workouts.isEmpty) {
+            final visible =
+                planFilter == null
+                    ? workouts
+                    : workouts.where((w) => w.planId == planFilter).toList();
+            if (visible.isEmpty) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Text(
@@ -324,7 +372,7 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                 ),
               );
             }
-            final sorted = List<Workout>.from(workouts)
+            final sorted = List<Workout>.from(visible)
               ..sort((a, b) => a.scheduledFor.compareTo(b.scheduledFor));
             return Column(
               children:

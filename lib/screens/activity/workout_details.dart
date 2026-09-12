@@ -42,29 +42,52 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final title = widget.workout?.title ?? 'Aerobic endurance';
-    final sportName = widget.workout?.sport.name.toUpperCase() ?? 'RUN';
+    final workout = widget.workout;
+    if (workout == null) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: navy,
+          foregroundColor: Colors.white,
+          title: const Text(
+            'Workout',
+            style: TextStyle(fontWeight: FontWeight.w900),
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'No workout found',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Back'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final title = workout.title;
+    final sportName = workout.sport.name.toUpperCase();
     final desc =
-        widget.workout?.description.isNotEmpty == true
-            ? widget.workout!.description
+        workout.description.isNotEmpty
+            ? workout.description
             : 'Stay relaxed and keep your effort in Zone 2.';
-    final durationStr = widget.workout?.duration ?? '45m';
+    final durationStr = workout.duration;
     final units = ref.watch(unitSystemProvider);
     final distanceStr =
-        widget.workout?.distanceKm != null
-            ? UnitConversion.formatDistance(units, widget.workout!.distanceKm!)
-            : UnitConversion.formatDistance(units, 7.2);
-    final tssStr =
-        widget.workout?.tss != null ? '${widget.workout!.tss}' : '62';
-    final targetPace = widget.workout?.targetPace ?? '5:55–6:15 /km';
-    final segments =
-        widget.workout?.segments ??
-        const [
-          WorkoutSegment(label: 'Warm up', duration: '10 min'),
-          WorkoutSegment(label: 'Aerobic run', duration: '30 min'),
-          WorkoutSegment(label: 'Cool down', duration: '5 min'),
-        ];
-    final isCompleted = widget.workout?.completed ?? false;
+        workout.distanceKm != null
+            ? UnitConversion.formatDistance(units, workout.distanceKm!)
+            : '—';
+    final tssStr = workout.tss != null ? '${workout.tss}' : '—';
+    final targetPace = workout.targetPace ?? '—';
+    final segments = workout.segments;
+    final isCompleted = workout.completed;
 
     return Scaffold(
       appBar: AppBar(
@@ -130,7 +153,10 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
                       targetPace,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : navy),
                       ),
                     ),
                   ),
@@ -141,20 +167,30 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
           const SizedBox(height: 18),
           const SectionHeading('Workout structure'),
           const SizedBox(height: 8),
-          ...segments.map(
-            (seg) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Card(
-                child: ListTile(
-                  leading: const Icon(Icons.drag_handle, color: blue),
-                  title: Text(
-                    '${seg.label} • ${seg.duration}',
-                    style: const TextStyle(fontWeight: FontWeight.w800),
+          if (segments.isEmpty)
+            const Card(
+              child: ListTile(
+                title: Text(
+                  'No structured segments for this workout.',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            )
+          else
+            ...segments.map(
+              (seg) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.drag_handle, color: blue),
+                    title: Text(
+                      '${seg.label} • ${seg.duration}',
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
           const SizedBox(height: 16),
           if (isCompleted)
             FilledButton.icon(
@@ -178,23 +214,10 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
                 minimumSize: const Size.fromHeight(54),
               ),
               onPressed: () {
-                final activeWorkout =
-                    widget.workout ??
-                    Workout(
-                      id: 'demo_run',
-                      planId: 'demo',
-                      sport: Sport.run,
-                      title: title,
-                      duration: durationStr,
-                      distanceKm: 7.2,
-                      tss: 62,
-                      targetPace: targetPace,
-                      scheduledFor: DateTime.now(),
-                    );
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => LiveWorkoutScreen(workout: activeWorkout),
+                    builder: (_) => LiveWorkoutScreen(workout: workout),
                   ),
                 );
               },
@@ -204,7 +227,7 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
                 style: TextStyle(fontWeight: FontWeight.w900),
               ),
             ),
-          if (!isCompleted && widget.workout != null) ...[
+          if (!isCompleted) ...[
             const SizedBox(height: 12),
             OutlinedButton.icon(
               style: OutlinedButton.styleFrom(

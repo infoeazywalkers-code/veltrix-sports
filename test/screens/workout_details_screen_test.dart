@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/models/activity/workout.dart';
 import 'package:veltrix_sports/screens/activity/workout_details.dart';
 
 void main() {
-  Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
+  Widget wrap(Widget child) =>
+      ProviderScope(child: MaterialApp(home: Scaffold(body: child)));
 
   Workout makeWorkout({
     String id = 'w1',
@@ -56,18 +58,12 @@ void main() {
       expect(find.text('Intervals • 25 min'), findsOneWidget);
     });
 
-    testWidgets('renders with null workout showing defaults', (tester) async {
+    testWidgets('renders honest empty state with null workout', (tester) async {
       await tester.pumpWidget(wrap(const WorkoutDetailsScreen(workout: null)));
       await tester.pumpAndSettle();
 
-      expect(find.text('Aerobic endurance'), findsWidgets);
-      expect(
-        find.text('Stay relaxed and keep your effort in Zone 2.'),
-        findsOneWidget,
-      );
-      expect(find.text('7.2 km'), findsOneWidget);
-      expect(find.text('62'), findsWidgets);
-      expect(find.text('5:55–6:15 /km'), findsOneWidget);
+      expect(find.text('No workout found'), findsOneWidget);
+      expect(find.text('Aerobic endurance'), findsNothing);
     });
 
     testWidgets('shows start workout button for non-completed workout', (
@@ -136,22 +132,25 @@ void main() {
     });
 
     testWidgets('displays target pace ListTile', (tester) async {
-      await tester.pumpWidget(wrap(const WorkoutDetailsScreen()));
+      final workout = makeWorkout();
+      await tester.pumpWidget(wrap(WorkoutDetailsScreen(workout: workout)));
       await tester.pumpAndSettle();
 
       expect(find.text('Target pace'), findsOneWidget);
       expect(find.byIcon(Icons.speed), findsOneWidget);
     });
 
-    testWidgets('renders default segments when workout is null', (
+    testWidgets('renders empty-segments message when workout has none', (
       tester,
     ) async {
-      await tester.pumpWidget(wrap(const WorkoutDetailsScreen(workout: null)));
+      final workout = makeWorkout(segments: const []);
+      await tester.pumpWidget(wrap(WorkoutDetailsScreen(workout: workout)));
       await tester.pumpAndSettle();
 
-      expect(find.text('Warm up • 10 min'), findsOneWidget);
-      expect(find.text('Aerobic run • 30 min'), findsOneWidget);
-      expect(find.text('Cool down • 5 min'), findsOneWidget);
+      expect(
+        find.text('No structured segments for this workout.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders custom segments from workout', (tester) async {
@@ -169,7 +168,8 @@ void main() {
     });
 
     testWidgets('renders workout structure section heading', (tester) async {
-      await tester.pumpWidget(wrap(const WorkoutDetailsScreen()));
+      final workout = makeWorkout();
+      await tester.pumpWidget(wrap(WorkoutDetailsScreen(workout: workout)));
       await tester.pumpAndSettle();
 
       expect(find.text('Workout structure'), findsOneWidget);
@@ -209,21 +209,26 @@ void main() {
       expect(find.textContaining('STRENGTH'), findsWidgets);
     });
 
-    testWidgets('renders without distance and tss when null', (tester) async {
+    testWidgets('renders placeholders without distance and tss when null', (
+      tester,
+    ) async {
       final workout = makeWorkout(distanceKm: null, tss: null);
       await tester.pumpWidget(wrap(WorkoutDetailsScreen(workout: workout)));
       await tester.pumpAndSettle();
 
-      expect(find.text('7.2 km'), findsOneWidget);
-      expect(find.text('62'), findsWidgets);
+      expect(find.text('—'), findsWidgets);
+      expect(find.text('7.2 km'), findsNothing);
     });
 
-    testWidgets('renders without target pace when null', (tester) async {
+    testWidgets('renders placeholder without target pace when null', (
+      tester,
+    ) async {
       final workout = makeWorkout(targetPace: null);
       await tester.pumpWidget(wrap(WorkoutDetailsScreen(workout: workout)));
       await tester.pumpAndSettle();
 
-      expect(find.text('5:55–6:15 /km'), findsOneWidget);
+      expect(find.text('—'), findsWidgets);
+      expect(find.text('5:55–6:15 /km'), findsNothing);
     });
 
     testWidgets('renders with empty description fallback', (tester) async {
@@ -246,7 +251,8 @@ void main() {
     });
 
     testWidgets('has a scrollable ListView body', (tester) async {
-      await tester.pumpWidget(wrap(const WorkoutDetailsScreen()));
+      final workout = makeWorkout();
+      await tester.pumpWidget(wrap(WorkoutDetailsScreen(workout: workout)));
       await tester.pumpAndSettle();
 
       expect(find.byType(ListView), findsOneWidget);
@@ -255,7 +261,8 @@ void main() {
     testWidgets('renders card with duration, distance, tss metrics', (
       tester,
     ) async {
-      await tester.pumpWidget(wrap(const WorkoutDetailsScreen()));
+      final workout = makeWorkout();
+      await tester.pumpWidget(wrap(WorkoutDetailsScreen(workout: workout)));
       await tester.pumpAndSettle();
 
       expect(find.text('Duration'), findsOneWidget);

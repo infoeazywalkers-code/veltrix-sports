@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/models/training/training_plan.dart';
+import 'package:veltrix_sports/services/activity/workout_service.dart';
+import 'package:veltrix_sports/services/training/plan_templates.dart';
 import 'package:veltrix_sports/services/training/training_plan_service.dart';
 
 void main() {
@@ -131,6 +134,112 @@ void main() {
         final plans = await service.getByUserId('u1');
         expect(plans.length, 1);
         expect(plans.first.name, 'Plan 1');
+      });
+    });
+
+    group('enrollFromMarketplace', () {
+      test('creates an active user-owned plan and returns its id', () async {
+        final template = kPlanTemplates['1']!;
+        final planId = await service.enrollFromMarketplace(
+          userId: 'buyer1',
+          catalogId: '1',
+          name: template.name,
+          description: template.description,
+          sport: template.sport,
+          durationWeeks: template.durationWeeks,
+          difficulty: template.difficulty,
+          price: 39.99,
+          startDate: DateTime(2026, 9, 14),
+        );
+
+        expect(planId, isNotEmpty);
+        final stored =
+            await firestore.collection('training_plans').doc(planId).get();
+        expect(stored.exists, isTrue);
+        final data = stored.data()!;
+        expect(data['userId'], 'buyer1');
+        expect(data['name'], template.name);
+        expect(data['status'], 'active');
+        expect(data['durationWeeks'], template.durationWeeks);
+        expect(data['price'], 39.99);
+      });
+
+      test('enroll then materialize schedules week 1 workouts', () async {
+        final template = kPlanTemplates['5']!;
+        final startMonday = DateTime(2026, 9, 14);
+        final planId = await service.enrollFromMarketplace(
+          userId: 'buyer2',
+          catalogId: '5',
+          name: template.name,
+          description: template.description,
+          sport: template.sport,
+          durationWeeks: template.durationWeeks,
+          difficulty: template.difficulty,
+          startDate: startMonday,
+        );
+
+        final count = await service.materializeWeeklyWorkouts(
+          userId: 'buyer2',
+          planId: planId,
+          startMonday: startMonday,
+          template: template.workouts,
+        );
+
+        expect(count, template.durationWeeks * template.workouts.length);
+        final workoutService = WorkoutService(db: firestore);
+        final week1 = await workoutService.getByPlanId('buyer2', planId);
+        expect(week1.length, count);
+        // Every week-1 workout is dated within the first 7 days.
+        final firstWeek =
+            week1
+                .where((w) => w.scheduledFor.difference(startMonday).inDays < 7)
+                .toList();
+        expect(firstWeek.length, template.workouts.length);
+      });
+    });
+
+    group('watchByPlanId ordering', () {
+      test('emits plan workouts ordered by scheduledFor', () async {
+        final workoutService = WorkoutService(db: firestore);
+        final dates = [
+          DateTime(2026, 9, 20),
+          DateTime(2026, 9, 14),
+          DateTime(2026, 9, 17),
+        ];
+        for (var i = 0; i < dates.length; i++) {
+          await firestore.collection('workouts').doc('ord$i').set({
+            'userId': 'u9',
+            'planId': 'plan_ord',
+            'sport': 'run',
+            'title': 'Workout $i',
+            'duration': '30 min',
+            'scheduledFor': Timestamp.fromDate(dates[i]),
+            'progress': 0.0,
+            'completed': false,
+          });
+        }
+        // A workout from another plan must not leak in.
+        await firestore.collection('workouts').doc('other').set({
+          'userId': 'u9',
+          'planId': 'other_plan',
+          'sport': 'run',
+          'title': 'Other',
+          'duration': '30 min',
+          'scheduledFor': Timestamp.fromDate(DateTime(2026, 9, 10)),
+          'progress': 0.0,
+          'completed': false,
+        });
+
+        final emitted =
+            await workoutService.watchByPlanId('u9', 'plan_ord').first;
+        expect(emitted.length, 3);
+        for (var i = 1; i < emitted.length; i++) {
+          expect(
+            !emitted[i].scheduledFor.isBefore(emitted[i - 1].scheduledFor),
+            isTrue,
+          );
+        }
+        expect(emitted.first.scheduledFor, DateTime(2026, 9, 14));
       });
     });
   });

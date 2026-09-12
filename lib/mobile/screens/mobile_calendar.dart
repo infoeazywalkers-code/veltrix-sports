@@ -27,9 +27,21 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
 
   DateTime get _weekEnd => _weekStart.add(const Duration(days: 7));
 
+  /// Plan chip label for a workout, or null when no chip should be shown.
+  ///
+  /// Legacy and empty plan ids are never chipped; anything else resolves via
+  /// [planNameProvider] (which falls back to 'Training plan' and never
+  /// throws), returning null only while the name is still loading.
+  String? _planLabel(String planId) {
+    if (!isRealPlanId(planId)) return null;
+    return ref.watch(planNameProvider(planId)).valueOrNull;
+  }
+
   @override
   Widget build(BuildContext context) {
     final workoutsAsync = ref.watch(workoutsByDateRangeProvider(_weekStart));
+    final activePlans = ref.watch(activePlansProvider).valueOrNull ?? const [];
+    final planFilter = ref.watch(calendarPlanFilterProvider);
 
     final dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
     final monthNames = [
@@ -181,8 +193,14 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                     final selectedDate = _weekStart.add(
                       Duration(days: selectedDay),
                     );
+                    final visible =
+                        planFilter == null
+                            ? workouts
+                            : workouts
+                                .where((w) => w.planId == planFilter)
+                                .toList();
                     final dayWorkouts =
-                        workouts
+                        visible
                             .where(
                               (w) =>
                                   w.scheduledFor.year == selectedDate.year &&
@@ -191,41 +209,29 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                             )
                             .toList();
                     if (dayWorkouts.isEmpty) {
-                      // Show demo workout when no workouts exist
-                      final demoWorkout = Workout(
-                        id: 'demo_run',
-                        planId: 'demo',
-                        sport: Sport.run,
-                        title: 'Easy Recovery Run',
-                        description:
-                            'Stay relaxed and keep your effort in Zone 2.',
-                        duration: '30 min',
-                        distanceKm: 4.5,
-                        tss: 35,
-                        targetPace: '6:30–7:00 /km',
-                        scheduledFor: selectedDate,
-                        progress: 0,
-                        completed: false,
-                      );
-                      return MWorkoutCard(
-                        sport: 'RUN',
-                        title: demoWorkout.title,
-                        details:
-                            '${demoWorkout.duration}  •  ${demoWorkout.distanceKm} km  •  ${demoWorkout.tss} TSS',
-                        color: M.blue,
-                        icon: Icons.directions_run,
-                        progress: demoWorkout.progress,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => WorkoutDetailsScreen(
-                                    workout: demoWorkout,
-                                  ),
-                            ),
-                          );
-                        },
+                      return MCard(
+                        child: Padding(
+                          padding: const EdgeInsets.all(M.base),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.event_busy,
+                                color:
+                                    (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? const Color(0xFF78909C)
+                                        : M.muted),
+                                size: 20,
+                              ),
+                              const SizedBox(width: M.sm),
+                              Text(
+                                'No workouts today',
+                                style: M.adaptiveMuted(context),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     }
                     return Column(
@@ -265,6 +271,7 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                                   color: color,
                                   icon: icon,
                                   progress: w.progress,
+                                  planLabel: _planLabel(w.planId),
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -286,6 +293,36 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                 ),
               ),
               const SizedBox(height: M.lg),
+              if (activePlans.isNotEmpty) ...[
+                SizedBox(
+                  height: 36,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: activePlans.length + 1,
+                    separatorBuilder: (_, _) => const SizedBox(width: 8),
+                    itemBuilder: (context, index) {
+                      final isAll = index == 0;
+                      final selected =
+                          isAll
+                              ? planFilter == null
+                              : planFilter == activePlans[index - 1].id;
+                      final label = isAll ? 'All' : activePlans[index - 1].name;
+                      return ChoiceChip(
+                        label: Text(label),
+                        selected: selected,
+                        onSelected:
+                            (_) =>
+                                ref
+                                    .read(calendarPlanFilterProvider.notifier)
+                                    .state = isAll
+                                        ? null
+                                        : activePlans[index - 1].id,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: M.md),
+              ],
               MSection(
                 title: 'Week overview',
                 child: workoutsAsync.when(
@@ -305,7 +342,13 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                         ),
                       ),
                   data: (workouts) {
-                    if (workouts.isEmpty) {
+                    final visible =
+                        planFilter == null
+                            ? workouts
+                            : workouts
+                                .where((w) => w.planId == planFilter)
+                                .toList();
+                    if (visible.isEmpty) {
                       return MCard(
                         child: Padding(
                           padding: EdgeInsets.all(M.base),
@@ -335,7 +378,7 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                       children: List.generate(7, (i) {
                         final day = _weekStart.add(Duration(days: i));
                         final dayWorkouts =
-                            workouts
+                            visible
                                 .where(
                                   (w) =>
                                       w.scheduledFor.year == day.year &&

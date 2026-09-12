@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/constants.dart';
+import '../../models/activity/activity.dart';
+import '../../models/training/training_plan.dart';
+import '../../providers.dart';
+import '../../services/training/ai_plan_service.dart';
+import '../../services/training/plan_materializer.dart';
+import '../../services/training/plan_templates.dart' show nextMonday;
+import 'plan_detail_screen.dart';
 
-class AiPlanGeneratorScreen extends StatefulWidget {
+class AiPlanGeneratorScreen extends ConsumerStatefulWidget {
   const AiPlanGeneratorScreen({super.key});
 
   @override
-  State<AiPlanGeneratorScreen> createState() => _AiPlanGeneratorScreenState();
+  ConsumerState<AiPlanGeneratorScreen> createState() =>
+      _AiPlanGeneratorScreenState();
 }
 
-class _AiPlanGeneratorScreenState extends State<AiPlanGeneratorScreen> {
+class _AiPlanGeneratorScreenState extends ConsumerState<AiPlanGeneratorScreen> {
   String _selectedGoal = 'Gran Fondo';
   String _selectedSport = 'Cycling';
   int _weeks = 12;
@@ -17,6 +27,113 @@ class _AiPlanGeneratorScreenState extends State<AiPlanGeneratorScreen> {
 
   bool _isGenerating = false;
   bool _planGenerated = false;
+  bool _isStarting = false;
+  Map<String, dynamic>? _basePlan;
+
+  /// Maps the UI sport label onto [SportType].
+  ///
+  /// Triathlon has no [SportType] equivalent, so it falls back to cycling
+  /// (the dominant discipline for workout scheduling).
+  SportType _mapSport(String sport) {
+    switch (sport) {
+      case 'Running':
+        return SportType.running;
+      case 'Swimming':
+        return SportType.swimming;
+      case 'Rowing':
+        return SportType.rowing;
+      default:
+        return SportType.cycling;
+    }
+  }
+
+  void _generatePlan() {
+    setState(() => _isGenerating = true);
+    // Generated synchronously from the physiological model; the loading
+    // state is kept so the UI transition stays perceptible.
+    Future(() {
+      // TODO: wire ftpWatts/lthrBpm/weightKg from the user profile instead
+      // of these defaults.
+      final plan = AIPlanService().generateBasePlan(
+        sport: _mapSport(_selectedSport),
+        philosophy: 'balanced',
+        level: _fitnessLevel,
+        totalWeeks: _weeks,
+        targetWeeklyHours: _hoursPerWeek,
+        ftpWatts: 200,
+        lthrBpm: 160,
+        weightKg: 75,
+      );
+      if (mounted) {
+        setState(() {
+          _basePlan = plan;
+          _isGenerating = false;
+          _planGenerated = true;
+        });
+      }
+    });
+  }
+
+  Future<void> _startTraining() async {
+    final basePlan = _basePlan;
+    if (basePlan == null) return;
+    final user = ref.read(currentUserProvider);
+    if (user == null) {
+      if (mounted) {
+        showFeatureMessage(context, 'Sign in to start training');
+      }
+      return;
+    }
+    setState(() => _isStarting = true);
+    try {
+      final startMonday = nextMonday(DateTime.now());
+      final planId = 'ai_${DateTime.now().millisecondsSinceEpoch}';
+      final weeks = (basePlan['weeks'] as List? ?? const []).length;
+      final totalWeeks = weeks == 0 ? _weeks : weeks;
+      await ref
+          .read(trainingPlanServiceProvider)
+          .create(
+            TrainingPlan(
+              id: planId,
+              userId: user.uid,
+              name: '$_selectedGoal · AI Plan',
+              description:
+                  'AI-generated $_selectedSport plan: $_weeks weeks at ${_hoursPerWeek.toStringAsFixed(1)}h/week.',
+              sport: _selectedSport,
+              durationWeeks: totalWeeks,
+              difficulty: _fitnessLevel,
+              targetGoal: _selectedGoal,
+              price: 0,
+              status: 'active',
+              startDate: startMonday,
+              endDate: startMonday.add(Duration(days: totalWeeks * 7)),
+              createdAt: DateTime.now(),
+            ),
+          );
+      await PlanMaterializer().materializeAiBasePlan(
+        userId: user.uid,
+        planId: planId,
+        basePlanMap: basePlan,
+        startMonday: startMonday,
+        sport: _selectedSport,
+      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => PlanDetailScreen(planId: planId)),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        showFeatureMessage(
+          context,
+          'Could not start training. Please try again.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isStarting = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,18 +270,7 @@ class _AiPlanGeneratorScreenState extends State<AiPlanGeneratorScreen> {
             width: double.infinity,
             height: 52,
             child: ElevatedButton(
-              onPressed:
-                  _isGenerating
-                      ? null
-                      : () {
-                        setState(() => _isGenerating = true);
-                        Future.delayed(const Duration(seconds: 3), () {
-                          setState(() {
-                            _isGenerating = false;
-                            _planGenerated = true;
-                          });
-                        });
-                      },
+              onPressed: _isGenerating ? null : _generatePlan,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8B5CF6),
                 shape: RoundedRectangleBorder(
@@ -197,6 +303,25 @@ class _AiPlanGeneratorScreenState extends State<AiPlanGeneratorScreen> {
   }
 
   Widget _buildPlanView() {
+    final basePlan = _basePlan;
+    final weeks =
+        basePlan == null
+            ? const <Map<String, dynamic>>[]
+            : (basePlan['weeks'] as List? ?? const [])
+                .whereType<Map>()
+                .map((w) => Map<String, dynamic>.from(w))
+                .toList();
+    final tssProgression =
+        basePlan == null
+            ? const <int>[]
+            : (basePlan['weeklyTSSProgression'] as List? ?? const [])
+                .whereType<num>()
+                .map((t) => t.toInt())
+                .toList();
+    final maxTss =
+        tssProgression.isEmpty
+            ? 1
+            : tssProgression.reduce((a, b) => a > b ? a : b);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -248,6 +373,69 @@ class _AiPlanGeneratorScreenState extends State<AiPlanGeneratorScreen> {
           const SizedBox(height: 20),
 
           const Text(
+            'WEEKLY TSS PROGRESSION',
+            style: TextStyle(
+              color: Colors.white54,
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // One row per generated week: real TSS progression data.
+          for (var i = 0; i < tssProgression.length; i++)
+            Container(
+              margin: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A1A1A),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 56,
+                    child: Text(
+                      'Week ${i + 1}',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(3),
+                      child: LinearProgressIndicator(
+                        value: tssProgression[i] / maxTss,
+                        minHeight: 6,
+                        color: const Color(0xFF8B5CF6),
+                        backgroundColor: Colors.white.withValues(alpha: 0.06),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 64,
+                    child: Text(
+                      '${tssProgression[i]} TSS',
+                      textAlign: TextAlign.end,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+          const SizedBox(height: 24),
+
+          const Text(
             'PLAN OVERVIEW',
             style: TextStyle(
               color: Colors.white54,
@@ -258,41 +446,23 @@ class _AiPlanGeneratorScreenState extends State<AiPlanGeneratorScreen> {
           ),
           const SizedBox(height: 12),
 
-          // Period breakdown
-          _periodCard(
-            'Base Building',
-            'Weeks 1-4',
-            'Aerobic foundation, technique drills, 80/20 intensity distribution',
-            const Color(0xFF3B82F6),
-            0.15,
-          ),
-          _periodCard(
-            'Build Phase',
-            'Weeks 5-8',
-            'Progressive overload, sweet spot intervals, race-specific preparation',
-            const Color(0xFFF97316),
-            0.15,
-          ),
-          _periodCard(
-            'Peak Phase',
-            'Weeks 9-10',
-            'Race simulation, VO2max work, sharpening',
-            const Color(0xFFEF4444),
-            0.15,
-          ),
-          _periodCard(
-            'Taper',
-            'Weeks 11-12',
-            'Volume reduction, intensity maintenance, recovery focus',
-            const Color(0xFF10B981),
-            0.15,
-          ),
+          // Per-week theme/focus from the generated base plan.
+          for (final week in weeks)
+            _periodCard(
+              (week['theme'] as String? ?? ''),
+              'Week ${week['weekNumber']} · ${week['targetWeeklyTSS']} TSS',
+              (week['focus'] as String? ?? ''),
+              week['isRecoveryWeek'] == true
+                  ? const Color(0xFF10B981)
+                  : const Color(0xFF8B5CF6),
+              0.15,
+            ),
 
           const SizedBox(height: 24),
 
-          // Weekly structure
+          // Sample structure
           const Text(
-            'SAMPLE WEEK STRUCTURE',
+            'SAMPLE STRUCTURE (WEEK 1)',
             style: TextStyle(
               color: Colors.white54,
               fontSize: 10,
@@ -405,7 +575,7 @@ class _AiPlanGeneratorScreenState extends State<AiPlanGeneratorScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isStarting ? null : _startTraining,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF10B981),
                     shape: RoundedRectangleBorder(
@@ -413,13 +583,23 @@ class _AiPlanGeneratorScreenState extends State<AiPlanGeneratorScreen> {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text(
-                    'Start Training',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  child:
+                      _isStarting
+                          ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                          : const Text(
+                            'Start Training',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                 ),
               ),
             ],

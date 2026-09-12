@@ -6,6 +6,7 @@ class WorkoutCard extends StatelessWidget {
   final Color color;
   final IconData icon;
   final double progress;
+  final String? planLabel;
   final VoidCallback? onTap;
   const WorkoutCard({
     super.key,
@@ -15,6 +16,7 @@ class WorkoutCard extends StatelessWidget {
     required this.color,
     required this.icon,
     this.progress = 0,
+    this.planLabel,
     this.onTap,
   });
   @override
@@ -61,6 +63,27 @@ class WorkoutCard extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                     ),
                   ),
+                  if (planLabel != null) ...[
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: .12),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        planLabel!,
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
                   Text(
                     details,
                     style: TextStyle(

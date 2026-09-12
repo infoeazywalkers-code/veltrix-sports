@@ -6,7 +6,8 @@ import '../../services/activity/workout_service.dart';
 
 class WorkoutBuilderDialog extends StatefulWidget {
   final DateTime? initialDate;
-  const WorkoutBuilderDialog({super.key, this.initialDate});
+  final String? planId;
+  const WorkoutBuilderDialog({super.key, this.initialDate, this.planId});
 
   @override
   State<WorkoutBuilderDialog> createState() => _WorkoutBuilderDialogState();
@@ -69,7 +70,7 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
     try {
       final newWorkout = Workout(
         id: const Uuid().v4(),
-        planId: 'user_created',
+        planId: widget.planId ?? 'user_created',
         sport: _selectedSport,
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
@@ -114,11 +115,23 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.fitness_center, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+          Icon(
+            Icons.fitness_center,
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
+          ),
           SizedBox(width: 10),
           Text(
             'Schedule Workout',
-            style: TextStyle(fontWeight: FontWeight.w900, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
+            ),
           ),
         ],
       ),
@@ -246,12 +259,21 @@ class _WorkoutBuilderDialogState extends State<WorkoutBuilderDialog> {
               const SizedBox(height: 14),
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.calendar_today, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+                leading: Icon(
+                  Icons.calendar_today,
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
+                ),
                 title: Text(
                   'Date: ${_scheduledFor.year}-${_scheduledFor.month.toString().padLeft(2, '0')}-${_scheduledFor.day.toString().padLeft(2, '0')}',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : navy),
                   ),
                 ),
                 trailing: TextButton(
