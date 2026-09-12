@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants.dart';
 import '../../models/events/event_ticket.dart';
 import '../../services/events/event_service.dart';
+import '../events/widgets/race_readiness_section.dart';
 
 class FeatureCollectionScreen extends StatelessWidget {
   final String title;
@@ -73,12 +74,21 @@ class FeatureCollectionScreen extends StatelessWidget {
                   title: Text(
                     item.title,
                     style: TextStyle(
-                      color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                   subtitle: Text(item.subtitle),
-                  trailing: Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
+                  ),
                   onTap:
                       () => Navigator.push(
                         context,
@@ -203,7 +213,13 @@ class _DetailRow extends StatelessWidget {
         leading: Icon(icon, color: color),
         title: Text(
           title,
-          style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy), fontWeight: FontWeight.w900),
+          style: TextStyle(
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
+            fontWeight: FontWeight.w900,
+          ),
         ),
         subtitle: Text(body),
       ),
@@ -283,41 +299,61 @@ class MyTicketsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('My tickets')),
-    body: StreamBuilder<List<EventTicket>>(
-      stream: EventService().watchMyTickets(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Center(child: Text('Sign in to view your tickets.'));
-        }
-        final tickets = snapshot.data ?? const <EventTicket>[];
-        if (tickets.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Text(
-                'Registered events will appear here with QR and arrival details.',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-        }
-        return ListView.separated(
-          padding: const EdgeInsets.all(18),
-          itemCount: tickets.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 10),
-          itemBuilder: (_, index) {
-            final ticket = tickets[index];
-            return Card(
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(18),
-                leading: Icon(Icons.qr_code_2, color: teal, size: 38),
-                title: Text(ticket.eventTitle, style: TextStyle(fontWeight: FontWeight.w900, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy))),
-                subtitle: Text('Status: ${ticket.status}\nTicket: ${ticket.qrPayload}'),
-              ),
+    body: ListView(
+      padding: const EdgeInsets.all(18),
+      children: [
+        const RaceReadinessSection(),
+        const SizedBox(height: 18),
+        StreamBuilder<List<EventTicket>>(
+          stream: EventService().watchMyTickets(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Center(child: Text('Sign in to view your tickets.'));
+            }
+            final tickets = snapshot.data ?? const <EventTicket>[];
+            if (tickets.isEmpty) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Text(
+                    'Registered events will appear here with QR and arrival details.',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: tickets.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 10),
+              itemBuilder: (_, index) {
+                final ticket = tickets[index];
+                return Card(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(18),
+                    leading: const Icon(Icons.qr_code_2, color: teal, size: 38),
+                    title: Text(
+                      ticket.eventTitle,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : navy),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Status: ${ticket.status}\nTicket: ${ticket.qrPayload}',
+                    ),
+                  ),
+                );
+              },
             );
           },
-        );
-      },
+        ),
+      ],
     ),
   );
 }
