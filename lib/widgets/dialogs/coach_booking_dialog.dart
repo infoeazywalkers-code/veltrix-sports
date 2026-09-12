@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../core/constants.dart';
 import '../../services/social/coach_service.dart';
+import '../../screens/coach/my_coach_inquiries_screen.dart';
 
 class CoachBookingDialog extends StatefulWidget {
   final CoachProfile coach;
@@ -17,6 +18,7 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
   final _messageController = TextEditingController();
   DateTime _preferredDate = DateTime.now().add(const Duration(days: 3));
   bool _submitting = false;
+  bool _submitted = false;
 
   @override
   void dispose() {
@@ -51,7 +53,11 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
       );
 
       if (mounted) {
-        Navigator.pop(context, true);
+        // CoachProfile carries no auth uid (id is the coaches-doc id, not a
+        // Firebase uid), so a direct chat room cannot be opened without
+        // fabricating a uid. Show a success state with "View my inquiries"
+        // (coach_inquiries where userId == uid via fetchMyInquiries).
+        setState(() => _submitted = true);
         showFeatureMessage(
           context,
           'Discovery call request sent to ${widget.coach.name}! They will reply within 24 hours.',
@@ -84,6 +90,37 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
           FilledButton(
             onPressed: () => Navigator.pop(context, 'signIn'),
             child: const Text('Sign in'),
+          ),
+        ],
+      );
+    }
+    if (_submitted) {
+      return AlertDialog(
+        title: const Text('Request sent'),
+        content: Text(
+          'Your discovery call request was sent to ${widget.coach.name}. '
+          'Track replies under your inquiries.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Close'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: lime,
+              foregroundColor: navy,
+            ),
+            onPressed: () {
+              Navigator.pop(context, true);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const MyCoachInquiriesScreen(),
+                ),
+              );
+            },
+            child: const Text('View my inquiries'),
           ),
         ],
       );

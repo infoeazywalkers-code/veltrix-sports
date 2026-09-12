@@ -21,6 +21,8 @@ import 'screens/training/training_plan_marketplace_screen.dart';
 import 'screens/explore/production_pages.dart';
 import 'screens/onboarding/onboarding_flow.dart';
 import 'screens/coach/coach_dashboard_screen.dart';
+import 'screens/coach/coach_requests_inbox_screen.dart';
+import 'screens/social/chat_inbox_screen.dart';
 import 'screens/athletes/athlete_discovery_screen.dart';
 
 import 'widgets/workout/workout_builder_dialog.dart';
@@ -534,6 +536,54 @@ class _ShellState extends ConsumerState<Shell> {
                               'My athletes',
                               'Coach access required',
                             ),
+                          ),
+                        if (isLoggedIn)
+                          CoachOnly(
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              leading: const Icon(Icons.inbox_outlined),
+                              title: const Text(
+                                'Coach requests',
+                                style: TextStyle(fontWeight: FontWeight.w800),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => const CoachRequestsInboxScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            fallback: _disabledDrawerItem(
+                              Icons.inbox_outlined,
+                              'Coach requests',
+                              'Coach access required',
+                            ),
+                          ),
+                        if (isLoggedIn)
+                          ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            leading: const Icon(Icons.chat_bubble_outline),
+                            title: const Text(
+                              'Messages',
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ChatInboxScreen(),
+                                ),
+                              );
+                            },
                           ),
                         _drawerItem(
                           ShellPage.support,

@@ -9,6 +9,8 @@ import '../../screens/challenges/challenges_screen.dart';
 import '../../screens/training/training_plan_marketplace_screen.dart';
 import '../../screens/coach/coach_match_screen.dart';
 import '../../screens/coach/coach_dashboard_screen.dart';
+import '../../screens/coach/coach_requests_inbox_screen.dart';
+import '../../screens/social/chat_inbox_screen.dart';
 import '../../screens/devices/devices_screen.dart';
 import '../../screens/explore/feature_collection_screen.dart';
 import '../../screens/premium/premium_screen.dart';
@@ -276,6 +278,46 @@ class MobileMoreScreen extends ConsumerWidget {
                           Icons.groups_outlined,
                           M.purple,
                         ),
+                      ),
+                    if (isLoggedIn) const SizedBox(height: M.sm),
+                    if (isLoggedIn)
+                      CoachOnly(
+                        child: _MoreFeature(
+                          'Coach requests',
+                          'Review pending athlete match requests',
+                          Icons.inbox_outlined,
+                          M.orange,
+                          onTap:
+                              () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => const CoachRequestsInboxScreen(),
+                                ),
+                              ),
+                        ),
+                        fallback: _LockedFeature(
+                          context,
+                          'Coach requests',
+                          'Review pending athlete match requests',
+                          Icons.inbox_outlined,
+                          M.orange,
+                        ),
+                      ),
+                    if (isLoggedIn) const SizedBox(height: M.sm),
+                    if (isLoggedIn)
+                      _MoreFeature(
+                        'Messages',
+                        'Chat with your coach or athletes',
+                        Icons.chat_bubble_outline,
+                        M.teal,
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ChatInboxScreen(),
+                              ),
+                            ),
                       ),
                     if (isLoggedIn) const SizedBox(height: M.sm),
                     _MoreFeature(

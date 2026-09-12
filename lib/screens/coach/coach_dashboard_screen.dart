@@ -4,8 +4,10 @@ import '../../core/constants.dart';
 import '../../services/social/coach_dashboard_service.dart';
 import '../../services/social/chat_service.dart';
 import '../../widgets/common/role_gate.dart';
+import '../social/chat_inbox_screen.dart';
 import '../social/chat_screen.dart';
 import 'coach_match_screen.dart';
+import 'coach_requests_inbox_screen.dart';
 
 /// Coach dashboard screen showing assigned athletes and management tools.
 class CoachDashboardScreen extends StatefulWidget {
@@ -40,6 +42,28 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
         ),
         backgroundColor: navy,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            tooltip: 'Coach requests',
+            icon: const Icon(Icons.inbox_outlined),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CoachRequestsInboxScreen(),
+                  ),
+                ),
+          ),
+          IconButton(
+            tooltip: 'Messages',
+            icon: const Icon(Icons.chat_bubble_outline),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ChatInboxScreen()),
+                ),
+          ),
+        ],
       ),
       body: CoachOnly(
         fallback: Center(
