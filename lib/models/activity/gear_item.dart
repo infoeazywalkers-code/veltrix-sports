@@ -22,18 +22,18 @@ class GearItem {
   });
 
   factory GearItem.fromFirestore(DocumentSnapshot doc) {
-    final m = doc.data() as Map<String, dynamic>;
+    final m = doc.data() as Map<String, dynamic>? ?? {};
     return GearItem(
       id: doc.id,
-      name: m['name'] ?? '',
+      name: (m['name'] as String? ?? '').trim(),
       type: GearType.values.firstWhere(
         (e) => e.name == m['type'],
         orElse: () => GearType.bike,
       ),
-      brandModel: m['brandModel'] ?? '',
-      distanceKm: (m['distanceKm'] ?? 0).toDouble(),
-      maxDistanceKm: (m['maxDistanceKm'] ?? 0).toDouble(),
-      isRetired: m['isRetired'] ?? false,
+      brandModel: (m['brandModel'] as String? ?? '').trim(),
+      distanceKm: (m['distanceKm'] as num? ?? 0).toDouble(),
+      maxDistanceKm: (m['maxDistanceKm'] as num? ?? 0).toDouble(),
+      isRetired: m['isRetired'] as bool? ?? false,
     );
   }
 

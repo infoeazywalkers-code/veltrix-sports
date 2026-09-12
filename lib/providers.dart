@@ -12,6 +12,8 @@ import 'services/social/challenge_service.dart';
 import 'services/social/leaderboard_service.dart';
 import 'services/performance/performance_service.dart';
 import 'services/core/preferences_service.dart';
+import 'services/gear/gear_service.dart';
+import 'models/activity/gear_item.dart';
 import 'models/social/athlete_card.dart';
 import 'models/social/social_challenge.dart';
 import 'models/user/user_profile.dart';
@@ -423,4 +425,19 @@ final unreadNotificationCountProvider = StreamProvider<int>((ref) {
     loading: () => Stream.value(0),
     error: (_, __) => Stream.value(0),
   );
+});
+
+// ---------------------------------------------------------------------------
+// Gear vault (live)
+// ---------------------------------------------------------------------------
+
+final gearServiceProvider = Provider<GearService>((ref) => GearService());
+
+/// Live gear list for the signed-in user.
+///
+/// Signed-out yields an empty stream value, never an error.
+final gearListProvider = StreamProvider.autoDispose<List<GearItem>>((ref) {
+  final user = ref.watch(currentUserProvider);
+  if (user == null) return Stream.value(const <GearItem>[]);
+  return ref.watch(gearServiceProvider).watchGear(user.uid);
 });

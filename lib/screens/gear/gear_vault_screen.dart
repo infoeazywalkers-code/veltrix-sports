@@ -1,30 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/activity/gear_item.dart';
+import '../../providers.dart';
+import 'widgets/gear_edit_dialog.dart';
+import 'widgets/gear_retire_dialog.dart';
 
-class GearVaultScreen extends StatelessWidget {
-  final List<GearItem> gear;
-  final Function(GearItem)? onEdit;
-  final VoidCallback? onAdd;
-
-  const GearVaultScreen({
-    super.key,
-    this.gear = const [],
-    this.onEdit,
-    this.onAdd,
-  });
+/// Live gear vault for the signed-in user.
+///
+/// Reads [gearListProvider] (backed by `GearService.watchGear`) and renders
+/// loading / error / data states. Signed-out users get a sign-in prompt
+/// instead of a crash; users with no gear get an honest empty state.
+/// The FAB opens [GearEditDialog]; tapping a card edits it; the small
+/// archive icon on each card opens [GearRetireDialog].
+class GearVaultScreen extends ConsumerWidget {
+  const GearVaultScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final bikes = gear.where((g) => g.type == GearType.bike).toList();
-    final shoes = gear.where((g) => g.type == GearType.shoes).toList();
-    final watches = gear.where((g) => g.type == GearType.watch).toList();
-    final powerMeters =
-        gear.where((g) => g.type == GearType.powerMeter).toList();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(currentUserProvider);
+    if (user == null) {
+      return const Scaffold(
+        backgroundColor: Color(0xFF0A0A0A),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.lock_outline, size: 56, color: Colors.white24),
+              SizedBox(height: 16),
+              Text(
+                'Sign in to view your gear',
+                style: TextStyle(
+                  color: Colors.white54,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final gearAsync = ref.watch(gearListProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: onAdd,
+        onPressed:
+            () => showDialog(
+              context: context,
+              builder: (_) => const GearEditDialog(),
+            ),
         backgroundColor: const Color(0xFFF97316),
         icon: const Icon(Icons.add, color: Colors.white, size: 20),
         label: const Text(
@@ -32,39 +58,66 @@ class GearVaultScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
         ),
       ),
-      body:
-          gear.isEmpty
-              ? _emptyState()
-              : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _summaryCards(gear),
-                    const SizedBox(height: 20),
-                    if (bikes.isNotEmpty) ...[
-                      _sectionHeader('Bicycles', Icons.directions_bike),
-                      ...bikes.map((g) => _gearCard(g, onEdit)),
-                      const SizedBox(height: 16),
-                    ],
-                    if (shoes.isNotEmpty) ...[
-                      _sectionHeader('Running Shoes', Icons.directions_run),
-                      ...shoes.map((g) => _gearCard(g, onEdit)),
-                      const SizedBox(height: 16),
-                    ],
-                    if (watches.isNotEmpty) ...[
-                      _sectionHeader('Wearable Tech', Icons.watch),
-                      ...watches.map((g) => _gearCard(g, onEdit)),
-                      const SizedBox(height: 16),
-                    ],
-                    if (powerMeters.isNotEmpty) ...[
-                      _sectionHeader('Power Meters', Icons.speed),
-                      ...powerMeters.map((g) => _gearCard(g, onEdit)),
-                    ],
-                  ],
-                ),
+      body: gearAsync.when(
+        loading:
+            () => const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Color(0xFFF97316)),
               ),
+            ),
+        error:
+            (e, _) => Center(
+              child: Text(
+                "Couldn't load gear: $e",
+                style: const TextStyle(color: Colors.white54, fontSize: 13),
+                textAlign: TextAlign.center,
+              ),
+            ),
+        data: (gear) {
+          if (gear.isEmpty) return _emptyState();
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _summaryCards(gear),
+                const SizedBox(height: 20),
+                ..._sections(context, gear),
+              ],
+            ),
+          );
+        },
+      ),
     );
+  }
+
+  List<Widget> _sections(BuildContext context, List<GearItem> gear) {
+    final bikes = gear.where((g) => g.type == GearType.bike).toList();
+    final shoes = gear.where((g) => g.type == GearType.shoes).toList();
+    final watches = gear.where((g) => g.type == GearType.watch).toList();
+    final powerMeters =
+        gear.where((g) => g.type == GearType.powerMeter).toList();
+    return [
+      if (bikes.isNotEmpty) ...[
+        _sectionHeader('Bicycles', Icons.directions_bike),
+        ...bikes.map((g) => _gearCard(context, g)),
+        const SizedBox(height: 16),
+      ],
+      if (shoes.isNotEmpty) ...[
+        _sectionHeader('Running Shoes', Icons.directions_run),
+        ...shoes.map((g) => _gearCard(context, g)),
+        const SizedBox(height: 16),
+      ],
+      if (watches.isNotEmpty) ...[
+        _sectionHeader('Wearable Tech', Icons.watch),
+        ...watches.map((g) => _gearCard(context, g)),
+        const SizedBox(height: 16),
+      ],
+      if (powerMeters.isNotEmpty) ...[
+        _sectionHeader('Power Meters', Icons.speed),
+        ...powerMeters.map((g) => _gearCard(context, g)),
+      ],
+    ];
   }
 
   Widget _emptyState() {
@@ -178,9 +231,13 @@ class GearVaultScreen extends StatelessWidget {
     );
   }
 
-  Widget _gearCard(GearItem g, Function(GearItem)? onEdit) {
+  Widget _gearCard(BuildContext context, GearItem g) {
     return GestureDetector(
-      onTap: onEdit != null ? () => onEdit(g) : null,
+      onTap:
+          () => showDialog(
+            context: context,
+            builder: (_) => GearEditDialog(existing: g),
+          ),
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
@@ -271,7 +328,27 @@ class GearVaultScreen extends StatelessWidget {
                 ],
               ),
             ),
-            if (g.maxDistanceKm > 0) _usageIndicator(g.usagePercent),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (g.maxDistanceKm > 0) _usageIndicator(g.usagePercent),
+                IconButton(
+                  tooltip: g.isRetired ? 'Restore gear' : 'Retire gear',
+                  onPressed:
+                      () => showDialog(
+                        context: context,
+                        builder: (_) => GearRetireDialog(gear: g),
+                      ),
+                  icon: Icon(
+                    g.isRetired
+                        ? Icons.unarchive_outlined
+                        : Icons.archive_outlined,
+                    color: _usageColor(g.usagePercent),
+                    size: 20,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -291,13 +368,15 @@ class GearVaultScreen extends StatelessWidget {
     }
   }
 
+  /// Shared usage color scale for the ring and the retire affordance.
+  Color _usageColor(double pct) {
+    if (pct > 85) return const Color(0xFFEF4444);
+    if (pct > 60) return const Color(0xFFF59E0B);
+    return const Color(0xFF10B981);
+  }
+
   Widget _usageIndicator(double pct) {
-    final color =
-        pct > 85
-            ? const Color(0xFFEF4444)
-            : pct > 60
-            ? const Color(0xFFF59E0B)
-            : const Color(0xFF10B981);
+    final color = _usageColor(pct);
 
     return Column(
       children: [
