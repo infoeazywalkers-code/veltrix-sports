@@ -47,7 +47,11 @@ class _ConnectivityBannerState extends State<ConnectivityBanner> {
             child: const Text(
               'You are offline. Some features may be limited.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         Expanded(child: widget.child),

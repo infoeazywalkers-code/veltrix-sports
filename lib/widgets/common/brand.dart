@@ -15,4 +15,3 @@ class Brand extends StatelessWidget {
     child: Icon(Icons.bolt_rounded, color: navy, size: size * 0.6),
   );
 }
-

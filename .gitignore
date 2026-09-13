@@ -48,14 +48,23 @@ app.*.map.json
 # Widget Preview related
 .widget_preview/
 
-# Firebase config (sensitive - never commit)
-**/firebase_options.dart
+# Firebase config — google-services / plist / signing stay secret.
+# NOTE: lib/firebase_options.dart IS committed on purpose: it only holds
+# public Firebase web/android identifiers (same project as the committed
+# firebase_options_dev.dart) + demo placeholders for desktop. CI needs it
+# for `flutter analyze` / builds. Real secrets live in GitHub Secrets.
 **/google-services.json
 **/GoogleService-Info.plist
 **/key.properties
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+ios_cert.p12
 session-*.md
 
-# Allow development Firebase options
+# Allow Firebase Dart options (public identifiers, needed by CI)
+!**/firebase_options.dart
 !**/firebase_options_dev.dart
 !**/firebase_options.dart.template
 

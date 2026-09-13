@@ -28,7 +28,10 @@ class Ring extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 19,
-                color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
               ),
             ),
           ],
@@ -38,7 +41,10 @@ class Ring extends StatelessWidget {
       Text(
         label,
         style: TextStyle(
-          color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
           fontWeight: FontWeight.w700,
           fontSize: 11,
         ),
@@ -46,4 +52,3 @@ class Ring extends StatelessWidget {
     ],
   );
 }
-

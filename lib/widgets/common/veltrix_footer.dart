@@ -12,13 +12,36 @@ class VeltrixFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     final desktop = MediaQuery.sizeOf(context).width >= 800;
     const groups = [
-      ('ATHLETES', ['Features', 'Training plans', 'Find a coach', 'Premium', 'Mobile app']),
-      ('COACHES', ['Coach platform', 'Coach pricing', 'Coach directory', 'Education', 'Resources']),
-      ('TRAIN', ['Calendar', 'Performance', 'Strength', 'Events', 'Device sync']),
-      ('COMPANY', ['About Veltrix', 'Careers', 'Partners', 'Contact', 'Support']),
+      (
+        'ATHLETES',
+        ['Features', 'Training plans', 'Find a coach', 'Premium', 'Mobile app'],
+      ),
+      (
+        'COACHES',
+        [
+          'Coach platform',
+          'Coach pricing',
+          'Coach directory',
+          'Education',
+          'Resources',
+        ],
+      ),
+      (
+        'TRAIN',
+        ['Calendar', 'Performance', 'Strength', 'Events', 'Device sync'],
+      ),
+      (
+        'COMPANY',
+        ['About Veltrix', 'Careers', 'Partners', 'Contact', 'Support'],
+      ),
     ];
     return Container(
-      padding: EdgeInsets.fromLTRB(desktop ? 40 : 22, 42, desktop ? 40 : 22, 24),
+      padding: EdgeInsets.fromLTRB(
+        desktop ? 40 : 22,
+        42,
+        desktop ? 40 : 22,
+        24,
+      ),
       decoration: BoxDecoration(
         color: darkNavy,
         borderRadius: BorderRadius.circular(28),
@@ -53,7 +76,11 @@ class VeltrixFooter extends StatelessWidget {
                     SizedBox(height: 16),
                     Text(
                       'Plan with confidence. Train with purpose. Perform when it matters.',
-                      style: TextStyle(color: Colors.white60, height: 1.5, fontSize: 13),
+                      style: TextStyle(
+                        color: Colors.white60,
+                        height: 1.5,
+                        fontSize: 13,
+                      ),
                     ),
                     SizedBox(height: 18),
                     Row(
@@ -76,18 +103,30 @@ class VeltrixFooter extends StatelessWidget {
                   child: Wrap(
                     spacing: 46,
                     runSpacing: 28,
-                    children: groups
-                        .map((g) => SizedBox(width: 130, child: FooterGroup(title: g.$1, links: g.$2)))
-                        .toList(),
+                    children:
+                        groups
+                            .map(
+                              (g) => SizedBox(
+                                width: 130,
+                                child: FooterGroup(title: g.$1, links: g.$2),
+                              ),
+                            )
+                            .toList(),
                   ),
                 )
               else
                 Wrap(
                   spacing: 24,
                   runSpacing: 28,
-                  children: groups
-                      .map((g) => SizedBox(width: 140, child: FooterGroup(title: g.$1, links: g.$2)))
-                      .toList(),
+                  children:
+                      groups
+                          .map(
+                            (g) => SizedBox(
+                              width: 140,
+                              child: FooterGroup(title: g.$1, links: g.$2),
+                            ),
+                          )
+                          .toList(),
                 ),
             ],
           ),
@@ -106,10 +145,22 @@ class VeltrixFooter extends StatelessWidget {
               Wrap(
                 spacing: 16,
                 children: [
-                  Text('Privacy', style: TextStyle(color: Colors.white54, fontSize: 11)),
-                  Text('Terms', style: TextStyle(color: Colors.white54, fontSize: 11)),
-                  Text('Cookies', style: TextStyle(color: Colors.white54, fontSize: 11)),
-                  Text('English \u00b7 India', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                  Text(
+                    'Privacy',
+                    style: TextStyle(color: Colors.white54, fontSize: 11),
+                  ),
+                  Text(
+                    'Terms',
+                    style: TextStyle(color: Colors.white54, fontSize: 11),
+                  ),
+                  Text(
+                    'Cookies',
+                    style: TextStyle(color: Colors.white54, fontSize: 11),
+                  ),
+                  Text(
+                    'English \u00b7 India',
+                    style: TextStyle(color: Colors.white54, fontSize: 11),
+                  ),
                 ],
               ),
             ],
@@ -119,4 +170,3 @@ class VeltrixFooter extends StatelessWidget {
     );
   }
 }
-

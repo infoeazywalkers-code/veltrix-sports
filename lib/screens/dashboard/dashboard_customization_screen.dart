@@ -127,7 +127,10 @@ class _DashboardCustomizationScreenState
           Text(
             'Visible Widgets',
             style: TextStyle(
-              color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
               fontSize: 16,
               fontWeight: FontWeight.w800,
             ),
@@ -135,7 +138,13 @@ class _DashboardCustomizationScreenState
           const SizedBox(height: 4),
           Text(
             'Drag to reorder. Tap to hide.',
-            style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 12),
+            style: TextStyle(
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
+              fontSize: 12,
+            ),
           ),
           const SizedBox(height: 12),
           ReorderableListView.builder(
@@ -149,12 +158,21 @@ class _DashboardCustomizationScreenState
               return Card(
                 key: ValueKey(widgetId),
                 child: ListTile(
-                  leading: Icon(Icons.drag_handle, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+                  leading: Icon(
+                    Icons.drag_handle,
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
+                  ),
                   title: Text(
                     label,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
                     ),
                   ),
                   trailing: IconButton(
@@ -170,7 +188,10 @@ class _DashboardCustomizationScreenState
             Text(
               'Hidden Widgets',
               style: TextStyle(
-                color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
               ),
@@ -178,7 +199,13 @@ class _DashboardCustomizationScreenState
             const SizedBox(height: 4),
             Text(
               'Tap to show on your dashboard.',
-              style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 12),
+              style: TextStyle(
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
+                fontSize: 12,
+              ),
             ),
             const SizedBox(height: 12),
             ...List.generate(_hiddenWidgets.length, (index) {
@@ -186,10 +213,22 @@ class _DashboardCustomizationScreenState
               final label = DashboardWidgetId.allWidgets[widgetId] ?? widgetId;
               return Card(
                 child: ListTile(
-                  leading: Icon(Icons.visibility_off, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+                  leading: Icon(
+                    Icons.visibility_off,
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
+                  ),
                   title: Text(
                     label,
-                    style: TextStyle(fontWeight: FontWeight.w600, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
+                    ),
                   ),
                   trailing: IconButton(
                     icon: Icon(Icons.add_circle_outline, color: blue),

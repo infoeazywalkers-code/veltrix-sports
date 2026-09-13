@@ -93,7 +93,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   return Center(
                     child: Text(
                       'Error loading messages',
-                      style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+                      style: TextStyle(
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF78909C)
+                                : muted),
+                      ),
                     ),
                   );
                 }
@@ -105,12 +110,22 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.chat_bubble_outline, size: 48, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 48,
+                          color:
+                              (Theme.of(context).brightness == Brightness.dark
+                                  ? const Color(0xFF78909C)
+                                  : muted),
+                        ),
                         const SizedBox(height: 12),
                         Text(
                           'Start the conversation',
                           style: TextStyle(
-                            color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted),
+                            color:
+                                (Theme.of(context).brightness == Brightness.dark
+                                    ? const Color(0xFF78909C)
+                                    : muted),
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -197,7 +212,12 @@ class _MessageBubble extends StatelessWidget {
               _formatTime(message.createdAt),
               style: TextStyle(
                 fontSize: 10,
-                color: isMe ? Colors.white60 : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted),
+                color:
+                    isMe
+                        ? Colors.white60
+                        : (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
               ),
             ),
           ],

@@ -21,7 +21,9 @@ class SportsEvent {
     this.registeredCount = 0,
   });
 
-  factory SportsEvent.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory SportsEvent.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data() ?? {};
     final date = data['date'];
     return SportsEvent(
@@ -56,7 +58,9 @@ class EventTicket {
     required this.createdAt,
   });
 
-  factory EventTicket.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory EventTicket.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data() ?? {};
     final createdAt = data['createdAt'];
     return EventTicket(

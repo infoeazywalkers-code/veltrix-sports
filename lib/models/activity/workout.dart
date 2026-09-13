@@ -9,9 +9,9 @@ class WorkoutSegment {
   const WorkoutSegment({required this.label, required this.duration});
 
   factory WorkoutSegment.fromMap(Map<String, dynamic> map) => WorkoutSegment(
-        label: map['label'] as String? ?? '',
-        duration: map['duration'] as String? ?? '',
-      );
+    label: map['label'] as String? ?? '',
+    duration: map['duration'] as String? ?? '',
+  );
 
   Map<String, dynamic> toMap() => {'label': label, 'duration': duration};
 }
@@ -68,42 +68,43 @@ class Workout {
           (map['scheduledFor'] as Timestamp?)?.toDate() ?? DateTime.now(),
       progress: (map['progress'] as num?)?.toDouble() ?? 0,
       completed: map['completed'] as bool? ?? false,
-      segments: (map['segments'] as List? ?? [])
-          .map((s) => WorkoutSegment.fromMap(s as Map<String, dynamic>))
-          .toList(),
+      segments:
+          (map['segments'] as List? ?? [])
+              .map((s) => WorkoutSegment.fromMap(s as Map<String, dynamic>))
+              .toList(),
     );
   }
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'planId': planId,
-        'sport': sport.name,
-        'title': title,
-        'description': description,
-        'duration': duration,
-        'distanceKm': distanceKm,
-        'tss': tss,
-        'targetPace': targetPace,
-        'scheduledFor': scheduledFor,
-        'progress': progress,
-        'completed': completed,
-        'segments': segments.map((s) => s.toMap()).toList(),
-      };
+    'userId': userId,
+    'planId': planId,
+    'sport': sport.name,
+    'title': title,
+    'description': description,
+    'duration': duration,
+    'distanceKm': distanceKm,
+    'tss': tss,
+    'targetPace': targetPace,
+    'scheduledFor': scheduledFor,
+    'progress': progress,
+    'completed': completed,
+    'segments': segments.map((s) => s.toMap()).toList(),
+  };
 
   Workout copyWith({String? userId}) => Workout(
-        id: id,
-        userId: userId ?? this.userId,
-        planId: planId,
-        sport: sport,
-        title: title,
-        description: description,
-        duration: duration,
-        distanceKm: distanceKm,
-        tss: tss,
-        targetPace: targetPace,
-        scheduledFor: scheduledFor,
-        progress: progress,
-        completed: completed,
-        segments: segments,
-      );
+    id: id,
+    userId: userId ?? this.userId,
+    planId: planId,
+    sport: sport,
+    title: title,
+    description: description,
+    duration: duration,
+    distanceKm: distanceKm,
+    tss: tss,
+    targetPace: targetPace,
+    scheduledFor: scheduledFor,
+    progress: progress,
+    completed: completed,
+    segments: segments,
+  );
 }

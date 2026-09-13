@@ -100,7 +100,10 @@ class MobileWorkoutDetailScreen extends ConsumerWidget {
                     targetPace,
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : M.navy),
                     ),
                   ),
                 ),

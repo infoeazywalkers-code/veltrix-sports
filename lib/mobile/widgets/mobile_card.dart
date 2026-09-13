@@ -24,13 +24,14 @@ class MCard extends StatelessWidget {
 
     return Card(
       color: color,
-      child: onTap != null
-          ? InkWell(
-              borderRadius: BorderRadius.circular(M.rLg),
-              onTap: onTap,
-              child: content,
-            )
-          : content,
+      child:
+          onTap != null
+              ? InkWell(
+                borderRadius: BorderRadius.circular(M.rLg),
+                onTap: onTap,
+                child: content,
+              )
+              : content,
     );
   }
 }
@@ -84,7 +85,14 @@ class MInfoCard extends StatelessWidget {
           if (trailing != null) trailing!,
           if (onTap != null) ...[
             const SizedBox(width: M.sm),
-            Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted), size: 20),
+            Icon(
+              Icons.chevron_right,
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : M.muted),
+              size: 20,
+            ),
           ],
         ],
       ),
@@ -145,10 +153,9 @@ class MGradientBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: padding ?? const EdgeInsets.symmetric(
-        horizontal: M.lg,
-        vertical: M.xl,
-      ),
+      padding:
+          padding ??
+          const EdgeInsets.symmetric(horizontal: M.lg, vertical: M.xl),
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: colors),
         borderRadius: BorderRadius.circular(M.rXl),
@@ -157,4 +164,3 @@ class MGradientBanner extends StatelessWidget {
     );
   }
 }
-

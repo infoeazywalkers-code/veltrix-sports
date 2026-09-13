@@ -168,7 +168,10 @@ class _MobileShellState extends ConsumerState<MobileShell> {
                       Text(
                         'VELTRIX',
                         style: TextStyle(
-                          color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
+                          color:
+                              (Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : M.navy),
                           fontSize: 19,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.2,
@@ -297,7 +300,13 @@ class _MobileShellState extends ConsumerState<MobileShell> {
       ),
       title: Text(
         label,
-        style: TextStyle(fontWeight: FontWeight.w800, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFFB0BEC5) : M.ink)),
+        style: TextStyle(
+          fontWeight: FontWeight.w800,
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFFB0BEC5)
+                  : M.ink),
+        ),
       ),
       onTap: () {
         Navigator.pop(context);

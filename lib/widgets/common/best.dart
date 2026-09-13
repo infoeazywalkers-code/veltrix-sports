@@ -15,13 +15,25 @@ class Best extends StatelessWidget {
         children: [
           Icon(icon, color: color),
           const SizedBox(height: 14),
-          Text(title, style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 11)),
+          Text(
+            title,
+            style: TextStyle(
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
+              fontSize: 11,
+            ),
+          ),
           Text(
             value,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w900,
-              color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
             ),
           ),
         ],
@@ -29,4 +41,3 @@ class Best extends StatelessWidget {
     ),
   );
 }
-

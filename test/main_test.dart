@@ -222,8 +222,8 @@ void main() {
               const MaterialPage(child: Text('prev')),
               MaterialPage(child: VeltrixErrorBoundary(details: details)),
             ],
-        // ignore: deprecated_member_use
-        onPopPage: (route, result) => route.didPop(result),
+            // ignore: deprecated_member_use
+            onPopPage: (route, result) => route.didPop(result),
           ),
         ),
       );

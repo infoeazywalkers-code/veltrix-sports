@@ -29,12 +29,20 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.w900,
-            color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
           ),
         ),
         Text(
           'Understand the work behind your progress',
-          style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+          style: TextStyle(
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
+          ),
         ),
         const SizedBox(height: 18),
         SegmentedButton<int>(
@@ -59,12 +67,21 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w900,
-                    color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : navy),
                   ),
                 ),
                 Text(
                   'Training load over time (CTL, ATL, TSB)',
-                  style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 11),
+                  style: TextStyle(
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
+                    fontSize: 11,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 historyAsync.when(
@@ -81,7 +98,13 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
                         child: Center(
                           child: Text(
                             'Failed to load chart: $e',
-                            style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+                            style: TextStyle(
+                              color:
+                                  (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? const Color(0xFF78909C)
+                                      : muted),
+                            ),
                           ),
                         ),
                       ),

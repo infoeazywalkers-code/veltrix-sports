@@ -46,4 +46,3 @@ class MStatRing extends StatelessWidget {
     );
   }
 }
-

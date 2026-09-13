@@ -70,4 +70,3 @@ class PillarCard extends StatelessWidget {
     ),
   );
 }
-

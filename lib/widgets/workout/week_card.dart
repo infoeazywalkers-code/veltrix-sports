@@ -83,7 +83,10 @@ class WeekCard extends ConsumerWidget {
                     Text(
                       ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
                       style: TextStyle(
-                        color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted),
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF78909C)
+                                : muted),
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
                       ),

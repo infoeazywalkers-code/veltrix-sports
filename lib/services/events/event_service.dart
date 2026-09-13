@@ -8,12 +8,17 @@ class EventService {
   final FirebaseAuth _auth;
   final FirebaseFunctions _functions;
 
-  EventService({FirebaseFirestore? db, FirebaseAuth? auth, FirebaseFunctions? functions})
-      : _db = db ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance,
-        _functions = functions ?? FirebaseFunctions.instance;
+  EventService({
+    FirebaseFirestore? db,
+    FirebaseAuth? auth,
+    FirebaseFunctions? functions,
+  }) : _db = db ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance,
+       _functions = functions ?? FirebaseFunctions.instance;
 
-  String get _userId => _auth.currentUser?.uid ?? (throw StateError('Sign in to register for events.'));
+  String get _userId =>
+      _auth.currentUser?.uid ??
+      (throw StateError('Sign in to register for events.'));
 
   Stream<List<SportsEvent>> watchUpcomingEvents() => _db
       .collection('events')
@@ -31,7 +36,9 @@ class EventService {
       .map((snapshot) => snapshot.docs.map(EventTicket.fromFirestore).toList());
 
   Future<EventTicket> register(SportsEvent event) async {
-    final result = await _functions.httpsCallable('registerForEvent').call({'eventId': event.id});
+    final result = await _functions.httpsCallable('registerForEvent').call({
+      'eventId': event.id,
+    });
     final data = Map<String, dynamic>.from(result.data as Map);
     return EventTicket(
       id: data['id'] as String,

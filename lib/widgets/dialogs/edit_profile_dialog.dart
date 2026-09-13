@@ -105,12 +105,24 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.edit, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+          Icon(
+            Icons.edit,
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
+          ),
           SizedBox(width: 10),
           Expanded(
             child: Text(
               'Edit Profile',
-              style: TextStyle(fontWeight: FontWeight.w900, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
+              ),
             ),
           ),
         ],
@@ -138,7 +150,13 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               const SizedBox(height: 18),
               Text(
                 'Primary Sports',
-                style: TextStyle(fontWeight: FontWeight.w800, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
+                ),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -153,7 +171,16 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                         selectedColor: lime,
                         checkmarkColor: navy,
                         labelStyle: TextStyle(
-                          color: isSelected ? (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy) : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFFB0BEC5) : ink),
+                          color:
+                              isSelected
+                                  ? (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : navy)
+                                  : (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? const Color(0xFFB0BEC5)
+                                      : ink),
                           fontWeight:
                               isSelected ? FontWeight.w900 : FontWeight.w600,
                         ),

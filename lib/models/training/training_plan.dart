@@ -59,20 +59,20 @@ class TrainingPlan {
   }
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'coachId': coachId,
-        'name': name,
-        'description': description,
-        'sport': sport,
-        'durationWeeks': durationWeeks,
-        'difficulty': difficulty,
-        'targetGoal': targetGoal,
-        'price': price,
-        'eventName': eventName,
-        'startDate': startDate,
-        'endDate': endDate,
-        'totalDistanceKm': totalDistanceKm,
-        'status': status,
-        'createdAt': createdAt,
-      };
+    'userId': userId,
+    'coachId': coachId,
+    'name': name,
+    'description': description,
+    'sport': sport,
+    'durationWeeks': durationWeeks,
+    'difficulty': difficulty,
+    'targetGoal': targetGoal,
+    'price': price,
+    'eventName': eventName,
+    'startDate': startDate,
+    'endDate': endDate,
+    'totalDistanceKm': totalDistanceKm,
+    'status': status,
+    'createdAt': createdAt,
+  };
 }

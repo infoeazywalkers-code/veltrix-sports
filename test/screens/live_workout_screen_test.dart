@@ -4,7 +4,9 @@ import 'package:veltrix_sports/models/activity/workout.dart';
 import 'package:veltrix_sports/screens/activity/live_workout_screen.dart';
 
 void main() {
-  testWidgets('LiveWorkoutScreen renders HUD metrics and stopwatch controls', (tester) async {
+  testWidgets('LiveWorkoutScreen renders HUD metrics and stopwatch controls', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1280, 800);
     addTearDown(() => tester.view.resetPhysicalSize());
 
@@ -21,9 +23,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: LiveWorkoutScreen(workout: workout),
-      ),
+      MaterialApp(home: LiveWorkoutScreen(workout: workout)),
     );
 
     await tester.pumpAndSettle();

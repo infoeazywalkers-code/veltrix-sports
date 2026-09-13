@@ -14,4 +14,3 @@ class FooterSocial extends StatelessWidget {
     child: Icon(icon, color: Colors.white70, size: 17),
   );
 }
-

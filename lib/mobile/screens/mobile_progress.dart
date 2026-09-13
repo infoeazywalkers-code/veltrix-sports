@@ -49,7 +49,10 @@ class _MobileProgressScreenState extends ConsumerState<MobileProgressScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Fitness, fatigue & form', style: M.adaptiveTitle(context)),
+                    Text(
+                      'Fitness, fatigue & form',
+                      style: M.adaptiveTitle(context),
+                    ),
                     const SizedBox(height: 2),
                     Text(
                       'Training load over time (CTL, ATL, TSB)',
@@ -347,7 +350,10 @@ class _InsightCard extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : M.navy),
                   ),
                 ),
                 const SizedBox(height: 2),

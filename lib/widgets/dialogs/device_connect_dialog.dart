@@ -418,7 +418,13 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
           Expanded(
             child: Text(
               widget.deviceName,
-              style: TextStyle(fontWeight: FontWeight.w900, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
+              ),
             ),
           ),
         ],
@@ -447,7 +453,10 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                         widget.category,
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
-                          color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                          color:
+                              (Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : navy),
                         ),
                       ),
                     ],
@@ -507,7 +516,10 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                           _lastSyncText,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
-                            color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFFB0BEC5) : ink),
+                            color:
+                                (Theme.of(context).brightness == Brightness.dark
+                                    ? const Color(0xFFB0BEC5)
+                                    : ink),
                           ),
                         ),
                       ],
@@ -549,7 +561,10 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                     : 'Pair this device to sync workouts directly from your wearable sensor.',
                 style: TextStyle(
                   fontSize: 13,
-                  color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFFB0BEC5).withValues(alpha: 0.8) : ink.withValues(alpha: 0.8)),
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFFB0BEC5).withValues(alpha: 0.8)
+                          : ink.withValues(alpha: 0.8)),
                 ),
               ),
             ],
@@ -694,7 +709,13 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
               (d) => ListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                leading: Icon(Icons.bluetooth_searching, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy)),
+                leading: Icon(
+                  Icons.bluetooth_searching,
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
+                ),
                 title: Text(
                   d.name,
                   style: const TextStyle(
@@ -738,7 +759,13 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
           _requested
               ? '${widget.deviceName} links via OAuth — request received. We\'ll notify you when it\'s ready.'
               : '${widget.deviceName} links via OAuth — coming to your account soon.',
-          style: TextStyle(fontSize: 13, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFFB0BEC5).withValues(alpha: 0.8) : ink.withValues(alpha: 0.8))),
+          style: TextStyle(
+            fontSize: 13,
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFB0BEC5).withValues(alpha: 0.8)
+                    : ink.withValues(alpha: 0.8)),
+          ),
         ),
         if (_requestLoading) ...[
           const SizedBox(height: 10),

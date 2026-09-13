@@ -4,7 +4,7 @@ class PaymentBackendService {
   final FirebaseFunctions _functions;
 
   PaymentBackendService({FirebaseFunctions? functions})
-      : _functions = functions ?? FirebaseFunctions.instance;
+    : _functions = functions ?? FirebaseFunctions.instance;
 
   Future<PaymentOrder> createOrder({required String planId}) async {
     final callable = _functions.httpsCallable('createRazorpayOrder');
@@ -36,5 +36,9 @@ class PaymentOrder {
   final int amountPaise;
   final String keyId;
 
-  const PaymentOrder({required this.orderId, required this.amountPaise, required this.keyId});
+  const PaymentOrder({
+    required this.orderId,
+    required this.amountPaise,
+    required this.keyId,
+  });
 }

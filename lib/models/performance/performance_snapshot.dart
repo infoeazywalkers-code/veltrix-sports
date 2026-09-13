@@ -38,13 +38,13 @@ class PerformanceSnapshot {
   }
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'fitness': fitness,
-        'fatigue': fatigue,
-        'form': form,
-        'weeklyTss': weeklyTss,
-        'weeklyWorkouts': weeklyWorkouts,
-        'weeklyDuration': weeklyDuration,
-        'recordedAt': recordedAt,
-      };
+    'userId': userId,
+    'fitness': fitness,
+    'fatigue': fatigue,
+    'form': form,
+    'weeklyTss': weeklyTss,
+    'weeklyWorkouts': weeklyWorkouts,
+    'weeklyDuration': weeklyDuration,
+    'recordedAt': recordedAt,
+  };
 }

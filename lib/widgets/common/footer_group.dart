@@ -5,7 +5,12 @@ class FooterGroup extends StatelessWidget {
   final String title;
   final List<String> links;
   final List<VoidCallback?>? onTapLinks;
-  const FooterGroup({super.key, required this.title, required this.links, this.onTapLinks});
+  const FooterGroup({
+    super.key,
+    required this.title,
+    required this.links,
+    this.onTapLinks,
+  });
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +29,10 @@ class FooterGroup extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: GestureDetector(
-            onTap: onTapLinks != null && i < onTapLinks!.length ? onTapLinks![i] : null,
+            onTap:
+                onTapLinks != null && i < onTapLinks!.length
+                    ? onTapLinks![i]
+                    : null,
             child: Text(
               links[i],
               style: const TextStyle(
@@ -33,9 +41,8 @@ class FooterGroup extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
+          ),
         ),
-      ),
     ],
   );
 }
-

@@ -25,7 +25,10 @@ class LegalScreen extends StatelessWidget {
           Text(
             isTerms ? 'Terms of Service' : 'Privacy Policy',
             style: TextStyle(
-              color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
               fontSize: 24,
               fontWeight: FontWeight.w900,
             ),
@@ -33,7 +36,13 @@ class LegalScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             'Last updated: September 2026',
-            style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 12),
+            style: TextStyle(
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
+              fontSize: 12,
+            ),
           ),
           const SizedBox(height: 16),
           for (final section in sections) ...[
@@ -60,13 +69,25 @@ class _LegalSection extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
             fontSize: 15,
             fontWeight: FontWeight.w800,
           ),
         ),
         const SizedBox(height: 6),
-        Text(body, style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFFB0BEC5) : ink), height: 1.55)),
+        Text(
+          body,
+          style: TextStyle(
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFB0BEC5)
+                    : ink),
+            height: 1.55,
+          ),
+        ),
       ],
     );
   }

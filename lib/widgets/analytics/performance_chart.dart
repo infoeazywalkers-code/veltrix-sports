@@ -54,16 +54,28 @@ class PerformanceChartWidget extends StatelessWidget {
     } else {
       // Default baseline
       fitnessSpots.addAll(const [
-        FlSpot(0, 20), FlSpot(1, 28), FlSpot(2, 35), FlSpot(3, 42),
-        FlSpot(4, 48), FlSpot(5, 54),
+        FlSpot(0, 20),
+        FlSpot(1, 28),
+        FlSpot(2, 35),
+        FlSpot(3, 42),
+        FlSpot(4, 48),
+        FlSpot(5, 54),
       ]);
       fatigueSpots.addAll(const [
-        FlSpot(0, 15), FlSpot(1, 32), FlSpot(2, 45), FlSpot(3, 38),
-        FlSpot(4, 58), FlSpot(5, 61),
+        FlSpot(0, 15),
+        FlSpot(1, 32),
+        FlSpot(2, 45),
+        FlSpot(3, 38),
+        FlSpot(4, 58),
+        FlSpot(5, 61),
       ]);
       formSpots.addAll(const [
-        FlSpot(0, 5), FlSpot(1, -4), FlSpot(2, -10), FlSpot(3, 4),
-        FlSpot(4, -10), FlSpot(5, -7),
+        FlSpot(0, 5),
+        FlSpot(1, -4),
+        FlSpot(2, -10),
+        FlSpot(3, 4),
+        FlSpot(4, -10),
+        FlSpot(5, -7),
       ]);
     }
 
@@ -85,8 +97,12 @@ class PerformanceChartWidget extends StatelessWidget {
           ),
           titlesData: FlTitlesData(
             show: true,
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
@@ -96,7 +112,10 @@ class PerformanceChartWidget extends StatelessWidget {
                   return Text(
                     value.toInt().toString(),
                     style: TextStyle(
-                      color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),
@@ -111,16 +130,32 @@ class PerformanceChartWidget extends StatelessWidget {
                 interval: 1,
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
-                  if (snapshots.isNotEmpty && index >= 0 && index < snapshots.length) {
+                  if (snapshots.isNotEmpty &&
+                      index >= 0 &&
+                      index < snapshots.length) {
                     final date = snapshots[index].recordedAt;
                     return Text(
                       '${date.day}/${date.month}',
-                      style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 10, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF78909C)
+                                : muted),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
                     );
                   }
                   return Text(
                     'W${index + 1}',
-                    style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), fontSize: 10, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
                   );
                 },
               ),
@@ -142,7 +177,10 @@ class PerformanceChartWidget extends StatelessWidget {
                   return LineTooltipItem(
                     '$label: ${spot.y.toStringAsFixed(1)}',
                     TextStyle(
-                      color: spot.barIndex == 0 ? lime : (spot.barIndex == 1 ? Colors.white : orange),
+                      color:
+                          spot.barIndex == 0
+                              ? lime
+                              : (spot.barIndex == 1 ? Colors.white : orange),
                       fontWeight: FontWeight.w800,
                       fontSize: 12,
                     ),

@@ -64,13 +64,17 @@ class MobileHomeScreen extends ConsumerWidget {
                       height: 40,
                       child: Center(child: CircularProgressIndicator()),
                     ),
-                error: (e, _) => Text('Error: $e', style: M.adaptiveMuted(context)),
+                error:
+                    (e, _) =>
+                        Text('Error: $e', style: M.adaptiveMuted(context)),
                 data: (profile) {
                   final name =
                       profile?.displayName.split(' ').first ?? 'Athlete';
                   return Text(
                     'Hello, $name',
-                    style: M.adaptiveScreenTitle(context).copyWith(fontSize: 32),
+                    style: M
+                        .adaptiveScreenTitle(context)
+                        .copyWith(fontSize: 32),
                   );
                 },
               ),
@@ -168,7 +172,11 @@ class MobileHomeScreen extends ConsumerWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 10,
-                              color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : M.navy),
+                              color:
+                                  (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : M.navy),
                             ),
                           ),
                         ),
@@ -256,7 +264,10 @@ class MobileHomeScreen extends ConsumerWidget {
                       (e, _) => MCard(
                         child: Padding(
                           padding: const EdgeInsets.all(M.base),
-                          child: Text('Error: $e', style: M.adaptiveMuted(context)),
+                          child: Text(
+                            'Error: $e',
+                            style: M.adaptiveMuted(context),
+                          ),
                         ),
                       ),
                   data: (workouts) {
@@ -438,7 +449,10 @@ class _WeekSummary extends StatelessWidget {
                   Text(
                     ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
                     style: TextStyle(
-                      color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : M.muted),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : M.muted),
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
                     ),

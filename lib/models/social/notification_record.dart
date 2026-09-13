@@ -19,7 +19,9 @@ class NotificationRecord {
     this.read = false,
   });
 
-  factory NotificationRecord.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory NotificationRecord.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data() ?? {};
     final createdAt = data['createdAt'];
     return NotificationRecord(
@@ -34,11 +36,11 @@ class NotificationRecord {
   }
 
   Map<String, dynamic> toMap() => {
-        'title': title,
-        'body': body,
-        'type': type,
-        'payload': payload,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'read': read,
-      };
+    'title': title,
+    'body': body,
+    'type': type,
+    'payload': payload,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'read': read,
+  };
 }

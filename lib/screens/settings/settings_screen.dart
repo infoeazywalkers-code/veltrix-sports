@@ -27,7 +27,10 @@ class SettingsScreen extends ConsumerWidget {
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w900,
-              color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
             ),
           ),
           const SizedBox(height: 24),
@@ -108,7 +111,13 @@ class SettingsScreen extends ConsumerWidget {
                   color: Colors.red,
                 ),
               ),
-              trailing: Icon(Icons.chevron_right, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+              trailing: Icon(
+                Icons.chevron_right,
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
+              ),
               onTap:
                   () => Navigator.push(
                     context,
@@ -247,7 +256,10 @@ class _SettingsSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
-                color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
               ),
             ),
             const SizedBox(height: 12),
@@ -332,7 +344,13 @@ class _ZoneSummary extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         '${zone.min}-${zone.max}',
-                        style: TextStyle(fontSize: 13, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color:
+                              (Theme.of(context).brightness == Brightness.dark
+                                  ? const Color(0xFF78909C)
+                                  : muted),
+                        ),
                       ),
                     ],
                   ),

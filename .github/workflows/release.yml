@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    name: Create Release
+  release-android-web:
+    name: Release Android + Web
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +26,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Setup google-services.json for CI
+        env:
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON_BASE64" ]; then
+            echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > android/app/google-services.json
+          elif [ ! -f android/app/google-services.json ]; then
+            echo '{"project_info":{"project_number":"25616595982","project_id":"veltrix-sports","storage_bucket":"veltrix-sports.firebasestorage.app"},"client":[{"client_info":{"mobilesdk_app_id":"1:25616595982:android:d3aa8cf032ea388fc8d05f","android_client_info":{"package_name":"com.veltrixsports.veltrix_sports"}},"api_key":[{"current_key":"ci-placeholder"}],"services":{"appinvite_service":{"other_platform_oauth_client":[]}}}],"configuration_version":"1"}' > android/app/google-services.json
+          fi
 
       - name: Configure Android signing
         env:
@@ -57,12 +67,160 @@ jobs:
       - name: Build Web
         run: flutter build web --release --no-tree-shake-icons --dart-define=VELTRIX_PRODUCTION=true
 
+      - name: Zip Web
+        run: zip -r web-build.zip build/web
+
       - name: Build Android APK
         run: flutter build apk --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
 
       - name: Build Android App Bundle
         run: flutter build appbundle --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-android-web
+          path: |
+            web-build.zip
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+  release-windows:
+    name: Release Windows (exe)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.9'
+          channel: 'stable'
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=$($env:GITHUB_REF -replace 'refs/tags/v','')" >> $env:GITHUB_OUTPUT
+      - run: flutter config --enable-windows-desktop
+      - run: flutter pub get
+      - run: flutter build windows --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
+      - name: Zip Windows build
+        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath windows-build.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-windows
+          path: windows-build.zip
+          retention-days: 30
+
+  release-linux:
+    name: Release Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.9'
+          channel: 'stable'
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - run: flutter config --enable-linux-desktop
+      - run: flutter pub get
+      - run: flutter build linux --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
+      - name: Tar Linux bundle
+        run: tar -czf linux-build.tar.gz -C build/linux/x64/release bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-linux
+          path: linux-build.tar.gz
+          retention-days: 30
+
+  release-macos:
+    name: Release macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.9'
+          channel: 'stable'
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - run: flutter config --enable-macos-desktop
+      - run: flutter pub get
+      - run: flutter build macos --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
+      - name: Zip macOS build
+        run: ditto -c -k --sequesterRsrc --keepParent build/macos/Build/Products/Release/*.app macos-build.zip || (cd build/macos/Build/Products/Release && zip -r ../../../../../macos-build.zip .)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-macos
+          path: macos-build.zip
+          retention-days: 30
+
+  release-ios:
+    name: Release iOS (ipa)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.9'
+          channel: 'stable'
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - run: flutter pub get
+      # Signed IPA — requires Apple secrets. Skipped gracefully if not set.
+      - name: Import signing (if secrets present)
+        id: signing
+        continue-on-error: true
+        env:
+          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          IOS_CERT_PASSWORD: ${{ secrets.IOS_CERT_PASSWORD }}
+          IOS_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISION_PROFILE_BASE64 }}
+        run: |
+          test -n "$IOS_CERTIFICATE_BASE64"
+          echo "$IOS_CERTIFICATE_BASE64" | base64 --decode > ios_cert.p12
+          security create-keychain -p actions build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p actions build.keychain
+          security import ios_cert.p12 -k build.keychain -P "$IOS_CERT_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k actions build.keychain
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$IOS_PROVISION_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+      - name: Build signed IPA
+        if: steps.signing.outcome == 'success'
+        run: flutter build ipa --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
+      - name: Build unsigned (fallback)
+        if: steps.signing.outcome != 'success'
+        run: flutter build ios --release --no-codesign --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
+      - uses: actions/upload-artifact@v4
+        if: steps.signing.outcome == 'success'
+        with:
+          name: release-ios
+          path: build/ios/ipa/*.ipa
+          retention-days: 30
+
+  publish:
+    name: Publish GitHub Release
+    needs: [release-android-web, release-windows, release-linux, release-macos, release-ios]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: List artifacts
+        run: find dist -type f | head -50
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -72,7 +230,10 @@ jobs:
           prerelease: false
           generate_release_notes: true
           files: |
-            build/app/outputs/flutter-apk/app-release.apk
-            build/app/outputs/bundle/release/app-release.aab
+            dist/release-android-web/*
+            dist/release-windows/*
+            dist/release-linux/*
+            dist/release-macos/*
+            dist/release-ios/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

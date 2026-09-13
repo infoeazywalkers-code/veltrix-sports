@@ -4,7 +4,10 @@ import 'package:flutter/foundation.dart';
 class AnalyticsService {
   static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
-  static Future<void> logEvent(String name, [Map<String, Object>? parameters]) async {
+  static Future<void> logEvent(
+    String name, [
+    Map<String, Object>? parameters,
+  ]) async {
     try {
       await _analytics.logEvent(name: name, parameters: parameters);
       if (kDebugMode) {
@@ -25,7 +28,12 @@ class AnalyticsService {
     });
   }
 
-  static Future<void> logWorkoutCompleted(String workoutId, String sport, double distanceKm, int tss) async {
+  static Future<void> logWorkoutCompleted(
+    String workoutId,
+    String sport,
+    double distanceKm,
+    int tss,
+  ) async {
     await logEvent('workout_completed', {
       'workout_id': workoutId,
       'sport': sport,
@@ -34,7 +42,10 @@ class AnalyticsService {
     });
   }
 
-  static Future<void> logSubscriptionPurchased(String planId, double price) async {
+  static Future<void> logSubscriptionPurchased(
+    String planId,
+    double price,
+  ) async {
     await logEvent('subscription_purchased', {
       'plan_id': planId,
       'price': price,
@@ -42,7 +53,10 @@ class AnalyticsService {
     });
   }
 
-  static Future<void> logDevicePaired(String deviceName, String category) async {
+  static Future<void> logDevicePaired(
+    String deviceName,
+    String category,
+  ) async {
     await logEvent('device_paired', {
       'device_name': deviceName,
       'category': category,
@@ -50,8 +64,6 @@ class AnalyticsService {
   }
 
   static Future<void> logCoachInquired(String coachName) async {
-    await logEvent('coach_inquired', {
-      'coach_name': coachName,
-    });
+    await logEvent('coach_inquired', {'coach_name': coachName});
   }
 }

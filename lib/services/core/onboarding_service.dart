@@ -6,10 +6,12 @@ class OnboardingService {
   final FirebaseAuth _auth;
 
   OnboardingService({FirebaseFirestore? db, FirebaseAuth? auth})
-      : _db = db ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance;
+    : _db = db ?? FirebaseFirestore.instance,
+      _auth = auth ?? FirebaseAuth.instance;
 
-  String get _userId => _auth.currentUser?.uid ?? (throw StateError('Sign in to continue onboarding.'));
+  String get _userId =>
+      _auth.currentUser?.uid ??
+      (throw StateError('Sign in to continue onboarding.'));
 
   Future<void> saveProgress({
     required List<String> sports,

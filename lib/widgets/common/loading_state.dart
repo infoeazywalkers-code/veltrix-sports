@@ -16,7 +16,15 @@ class LoadingSpinner extends StatelessWidget {
             const CircularProgressIndicator(color: navy),
             if (message != null) ...[
               const SizedBox(height: 16),
-              Text(message!, style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted))),
+              Text(
+                message!,
+                style: TextStyle(
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
+                ),
+              ),
             ],
           ],
         ),
@@ -43,14 +51,16 @@ class ErrorState extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+              style: TextStyle(
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
+              ),
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 16),
-              FilledButton(
-                onPressed: onRetry,
-                child: const Text('Retry'),
-              ),
+              FilledButton(onPressed: onRetry, child: const Text('Retry')),
             ],
           ],
         ),
@@ -78,21 +88,36 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted), size: 48),
+            Icon(
+              icon,
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
+              size: 48,
+            ),
             const SizedBox(height: 16),
             Text(
               title,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
-                color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               subtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(color: (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF78909C) : muted)),
+              style: TextStyle(
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
+              ),
             ),
           ],
         ),

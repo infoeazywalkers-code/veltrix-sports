@@ -24,9 +24,10 @@ class MarketingFeatureCard extends StatelessWidget {
     decoration: BoxDecoration(
       color: color ?? navy,
       borderRadius: BorderRadius.circular(22),
-      image: image == null
-          ? null
-          : DecorationImage(image: AssetImage(image!), fit: BoxFit.cover),
+      image:
+          image == null
+              ? null
+              : DecorationImage(image: AssetImage(image!), fit: BoxFit.cover),
     ),
     child: Container(
       padding: const EdgeInsets.all(22),
@@ -96,4 +97,3 @@ class MarketingFeatureCard extends StatelessWidget {
     ),
   );
 }
-
