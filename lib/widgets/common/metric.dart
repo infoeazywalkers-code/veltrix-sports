@@ -10,9 +10,10 @@ class Metric extends StatelessWidget {
       Text(
         value,
         style: TextStyle(
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : navy),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
           fontSize: 19,
           fontWeight: FontWeight.w900,
         ),
@@ -20,9 +21,10 @@ class Metric extends StatelessWidget {
       Text(
         label,
         style: TextStyle(
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
           fontSize: 10,
         ),
       ),

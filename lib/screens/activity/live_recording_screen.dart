@@ -88,9 +88,8 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
     final random = (DateTime.now().millisecondsSinceEpoch % 100) / 100;
     _distanceKm += 0.008 + random * 0.004;
     _currentSpeedKmh = 25 + random * 15;
-    _avgSpeedKmh = _distanceKm > 0
-        ? (_distanceKm / (_elapsedSeconds / 3600))
-        : 0;
+    _avgSpeedKmh =
+        _distanceKm > 0 ? (_distanceKm / (_elapsedSeconds / 3600)) : 0;
     _elevationGainM = (_distanceKm * 12).round();
 
     if (_selectedSport == SportType.cycling) {
@@ -102,12 +101,14 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
       _currentCadence = 170 + (random * 20).round();
     }
 
-    _avgHeartRate = _avgHeartRate == null
-        ? _currentHeartRate
-        : ((_avgHeartRate! + _currentHeartRate!) ~/ 2);
-    _avgPower = _avgPower == null
-        ? _currentPower
-        : ((_avgPower! + _currentPower!) ~/ 2);
+    _avgHeartRate =
+        _avgHeartRate == null
+            ? _currentHeartRate
+            : ((_avgHeartRate! + _currentHeartRate!) ~/ 2);
+    _avgPower =
+        _avgPower == null
+            ? _currentPower
+            : ((_avgPower! + _currentPower!) ~/ 2);
   }
 
   String _formatDuration(int seconds) {
@@ -177,41 +178,46 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: SportType.values.take(4).map((sport) {
-                  final isSelected = sport == _selectedSport;
-                  return GestureDetector(
-                    onTap: () {
-                      if (!_isRecording) {
-                        setState(() => _selectedSport = sport);
-                      }
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 6),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? const Color(0xFFF97316).withValues(alpha: 0.15)
-                            : Colors.white.withValues(alpha: 0.03),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: isSelected
-                              ? const Color(0xFFF97316)
-                              : Colors.transparent,
+                children:
+                    SportType.values.take(4).map((sport) {
+                      final isSelected = sport == _selectedSport;
+                      return GestureDetector(
+                        onTap: () {
+                          if (!_isRecording) {
+                            setState(() => _selectedSport = sport);
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                isSelected
+                                    ? const Color(
+                                      0xFFF97316,
+                                    ).withValues(alpha: 0.15)
+                                    : Colors.white.withValues(alpha: 0.03),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color:
+                                  isSelected
+                                      ? const Color(0xFFF97316)
+                                      : Colors.transparent,
+                            ),
+                          ),
+                          child: Text(
+                            _sportEmoji(sport),
+                            style: TextStyle(
+                              fontSize: isSelected ? 22 : 18,
+                              color: isSelected ? null : Colors.white38,
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        _sportEmoji(sport),
-                        style: TextStyle(
-                          fontSize: isSelected ? 22 : 18,
-                          color: isSelected ? null : Colors.white38,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
+                      );
+                    }).toList(),
               ),
             ),
 
@@ -221,9 +227,10 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
             Text(
               _formatDuration(_elapsedSeconds),
               style: TextStyle(
-                color: _isRecording
-                    ? (_isPaused ? const Color(0xFFFBBF24) : Colors.white)
-                    : Colors.white24,
+                color:
+                    _isRecording
+                        ? (_isPaused ? const Color(0xFFFBBF24) : Colors.white)
+                        : Colors.white24,
                 fontSize: 56,
                 fontWeight: FontWeight.w200,
                 fontFeatures: const [FontFeature.tabularFigures()],
@@ -241,9 +248,10 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
                     width: 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: _isPaused
-                          ? const Color(0xFFFBBF24)
-                          : const Color(0xFFEF4444),
+                      color:
+                          _isPaused
+                              ? const Color(0xFFFBBF24)
+                              : const Color(0xFFEF4444),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -251,9 +259,10 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
                   Text(
                     _isPaused ? 'PAUSED' : 'RECORDING',
                     style: TextStyle(
-                      color: _isPaused
-                          ? const Color(0xFFFBBF24)
-                          : const Color(0xFFEF4444),
+                      color:
+                          _isPaused
+                              ? const Color(0xFFFBBF24)
+                              : const Color(0xFFEF4444),
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
@@ -387,35 +396,41 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
                 children: [
                   // Stop button
                   GestureDetector(
-                    onTap: _isRecording
-                        ? () {
-                            _timer?.cancel();
-                            setState(() {
-                              _isRecording = false;
-                              _isPaused = false;
-                            });
-                            // Save activity logic would go here
-                          }
-                        : null,
+                    onTap:
+                        _isRecording
+                            ? () {
+                              _timer?.cancel();
+                              setState(() {
+                                _isRecording = false;
+                                _isPaused = false;
+                              });
+                              // Save activity logic would go here
+                            }
+                            : null,
                     child: Container(
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: _isRecording
-                            ? const Color(0xFFEF4444).withValues(alpha: 0.15)
-                            : Colors.white.withValues(alpha: 0.03),
+                        color:
+                            _isRecording
+                                ? const Color(
+                                  0xFFEF4444,
+                                ).withValues(alpha: 0.15)
+                                : Colors.white.withValues(alpha: 0.03),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: _isRecording
-                              ? const Color(0xFFEF4444)
-                              : Colors.white.withValues(alpha: 0.1),
+                          color:
+                              _isRecording
+                                  ? const Color(0xFFEF4444)
+                                  : Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
                       child: Icon(
                         Icons.stop,
-                        color: _isRecording
-                            ? const Color(0xFFEF4444)
-                            : Colors.white24,
+                        color:
+                            _isRecording
+                                ? const Color(0xFFEF4444)
+                                : Colors.white24,
                         size: 24,
                       ),
                     ),
@@ -430,11 +445,12 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
                       width: 72,
                       height: 72,
                       decoration: BoxDecoration(
-                        color: _isRecording
-                            ? (_isPaused
-                                  ? const Color(0xFF10B981)
-                                  : const Color(0xFFFBBF24))
-                            : const Color(0xFFF97316),
+                        color:
+                            _isRecording
+                                ? (_isPaused
+                                    ? const Color(0xFF10B981)
+                                    : const Color(0xFFFBBF24))
+                                : const Color(0xFFF97316),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -456,21 +472,26 @@ class _LiveRecordingScreenState extends State<LiveRecordingScreen> {
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: _isRecording
-                            ? const Color(0xFF3B82F6).withValues(alpha: 0.15)
-                            : Colors.white.withValues(alpha: 0.03),
+                        color:
+                            _isRecording
+                                ? const Color(
+                                  0xFF3B82F6,
+                                ).withValues(alpha: 0.15)
+                                : Colors.white.withValues(alpha: 0.03),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: _isRecording
-                              ? const Color(0xFF3B82F6)
-                              : Colors.white.withValues(alpha: 0.1),
+                          color:
+                              _isRecording
+                                  ? const Color(0xFF3B82F6)
+                                  : Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
                       child: Icon(
                         Icons.flag,
-                        color: _isRecording
-                            ? const Color(0xFF3B82F6)
-                            : Colors.white24,
+                        color:
+                            _isRecording
+                                ? const Color(0xFF3B82F6)
+                                : Colors.white24,
                         size: 24,
                       ),
                     ),

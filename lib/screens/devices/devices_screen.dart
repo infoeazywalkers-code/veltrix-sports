@@ -83,9 +83,10 @@ class DevicesScreen extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF0F2030)
-                : const Color(0xffeaf2f8),
+            color:
+                Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF0F2030)
+                    : const Color(0xffeaf2f8),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -96,18 +97,20 @@ class DevicesScreen extends StatelessWidget {
                 child: Text(
                   'Don\u2019t see your device? Contact our support team and we\u2019ll help you get connected.',
                   style: TextStyle(
-                    color: (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : navy),
                     fontSize: 13,
                   ),
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => supportScreen()),
-                ),
+                onPressed:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => supportScreen()),
+                    ),
                 child: const Text(
                   'Contact support',
                   style: TextStyle(fontWeight: FontWeight.w800),
@@ -165,78 +168,89 @@ class _TopDevicesState extends State<_TopDevices> {
       spacing: 12,
       runSpacing: 12,
       alignment: WrapAlignment.center,
-      children: _devices.map((d) {
-        final connected = _isConnected(d.$1, false);
-        return InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () async {
-            final changed = await showDialog<bool>(
-              context: context,
-              builder: (_) => DeviceConnectDialog(
-                deviceName: d.$1,
-                category: d.$3,
-                isConnected: connected,
+      children:
+          _devices.map((d) {
+            final connected = _isConnected(d.$1, false);
+            return InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () async {
+                final changed = await showDialog<bool>(
+                  context: context,
+                  builder:
+                      (_) => DeviceConnectDialog(
+                        deviceName: d.$1,
+                        category: d.$3,
+                        isConnected: connected,
+                      ),
+                );
+                if (changed != null) {
+                  await _refreshStates();
+                }
+              },
+              child: Container(
+                width:
+                    desktop ? 150 : (MediaQuery.sizeOf(context).width - 50) / 3,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 22,
+                  horizontal: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardTheme.color,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color:
+                        connected
+                            ? Colors.green.withValues(alpha: 0.4)
+                            : (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF1A3040)
+                                : const Color(0xffe4eaf0)),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      d.$2,
+                      color:
+                          connected
+                              ? Colors.green[800]
+                              : (Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : navy),
+                      size: 32,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      d.$1,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : navy),
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      connected ? 'Connected' : 'Tap to pair',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color:
+                            connected
+                                ? Colors.green[700]
+                                : (Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? const Color(0xFF78909C)
+                                    : muted),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
-            if (changed != null) {
-              await _refreshStates();
-            }
-          },
-          child: Container(
-            width: desktop ? 150 : (MediaQuery.sizeOf(context).width - 50) / 3,
-            padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardTheme.color,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: connected
-                    ? Colors.green.withValues(alpha: 0.4)
-                    : (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF1A3040)
-                          : const Color(0xffe4eaf0)),
-              ),
-            ),
-            child: Column(
-              children: [
-                Icon(
-                  d.$2,
-                  color: connected
-                      ? Colors.green[800]
-                      : (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
-                  size: 32,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  d.$1,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  connected ? 'Connected' : 'Tap to pair',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    color: connected
-                        ? Colors.green[700]
-                        : (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C)
-                              : muted),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
+          }).toList(),
     );
   }
 }
@@ -267,9 +281,10 @@ class _DeviceCategory extends StatelessWidget {
             Wrap(
               spacing: desktop ? 12 : 10,
               runSpacing: desktop ? 12 : 10,
-              children: devices
-                  .map((d) => _DeviceChip(d.$1, d.$2, category, d.$3))
-                  .toList(),
+              children:
+                  devices
+                      .map((d) => _DeviceChip(d.$1, d.$2, category, d.$3))
+                      .toList(),
             ),
           ],
         ),
@@ -311,11 +326,12 @@ class _DeviceChipState extends State<_DeviceChip> {
     onTap: () async {
       final changed = await showDialog<bool>(
         context: context,
-        builder: (_) => DeviceConnectDialog(
-          deviceName: widget.name,
-          category: widget.category,
-          isConnected: _connected,
-        ),
+        builder:
+            (_) => DeviceConnectDialog(
+              deviceName: widget.name,
+              category: widget.category,
+              isConnected: _connected,
+            ),
       );
       if (changed != null && mounted) {
         setState(() => _connected = changed);
@@ -326,45 +342,50 @@ class _DeviceChipState extends State<_DeviceChip> {
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: _connected
-            ? lime.withValues(alpha: 0.25)
-            : (Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF0F2030)
-                  : bg),
+        color:
+            _connected
+                ? lime.withValues(alpha: 0.25)
+                : (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF0F2030)
+                    : bg),
         borderRadius: BorderRadius.circular(12),
-        border: _connected
-            ? Border.all(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withValues(alpha: 0.3)
-                    : navy.withValues(alpha: 0.3),
-              )
-            : null,
+        border:
+            _connected
+                ? Border.all(
+                  color:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white.withValues(alpha: 0.3)
+                          : navy.withValues(alpha: 0.3),
+                )
+                : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             widget.icon,
-            color: _connected
-                ? (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy)
-                : (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+            color:
+                _connected
+                    ? (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy)
+                    : (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
             size: 18,
           ),
           const SizedBox(width: 8),
           Text(
             widget.name,
             style: TextStyle(
-              color: _connected
-                  ? (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy)
-                  : (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFFB0BEC5)
-                        : ink),
+              color:
+                  _connected
+                      ? (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy)
+                      : (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFFB0BEC5)
+                          : ink),
               fontWeight: FontWeight.w700,
               fontSize: 12,
             ),
@@ -514,14 +535,16 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
                   padding: const EdgeInsets.all(10),
                   margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
-                    color: _syncSuccess
-                        ? Colors.green.withValues(alpha: 0.2)
-                        : Colors.orange.withValues(alpha: 0.2),
+                    color:
+                        _syncSuccess
+                            ? Colors.green.withValues(alpha: 0.2)
+                            : Colors.orange.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: _syncSuccess
-                          ? Colors.green.withValues(alpha: 0.5)
-                          : Colors.orange.withValues(alpha: 0.5),
+                      color:
+                          _syncSuccess
+                              ? Colors.green.withValues(alpha: 0.5)
+                              : Colors.orange.withValues(alpha: 0.5),
                     ),
                   ),
                   child: Row(
@@ -563,16 +586,17 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    icon: _isSyncing
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: navy,
-                            ),
-                          )
-                        : const Icon(Icons.sync, size: 18),
+                    icon:
+                        _isSyncing
+                            ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: navy,
+                              ),
+                            )
+                            : const Icon(Icons.sync, size: 18),
                     label: Text(
                       _isSyncing ? 'Syncing...' : 'Sync Watch Workouts Now',
                       style: const TextStyle(
@@ -589,11 +613,12 @@ class _WatchSyncBannerState extends State<_WatchSyncBanner> {
                       if (!context.mounted) return;
                       await showDialog<bool>(
                         context: context,
-                        builder: (_) => DeviceConnectDialog(
-                          deviceName: 'Apple Watch Series 9',
-                          category: 'Wearable',
-                          isConnected: real,
-                        ),
+                        builder:
+                            (_) => DeviceConnectDialog(
+                              deviceName: 'Apple Watch Series 9',
+                              category: 'Wearable',
+                              isConnected: real,
+                            ),
                       );
                     },
                     style: OutlinedButton.styleFrom(

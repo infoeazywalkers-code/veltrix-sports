@@ -20,11 +20,12 @@ class PerformanceService {
 
   Future<PerformanceSnapshot?> getLatest(String userId) async {
     try {
-      final q = await _snapshots
-          .where('userId', isEqualTo: userId)
-          .orderBy('recordedAt', descending: true)
-          .limit(1)
-          .get();
+      final q =
+          await _snapshots
+              .where('userId', isEqualTo: userId)
+              .orderBy('recordedAt', descending: true)
+              .limit(1)
+              .get();
       if (q.docs.isEmpty) return null;
       return PerformanceSnapshot.fromMap(q.docs.first.id, q.docs.first.data());
     } catch (e) {
@@ -74,11 +75,12 @@ class PerformanceService {
     int limit = 30,
   }) async {
     try {
-      final q = await _snapshots
-          .where('userId', isEqualTo: userId)
-          .orderBy('recordedAt', descending: true)
-          .limit(limit)
-          .get();
+      final q =
+          await _snapshots
+              .where('userId', isEqualTo: userId)
+              .orderBy('recordedAt', descending: true)
+              .limit(limit)
+              .get();
       return q.docs
           .map((doc) => PerformanceSnapshot.fromMap(doc.id, doc.data()))
           .toList();

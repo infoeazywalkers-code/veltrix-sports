@@ -14,37 +14,40 @@ class AuthWrapper extends ConsumerWidget {
     final authState = ref.watch(authStateProvider);
 
     return authState.when(
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator(color: navy)),
-      ),
-      error: (e, _) => Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.error_outline_rounded,
-                  color: Colors.redAccent,
-                  size: 48,
+      loading:
+          () => const Scaffold(
+            body: Center(child: CircularProgressIndicator(color: navy)),
+          ),
+      error:
+          (e, _) => Scaffold(
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      color: Colors.redAccent,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      AuthService.getHumanReadableAuthError(e),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : navy),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  AuthService.getHumanReadableAuthError(e),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
       data: (user) {
         if (user == null) return const LoginScreen();
         return child;
@@ -203,60 +206,64 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Reset Password'),
-        content: Form(
-          key: dialogFormKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Enter your email address and we\'ll send you a link to reset your password.',
-                style: TextStyle(
-                  color: (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
-                  fontSize: 13,
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                validator: _validateEmail,
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  prefixIcon: const Icon(Icons.email_outlined, size: 20),
-                  filled: true,
-                  fillColor: bg,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+      builder:
+          (ctx) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text('Reset Password'),
+            content: Form(
+              key: dialogFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Enter your email address and we\'ll send you a link to reset your password.',
+                    style: TextStyle(
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
+                      fontSize: 13,
+                    ),
                   ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: _validateEmail,
+                    decoration: InputDecoration(
+                      hintText: 'Email',
+                      prefixIcon: const Icon(Icons.email_outlined, size: 20),
+                      filled: true,
+                      fillColor: bg,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () {
+                  if (dialogFormKey.currentState!.validate()) {
+                    Navigator.of(ctx).pop(true);
+                  }
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xff00B4D8),
                 ),
+                child: const Text('Send Link'),
               ),
             ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              if (dialogFormKey.currentState!.validate()) {
-                Navigator.of(ctx).pop(true);
-              }
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xff00B4D8),
-            ),
-            child: const Text('Send Link'),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true && mounted) {
@@ -390,22 +397,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Colors.white,
+                      child:
+                          _isLoading
+                              ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : Text(
+                                _isSignUp ? 'Create Account' : 'Sign In',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
-                            )
-                          : Text(
-                              _isSignUp ? 'Create Account' : 'Sign In',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -478,8 +486,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         style: TextStyle(
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C)
-                              : muted),
+                                  ? const Color(0xFF78909C)
+                                  : muted),
                           fontSize: 13,
                         ),
                       ),
@@ -515,15 +523,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       decoration: InputDecoration(
         hintText: 'Full Name',
         hintStyle: TextStyle(
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
         ),
         prefixIcon: Icon(
           Icons.person_outline,
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
           size: 20,
         ),
         filled: true,
@@ -550,15 +560,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       decoration: InputDecoration(
         hintText: 'Email',
         hintStyle: TextStyle(
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
         ),
         prefixIcon: Icon(
           Icons.email_outlined,
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
           size: 20,
         ),
         filled: true,
@@ -585,15 +597,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       decoration: InputDecoration(
         hintText: 'Password',
         hintStyle: TextStyle(
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
         ),
         prefixIcon: Icon(
           Icons.lock_outline,
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
           size: 20,
         ),
         suffixIcon: IconButton(
@@ -601,9 +615,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _obscurePassword
                 ? Icons.visibility_off_outlined
                 : Icons.visibility_outlined,
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF78909C)
-                : muted),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
             size: 20,
           ),
           onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
@@ -632,15 +647,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       decoration: InputDecoration(
         hintText: 'Confirm Password',
         hintStyle: TextStyle(
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
         ),
         prefixIcon: Icon(
           Icons.lock_outline,
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
           size: 20,
         ),
         suffixIcon: IconButton(
@@ -648,14 +665,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _obscureConfirmPassword
                 ? Icons.visibility_off_outlined
                 : Icons.visibility_outlined,
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF78909C)
-                : muted),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
             size: 20,
           ),
-          onPressed: () => setState(
-            () => _obscureConfirmPassword = !_obscureConfirmPassword,
-          ),
+          onPressed:
+              () => setState(
+                () => _obscureConfirmPassword = !_obscureConfirmPassword,
+              ),
         ),
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.08),

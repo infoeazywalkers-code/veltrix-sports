@@ -6,12 +6,14 @@ import 'package:veltrix_sports/services/payment/payment_service.dart';
 
 Widget openDialog(Widget dialog) => MaterialApp(
   home: Builder(
-    builder: (context) => Scaffold(
-      body: ElevatedButton(
-        onPressed: () => showDialog(context: context, builder: (_) => dialog),
-        child: const Text('Open'),
-      ),
-    ),
+    builder:
+        (context) => Scaffold(
+          body: ElevatedButton(
+            onPressed:
+                () => showDialog(context: context, builder: (_) => dialog),
+            child: const Text('Open'),
+          ),
+        ),
   ),
 );
 

@@ -43,10 +43,13 @@ class MobileHomeScreen extends ConsumerWidget {
           ),
           actions: [
             IconButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
-              ),
+              onPressed:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const NotificationsScreen(),
+                    ),
+                  ),
               icon: const Badge(child: Icon(Icons.notifications_none_rounded)),
             ),
           ],
@@ -56,12 +59,14 @@ class MobileHomeScreen extends ConsumerWidget {
           sliver: SliverList.list(
             children: [
               profileAsync.when(
-                loading: () => const SizedBox(
-                  height: 40,
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-                error: (e, _) =>
-                    Text('Error: $e', style: M.adaptiveMuted(context)),
+                loading:
+                    () => const SizedBox(
+                      height: 40,
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                error:
+                    (e, _) =>
+                        Text('Error: $e', style: M.adaptiveMuted(context)),
                 data: (profile) {
                   final name =
                       profile?.displayName.split(' ').first ?? 'Athlete';
@@ -133,18 +138,20 @@ class MobileHomeScreen extends ConsumerWidget {
               const SizedBox(height: M.lg),
 
               MBanner(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (_) => const EventDetailsDialog(
-                    event: {
-                      'title': 'Mumbai Half Marathon',
-                      'date': '25 October 2026',
-                      'location': 'Mumbai, India',
-                      'category': 'Running',
-                      'participants': '15,000+ Runners',
-                    },
-                  ),
-                ),
+                onTap:
+                    () => showDialog(
+                      context: context,
+                      builder:
+                          (_) => const EventDetailsDialog(
+                            event: {
+                              'title': 'Mumbai Half Marathon',
+                              'date': '25 October 2026',
+                              'location': 'Mumbai, India',
+                              'category': 'Running',
+                              'participants': '15,000+ Runners',
+                            },
+                          ),
+                    ),
                 backgroundColor: M.navy,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,26 +174,28 @@ class MobileHomeScreen extends ConsumerWidget {
                               fontSize: 10,
                               color:
                                   (Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : M.navy),
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : M.navy),
                             ),
                           ),
                         ),
                         const Spacer(),
                         IconButton(
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (_) => const EventDetailsDialog(
-                              event: {
-                                'title': 'Mumbai Half Marathon',
-                                'date': '25 October 2026',
-                                'location': 'Mumbai, India',
-                                'category': 'Running',
-                                'participants': '15,000+ Runners',
-                              },
-                            ),
-                          ),
+                          onPressed:
+                              () => showDialog(
+                                context: context,
+                                builder:
+                                    (_) => const EventDetailsDialog(
+                                      event: {
+                                        'title': 'Mumbai Half Marathon',
+                                        'date': '25 October 2026',
+                                        'location': 'Mumbai, India',
+                                        'category': 'Running',
+                                        'participants': '15,000+ Runners',
+                                      },
+                                    ),
+                              ),
                           icon: const Icon(
                             Icons.more_horiz,
                             color: Colors.white70,
@@ -242,20 +251,25 @@ class MobileHomeScreen extends ConsumerWidget {
                 title: 'Today\'s training',
                 action: 'View week',
                 child: workoutsAsync.when(
-                  loading: () => const MCard(
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(M.base),
-                        child: CircularProgressIndicator(),
+                  loading:
+                      () => const MCard(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(M.base),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  error: (e, _) => MCard(
-                    child: Padding(
-                      padding: const EdgeInsets.all(M.base),
-                      child: Text('Error: $e', style: M.adaptiveMuted(context)),
-                    ),
-                  ),
+                  error:
+                      (e, _) => MCard(
+                        child: Padding(
+                          padding: const EdgeInsets.all(M.base),
+                          child: Text(
+                            'Error: $e',
+                            style: M.adaptiveMuted(context),
+                          ),
+                        ),
+                      ),
                   data: (workouts) {
                     if (workouts.isEmpty) {
                       // Show demo workout when no workouts exist
@@ -286,8 +300,10 @@ class MobileHomeScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  WorkoutDetailsScreen(workout: demoWorkout),
+                              builder:
+                                  (_) => WorkoutDetailsScreen(
+                                    workout: demoWorkout,
+                                  ),
                             ),
                           );
                         },
@@ -301,24 +317,26 @@ class MobileHomeScreen extends ConsumerWidget {
                         UnitConversion.formatDistance(units, w.distanceKm!),
                       if (w.tss != null) '${w.tss} TSS',
                     ].join('  •  ');
-                    final icon = w.sport == Sport.run
-                        ? Icons.directions_run_rounded
-                        : w.sport == Sport.bike
-                        ? Icons.directions_bike
-                        : w.sport == Sport.swim
-                        ? Icons.pool
-                        : w.sport == Sport.strength
-                        ? Icons.fitness_center
-                        : Icons.self_improvement;
-                    final color = w.sport == Sport.run
-                        ? M.blue
-                        : w.sport == Sport.bike
-                        ? M.purple
-                        : w.sport == Sport.swim
-                        ? M.teal
-                        : w.sport == Sport.strength
-                        ? M.orange
-                        : M.muted;
+                    final icon =
+                        w.sport == Sport.run
+                            ? Icons.directions_run_rounded
+                            : w.sport == Sport.bike
+                            ? Icons.directions_bike
+                            : w.sport == Sport.swim
+                            ? Icons.pool
+                            : w.sport == Sport.strength
+                            ? Icons.fitness_center
+                            : Icons.self_improvement;
+                    final color =
+                        w.sport == Sport.run
+                            ? M.blue
+                            : w.sport == Sport.bike
+                            ? M.purple
+                            : w.sport == Sport.swim
+                            ? M.teal
+                            : w.sport == Sport.strength
+                            ? M.orange
+                            : M.muted;
                     return MWorkoutCard(
                       sport: sportLabel,
                       title: w.title,
@@ -374,10 +392,11 @@ class MobileHomeScreen extends ConsumerWidget {
                           foregroundColor: M.navy,
                           padding: const EdgeInsets.symmetric(vertical: M.md),
                         ),
-                        onPressed: () => showFeatureMessage(
-                          context,
-                          'Your Veltrix training journey is ready to begin.',
-                        ),
+                        onPressed:
+                            () => showFeatureMessage(
+                              context,
+                              'Your Veltrix training journey is ready to begin.',
+                            ),
                         child: const Text(
                           'Get started',
                           style: TextStyle(fontWeight: FontWeight.w900),
@@ -430,9 +449,10 @@ class _WeekSummary extends StatelessWidget {
                   Text(
                     ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
                     style: TextStyle(
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : M.muted),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : M.muted),
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
                     ),
@@ -479,12 +499,12 @@ class _TrainingStatus extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = ref.watch(latestPerformanceProvider).valueOrNull;
-    final formState = snapshot == null
-        ? null
-        : PmcService().getFormState(snapshot.form);
-    final insightText = formState == null
-        ? 'No training data yet — complete a workout to see your status.'
-        : '${formState.label} — ${formState.description}.';
+    final formState =
+        snapshot == null ? null : PmcService().getFormState(snapshot.form);
+    final insightText =
+        formState == null
+            ? 'No training data yet — complete a workout to see your status.'
+            : '${formState.label} — ${formState.description}.';
 
     return MSection(
       title: 'Training status',

@@ -66,10 +66,11 @@ List<Workout> buildAiBasePlanWorkouts({
   final monday = DateTime(startMonday.year, startMonday.month, startMonday.day);
   final parsedSport = parsePlanSport(sport);
   final rawWeeks = basePlanMap['weeks'] as List? ?? const [];
-  final weeks = rawWeeks
-      .whereType<Map>()
-      .map((w) => Map<String, dynamic>.from(w))
-      .toList();
+  final weeks =
+      rawWeeks
+          .whereType<Map>()
+          .map((w) => Map<String, dynamic>.from(w))
+          .toList();
   final workouts = <Workout>[];
   for (final week in weeks) {
     final weekNumber = (week['weekNumber'] as num?)?.toInt() ?? 1;
@@ -208,11 +209,12 @@ Future<void> rollbackPlanWorkouts(
   String planId,
 ) async {
   try {
-    final query = await db
-        .collection('workouts')
-        .where('userId', isEqualTo: userId)
-        .where('planId', isEqualTo: planId)
-        .get();
+    final query =
+        await db
+            .collection('workouts')
+            .where('userId', isEqualTo: userId)
+            .where('planId', isEqualTo: planId)
+            .get();
     if (query.docs.isEmpty) return;
     final batch = db.batch();
     for (final doc in query.docs) {

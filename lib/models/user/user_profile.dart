@@ -51,8 +51,8 @@ class UserProfile {
       onboardingStatus: map['onboardingStatus'] as String?,
       isPremium: map['isPremium'] as bool? ?? false,
       subscriptionTier: map['subscriptionTier'] as String?,
-      subscriptionRenewsAt: (map['subscriptionRenewsAt'] as Timestamp?)
-          ?.toDate(),
+      subscriptionRenewsAt:
+          (map['subscriptionRenewsAt'] as Timestamp?)?.toDate(),
       deviceIds: (map['deviceIds'] as List? ?? []).cast<String>(),
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );

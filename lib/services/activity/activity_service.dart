@@ -92,11 +92,12 @@ class ActivityService {
     DateTime start,
     DateTime end,
   ) async {
-    final snap = await _col
-        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
-        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(end))
-        .orderBy('date', descending: true)
-        .get();
+    final snap =
+        await _col
+            .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+            .where('date', isLessThanOrEqualTo: Timestamp.fromDate(end))
+            .orderBy('date', descending: true)
+            .get();
     return snap.docs.map(Activity.fromFirestore).toList();
   }
 
@@ -110,12 +111,13 @@ class ActivityService {
     DateTime start,
     DateTime end,
   ) async {
-    final snap = await _col
-        .where('userId', isEqualTo: userId)
-        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
-        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(end))
-        .orderBy('date', descending: true)
-        .get();
+    final snap =
+        await _col
+            .where('userId', isEqualTo: userId)
+            .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+            .where('date', isLessThanOrEqualTo: Timestamp.fromDate(end))
+            .orderBy('date', descending: true)
+            .get();
     return snap.docs.map(Activity.fromFirestore).toList();
   }
 }

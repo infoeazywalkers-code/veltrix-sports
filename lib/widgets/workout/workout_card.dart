@@ -55,9 +55,10 @@ class WorkoutCard extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : navy),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
                       fontSize: 16,
                       fontWeight: FontWeight.w900,
                     ),
@@ -86,9 +87,10 @@ class WorkoutCard extends StatelessWidget {
                   Text(
                     details,
                     style: TextStyle(
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
                       fontSize: 11,
                     ),
                   ),
@@ -106,9 +108,10 @@ class WorkoutCard extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: (Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF78909C)
-                  : muted),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
             ),
           ],
         ),

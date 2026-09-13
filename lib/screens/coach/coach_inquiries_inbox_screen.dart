@@ -82,9 +82,10 @@ class _CoachInquiriesInboxScreenState extends State<CoachInquiriesInboxScreen> {
       }
       try {
         final profile = await _athleteProfile(inquiry);
-        final athleteName = (profile?.displayName.isNotEmpty == true)
-            ? profile!.displayName
-            : 'Athlete';
+        final athleteName =
+            (profile?.displayName.isNotEmpty == true)
+                ? profile!.displayName
+                : 'Athlete';
         final roomId = await _chatService.getOrCreateChatRoom(
           athleteId: inquiry.userId,
           coachId: coach.uid,
@@ -95,8 +96,9 @@ class _CoachInquiriesInboxScreenState extends State<CoachInquiriesInboxScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) =>
-                ChatScreen(chatRoomId: roomId, otherUserName: athleteName),
+            builder:
+                (_) =>
+                    ChatScreen(chatRoomId: roomId, otherUserName: athleteName),
           ),
         );
       } catch (_) {
@@ -157,59 +159,61 @@ class _CoachInquiriesInboxScreenState extends State<CoachInquiriesInboxScreen> {
             ],
           ),
         ),
-        child: coach == null
-            ? const Center(child: Text('Sign in as a coach to continue.'))
-            : StreamBuilder<List<CoachInquiry>>(
-                stream: CoachService.watchInquiriesForCoach(coach.uid),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.error_outline, size: 48, color: orange),
-                          SizedBox(height: 12),
-                          Text('Could not load inquiries.'),
-                        ],
-                      ),
-                    );
-                  }
-                  final inquiries = snapshot.data ?? [];
-                  if (inquiries.isEmpty) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(24),
-                        child: Text(
-                          'No call inquiries yet. New discovery-call bookings will appear here.',
-                          textAlign: TextAlign.center,
+        child:
+            coach == null
+                ? const Center(child: Text('Sign in as a coach to continue.'))
+                : StreamBuilder<List<CoachInquiry>>(
+                  stream: CoachService.watchInquiriesForCoach(coach.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.error_outline, size: 48, color: orange),
+                            SizedBox(height: 12),
+                            Text('Could not load inquiries.'),
+                          ],
                         ),
-                      ),
-                    );
-                  }
-                  return ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: inquiries.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) {
-                      final inquiry = inquiries[index];
-                      final busy = _busy.contains(inquiry.id);
-                      return _InquiryCard(
-                        inquiry: inquiry,
-                        profileFuture: _athleteProfile(inquiry),
-                        dateLabel: inquiry.preferredDate.isEmpty
-                            ? ''
-                            : _formatDate(inquiry.preferredDate),
-                        busy: busy,
-                        onAccept: () => _accept(inquiry),
-                        onDecline: () => _decline(inquiry),
                       );
-                    },
-                  );
-                },
-              ),
+                    }
+                    final inquiries = snapshot.data ?? [];
+                    if (inquiries.isEmpty) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(24),
+                          child: Text(
+                            'No call inquiries yet. New discovery-call bookings will appear here.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    }
+                    return ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: inquiries.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) {
+                        final inquiry = inquiries[index];
+                        final busy = _busy.contains(inquiry.id);
+                        return _InquiryCard(
+                          inquiry: inquiry,
+                          profileFuture: _athleteProfile(inquiry),
+                          dateLabel:
+                              inquiry.preferredDate.isEmpty
+                                  ? ''
+                                  : _formatDate(inquiry.preferredDate),
+                          busy: busy,
+                          onAccept: () => _accept(inquiry),
+                          onDecline: () => _decline(inquiry),
+                        );
+                      },
+                    );
+                  },
+                ),
       ),
     );
   }
@@ -248,14 +252,16 @@ class _InquiryCard extends StatelessWidget {
                 future: profileFuture,
                 builder: (context, snapshot) {
                   final profile = snapshot.data;
-                  final name = (profile?.displayName.isNotEmpty == true)
-                      ? profile!.displayName
-                      : inquiry.userId.isEmpty
-                      ? 'Athlete'
-                      : 'Athlete ${inquiry.userId.substring(0, inquiry.userId.length.clamp(0, 6))}';
-                  final email = profile?.email.isNotEmpty == true
-                      ? profile!.email
-                      : inquiry.userEmail;
+                  final name =
+                      (profile?.displayName.isNotEmpty == true)
+                          ? profile!.displayName
+                          : inquiry.userId.isEmpty
+                          ? 'Athlete'
+                          : 'Athlete ${inquiry.userId.substring(0, inquiry.userId.length.clamp(0, 6))}';
+                  final email =
+                      profile?.email.isNotEmpty == true
+                          ? profile!.email
+                          : inquiry.userEmail;
                   return Row(
                     children: [
                       const CircleAvatar(
@@ -325,15 +331,16 @@ class _InquiryCard extends StatelessWidget {
                           foregroundColor: navy,
                         ),
                         onPressed: busy ? null : onAccept,
-                        icon: busy
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Icon(Icons.check, size: 18),
+                        icon:
+                            busy
+                                ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                : const Icon(Icons.check, size: 18),
                         label: Text(
                           busy ? 'Working…' : 'Accept',
                           style: const TextStyle(fontWeight: FontWeight.w900),
@@ -365,11 +372,12 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = status == 'accepted'
-        ? Colors.green
-        : status == 'declined'
-        ? muted
-        : orange;
+    final Color color =
+        status == 'accepted'
+            ? Colors.green
+            : status == 'declined'
+            ? muted
+            : orange;
     return Chip(
       label: Text(
         status.isEmpty ? 'pending' : status,

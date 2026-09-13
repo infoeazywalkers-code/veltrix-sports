@@ -247,10 +247,8 @@ void main() {
       expect(find.text('Bike B'), findsOneWidget);
       expect(find.text('RETIRED'), findsNothing);
 
-      final snap = await fake
-          .collection('gear')
-          .where('userId', isEqualTo: 'u1')
-          .get();
+      final snap =
+          await fake.collection('gear').where('userId', isEqualTo: 'u1').get();
       await service.retireGear(snap.docs.first.id);
       await tester.pumpAndSettle();
       expect(find.text('RETIRED'), findsOneWidget);

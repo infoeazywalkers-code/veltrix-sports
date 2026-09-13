@@ -17,18 +17,18 @@ class StatusCard extends ConsumerWidget {
 
     final fitnessStr = perf != null ? fitnessVal.toStringAsFixed(0) : '\u2014';
     final fatigueStr = perf != null ? fatigueVal.toStringAsFixed(0) : '\u2014';
-    final formStr = perf != null
-        ? (formVal > 0
-              ? '+${formVal.toStringAsFixed(0)}'
-              : formVal.toStringAsFixed(0))
-        : '\u2014';
+    final formStr =
+        perf != null
+            ? (formVal > 0
+                ? '+${formVal.toStringAsFixed(0)}'
+                : formVal.toStringAsFixed(0))
+            : '\u2014';
 
     // Clamp ring amounts: fitness/fatigue normalized to 0-100 scale, form to 0-1 range
     final fitnessRing = perf != null ? (fitnessVal / 100).clamp(0.0, 1.0) : 0.0;
     final fatigueRing = perf != null ? (fatigueVal / 100).clamp(0.0, 1.0) : 0.0;
-    final formRing = perf != null
-        ? ((formVal + 50) / 100).clamp(0.0, 1.0)
-        : 0.0;
+    final formRing =
+        perf != null ? ((formVal + 50) / 100).clamp(0.0, 1.0) : 0.0;
 
     return Card(
       child: Padding(

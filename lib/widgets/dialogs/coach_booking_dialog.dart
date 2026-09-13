@@ -130,9 +130,10 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
         children: [
           Icon(
             Icons.groups,
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -140,9 +141,10 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
               'Book Call with ${widget.coach.name.split(' ').length > 1 ? widget.coach.name.split(' ').elementAt(1) : widget.coach.name}',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                 fontSize: 18,
               ),
             ),
@@ -175,8 +177,9 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.flag_outlined),
                   ),
-                  validator: (val) =>
-                      val == null || val.trim().isEmpty ? 'Required' : null,
+                  validator:
+                      (val) =>
+                          val == null || val.trim().isEmpty ? 'Required' : null,
                 ),
               ),
               const SizedBox(height: 12),
@@ -188,17 +191,19 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
                   contentPadding: EdgeInsets.zero,
                   leading: Icon(
                     Icons.calendar_month,
-                    color: (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : navy),
                   ),
                   title: Text(
                     'Call Date: ${_preferredDate.year}-${_preferredDate.month.toString().padLeft(2, '0')}-${_preferredDate.day.toString().padLeft(2, '0')}',
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : navy),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
                       fontSize: 13,
                     ),
                   ),
@@ -221,8 +226,9 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
                         'Share your background, injury history, and schedule availability...',
                     border: OutlineInputBorder(),
                   ),
-                  validator: (val) =>
-                      val == null || val.trim().isEmpty ? 'Required' : null,
+                  validator:
+                      (val) =>
+                          val == null || val.trim().isEmpty ? 'Required' : null,
                 ),
               ),
             ],
@@ -243,16 +249,17 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
               foregroundColor: navy,
             ),
             onPressed: _submitting ? null : _submit,
-            child: _submitting
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text(
-                    'Book 1-on-1 Consultation',
-                    style: TextStyle(fontWeight: FontWeight.w900),
-                  ),
+            child:
+                _submitting
+                    ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                    : const Text(
+                      'Book 1-on-1 Consultation',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
           ),
         ),
       ],

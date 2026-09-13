@@ -186,9 +186,10 @@ class _GearEditDialogState extends ConsumerState<GearEditDialog> {
                   ),
                 ],
                 selected: {_type},
-                onSelectionChanged: _saving
-                    ? null
-                    : (selected) => setState(() => _type = selected.first),
+                onSelectionChanged:
+                    _saving
+                        ? null
+                        : (selected) => setState(() => _type = selected.first),
               ),
               const SizedBox(height: 12),
               TextFormField(

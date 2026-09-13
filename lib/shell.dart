@@ -170,9 +170,10 @@ class _ShellState extends ConsumerState<Shell> {
           foregroundColor: Colors.white,
           // Deep pages (index >= 5) show a back affordance to Home so the
           // bottom bar never falsely implies Profile is selected.
-          leading: page >= 5
-              ? BackButton(onPressed: () => goPage(ShellPage.home))
-              : null,
+          leading:
+              page >= 5
+                  ? BackButton(onPressed: () => goPage(ShellPage.home))
+                  : null,
           title: Row(
             children: [
               const Brand(),
@@ -227,13 +228,14 @@ class _ShellState extends ConsumerState<Shell> {
                     'Coach Match',
                     'Coach Resources',
                   ],
-                  onSelected: (i) => goPage(
-                    i == 0
-                        ? ShellPage.coachPlatform
-                        : i == 1
-                        ? ShellPage.coachMatch
-                        : ShellPage.coachResources,
-                  ),
+                  onSelected:
+                      (i) => goPage(
+                        i == 0
+                            ? ShellPage.coachPlatform
+                            : i == 1
+                            ? ShellPage.coachMatch
+                            : ShellPage.coachResources,
+                      ),
                 ),
                 NavMenu(
                   label: 'Training',
@@ -243,37 +245,40 @@ class _ShellState extends ConsumerState<Shell> {
                     'Workout Library',
                     'Strength',
                   ],
-                  onSelected: (i) => goPage(
-                    i == 0
-                        ? ShellPage.calendar
-                        : i == 1
-                        ? ShellPage.progress
-                        : i == 2
-                        ? ShellPage.workoutLibrary
-                        : ShellPage.strength,
-                  ),
+                  onSelected:
+                      (i) => goPage(
+                        i == 0
+                            ? ShellPage.calendar
+                            : i == 1
+                            ? ShellPage.progress
+                            : i == 2
+                            ? ShellPage.workoutLibrary
+                            : ShellPage.strength,
+                      ),
                 ),
                 NavMenu(
                   label: 'Connect',
                   items: const ['Devices', 'Events', 'Training Plans'],
-                  onSelected: (i) => goPage(
-                    i == 0
-                        ? ShellPage.devices
-                        : i == 1
-                        ? ShellPage.events
-                        : ShellPage.trainingPlans,
-                  ),
+                  onSelected:
+                      (i) => goPage(
+                        i == 0
+                            ? ShellPage.devices
+                            : i == 1
+                            ? ShellPage.events
+                            : ShellPage.trainingPlans,
+                      ),
                 ),
                 NavMenu(
                   label: 'Resources',
                   items: const ['Help Center', 'Training Guides', 'About'],
-                  onSelected: (i) => goPage(
-                    i == 0
-                        ? ShellPage.support
-                        : i == 1
-                        ? ShellPage.trainingGuides
-                        : ShellPage.about,
-                  ),
+                  onSelected:
+                      (i) => goPage(
+                        i == 0
+                            ? ShellPage.support
+                            : i == 1
+                            ? ShellPage.trainingGuides
+                            : ShellPage.about,
+                      ),
                 ),
               ],
             ],
@@ -380,224 +385,230 @@ class _ShellState extends ConsumerState<Shell> {
               ),
           ],
         ),
-        drawer: desktop
-            ? null
-            : Drawer(
-                child: SafeArea(
-                  child: ListView(
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      const Row(
-                        children: [
-                          Brand(),
-                          SizedBox(width: 10),
-                          Text(
-                            'VELTRIX',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 19,
-                              color: navy,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      _drawerItem(ShellPage.home, Icons.home_outlined, 'Home'),
-                      _drawerItem(
-                        ShellPage.calendar,
-                        Icons.calendar_month_outlined,
-                        'Calendar',
-                      ),
-                      _drawerItem(
-                        ShellPage.progress,
-                        Icons.insights_outlined,
-                        'Progress',
-                      ),
-                      _drawerItem(
-                        ShellPage.explore,
-                        Icons.explore_outlined,
-                        'Explore',
-                      ),
-                      _drawerItem(
-                        ShellPage.profile,
-                        Icons.person_outline,
-                        'Profile',
-                      ),
-                      const Divider(height: 32),
-                      _drawerItem(
-                        ShellPage.premium,
-                        Icons.workspace_premium,
-                        'Premium',
-                      ),
-                      _drawerItem(
-                        ShellPage.coachMatch,
-                        Icons.groups_outlined,
-                        'Coach Match',
-                      ),
-                      _drawerItem(
-                        ShellPage.devices,
-                        Icons.devices_other,
-                        'Devices',
-                      ),
-                      _drawerItem(
-                        ShellPage.strength,
-                        Icons.fitness_center,
-                        'Strength',
-                      ),
-                      _drawerItem(
-                        ShellPage.notifications,
-                        Icons.notifications_none_rounded,
-                        'Notifications',
-                        badgeCount: unreadCount,
-                      ),
-                      _drawerItem(
-                        ShellPage.trainingPlans,
-                        Icons.event_note,
-                        'Training plans',
-                      ),
-                      _drawerItem(
-                        ShellPage.events,
-                        Icons.emoji_events,
-                        'Events',
-                      ),
-                      _drawerItem(
-                        ShellPage.tickets,
-                        Icons.confirmation_number,
-                        'Tickets',
-                      ),
-                      _drawerItem(
-                        ShellPage.workoutLibrary,
-                        Icons.library_books,
-                        'Workout library',
-                      ),
-                      // Coach-only destinations: hidden when logged out;
-                      // non-coach roles get a snackbar instead of navigation
-                      // (RoleGate defaults to deny on unknown/loading/error).
-                      if (isLoggedIn)
-                        CoachOnly(
-                          child: _drawerItem(
-                            ShellPage.coachPlatform,
-                            Icons.dashboard_customize,
-                            'Coach platform',
-                          ),
-                          fallback: _disabledDrawerItem(
-                            Icons.dashboard_customize,
-                            'Coach platform',
-                            'Coach access required',
-                          ),
-                        ),
-                      if (isLoggedIn)
-                        CoachOnly(
-                          child: _drawerItem(
-                            ShellPage.coachResources,
-                            Icons.menu_book,
-                            'Coach resources',
-                          ),
-                          fallback: _disabledDrawerItem(
-                            Icons.menu_book,
-                            'Coach resources',
-                            'Coach access required',
-                          ),
-                        ),
-                      if (isLoggedIn)
-                        CoachOnly(
-                          child: ListTile(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            leading: const Icon(Icons.groups_outlined),
-                            title: const Text(
-                              'My athletes',
-                              style: TextStyle(fontWeight: FontWeight.w800),
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const CoachDashboardScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          fallback: _disabledDrawerItem(
-                            Icons.groups_outlined,
-                            'My athletes',
-                            'Coach access required',
-                          ),
-                        ),
-                      if (isLoggedIn)
-                        CoachOnly(
-                          child: ListTile(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            leading: const Icon(Icons.inbox_outlined),
-                            title: const Text(
-                              'Coach requests',
-                              style: TextStyle(fontWeight: FontWeight.w800),
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      const CoachRequestsInboxScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          fallback: _disabledDrawerItem(
-                            Icons.inbox_outlined,
-                            'Coach requests',
-                            'Coach access required',
-                          ),
-                        ),
-                      if (isLoggedIn)
-                        ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          leading: const Icon(Icons.chat_bubble_outline),
-                          title: const Text(
-                            'Messages',
-                            style: TextStyle(fontWeight: FontWeight.w800),
-                          ),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const ChatInboxScreen(),
+        drawer:
+            desktop
+                ? null
+                : Drawer(
+                  child: SafeArea(
+                    child: ListView(
+                      padding: const EdgeInsets.all(16),
+                      children: [
+                        const Row(
+                          children: [
+                            Brand(),
+                            SizedBox(width: 10),
+                            Text(
+                              'VELTRIX',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 19,
+                                color: navy,
                               ),
-                            );
-                          },
+                            ),
+                          ],
                         ),
-                      _drawerItem(
-                        ShellPage.support,
-                        Icons.support_agent,
-                        'Support center',
-                      ),
-                      _drawerItem(
-                        ShellPage.trainingGuides,
-                        Icons.school,
-                        'Training guides',
-                      ),
-                      _drawerItem(
-                        ShellPage.about,
-                        Icons.info_outline,
-                        'About Veltrix',
-                      ),
-                      _drawerItem(
-                        ShellPage.athleteOnboarding,
-                        Icons.directions_run,
-                        'Athlete onboarding',
-                      ),
-                    ],
+                        const SizedBox(height: 24),
+                        _drawerItem(
+                          ShellPage.home,
+                          Icons.home_outlined,
+                          'Home',
+                        ),
+                        _drawerItem(
+                          ShellPage.calendar,
+                          Icons.calendar_month_outlined,
+                          'Calendar',
+                        ),
+                        _drawerItem(
+                          ShellPage.progress,
+                          Icons.insights_outlined,
+                          'Progress',
+                        ),
+                        _drawerItem(
+                          ShellPage.explore,
+                          Icons.explore_outlined,
+                          'Explore',
+                        ),
+                        _drawerItem(
+                          ShellPage.profile,
+                          Icons.person_outline,
+                          'Profile',
+                        ),
+                        const Divider(height: 32),
+                        _drawerItem(
+                          ShellPage.premium,
+                          Icons.workspace_premium,
+                          'Premium',
+                        ),
+                        _drawerItem(
+                          ShellPage.coachMatch,
+                          Icons.groups_outlined,
+                          'Coach Match',
+                        ),
+                        _drawerItem(
+                          ShellPage.devices,
+                          Icons.devices_other,
+                          'Devices',
+                        ),
+                        _drawerItem(
+                          ShellPage.strength,
+                          Icons.fitness_center,
+                          'Strength',
+                        ),
+                        _drawerItem(
+                          ShellPage.notifications,
+                          Icons.notifications_none_rounded,
+                          'Notifications',
+                          badgeCount: unreadCount,
+                        ),
+                        _drawerItem(
+                          ShellPage.trainingPlans,
+                          Icons.event_note,
+                          'Training plans',
+                        ),
+                        _drawerItem(
+                          ShellPage.events,
+                          Icons.emoji_events,
+                          'Events',
+                        ),
+                        _drawerItem(
+                          ShellPage.tickets,
+                          Icons.confirmation_number,
+                          'Tickets',
+                        ),
+                        _drawerItem(
+                          ShellPage.workoutLibrary,
+                          Icons.library_books,
+                          'Workout library',
+                        ),
+                        // Coach-only destinations: hidden when logged out;
+                        // non-coach roles get a snackbar instead of navigation
+                        // (RoleGate defaults to deny on unknown/loading/error).
+                        if (isLoggedIn)
+                          CoachOnly(
+                            child: _drawerItem(
+                              ShellPage.coachPlatform,
+                              Icons.dashboard_customize,
+                              'Coach platform',
+                            ),
+                            fallback: _disabledDrawerItem(
+                              Icons.dashboard_customize,
+                              'Coach platform',
+                              'Coach access required',
+                            ),
+                          ),
+                        if (isLoggedIn)
+                          CoachOnly(
+                            child: _drawerItem(
+                              ShellPage.coachResources,
+                              Icons.menu_book,
+                              'Coach resources',
+                            ),
+                            fallback: _disabledDrawerItem(
+                              Icons.menu_book,
+                              'Coach resources',
+                              'Coach access required',
+                            ),
+                          ),
+                        if (isLoggedIn)
+                          CoachOnly(
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              leading: const Icon(Icons.groups_outlined),
+                              title: const Text(
+                                'My athletes',
+                                style: TextStyle(fontWeight: FontWeight.w800),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => const CoachDashboardScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            fallback: _disabledDrawerItem(
+                              Icons.groups_outlined,
+                              'My athletes',
+                              'Coach access required',
+                            ),
+                          ),
+                        if (isLoggedIn)
+                          CoachOnly(
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              leading: const Icon(Icons.inbox_outlined),
+                              title: const Text(
+                                'Coach requests',
+                                style: TextStyle(fontWeight: FontWeight.w800),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => const CoachRequestsInboxScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            fallback: _disabledDrawerItem(
+                              Icons.inbox_outlined,
+                              'Coach requests',
+                              'Coach access required',
+                            ),
+                          ),
+                        if (isLoggedIn)
+                          ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            leading: const Icon(Icons.chat_bubble_outline),
+                            title: const Text(
+                              'Messages',
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ChatInboxScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        _drawerItem(
+                          ShellPage.support,
+                          Icons.support_agent,
+                          'Support center',
+                        ),
+                        _drawerItem(
+                          ShellPage.trainingGuides,
+                          Icons.school,
+                          'Training guides',
+                        ),
+                        _drawerItem(
+                          ShellPage.about,
+                          Icons.info_outline,
+                          'About Veltrix',
+                        ),
+                        _drawerItem(
+                          ShellPage.athleteOnboarding,
+                          Icons.directions_run,
+                          'Athlete onboarding',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
         body: Column(
           children: [
             if (onboardingStatus.isLoading)
@@ -605,61 +616,65 @@ class _ShellState extends ConsumerState<Shell> {
             Expanded(child: ConnectivityBanner(child: currentScreen)),
           ],
         ),
-        floatingActionButton: page == ShellPage.calendar.index
-            ? FloatingActionButton.extended(
-                backgroundColor: lime,
-                foregroundColor: navy,
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (_) => WorkoutBuilderDialog(
-                    planId: ref.read(calendarPlanFilterProvider),
+        floatingActionButton:
+            page == ShellPage.calendar.index
+                ? FloatingActionButton.extended(
+                  backgroundColor: lime,
+                  foregroundColor: navy,
+                  onPressed:
+                      () => showDialog(
+                        context: context,
+                        builder:
+                            (_) => WorkoutBuilderDialog(
+                              planId: ref.read(calendarPlanFilterProvider),
+                            ),
+                      ),
+                  icon: const Icon(Icons.add),
+                  label: const Text(
+                    'Add workout',
+                    style: TextStyle(fontWeight: FontWeight.w900),
                   ),
+                )
+                : null,
+        bottomNavigationBar:
+            desktop
+                ? null
+                : NavigationBar(
+                  height: 72,
+                  // Deep pages (index >= 5) have no tab: fall back to Home
+                  // visually and never falsely highlight Profile. The AppBar
+                  // back button is the true affordance for deep pages.
+                  selectedIndex: page < 5 ? page : ShellPage.home.index,
+                  onDestinationSelected: (i) => goPage(ShellPage.values[i]),
+                  indicatorColor: lime,
+                  destinations: const [
+                    NavigationDestination(
+                      icon: Icon(Icons.home_outlined),
+                      selectedIcon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.calendar_month_outlined),
+                      selectedIcon: Icon(Icons.calendar_month),
+                      label: 'Calendar',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.insights_outlined),
+                      selectedIcon: Icon(Icons.insights),
+                      label: 'Progress',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.explore_outlined),
+                      selectedIcon: Icon(Icons.explore),
+                      label: 'Explore',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.person_outline),
+                      selectedIcon: Icon(Icons.person),
+                      label: 'Profile',
+                    ),
+                  ],
                 ),
-                icon: const Icon(Icons.add),
-                label: const Text(
-                  'Add workout',
-                  style: TextStyle(fontWeight: FontWeight.w900),
-                ),
-              )
-            : null,
-        bottomNavigationBar: desktop
-            ? null
-            : NavigationBar(
-                height: 72,
-                // Deep pages (index >= 5) have no tab: fall back to Home
-                // visually and never falsely highlight Profile. The AppBar
-                // back button is the true affordance for deep pages.
-                selectedIndex: page < 5 ? page : ShellPage.home.index,
-                onDestinationSelected: (i) => goPage(ShellPage.values[i]),
-                indicatorColor: lime,
-                destinations: const [
-                  NavigationDestination(
-                    icon: Icon(Icons.home_outlined),
-                    selectedIcon: Icon(Icons.home),
-                    label: 'Home',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.calendar_month_outlined),
-                    selectedIcon: Icon(Icons.calendar_month),
-                    label: 'Calendar',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.insights_outlined),
-                    selectedIcon: Icon(Icons.insights),
-                    label: 'Progress',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.explore_outlined),
-                    selectedIcon: Icon(Icons.explore),
-                    label: 'Explore',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.person_outline),
-                    selectedIcon: Icon(Icons.person),
-                    label: 'Profile',
-                  ),
-                ],
-              ),
       ),
     );
   }

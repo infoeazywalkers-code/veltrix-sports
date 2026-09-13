@@ -54,11 +54,12 @@ class WorkoutService {
 
   Future<List<Workout>> getByPlanId(String userId, String planId) async {
     try {
-      final q = await _workouts
-          .where('userId', isEqualTo: userId)
-          .where('planId', isEqualTo: planId)
-          .orderBy('scheduledFor')
-          .get();
+      final q =
+          await _workouts
+              .where('userId', isEqualTo: userId)
+              .where('planId', isEqualTo: planId)
+              .orderBy('scheduledFor')
+              .get();
       return q.docs.map((doc) => Workout.fromMap(doc.id, doc.data())).toList();
     } catch (e) {
       throw Exception('Failed to get workouts by plan: $e');
@@ -76,9 +77,10 @@ class WorkoutService {
         .orderBy('scheduledFor')
         .snapshots()
         .map(
-          (snap) => snap.docs
-              .map((doc) => Workout.fromMap(doc.id, doc.data()))
-              .toList(),
+          (snap) =>
+              snap.docs
+                  .map((doc) => Workout.fromMap(doc.id, doc.data()))
+                  .toList(),
         )
         .handleError((e) {
           throw Exception('Failed to watch workouts by plan: $e');
@@ -96,9 +98,10 @@ class WorkoutService {
         .where('scheduledFor', isLessThanOrEqualTo: end)
         .snapshots()
         .map(
-          (snap) => snap.docs
-              .map((doc) => Workout.fromMap(doc.id, doc.data()))
-              .toList(),
+          (snap) =>
+              snap.docs
+                  .map((doc) => Workout.fromMap(doc.id, doc.data()))
+                  .toList(),
         )
         .handleError((e) {
           throw Exception('Failed to watch workouts: $e');
@@ -108,12 +111,13 @@ class WorkoutService {
   Future<List<Workout>> getWeek(String userId, DateTime weekStart) async {
     try {
       final weekEnd = weekStart.add(const Duration(days: 7));
-      final q = await _workouts
-          .where('userId', isEqualTo: userId)
-          .where('scheduledFor', isGreaterThanOrEqualTo: weekStart)
-          .where('scheduledFor', isLessThanOrEqualTo: weekEnd)
-          .orderBy('scheduledFor')
-          .get();
+      final q =
+          await _workouts
+              .where('userId', isEqualTo: userId)
+              .where('scheduledFor', isGreaterThanOrEqualTo: weekStart)
+              .where('scheduledFor', isLessThanOrEqualTo: weekEnd)
+              .orderBy('scheduledFor')
+              .get();
       return q.docs.map((doc) => Workout.fromMap(doc.id, doc.data())).toList();
     } catch (e) {
       throw Exception('Failed to get week workouts: $e');
@@ -122,13 +126,14 @@ class WorkoutService {
 
   Future<List<Workout>> getUpcoming(String userId, {int limit = 5}) async {
     try {
-      final q = await _workouts
-          .where('userId', isEqualTo: userId)
-          .where('scheduledFor', isGreaterThanOrEqualTo: DateTime.now())
-          .where('completed', isEqualTo: false)
-          .orderBy('scheduledFor')
-          .limit(limit)
-          .get();
+      final q =
+          await _workouts
+              .where('userId', isEqualTo: userId)
+              .where('scheduledFor', isGreaterThanOrEqualTo: DateTime.now())
+              .where('completed', isEqualTo: false)
+              .orderBy('scheduledFor')
+              .limit(limit)
+              .get();
       return q.docs.map((doc) => Workout.fromMap(doc.id, doc.data())).toList();
     } catch (e) {
       throw Exception('Failed to get upcoming workouts: $e');

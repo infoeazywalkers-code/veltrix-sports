@@ -35,18 +35,20 @@ class HomeScreen extends StatelessWidget {
             fontSize: width > 850 ? 58 : 38,
             height: .98,
             fontWeight: FontWeight.w900,
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
           ),
         ),
         const SizedBox(height: 14),
         Text(
           'Built for athletes and coaches who want more from every session.',
           style: TextStyle(
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF78909C)
-                : muted),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
             fontSize: 17,
           ),
         ),
@@ -76,8 +78,8 @@ class HomeScreen extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 foregroundColor:
                     (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+                        ? Colors.white
+                        : navy),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 22,
                   vertical: 16,
@@ -106,9 +108,10 @@ class HomeScreen extends StatelessWidget {
               child: Text(
                 'YOUR TRAINING TODAY',
                 style: TextStyle(
-                  color: (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
                   fontSize: 10,
                   letterSpacing: 1.4,
                   fontWeight: FontWeight.w900,
@@ -121,18 +124,20 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(height: 26),
         InkWell(
           borderRadius: BorderRadius.circular(22),
-          onTap: () => showDialog(
-            context: context,
-            builder: (_) => const EventDetailsDialog(
-              event: {
-                'title': 'Mumbai Half Marathon',
-                'date': '25 October 2026',
-                'location': 'Mumbai, India',
-                'category': 'Running',
-                'participants': '15,000+ Runners',
-              },
-            ),
-          ),
+          onTap:
+              () => showDialog(
+                context: context,
+                builder:
+                    (_) => const EventDetailsDialog(
+                      event: {
+                        'title': 'Mumbai Half Marathon',
+                        'date': '25 October 2026',
+                        'location': 'Mumbai, India',
+                        'category': 'Running',
+                        'participants': '15,000+ Runners',
+                      },
+                    ),
+              ),
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -157,18 +162,20 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const Spacer(),
                     IconButton(
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (_) => const EventDetailsDialog(
-                          event: {
-                            'title': 'Mumbai Half Marathon',
-                            'date': '25 October 2026',
-                            'location': 'Mumbai, India',
-                            'category': 'Running',
-                            'participants': '15,000+ Runners',
-                          },
-                        ),
-                      ),
+                      onPressed:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (_) => const EventDetailsDialog(
+                                  event: {
+                                    'title': 'Mumbai Half Marathon',
+                                    'date': '25 October 2026',
+                                    'location': 'Mumbai, India',
+                                    'category': 'Running',
+                                    'participants': '15,000+ Runners',
+                                  },
+                                ),
+                          ),
                       icon: const Icon(Icons.more_horiz, color: Colors.white70),
                     ),
                   ],
@@ -305,8 +312,8 @@ class HomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.w900,
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : navy),
+                                  ? Colors.white
+                                  : navy),
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -319,8 +326,10 @@ class HomeScreen extends StatelessWidget {
                         style: TextStyle(
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C).withValues(alpha: .9)
-                              : muted.withValues(alpha: .9)),
+                                  ? const Color(
+                                    0xFF78909C,
+                                  ).withValues(alpha: .9)
+                                  : muted.withValues(alpha: .9)),
                           fontSize: 11,
                         ),
                       ),
@@ -351,9 +360,10 @@ class PublicHomeSections extends StatelessWidget {
           'Train like the world\u2019s best.',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
             fontSize: 26,
             fontWeight: FontWeight.w900,
           ),
@@ -661,12 +671,13 @@ class _HomeVideoHeroState extends State<HomeVideoHero> {
               controller: _controller,
               hasError: _hasError,
               onRetry: _initVideo,
-              onPlay: () => _controller
-                  ?.play()
-                  .then((_) {
-                    if (mounted) setState(() {});
-                  })
-                  .catchError((_) {}),
+              onPlay:
+                  () => _controller
+                      ?.play()
+                      .then((_) {
+                        if (mounted) setState(() {});
+                      })
+                      .catchError((_) {}),
             ),
             const DecoratedBox(
               decoration: BoxDecoration(
@@ -768,46 +779,48 @@ class _VideoLayer extends StatelessWidget {
           Image.asset(
             'assets/images/forest-run.png',
             fit: BoxFit.cover,
-            errorBuilder: (ctx, err, stack) => Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [navy, Color(0xff1e3a5f)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+            errorBuilder:
+                (ctx, err, stack) => Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [navy, Color(0xff1e3a5f)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.fitness_center_rounded,
+                      color: lime,
+                      size: 48,
+                    ),
+                  ),
                 ),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.fitness_center_rounded,
-                  color: lime,
-                  size: 48,
-                ),
-              ),
-            ),
           ),
         if (!ready)
           Center(
-            child: hasError
-                ? FilledButton.icon(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.white.withValues(alpha: .92),
-                      foregroundColor: navy,
+            child:
+                hasError
+                    ? FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.white.withValues(alpha: .92),
+                        foregroundColor: navy,
+                      ),
+                      onPressed: onRetry,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text(
+                        'Retry video',
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                    )
+                    : const SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
                     ),
-                    onPressed: onRetry,
-                    icon: const Icon(Icons.refresh_rounded),
-                    label: const Text(
-                      'Retry video',
-                      style: TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                  )
-                : const SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      color: Colors.white,
-                    ),
-                  ),
           ),
         if (ready && !c.value.isPlaying)
           Center(

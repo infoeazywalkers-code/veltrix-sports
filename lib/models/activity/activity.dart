@@ -204,9 +204,10 @@ class Activity {
         (e) => e.name == m['sport'],
         orElse: () => SportType.cycling,
       ),
-      date: m['date'] is Timestamp
-          ? (m['date'] as Timestamp).toDate()
-          : DateTime.tryParse(m['date'] ?? '') ?? DateTime.now(),
+      date:
+          m['date'] is Timestamp
+              ? (m['date'] as Timestamp).toDate()
+              : DateTime.tryParse(m['date'] ?? '') ?? DateTime.now(),
       distanceKm: (m['distanceKm'] ?? 0).toDouble(),
       durationSeconds: m['durationSeconds'] ?? 0,
       movingTimeSeconds: m['movingTimeSeconds'] ?? 0,
@@ -246,9 +247,10 @@ class Activity {
       trainingEffectAerobic: m['trainingEffectAerobic']?.toDouble(),
       trainingEffectAnaerobic: m['trainingEffectAnaerobic']?.toDouble(),
       prBadges: List<String>.from(m['prBadges'] ?? []),
-      weather: m['weather'] != null
-          ? ActivityWeather.fromMap(m['weather'] as Map<String, dynamic>)
-          : null,
+      weather:
+          m['weather'] != null
+              ? ActivityWeather.fromMap(m['weather'] as Map<String, dynamic>)
+              : null,
     );
   }
 

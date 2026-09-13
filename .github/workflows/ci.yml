@@ -163,6 +163,14 @@ jobs:
           flutter-version: '3.41.9'
           channel: 'stable'
       - run: flutter pub get
+      # TEMP DEBUG — remove once format gate is green
+      - name: Debug formatter environment
+        run: |
+          dart --version
+          python3 -c "import json; d=json.load(open('.dart_tool/package_config.json')); print([ (p['name'], p.get('languageVersion')) for p in d['packages'] if p['name']=='veltrix_sports'])"
+          md5sum lib/main.dart
+          grep -c $'\r' lib/main.dart || echo "no CR bytes"
+          dart format --output=show lib/main.dart 2>/dev/null | head -60
       - run: dart format --set-exit-if-changed .
 
   build-windows:

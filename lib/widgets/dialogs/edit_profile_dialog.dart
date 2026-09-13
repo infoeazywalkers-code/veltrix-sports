@@ -107,9 +107,10 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         children: [
           Icon(
             Icons.edit,
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
           ),
           SizedBox(width: 10),
           Expanded(
@@ -117,9 +118,10 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               'Edit Profile',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
               ),
             ),
           ),
@@ -139,54 +141,60 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty
-                    ? 'Enter your name'
-                    : null,
+                validator:
+                    (val) =>
+                        val == null || val.trim().isEmpty
+                            ? 'Enter your name'
+                            : null,
               ),
               const SizedBox(height: 18),
               Text(
                 'Primary Sports',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
-                  color: (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
                 ),
               ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: _availableSports.map((sport) {
-                  final isSelected = _selectedSports.contains(sport);
-                  return FilterChip(
-                    label: Text(sport),
-                    selected: isSelected,
-                    selectedColor: lime,
-                    checkmarkColor: navy,
-                    labelStyle: TextStyle(
-                      color: isSelected
-                          ? (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : navy)
-                          : (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFFB0BEC5)
-                                : ink),
-                      fontWeight: isSelected
-                          ? FontWeight.w900
-                          : FontWeight.w600,
-                    ),
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedSports.add(sport);
-                        } else {
-                          _selectedSports.remove(sport);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
+                children:
+                    _availableSports.map((sport) {
+                      final isSelected = _selectedSports.contains(sport);
+                      return FilterChip(
+                        label: Text(sport),
+                        selected: isSelected,
+                        selectedColor: lime,
+                        checkmarkColor: navy,
+                        labelStyle: TextStyle(
+                          color:
+                              isSelected
+                                  ? (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : navy)
+                                  : (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? const Color(0xFFB0BEC5)
+                                      : ink),
+                          fontWeight:
+                              isSelected ? FontWeight.w900 : FontWeight.w600,
+                        ),
+                        onSelected: (selected) {
+                          setState(() {
+                            if (selected) {
+                              _selectedSports.add(sport);
+                            } else {
+                              _selectedSports.remove(sport);
+                            }
+                          });
+                        },
+                      );
+                    }).toList(),
               ),
             ],
           ),
@@ -203,16 +211,17 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             foregroundColor: navy,
           ),
           onPressed: _saving ? null : _save,
-          child: _saving
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text(
-                  'Save Changes',
-                  style: TextStyle(fontWeight: FontWeight.w900),
-                ),
+          child:
+              _saving
+                  ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                  : const Text(
+                    'Save Changes',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
         ),
       ],
     );

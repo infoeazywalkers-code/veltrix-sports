@@ -100,15 +100,13 @@ class LeaderboardService {
         if (card == null || !card.showOnLeaderboards) continue;
         final a = agg[ids[i]]!;
         final dominantSport = _dominantSport(a.sportCounts);
-        final sport = card.sports.isNotEmpty
-            ? card.sports.first
-            : dominantSport;
+        final sport =
+            card.sports.isNotEmpty ? card.sports.first : dominantSport;
         rows.add(
           LeaderboardRow(
             userId: ids[i],
-            displayName: card.displayName.isNotEmpty
-                ? card.displayName
-                : 'Athlete',
+            displayName:
+                card.displayName.isNotEmpty ? card.displayName : 'Athlete',
             handle: card.handle,
             photoUrl: card.photoUrl,
             team: card.team,

@@ -15,9 +15,10 @@ class SectionHeading extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w900,
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
           ),
         ),
       ),

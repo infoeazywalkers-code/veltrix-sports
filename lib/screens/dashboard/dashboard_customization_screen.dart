@@ -30,9 +30,10 @@ class _DashboardCustomizationScreenState
           ? dashboardPrefs!.visibleWidgets
           : DashboardWidgetId.defaultVisible,
     );
-    _hiddenWidgets = DashboardWidgetId.allWidgets.keys
-        .where((id) => !_visibleWidgets.contains(id))
-        .toList();
+    _hiddenWidgets =
+        DashboardWidgetId.allWidgets.keys
+            .where((id) => !_visibleWidgets.contains(id))
+            .toList();
   }
 
   Future<void> _savePreferences() async {
@@ -100,22 +101,23 @@ class _DashboardCustomizationScreenState
         actions: [
           TextButton(
             onPressed: _isSaving ? null : _savePreferences,
-            child: _isSaving
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
+            child:
+                _isSaving
+                    ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                    : const Text(
+                      'SAVE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  )
-                : const Text(
-                    'SAVE',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
           ),
         ],
       ),
@@ -125,9 +127,10 @@ class _DashboardCustomizationScreenState
           Text(
             'Visible Widgets',
             style: TextStyle(
-              color: (Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white
-                  : navy),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
               fontSize: 16,
               fontWeight: FontWeight.w800,
             ),
@@ -136,9 +139,10 @@ class _DashboardCustomizationScreenState
           Text(
             'Drag to reorder. Tap to hide.',
             style: TextStyle(
-              color: (Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF78909C)
-                  : muted),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
               fontSize: 12,
             ),
           ),
@@ -156,17 +160,19 @@ class _DashboardCustomizationScreenState
                 child: ListTile(
                   leading: Icon(
                     Icons.drag_handle,
-                    color: (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF78909C)
-                        : muted),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
                   ),
                   title: Text(
                     label,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : navy),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
                     ),
                   ),
                   trailing: IconButton(
@@ -182,9 +188,10 @@ class _DashboardCustomizationScreenState
             Text(
               'Hidden Widgets',
               style: TextStyle(
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
               ),
@@ -193,9 +200,10 @@ class _DashboardCustomizationScreenState
             Text(
               'Tap to show on your dashboard.',
               style: TextStyle(
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : muted),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
                 fontSize: 12,
               ),
             ),
@@ -207,17 +215,19 @@ class _DashboardCustomizationScreenState
                 child: ListTile(
                   leading: Icon(
                     Icons.visibility_off,
-                    color: (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF78909C)
-                        : muted),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
                   ),
                   title: Text(
                     label,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
                     ),
                   ),
                   trailing: IconButton(

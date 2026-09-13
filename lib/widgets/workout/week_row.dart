@@ -32,9 +32,10 @@ class WeekRow extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.w800,
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFFB0BEC5)
-                : ink),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFB0BEC5)
+                    : ink),
           ),
         ),
         subtitle: Text(
@@ -43,9 +44,10 @@ class WeekRow extends StatelessWidget {
         ),
         trailing: Icon(
           Icons.chevron_right,
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF78909C)
-              : muted),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
         ),
       ),
     ),

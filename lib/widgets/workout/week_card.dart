@@ -39,9 +39,10 @@ class WeekCard extends ConsumerWidget {
 
     // Normalize bar heights to max 80
     final maxTss = dailyTss.reduce((a, b) => a > b ? a : b);
-    final barHeights = maxTss > 0
-        ? dailyTss.map((t) => (t / maxTss) * 80.0).toList()
-        : List<double>.filled(7, 0);
+    final barHeights =
+        maxTss > 0
+            ? dailyTss.map((t) => (t / maxTss) * 80.0).toList()
+            : List<double>.filled(7, 0);
 
     // Today's weekday index (0=Mon) for highlighting
     final todayIndex = now.weekday - 1;
@@ -71,9 +72,10 @@ class WeekCard extends ConsumerWidget {
                       width: 20,
                       height: barHeights[i],
                       decoration: BoxDecoration(
-                        color: i == todayIndex
-                            ? lime
-                            : blue.withValues(alpha: .25),
+                        color:
+                            i == todayIndex
+                                ? lime
+                                : blue.withValues(alpha: .25),
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
@@ -81,9 +83,10 @@ class WeekCard extends ConsumerWidget {
                     Text(
                       ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
                       style: TextStyle(
-                        color: (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF78909C)
-                            : muted),
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF78909C)
+                                : muted),
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
                       ),

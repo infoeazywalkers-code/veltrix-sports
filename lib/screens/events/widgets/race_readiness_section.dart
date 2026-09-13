@@ -30,8 +30,8 @@ class RaceReadinessSection extends StatefulWidget {
 class _RaceReadinessSectionState extends State<RaceReadinessSection> {
   final EventService _events = EventService();
   final RaceReadinessService _readiness = RaceReadinessService();
-  late final Stream<List<SportsEvent>> _upcomingEvents = _events
-      .watchUpcomingEvents();
+  late final Stream<List<SportsEvent>> _upcomingEvents =
+      _events.watchUpcomingEvents();
   final Map<String, Future<RaceReadiness>> _readinessCache = {};
   bool _registering = false;
 
@@ -137,19 +137,15 @@ class _RaceReadinessSectionState extends State<RaceReadinessSection> {
       );
     }
 
-    final Set<String> ticketEventIds = tickets
-        .map((ticket) => ticket.eventId)
-        .toSet();
-    final List<SportsEvent> registered = upcoming
-        .where((event) => ticketEventIds.contains(event.id))
-        .toList();
-    final SportsEvent focus = registered.isNotEmpty
-        ? registered.first
-        : upcoming.first;
+    final Set<String> ticketEventIds =
+        tickets.map((ticket) => ticket.eventId).toSet();
+    final List<SportsEvent> registered =
+        upcoming.where((event) => ticketEventIds.contains(event.id)).toList();
+    final SportsEvent focus =
+        registered.isNotEmpty ? registered.first : upcoming.first;
     final bool focusRegistered = ticketEventIds.contains(focus.id);
-    final List<SportsEvent> others = registered
-        .where((event) => event.id != focus.id)
-        .toList();
+    final List<SportsEvent> others =
+        registered.where((event) => event.id != focus.id).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,11 +261,12 @@ class _TicketReadinessRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool dark = Theme.of(context).brightness == Brightness.dark;
     final int daysOut = event.date.difference(DateTime.now()).inDays;
-    final String countdown = daysOut <= 0
-        ? 'Race day'
-        : daysOut == 1
-        ? '1 day out'
-        : '$daysOut days out';
+    final String countdown =
+        daysOut <= 0
+            ? 'Race day'
+            : daysOut == 1
+            ? '1 day out'
+            : '$daysOut days out';
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Card(

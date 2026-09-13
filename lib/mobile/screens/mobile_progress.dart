@@ -60,19 +60,21 @@ class _MobileProgressScreenState extends ConsumerState<MobileProgressScreen> {
                     ),
                     const SizedBox(height: M.md),
                     historyAsync.when(
-                      loading: () => const SizedBox(
-                        height: 190,
-                        child: Center(child: CircularProgressIndicator()),
-                      ),
-                      error: (e, _) => SizedBox(
-                        height: 190,
-                        child: Center(
-                          child: Text(
-                            'Failed to load chart: $e',
-                            style: M.adaptiveCardBody(context),
+                      loading:
+                          () => const SizedBox(
+                            height: 190,
+                            child: Center(child: CircularProgressIndicator()),
                           ),
-                        ),
-                      ),
+                      error:
+                          (e, _) => SizedBox(
+                            height: 190,
+                            child: Center(
+                              child: Text(
+                                'Failed to load chart: $e',
+                                style: M.adaptiveCardBody(context),
+                              ),
+                            ),
+                          ),
                       data: (history) {
                         final latest = perfAsync.valueOrNull;
                         return PerformanceChartWidget(
@@ -166,81 +168,84 @@ class _MobileProgressScreenState extends ConsumerState<MobileProgressScreen> {
               ref
                   .watch(personalBestsProvider)
                   .when(
-                    loading: () => const MSection(
-                      title: 'Personal bests',
-                      action: 'View all',
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _BestCard(
-                              '5K run',
-                              '\u2014',
-                              Icons.directions_run,
-                              M.blue,
-                            ),
+                    loading:
+                        () => const MSection(
+                          title: 'Personal bests',
+                          action: 'View all',
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _BestCard(
+                                  '5K run',
+                                  '\u2014',
+                                  Icons.directions_run,
+                                  M.blue,
+                                ),
+                              ),
+                              SizedBox(width: M.sm),
+                              Expanded(
+                                child: _BestCard(
+                                  '20 min power',
+                                  '\u2014',
+                                  Icons.directions_bike,
+                                  M.purple,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: M.sm),
-                          Expanded(
-                            child: _BestCard(
-                              '20 min power',
-                              '\u2014',
-                              Icons.directions_bike,
-                              M.purple,
-                            ),
+                        ),
+                    error:
+                        (_, __) => const MSection(
+                          title: 'Personal bests',
+                          action: 'View all',
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _BestCard(
+                                  '5K run',
+                                  '\u2014',
+                                  Icons.directions_run,
+                                  M.blue,
+                                ),
+                              ),
+                              SizedBox(width: M.sm),
+                              Expanded(
+                                child: _BestCard(
+                                  '20 min power',
+                                  '\u2014',
+                                  Icons.directions_bike,
+                                  M.purple,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    error: (_, __) => const MSection(
-                      title: 'Personal bests',
-                      action: 'View all',
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _BestCard(
-                              '5K run',
-                              '\u2014',
-                              Icons.directions_run,
-                              M.blue,
-                            ),
+                        ),
+                    data:
+                        (pbs) => MSection(
+                          title: 'Personal bests',
+                          action: 'View all',
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _BestCard(
+                                  '5K run',
+                                  pbs.best5kPace,
+                                  Icons.directions_run,
+                                  M.blue,
+                                ),
+                              ),
+                              const SizedBox(width: M.sm),
+                              Expanded(
+                                child: _BestCard(
+                                  '20 min power',
+                                  pbs.best20MinPower,
+                                  Icons.directions_bike,
+                                  M.purple,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: M.sm),
-                          Expanded(
-                            child: _BestCard(
-                              '20 min power',
-                              '\u2014',
-                              Icons.directions_bike,
-                              M.purple,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    data: (pbs) => MSection(
-                      title: 'Personal bests',
-                      action: 'View all',
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _BestCard(
-                              '5K run',
-                              pbs.best5kPace,
-                              Icons.directions_run,
-                              M.blue,
-                            ),
-                          ),
-                          const SizedBox(width: M.sm),
-                          Expanded(
-                            child: _BestCard(
-                              '20 min power',
-                              pbs.best20MinPower,
-                              Icons.directions_bike,
-                              M.purple,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
                   ),
               const SizedBox(height: M.xxl),
             ],
@@ -345,9 +350,10 @@ class _InsightCard extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color: (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : M.navy),
+                    color:
+                        (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : M.navy),
                   ),
                 ),
                 const SizedBox(height: 2),

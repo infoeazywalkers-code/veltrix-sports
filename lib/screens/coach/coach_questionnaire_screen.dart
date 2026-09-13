@@ -47,22 +47,23 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
         // questionnaire pops once below carrying that result.
         final signIn = await showDialog<bool>(
           context: context,
-          builder: (dialogContext) => AlertDialog(
-            title: const Text('Sign in required'),
-            content: const Text(
-              'Please sign in to submit your coach questionnaire.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext, false),
-                child: const Text('Cancel'),
+          builder:
+              (dialogContext) => AlertDialog(
+                title: const Text('Sign in required'),
+                content: const Text(
+                  'Please sign in to submit your coach questionnaire.',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext, false),
+                    child: const Text('Cancel'),
+                  ),
+                  FilledButton(
+                    onPressed: () => Navigator.pop(dialogContext, true),
+                    child: const Text('Sign in'),
+                  ),
+                ],
               ),
-              FilledButton(
-                onPressed: () => Navigator.pop(dialogContext, true),
-                child: const Text('Sign in'),
-              ),
-            ],
-          ),
         );
         if (signIn == true && mounted) {
           Navigator.pop(context, 'signIn');
@@ -93,44 +94,46 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
         // push site in CoachMatchScreen to handle.
         final done = await showDialog<dynamic>(
           context: context,
-          builder: (dialogContext) => AlertDialog(
-            title: const Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.green),
-                SizedBox(width: 10),
-                Text('Questionnaire submitted'),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'We will match you with a $sport coach for your goal: $goal.',
+          builder:
+              (dialogContext) => AlertDialog(
+                title: const Row(
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.green),
+                    SizedBox(width: 10),
+                    Text('Questionnaire submitted'),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  'Our team will review your answers and contact you within 24-48 hours with a recommended coach match.',
-                  style: TextStyle(
-                    color: (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF78909C)
-                        : muted),
-                    fontSize: 13,
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'We will match you with a $sport coach for your goal: $goal.',
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Our team will review your answers and contact you within 24-48 hours with a recommended coach match.',
+                      style: TextStyle(
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF78909C)
+                                : muted),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext, 'requests'),
+                    child: const Text('View my requests'),
                   ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext, 'requests'),
-                child: const Text('View my requests'),
+                  FilledButton(
+                    onPressed: () => Navigator.pop(dialogContext, true),
+                    child: const Text('Done'),
+                  ),
+                ],
               ),
-              FilledButton(
-                onPressed: () => Navigator.pop(dialogContext, true),
-                child: const Text('Done'),
-              ),
-            ],
-          ),
         );
         if (!context.mounted) return;
         if (done == 'requests') {
@@ -175,18 +178,20 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w900,
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'We use your answers to recommend coaches who fit your goals and communication style.',
               style: TextStyle(
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : muted),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
                 height: 1.4,
               ),
             ),
@@ -197,13 +202,16 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
                 labelText: 'Primary sport',
                 border: OutlineInputBorder(),
               ),
-              items: const [
-                'Running',
-                'Cycling',
-                'Swimming',
-                'Triathlon',
-                'Strength',
-              ].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+              items:
+                  const [
+                        'Running',
+                        'Cycling',
+                        'Swimming',
+                        'Triathlon',
+                        'Strength',
+                      ]
+                      .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                      .toList(),
               onChanged: (v) => setState(() => sport = v!),
             ),
             const SizedBox(height: 16),
@@ -213,12 +221,10 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
                 labelText: 'Experience level',
                 border: OutlineInputBorder(),
               ),
-              items: const [
-                'Beginner',
-                'Intermediate',
-                'Advanced',
-                'Elite',
-              ].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+              items:
+                  const ['Beginner', 'Intermediate', 'Advanced', 'Elite']
+                      .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                      .toList(),
               onChanged: (v) => setState(() => experience = v!),
             ),
             const SizedBox(height: 16),
@@ -228,12 +234,15 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
                 labelText: 'Main goal',
                 border: OutlineInputBorder(),
               ),
-              items: const [
-                'Improve performance',
-                'Complete my first event',
-                'Return from injury',
-                'Build consistency',
-              ].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+              items:
+                  const [
+                        'Improve performance',
+                        'Complete my first event',
+                        'Return from injury',
+                        'Build consistency',
+                      ]
+                      .map((v) => DropdownMenuItem(value: v, child: Text(v)))
+                      .toList(),
               onChanged: (v) => setState(() => goal = v!),
             ),
             const SizedBox(height: 16),
@@ -243,18 +252,19 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
                 labelText: 'Pricing package',
                 border: OutlineInputBorder(),
               ),
-              items: const ['', 'bronze', 'silver', 'gold']
-                  .map(
-                    (v) => DropdownMenuItem(
-                      value: v,
-                      child: Text(
-                        v.isEmpty
-                            ? 'No preference'
-                            : '${v[0].toUpperCase()}${v.substring(1)}',
-                      ),
-                    ),
-                  )
-                  .toList(),
+              items:
+                  const ['', 'bronze', 'silver', 'gold']
+                      .map(
+                        (v) => DropdownMenuItem(
+                          value: v,
+                          child: Text(
+                            v.isEmpty
+                                ? 'No preference'
+                                : '${v[0].toUpperCase()}${v.substring(1)}',
+                          ),
+                        ),
+                      )
+                      .toList(),
               onChanged: (v) => setState(() => package = v ?? ''),
             ),
             const SizedBox(height: 16),
@@ -275,13 +285,14 @@ class _CoachQuestionnaireScreenState extends State<CoachQuestionnaireScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               onPressed: _submitting ? null : _submit,
-              icon: _submitting
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.send),
+              icon:
+                  _submitting
+                      ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                      : const Icon(Icons.send),
               label: Text(
                 _submitting ? 'Submitting...' : 'Submit answers',
                 style: const TextStyle(fontWeight: FontWeight.w900),

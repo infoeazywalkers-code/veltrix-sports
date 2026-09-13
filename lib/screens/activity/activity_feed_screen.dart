@@ -93,12 +93,13 @@ class _ActivityFeedScreenState extends ConsumerState<ActivityFeedScreen> {
                       selectedColor: const Color(0xFFF97316),
                       backgroundColor: const Color(0xFF1A1A1A),
                       side: BorderSide(
-                        color: selected
-                            ? const Color(0xFFF97316)
-                            : Colors.white.withValues(alpha: 0.12),
+                        color:
+                            selected
+                                ? const Color(0xFFF97316)
+                                : Colors.white.withValues(alpha: 0.12),
                       ),
-                      onSelected: (_) =>
-                          setState(() => _sportFilter = filter['id']!),
+                      onSelected:
+                          (_) => setState(() => _sportFilter = filter['id']!),
                     );
                   },
                 ),
@@ -107,71 +108,81 @@ class _ActivityFeedScreenState extends ConsumerState<ActivityFeedScreen> {
                 child: RefreshIndicator(
                   color: const Color(0xFFF97316),
                   onRefresh: _refresh,
-                  child: filtered.isEmpty
-                      ? ListView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 72),
-                              child: Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.run_circle_outlined,
-                                      size: 64,
-                                      color: Colors.white24,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Text(
-                                      activities.isEmpty
-                                          ? 'No activities yet'
-                                          : 'No activities for this filter',
-                                      style: const TextStyle(
-                                        color: Colors.white54,
-                                        fontSize: 16,
+                  child:
+                      filtered.isEmpty
+                          ? ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 72),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.run_circle_outlined,
+                                        size: 64,
+                                        color: Colors.white24,
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Record your first workout to see it here',
-                                      style: TextStyle(
-                                        color: Colors.white38,
-                                        fontSize: 13,
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        activities.isEmpty
+                                            ? 'No activities yet'
+                                            : 'No activities for this filter',
+                                        style: const TextStyle(
+                                          color: Colors.white54,
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Record your first workout to see it here',
+                                        style: TextStyle(
+                                          color: Colors.white38,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        )
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          itemCount: itemCount,
-                          itemBuilder: (context, index) {
-                            if (index >= filtered.length) {
-                              return _LoadMoreButton(
-                                loadedCount: activities.length,
-                                onLoadMore: () =>
-                                    ref.read(feedLimitProvider.notifier).state =
-                                        limit >= 50 ? 100 : limit * 2,
-                              );
-                            }
-                            return _ActivityCard(activity: filtered[index]);
-                          },
-                        ),
+                            ],
+                          )
+                          : ListView.builder(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            itemCount: itemCount,
+                            itemBuilder: (context, index) {
+                              if (index >= filtered.length) {
+                                return _LoadMoreButton(
+                                  loadedCount: activities.length,
+                                  onLoadMore:
+                                      () =>
+                                          ref
+                                              .read(feedLimitProvider.notifier)
+                                              .state = limit >= 50
+                                                  ? 100
+                                                  : limit * 2,
+                                );
+                              }
+                              return _ActivityCard(activity: filtered[index]);
+                            },
+                          ),
                 ),
               ),
             ],
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: Color(0xFFF97316)),
-        ),
-        error: (e, _) => Center(
-          child: Text('Error: $e', style: const TextStyle(color: Colors.red)),
-        ),
+        loading:
+            () => const Center(
+              child: CircularProgressIndicator(color: Color(0xFFF97316)),
+            ),
+        error:
+            (e, _) => Center(
+              child: Text(
+                'Error: $e',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
       ),
     );
   }
@@ -261,20 +272,22 @@ class _ActivityCard extends ConsumerWidget {
               children: [
                 CircleAvatar(
                   radius: 18,
-                  backgroundImage: activity.athleteAvatar.isNotEmpty
-                      ? NetworkImage(activity.athleteAvatar)
-                      : null,
+                  backgroundImage:
+                      activity.athleteAvatar.isNotEmpty
+                          ? NetworkImage(activity.athleteAvatar)
+                          : null,
                   backgroundColor: const Color(
                     0xFFF97316,
                   ).withValues(alpha: 0.2),
-                  child: activity.athleteAvatar.isEmpty
-                      ? Text(
-                          activity.athleteName.isNotEmpty
-                              ? activity.athleteName[0].toUpperCase()
-                              : '?',
-                          style: const TextStyle(color: Color(0xFFF97316)),
-                        )
-                      : null,
+                  child:
+                      activity.athleteAvatar.isEmpty
+                          ? Text(
+                            activity.athleteName.isNotEmpty
+                                ? activity.athleteName[0].toUpperCase()
+                                : '?',
+                            style: const TextStyle(color: Color(0xFFF97316)),
+                          )
+                          : null,
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -437,35 +450,36 @@ class _ActivityCard extends ConsumerWidget {
               child: Wrap(
                 spacing: 6,
                 runSpacing: 4,
-                children: activity.prBadges
-                    .map(
-                      (pr) => Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(
-                            0xFFFBBF24,
-                          ).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(
-                              0xFFFBBF24,
-                            ).withValues(alpha: 0.3),
+                children:
+                    activity.prBadges
+                        .map(
+                          (pr) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFFFBBF24,
+                              ).withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: const Color(
+                                  0xFFFBBF24,
+                                ).withValues(alpha: 0.3),
+                              ),
+                            ),
+                            child: Text(
+                              '🏆 $pr',
+                              style: const TextStyle(
+                                color: Color(0xFFFBBF24),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          '🏆 $pr',
-                          style: const TextStyle(
-                            color: Color(0xFFFBBF24),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
+                        )
+                        .toList(),
               ),
             ),
 
@@ -496,9 +510,10 @@ class _ActivityCard extends ConsumerWidget {
                 const Spacer(),
                 InkWell(
                   borderRadius: BorderRadius.circular(8),
-                  onTap: () => ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(const SnackBar(content: Text('Link copied'))),
+                  onTap:
+                      () => ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Link copied')),
+                      ),
                   child: _actionButton(
                     icon: Icons.share,
                     color: Colors.white54,
@@ -543,214 +558,234 @@ class _ActivityCard extends ConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (sheetContext) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-        ),
-        child: DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.6,
-          minChildSize: 0.4,
-          maxChildSize: 0.9,
-          builder: (_, scrollController) => Column(
-            children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Comments',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: ref
-                      .read(activityServiceProvider)
-                      .watchComments(activity.id),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const Center(
-                        child: Text(
-                          'Could not load comments',
-                          style: TextStyle(color: Colors.white54),
+      builder:
+          (sheetContext) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+            ),
+            child: DraggableScrollableSheet(
+              expand: false,
+              initialChildSize: 0.6,
+              minChildSize: 0.4,
+              maxChildSize: 0.9,
+              builder:
+                  (_, scrollController) => Column(
+                    children: [
+                      const SizedBox(height: 12),
+                      Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.white24,
+                          borderRadius: BorderRadius.circular(2),
                         ),
-                      );
-                    }
-                    if (!snapshot.hasData) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFFF97316),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Comments',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
                         ),
-                      );
-                    }
-                    final docs = snapshot.data!.docs;
-                    if (docs.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'No comments yet. Start the conversation!',
-                          style: TextStyle(color: Colors.white38),
-                        ),
-                      );
-                    }
-                    return ListView.separated(
-                      controller: scrollController,
-                      padding: const EdgeInsets.all(16),
-                      itemCount: docs.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 8),
-                      itemBuilder: (context, index) {
-                        final data = docs[index].data() as Map<String, dynamic>;
-                        final createdAt = data['createdAt'] as Timestamp?;
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 14,
-                              backgroundColor: const Color(
-                                0xFFF97316,
-                              ).withValues(alpha: 0.2),
-                              child: Text(
-                                ((data['userName'] ?? '?')
-                                        .toString()
-                                        .isNotEmpty)
-                                    ? (data['userName'])
-                                          .toString()[0]
-                                          .toUpperCase()
-                                    : '?',
-                                style: const TextStyle(
+                      ),
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: ref
+                              .read(activityServiceProvider)
+                              .watchComments(activity.id),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const Center(
+                                child: Text(
+                                  'Could not load comments',
+                                  style: TextStyle(color: Colors.white54),
+                                ),
+                              );
+                            }
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                child: CircularProgressIndicator(
                                   color: Color(0xFFF97316),
-                                  fontSize: 11,
+                                ),
+                              );
+                            }
+                            final docs = snapshot.data!.docs;
+                            if (docs.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  'No comments yet. Start the conversation!',
+                                  style: TextStyle(color: Colors.white38),
+                                ),
+                              );
+                            }
+                            return ListView.separated(
+                              controller: scrollController,
+                              padding: const EdgeInsets.all(16),
+                              itemCount: docs.length,
+                              separatorBuilder:
+                                  (_, __) => const SizedBox(height: 8),
+                              itemBuilder: (context, index) {
+                                final data =
+                                    docs[index].data() as Map<String, dynamic>;
+                                final createdAt =
+                                    data['createdAt'] as Timestamp?;
+                                return Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 14,
+                                      backgroundColor: const Color(
+                                        0xFFF97316,
+                                      ).withValues(alpha: 0.2),
+                                      child: Text(
+                                        ((data['userName'] ?? '?')
+                                                .toString()
+                                                .isNotEmpty)
+                                            ? (data['userName'])
+                                                .toString()[0]
+                                                .toUpperCase()
+                                            : '?',
+                                        style: const TextStyle(
+                                          color: Color(0xFFF97316),
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  (data['userName'] ??
+                                                          'Athlete')
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ),
+                                              if (createdAt != null)
+                                                Text(
+                                                  _commentTimeAgo(
+                                                    createdAt.toDate(),
+                                                  ),
+                                                  style: const TextStyle(
+                                                    color: Colors.white38,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            (data['text'] ?? '').toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: controller,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: 'Add a comment...',
+                                  hintStyle: const TextStyle(
+                                    color: Colors.white38,
+                                  ),
+                                  filled: true,
+                                  fillColor: const Color(0xFF0A0A0A),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 10,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          (data['userName'] ?? 'Athlete')
-                                              .toString(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                      if (createdAt != null)
-                                        Text(
-                                          _commentTimeAgo(createdAt.toDate()),
-                                          style: const TextStyle(
-                                            color: Colors.white38,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    (data['text'] ?? '').toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.send,
+                                color: Color(0xFFF97316),
                               ),
+                              onPressed: () async {
+                                final text = controller.text.trim();
+                                if (text.isEmpty) return;
+                                final user = ref.read(currentUserProvider);
+                                if (user == null) {
+                                  ScaffoldMessenger.of(
+                                    sheetContext,
+                                  ).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Sign in to comment'),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                final displayName =
+                                    (user.displayName?.isNotEmpty == true)
+                                        ? user.displayName!
+                                        : 'Athlete';
+                                try {
+                                  await ref
+                                      .read(activityServiceProvider)
+                                      .addComment(
+                                        activity.id,
+                                        user.uid,
+                                        displayName,
+                                        text,
+                                      );
+                                  controller.clear();
+                                } catch (_) {
+                                  if (sheetContext.mounted) {
+                                    ScaffoldMessenger.of(
+                                      sheetContext,
+                                    ).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Could not post comment'),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
                             ),
                           ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: controller,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Add a comment...',
-                          hintStyle: const TextStyle(color: Colors.white38),
-                          filled: true,
-                          fillColor: const Color(0xFF0A0A0A),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.send, color: Color(0xFFF97316)),
-                      onPressed: () async {
-                        final text = controller.text.trim();
-                        if (text.isEmpty) return;
-                        final user = ref.read(currentUserProvider);
-                        if (user == null) {
-                          ScaffoldMessenger.of(sheetContext).showSnackBar(
-                            const SnackBar(content: Text('Sign in to comment')),
-                          );
-                          return;
-                        }
-                        final displayName =
-                            (user.displayName?.isNotEmpty == true)
-                            ? user.displayName!
-                            : 'Athlete';
-                        try {
-                          await ref
-                              .read(activityServiceProvider)
-                              .addComment(
-                                activity.id,
-                                user.uid,
-                                displayName,
-                                text,
-                              );
-                          controller.clear();
-                        } catch (_) {
-                          if (sheetContext.mounted) {
-                            ScaffoldMessenger.of(sheetContext).showSnackBar(
-                              const SnackBar(
-                                content: Text('Could not post comment'),
-                              ),
-                            );
-                          }
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                    ],
+                  ),
+            ),
           ),
-        ),
-      ),
     ).whenComplete(controller.dispose);
   }
 

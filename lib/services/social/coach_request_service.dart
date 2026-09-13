@@ -45,9 +45,10 @@ class CoachRequestService {
         .orderBy('createdAt')
         .snapshots()
         .map(
-          (snap) => snap.docs
-              .map((doc) => CoachRequest.fromMap(doc.id, doc.data()))
-              .toList(),
+          (snap) =>
+              snap.docs
+                  .map((doc) => CoachRequest.fromMap(doc.id, doc.data()))
+                  .toList(),
         )
         .handleError((e) {
           throw Exception('Failed to watch pending requests: $e');
@@ -56,10 +57,11 @@ class CoachRequestService {
 
   Future<List<CoachRequest>> getByUserId(String userId) async {
     try {
-      final q = await _requests
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .get();
+      final q =
+          await _requests
+              .where('userId', isEqualTo: userId)
+              .orderBy('createdAt', descending: true)
+              .get();
       return q.docs
           .map((doc) => CoachRequest.fromMap(doc.id, doc.data()))
           .toList();

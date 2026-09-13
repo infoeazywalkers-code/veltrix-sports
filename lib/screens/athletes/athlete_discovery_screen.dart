@@ -126,15 +126,16 @@ class _AthleteDiscoveryScreenState
             decoration: InputDecoration(
               hintText: 'Search name, handle, team, location',
               prefixIcon: const Icon(Icons.search),
-              suffixIcon: _query.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() => _query = '');
-                      },
-                    )
-                  : null,
+              suffixIcon:
+                  _query.isNotEmpty
+                      ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() => _query = '');
+                        },
+                      )
+                      : null,
               filled: true,
               fillColor: Colors.white,
               border: OutlineInputBorder(
@@ -150,17 +151,20 @@ class _AthleteDiscoveryScreenState
               const SizedBox(width: 8),
               DropdownButton<String>(
                 value: _sport,
-                items: _kSportFilter
-                    .map(
-                      (s) => DropdownMenuItem(
-                        value: s,
-                        child: Text(
-                          s == 'All' ? 'All sports' : s,
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    )
-                    .toList(),
+                items:
+                    _kSportFilter
+                        .map(
+                          (s) => DropdownMenuItem(
+                            value: s,
+                            child: Text(
+                              s == 'All' ? 'All sports' : s,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                 onChanged: (v) {
                   if (v != null) setState(() => _sport = v);
                 },
@@ -169,14 +173,16 @@ class _AthleteDiscoveryScreenState
           ),
           const SizedBox(height: 12),
           directoryAsync.when(
-            loading: () => const Padding(
-              padding: EdgeInsets.symmetric(vertical: 48),
-              child: Center(child: CircularProgressIndicator(color: navy)),
-            ),
-            error: (e, _) => _DiscoveryError(
-              message: ErrorHandler.getUserMessage(e),
-              onRetry: () => ref.invalidate(athleteDirectoryProvider(50)),
-            ),
+            loading:
+                () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 48),
+                  child: Center(child: CircularProgressIndicator(color: navy)),
+                ),
+            error:
+                (e, _) => _DiscoveryError(
+                  message: ErrorHandler.getUserMessage(e),
+                  onRetry: () => ref.invalidate(athleteDirectoryProvider(50)),
+                ),
             data: (cards) {
               final filtered = _filter(cards);
               if (filtered.isEmpty) {
@@ -197,23 +203,27 @@ class _AthleteDiscoveryScreenState
                 );
               }
               return Column(
-                children: filtered
-                    .map(
-                      (card) => Padding(
-                        padding: const EdgeInsets.only(bottom: 9),
-                        child: _AthleteRow(
-                          card: card,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  AthleteProfileScreen(uid: card.uid),
+                children:
+                    filtered
+                        .map(
+                          (card) => Padding(
+                            padding: const EdgeInsets.only(bottom: 9),
+                            child: _AthleteRow(
+                              card: card,
+                              onTap:
+                                  () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (_) => AthleteProfileScreen(
+                                            uid: card.uid,
+                                          ),
+                                    ),
+                                  ),
                             ),
                           ),
-                        ),
-                      ),
-                    )
-                    .toList(),
+                        )
+                        .toList(),
               );
             },
           ),
@@ -245,12 +255,13 @@ class _AthleteRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final initials = card.displayName
-        .split(' ')
-        .map((w) => w.isNotEmpty ? w[0] : '')
-        .take(2)
-        .join()
-        .toUpperCase();
+    final initials =
+        card.displayName
+            .split(' ')
+            .map((w) => w.isNotEmpty ? w[0] : '')
+            .take(2)
+            .join()
+            .toUpperCase();
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -264,17 +275,18 @@ class _AthleteRow extends StatelessWidget {
                 backgroundColor: navy,
                 backgroundImage:
                     card.photoUrl != null && card.photoUrl!.isNotEmpty
-                    ? NetworkImage(card.photoUrl!)
-                    : null,
-                child: card.photoUrl == null || card.photoUrl!.isEmpty
-                    ? Text(
-                        initials.isNotEmpty ? initials : 'A',
-                        style: const TextStyle(
-                          color: lime,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      )
-                    : null,
+                        ? NetworkImage(card.photoUrl!)
+                        : null,
+                child:
+                    card.photoUrl == null || card.photoUrl!.isEmpty
+                        ? Text(
+                          initials.isNotEmpty ? initials : 'A',
+                          style: const TextStyle(
+                            color: lime,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        )
+                        : null,
               ),
               const SizedBox(width: 12),
               Expanded(

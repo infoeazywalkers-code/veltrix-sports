@@ -179,10 +179,11 @@ class NotificationService {
   Future<void> _requestExactAlarmPermission() async {
     if (kIsWeb) return;
     try {
-      final androidPlugin = _localNotifications
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >();
+      final androidPlugin =
+          _localNotifications
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
       if (androidPlugin != null) {
         await androidPlugin.requestNotificationsPermission();
       }

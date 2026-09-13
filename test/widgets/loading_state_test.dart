@@ -4,9 +4,7 @@ import 'package:veltrix_sports/widgets/common/loading_state.dart';
 
 void main() {
   Widget wrap(Widget child) => MaterialApp(
-    home: Scaffold(
-      body: SingleChildScrollView(child: Center(child: child)),
-    ),
+    home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
   );
 
   group('LoadingSpinner', () {

@@ -95,17 +95,20 @@ RaceReadiness computeReadiness({
     taperAdvice =
         'Log activities to build readiness — your score will update as training syncs.';
   } else if (safeDaysOut > 21) {
-    taperAdvice = tsb >= 5
-        ? 'Build phase — keep stacking volume. You are fresh with time to spare, so bank fitness now.'
-        : 'Build phase — keep stacking volume.';
+    taperAdvice =
+        tsb >= 5
+            ? 'Build phase — keep stacking volume. You are fresh with time to spare, so bank fitness now.'
+            : 'Build phase — keep stacking volume.';
   } else if (safeDaysOut >= 7) {
-    taperAdvice = tsb <= -10
-        ? 'Pre-taper — hold intensity, trim volume ~10%/wk to shed fatigue.'
-        : 'Pre-taper — hold intensity, trim volume ~10%/wk.';
+    taperAdvice =
+        tsb <= -10
+            ? 'Pre-taper — hold intensity, trim volume ~10%/wk to shed fatigue.'
+            : 'Pre-taper — hold intensity, trim volume ~10%/wk.';
   } else {
-    taperAdvice = tsb <= -10
-        ? 'Race week — stay fresh, no hero workouts. Prioritize sleep and easy movement to shed fatigue.'
-        : 'Race week — stay fresh, no hero workouts.';
+    taperAdvice =
+        tsb <= -10
+            ? 'Race week — stay fresh, no hero workouts. Prioritize sleep and easy movement to shed fatigue.'
+            : 'Race week — stay fresh, no hero workouts.';
   }
 
   return RaceReadiness(

@@ -26,18 +26,20 @@ class SeedDataService {
       if (userSnap.exists) return; // User already initialized
 
       // Skip if user already has any Firestore data (workouts, plans, etc.)
-      final existingWorkouts = await _db
-          .collection('workouts')
-          .where('userId', isEqualTo: userId)
-          .limit(1)
-          .get();
+      final existingWorkouts =
+          await _db
+              .collection('workouts')
+              .where('userId', isEqualTo: userId)
+              .limit(1)
+              .get();
       if (existingWorkouts.docs.isNotEmpty) return;
 
-      final existingPlans = await _db
-          .collection('training_plans')
-          .where('userId', isEqualTo: userId)
-          .limit(1)
-          .get();
+      final existingPlans =
+          await _db
+              .collection('training_plans')
+              .where('userId', isEqualTo: userId)
+              .limit(1)
+              .get();
       if (existingPlans.docs.isNotEmpty) return;
 
       final batch = _db.batch();
@@ -46,9 +48,8 @@ class SeedDataService {
       final profile = UserProfile(
         id: userId,
         email: email ?? '',
-        displayName: (displayName?.isNotEmpty == true)
-            ? displayName!
-            : 'Athlete',
+        displayName:
+            (displayName?.isNotEmpty == true) ? displayName! : 'Athlete',
         photoUrl: photoUrl,
         role: UserRole.athlete,
         sports: const ['Running', 'Cycling'],

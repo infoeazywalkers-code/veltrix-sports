@@ -104,10 +104,8 @@ class GpsRouteMapWidget extends StatelessWidget {
   }
 
   Widget _elevationProfile() {
-    final elevations = gpsPoints
-        .map((p) => p.altitude ?? 0)
-        .where((e) => e > 0)
-        .toList();
+    final elevations =
+        gpsPoints.map((p) => p.altitude ?? 0).where((e) => e > 0).toList();
     if (elevations.isEmpty) return const SizedBox.shrink();
 
     final maxElev = elevations.reduce((a, b) => a > b ? a : b);
@@ -164,11 +162,12 @@ class _RoutePainter extends CustomPainter {
     final drawWidth = size.width - padding * 2;
     final drawHeight = size.height - padding * 2;
 
-    final routePaint = Paint()
-      ..color = const Color(0xFFF97316)
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
+    final routePaint =
+        Paint()
+          ..color = const Color(0xFFF97316)
+          ..strokeWidth = 3
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke;
 
     final startPaint = Paint()..color = const Color(0xFF10B981);
     final endPaint = Paint()..color = const Color(0xFFEF4444);
@@ -210,20 +209,22 @@ class _ElevationPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (elevations.isEmpty || range == 0) return;
 
-    final fillPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          const Color(0xFF10B981).withValues(alpha: 0.4),
-          const Color(0xFF10B981).withValues(alpha: 0.0),
-        ],
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+    final fillPaint =
+        Paint()
+          ..shader = LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              const Color(0xFF10B981).withValues(alpha: 0.4),
+              const Color(0xFF10B981).withValues(alpha: 0.0),
+            ],
+          ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
-    final linePaint = Paint()
-      ..color = const Color(0xFF10B981)
-      ..strokeWidth = 1.5
-      ..style = PaintingStyle.stroke;
+    final linePaint =
+        Paint()
+          ..color = const Color(0xFF10B981)
+          ..strokeWidth = 1.5
+          ..style = PaintingStyle.stroke;
 
     final path = Path();
     final fillPath = Path();

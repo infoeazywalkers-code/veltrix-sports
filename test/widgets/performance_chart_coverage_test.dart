@@ -5,9 +5,7 @@ import 'package:veltrix_sports/widgets/analytics/performance_chart.dart';
 import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
 
 Widget wrap(Widget child) => MaterialApp(
-  home: Scaffold(
-    body: SingleChildScrollView(child: Center(child: child)),
-  ),
+  home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
 );
 
 void main() {

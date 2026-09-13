@@ -43,15 +43,17 @@ class PlanDetailScreen extends ConsumerWidget {
         title: const Text('Training plan'),
       ),
       body: plansAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: Color(0xFF8B5CF6)),
-        ),
-        error: (_, _) => const Center(
-          child: Text(
-            'Failed to load plan',
-            style: TextStyle(color: Colors.white54),
-          ),
-        ),
+        loading:
+            () => const Center(
+              child: CircularProgressIndicator(color: Color(0xFF8B5CF6)),
+            ),
+        error:
+            (_, _) => const Center(
+              child: Text(
+                'Failed to load plan',
+                style: TextStyle(color: Colors.white54),
+              ),
+            ),
         data: (plans) {
           final matches = plans.where((p) => p.id == planId).toList();
           if (matches.isEmpty) {
@@ -98,29 +100,32 @@ class PlanDetailScreen extends ConsumerWidget {
               progressAsync.when(
                 loading: () => const LinearProgressIndicator(),
                 error: (_, _) => const LinearProgressIndicator(value: 0),
-                data: (progress) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: progress.clamp(0.0, 1.0),
-                        minHeight: 8,
-                        color: const Color(0xFF10B981),
-                        backgroundColor: Colors.white.withValues(alpha: 0.08),
-                      ),
+                data:
+                    (progress) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: progress.clamp(0.0, 1.0),
+                            minHeight: 8,
+                            color: const Color(0xFF10B981),
+                            backgroundColor: Colors.white.withValues(
+                              alpha: 0.08,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          '${(progress.clamp(0.0, 1.0) * 100).round()}% complete',
+                          style: const TextStyle(
+                            color: Color(0xFF10B981),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '${(progress.clamp(0.0, 1.0) * 100).round()}% complete',
-                      style: const TextStyle(
-                        color: Color(0xFF10B981),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
               ),
               const SizedBox(height: 20),
               Row(
@@ -179,21 +184,25 @@ class PlanDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               workoutsAsync.when(
-                loading: () => const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Center(
-                    child: CircularProgressIndicator(color: Color(0xFF8B5CF6)),
-                  ),
-                ),
-                error: (_, _) => const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Center(
-                    child: Text(
-                      'Failed to load workouts',
-                      style: TextStyle(color: Colors.white54),
+                loading:
+                    () => const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFF8B5CF6),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                error:
+                    (_, _) => const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(
+                        child: Text(
+                          'Failed to load workouts',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                      ),
+                    ),
                 data: (workouts) {
                   if (workouts.isEmpty) {
                     return const Padding(
@@ -247,22 +256,23 @@ class PlanDetailScreen extends ConsumerWidget {
   Future<void> _cancelPlan(BuildContext context, WidgetRef ref) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Cancel plan?'),
-        content: const Text(
-          'Scheduled workouts stay on your calendar, but the plan will no longer be active.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Keep plan'),
+      builder:
+          (dialogContext) => AlertDialog(
+            title: const Text('Cancel plan?'),
+            content: const Text(
+              'Scheduled workouts stay on your calendar, but the plan will no longer be active.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: const Text('Keep plan'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, true),
+                child: const Text('Cancel plan'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Cancel plan'),
-          ),
-        ],
-      ),
     );
     if (confirmed != true || !context.mounted) return;
     try {
@@ -291,9 +301,10 @@ class PlanDetailScreen extends ConsumerWidget {
       child: ListTile(
         leading: Icon(
           workout.completed ? Icons.check_circle : Icons.fitness_center,
-          color: workout.completed
-              ? const Color(0xFF10B981)
-              : const Color(0xFF8B5CF6),
+          color:
+              workout.completed
+                  ? const Color(0xFF10B981)
+                  : const Color(0xFF8B5CF6),
         ),
         title: Text(
           workout.title,
@@ -308,12 +319,13 @@ class PlanDetailScreen extends ConsumerWidget {
           style: const TextStyle(color: Colors.white54, fontSize: 11),
         ),
         trailing: const Icon(Icons.chevron_right, color: Colors.white38),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => WorkoutDetailsScreen(workout: workout),
-          ),
-        ),
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => WorkoutDetailsScreen(workout: workout),
+              ),
+            ),
       ),
     );
   }
@@ -328,10 +340,10 @@ class PlanDetailScreen extends ConsumerWidget {
         planStart ??
         (sorted.isNotEmpty
             ? DateTime(
-                sorted.first.scheduledFor.year,
-                sorted.first.scheduledFor.month,
-                sorted.first.scheduledFor.day,
-              )
+              sorted.first.scheduledFor.year,
+              sorted.first.scheduledFor.month,
+              sorted.first.scheduledFor.day,
+            )
             : DateTime.now());
     final grouped = <int, List<Workout>>{};
     for (final workout in sorted) {
@@ -348,9 +360,8 @@ class PlanDetailScreen extends ConsumerWidget {
 
   String _dateRange(DateTime? start, DateTime? end) {
     if (start == null) return 'Start date TBD';
-    final endLabel = end == null
-        ? '…'
-        : '${end.day} ${monthName(end.month)} ${end.year}';
+    final endLabel =
+        end == null ? '…' : '${end.day} ${monthName(end.month)} ${end.year}';
     return '${start.day} ${monthName(start.month)} ${start.year} – $endLabel';
   }
 }

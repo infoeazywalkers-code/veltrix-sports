@@ -84,9 +84,8 @@ class PhysicalProfile {
   );
 
   Map<String, dynamic> toMap() => {
-    'dateOfBirth': dateOfBirth != null
-        ? Timestamp.fromDate(dateOfBirth!)
-        : null,
+    'dateOfBirth':
+        dateOfBirth != null ? Timestamp.fromDate(dateOfBirth!) : null,
     'weightKg': weightKg,
     'heightCm': heightCm,
     'maxHeartRate': maxHeartRate,
@@ -110,12 +109,12 @@ class PhysicalProfile {
     dateOfBirth: clearDateOfBirth ? null : (dateOfBirth ?? this.dateOfBirth),
     weightKg: clearWeightKg ? null : (weightKg ?? this.weightKg),
     heightCm: clearHeightCm ? null : (heightCm ?? this.heightCm),
-    maxHeartRate: clearMaxHeartRate
-        ? null
-        : (maxHeartRate ?? this.maxHeartRate),
-    restingHeartRate: clearRestingHeartRate
-        ? null
-        : (restingHeartRate ?? this.restingHeartRate),
+    maxHeartRate:
+        clearMaxHeartRate ? null : (maxHeartRate ?? this.maxHeartRate),
+    restingHeartRate:
+        clearRestingHeartRate
+            ? null
+            : (restingHeartRate ?? this.restingHeartRate),
     hrCalculationMethod: hrCalculationMethod ?? this.hrCalculationMethod,
   );
 
@@ -185,9 +184,8 @@ class SportProfile {
     primarySport: primarySport ?? this.primarySport,
     secondarySports: secondarySports ?? this.secondarySports,
     experienceLevel: experienceLevel ?? this.experienceLevel,
-    yearsExperience: clearYearsExperience
-        ? null
-        : (yearsExperience ?? this.yearsExperience),
+    yearsExperience:
+        clearYearsExperience ? null : (yearsExperience ?? this.yearsExperience),
   );
 
   @override
@@ -273,9 +271,10 @@ class TrainingGoals {
   });
 
   factory TrainingGoals.fromMap(Map<String, dynamic> m) => TrainingGoals(
-    targetEvents: (m['targetEvents'] as List? ?? [])
-        .map((e) => TargetEvent.fromMap(e as Map<String, dynamic>))
-        .toList(),
+    targetEvents:
+        (m['targetEvents'] as List? ?? [])
+            .map((e) => TargetEvent.fromMap(e as Map<String, dynamic>))
+            .toList(),
     performanceGoals: (m['performanceGoals'] as List? ?? []).cast<String>(),
     weeklyHoursTarget: (m['weeklyHoursTarget'] as num?)?.toInt(),
   );
@@ -294,9 +293,10 @@ class TrainingGoals {
   }) => TrainingGoals(
     targetEvents: targetEvents ?? this.targetEvents,
     performanceGoals: performanceGoals ?? this.performanceGoals,
-    weeklyHoursTarget: clearWeeklyHoursTarget
-        ? null
-        : (weeklyHoursTarget ?? this.weeklyHoursTarget),
+    weeklyHoursTarget:
+        clearWeeklyHoursTarget
+            ? null
+            : (weeklyHoursTarget ?? this.weeklyHoursTarget),
   );
 
   @override
@@ -445,9 +445,10 @@ class HeartRateZones {
 
   factory HeartRateZones.fromMap(Map<String, dynamic> m) => HeartRateZones(
     method: m['method'] as String? ?? 'auto',
-    zones: (m['zones'] as List? ?? [])
-        .map((z) => HeartRateZone.fromMap(z as Map<String, dynamic>))
-        .toList(),
+    zones:
+        (m['zones'] as List? ?? [])
+            .map((z) => HeartRateZone.fromMap(z as Map<String, dynamic>))
+            .toList(),
   );
 
   Map<String, dynamic> toMap() => {

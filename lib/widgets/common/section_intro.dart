@@ -26,9 +26,10 @@ class SectionIntro extends StatelessWidget {
         title,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: (Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : navy),
+          color:
+              (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
           fontSize: 32,
           height: 1.05,
           fontWeight: FontWeight.w900,
@@ -41,9 +42,10 @@ class SectionIntro extends StatelessWidget {
           body,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF78909C)
-                : muted),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
             fontSize: 15,
             height: 1.5,
           ),

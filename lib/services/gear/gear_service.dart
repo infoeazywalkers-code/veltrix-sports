@@ -59,10 +59,11 @@ class GearService {
   }
 
   Future<List<GearItem>> getActiveGear(String userId) async {
-    final snap = await _col
-        .where('userId', isEqualTo: userId)
-        .where('isRetired', isEqualTo: false)
-        .get();
+    final snap =
+        await _col
+            .where('userId', isEqualTo: userId)
+            .where('isRetired', isEqualTo: false)
+            .get();
     return _parseAll(snap);
   }
 }

@@ -91,9 +91,8 @@ class PmcService {
 
     final avgTss = (sumY / n).round();
     final denominator = n * sumXX - sumX * sumX;
-    final slope = denominator != 0
-        ? (n * sumXY - sumX * sumY) / denominator
-        : 0;
+    final slope =
+        denominator != 0 ? (n * sumXY - sumX * sumY) / denominator : 0;
     final intercept = (sumY - slope * sumX) / n;
 
     return ForecastStats(
@@ -111,9 +110,8 @@ class PmcService {
     if (metrics.isEmpty) return [];
 
     final lastMetric = metrics.last;
-    final fourWeeks = metrics.length >= 28
-        ? metrics.sublist(metrics.length - 28)
-        : metrics;
+    final fourWeeks =
+        metrics.length >= 28 ? metrics.sublist(metrics.length - 28) : metrics;
     final forecastStats = computeForecastStats(fourWeeks);
 
     double currentCtl = lastMetric.ctl;

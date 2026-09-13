@@ -43,9 +43,10 @@ class AthleteDirectoryService {
         .limit(limit)
         .snapshots()
         .map(
-          (snap) => snap.docs
-              .map((doc) => AthleteCard.fromMap(doc.id, doc.data()))
-              .toList(),
+          (snap) =>
+              snap.docs
+                  .map((doc) => AthleteCard.fromMap(doc.id, doc.data()))
+                  .toList(),
         )
         .handleError((e) {
           throw Exception('Failed to watch athlete directory: $e');
@@ -65,9 +66,8 @@ class AthleteDirectoryService {
       final existing = await get(uid);
       final card = AthleteCard(
         uid: uid,
-        displayName: profile.displayName.isNotEmpty
-            ? profile.displayName
-            : 'Athlete',
+        displayName:
+            profile.displayName.isNotEmpty ? profile.displayName : 'Athlete',
         handle: _handleFor(profile.displayName),
         location: existing?.location ?? '',
         team: existing?.team ?? '',

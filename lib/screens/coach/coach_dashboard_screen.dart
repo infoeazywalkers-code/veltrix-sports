@@ -47,30 +47,33 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
           IconButton(
             tooltip: 'Coach requests',
             icon: const Icon(Icons.inbox_outlined),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const CoachRequestsInboxScreen(),
-              ),
-            ),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CoachRequestsInboxScreen(),
+                  ),
+                ),
           ),
           IconButton(
             tooltip: 'Call inquiries',
             icon: const Icon(Icons.call_outlined),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const CoachInquiriesInboxScreen(),
-              ),
-            ),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CoachInquiriesInboxScreen(),
+                  ),
+                ),
           ),
           IconButton(
             tooltip: 'Messages',
             icon: const Icon(Icons.chat_bubble_outline),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ChatInboxScreen()),
-            ),
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ChatInboxScreen()),
+                ),
           ),
         ],
       ),
@@ -84,9 +87,10 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
               Text(
                 'Coach access required',
                 style: TextStyle(
-                  color: (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+                  color:
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
                 ),
@@ -111,8 +115,8 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
                   ButtonSegment(value: 'paused', label: Text('Paused')),
                 ],
                 selected: {_filter},
-                onSelectionChanged: (selection) =>
-                    setState(() => _filter = selection.first),
+                onSelectionChanged:
+                    (selection) => setState(() => _filter = selection.first),
               ),
             ),
             Expanded(
@@ -139,9 +143,9 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
                             style: TextStyle(
                               color:
                                   (Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? const Color(0xFF78909C)
-                                  : muted),
+                                          Brightness.dark
+                                      ? const Color(0xFF78909C)
+                                      : muted),
                               fontSize: 16,
                             ),
                           ),
@@ -162,8 +166,8 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
                             size: 64,
                             color:
                                 (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF78909C)
-                                : muted),
+                                    ? const Color(0xFF78909C)
+                                    : muted),
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -171,9 +175,9 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
                             style: TextStyle(
                               color:
                                   (Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : navy),
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : navy),
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
                             ),
@@ -185,20 +189,21 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
                             style: TextStyle(
                               color:
                                   (Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? const Color(0xFF78909C)
-                                  : muted),
+                                          Brightness.dark
+                                      ? const Color(0xFF78909C)
+                                      : muted),
                               fontSize: 14,
                             ),
                           ),
                           const SizedBox(height: 16),
                           FilledButton(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const CoachMatchScreen(),
-                              ),
-                            ),
+                            onPressed:
+                                () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const CoachMatchScreen(),
+                                  ),
+                                ),
                             child: const Text('Find athletes'),
                           ),
                         ],
@@ -228,8 +233,8 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
                           athlete.id,
                         ),
                         onTap: () => _openChat(context, athlete),
-                        onStatusToggle: (status) =>
-                            _toggleStatus(athlete.id, status),
+                        onStatusToggle:
+                            (status) => _toggleStatus(athlete.id, status),
                         onRemove: () => _confirmRemove(athlete),
                       );
                     },
@@ -259,10 +264,11 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ChatScreen(
-              chatRoomId: chatRoomId,
-              otherUserName: athlete.displayName,
-            ),
+            builder:
+                (_) => ChatScreen(
+                  chatRoomId: chatRoomId,
+                  otherUserName: athlete.displayName,
+                ),
           ),
         );
       }
@@ -290,22 +296,23 @@ class _CoachDashboardScreenState extends State<CoachDashboardScreen> {
   Future<void> _confirmRemove(AssignedAthlete athlete) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Remove athlete?'),
-        content: Text(
-          'Remove ${athlete.displayName} from your roster? They will be marked as completed.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Cancel'),
+      builder:
+          (dialogContext) => AlertDialog(
+            title: const Text('Remove athlete?'),
+            content: Text(
+              'Remove ${athlete.displayName} from your roster? They will be marked as completed.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(dialogContext, true),
+                child: const Text('Remove'),
+              ),
+            ],
           ),
-          FilledButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Remove'),
-          ),
-        ],
-      ),
     );
     if (confirmed != true) return;
     try {
@@ -355,22 +362,24 @@ class _AthleteCard extends StatelessWidget {
                   CircleAvatar(
                     radius: 24,
                     backgroundColor: const Color(0xffe7eff6),
-                    backgroundImage: athlete.photoUrl != null
-                        ? NetworkImage(athlete.photoUrl!)
-                        : null,
-                    onBackgroundImageError: athlete.photoUrl != null
-                        ? (_, __) {}
-                        : null,
-                    child: athlete.photoUrl == null
-                        ? Icon(
-                            Icons.person,
-                            color:
-                                (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : navy),
-                            size: 24,
-                          )
-                        : null,
+                    backgroundImage:
+                        athlete.photoUrl != null
+                            ? NetworkImage(athlete.photoUrl!)
+                            : null,
+                    onBackgroundImageError:
+                        athlete.photoUrl != null ? (_, __) {} : null,
+                    child:
+                        athlete.photoUrl == null
+                            ? Icon(
+                              Icons.person,
+                              color:
+                                  (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : navy),
+                              size: 24,
+                            )
+                            : null,
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -384,8 +393,8 @@ class _AthleteCard extends StatelessWidget {
                             fontSize: 15,
                             color:
                                 (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : navy),
+                                    ? Colors.white
+                                    : navy),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -400,8 +409,8 @@ class _AthleteCard extends StatelessWidget {
                           style: TextStyle(
                             color:
                                 (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF78909C)
-                                : muted),
+                                    ? const Color(0xFF78909C)
+                                    : muted),
                             fontSize: 12,
                           ),
                         ),
@@ -411,9 +420,10 @@ class _AthleteCard extends StatelessWidget {
                   PopupMenuButton<String>(
                     icon: Icon(
                       Icons.more_vert,
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
                     ),
                     onSelected: (value) {
                       if (value == 'remove') {
@@ -422,15 +432,19 @@ class _AthleteCard extends StatelessWidget {
                         onStatusToggle(value);
                       }
                     },
-                    itemBuilder: (_) => const [
-                      PopupMenuItem(value: 'active', child: Text('Set Active')),
-                      PopupMenuItem(value: 'paused', child: Text('Pause')),
-                      PopupMenuItem(
-                        value: 'completed',
-                        child: Text('Complete'),
-                      ),
-                      PopupMenuItem(value: 'remove', child: Text('Remove')),
-                    ],
+                    itemBuilder:
+                        (_) => const [
+                          PopupMenuItem(
+                            value: 'active',
+                            child: Text('Set Active'),
+                          ),
+                          PopupMenuItem(value: 'paused', child: Text('Pause')),
+                          PopupMenuItem(
+                            value: 'completed',
+                            child: Text('Complete'),
+                          ),
+                          PopupMenuItem(value: 'remove', child: Text('Remove')),
+                        ],
                   ),
                 ],
               ),

@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/screens/devices/devices_screen.dart';
 
-Widget _wrap(Widget child) => ProviderScope(
-  child: MaterialApp(home: Scaffold(body: child)),
-);
+Widget _wrap(Widget child) =>
+    ProviderScope(child: MaterialApp(home: Scaffold(body: child)));
 
 void _setMobile(WidgetTester tester) {
   tester.view.physicalSize = const Size(800, 1200);

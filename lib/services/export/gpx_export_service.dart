@@ -47,44 +47,43 @@ class GpxExportService {
     DateTime? date,
   ) {
     final startTime = (date ?? DateTime.now()).toUtc().toIso8601String();
-    final buffer = StringBuffer()
-      ..writeln('<?xml version="1.0" encoding="UTF-8"?>')
-      ..writeln('<gpx version="1.1" creator="Veltrix Athletic Performance"')
-      ..writeln('  xmlns="http://www.topografix.com/GPX/1/1"')
-      ..writeln(
-        '  xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1"',
-      )
-      ..writeln('  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
-      ..writeln(
-        '  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">',
-      )
-      ..writeln('  <metadata>')
-      ..writeln('    <name>${_escapeXml(title)}</name>')
-      ..writeln('    <time>$startTime</time>')
-      ..writeln('    <type>$sport</type>')
-      ..writeln('  </metadata>')
-      ..writeln('  <trk>')
-      ..writeln('    <name>${_escapeXml(title)}</name>')
-      ..writeln('    <type>$sport</type>')
-      ..writeln('    <trkseg>');
+    final buffer =
+        StringBuffer()
+          ..writeln('<?xml version="1.0" encoding="UTF-8"?>')
+          ..writeln('<gpx version="1.1" creator="Veltrix Athletic Performance"')
+          ..writeln('  xmlns="http://www.topografix.com/GPX/1/1"')
+          ..writeln(
+            '  xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1"',
+          )
+          ..writeln('  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
+          ..writeln(
+            '  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">',
+          )
+          ..writeln('  <metadata>')
+          ..writeln('    <name>${_escapeXml(title)}</name>')
+          ..writeln('    <time>$startTime</time>')
+          ..writeln('    <type>$sport</type>')
+          ..writeln('  </metadata>')
+          ..writeln('  <trk>')
+          ..writeln('    <name>${_escapeXml(title)}</name>')
+          ..writeln('    <type>$sport</type>')
+          ..writeln('    <trkseg>');
 
     for (final pt in track) {
       final timeIso = pt.timestamp.toUtc().toIso8601String();
-      final ele = pt.altitude != null
-          ? '<ele>${pt.altitude!.toStringAsFixed(1)}</ele>'
-          : '';
-      final hr = pt.heartRate != null
-          ? '<gpxtpx:hr>${pt.heartRate}</gpxtpx:hr>'
-          : '';
-      final cad = pt.cadence != null
-          ? '<gpxtpx:cad>${pt.cadence}</gpxtpx:cad>'
-          : '';
+      final ele =
+          pt.altitude != null
+              ? '<ele>${pt.altitude!.toStringAsFixed(1)}</ele>'
+              : '';
+      final hr =
+          pt.heartRate != null ? '<gpxtpx:hr>${pt.heartRate}</gpxtpx:hr>' : '';
+      final cad =
+          pt.cadence != null ? '<gpxtpx:cad>${pt.cadence}</gpxtpx:cad>' : '';
       final power = pt.power != null ? '<power>${pt.power}</power>' : '';
 
       String extensions = '';
       if (hr.isNotEmpty || cad.isNotEmpty) {
-        extensions =
-            '''
+        extensions = '''
         <extensions>
           <gpxtpx:TrackPointExtension>
             $hr

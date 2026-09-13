@@ -80,9 +80,10 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w800,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : M.navy),
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : M.navy),
                       ),
                     ),
                   ),
@@ -99,8 +100,8 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: 7,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(width: M.sm),
+                  separatorBuilder:
+                      (context, index) => const SizedBox(width: M.sm),
                   itemBuilder: (context, i) {
                     final selected = selectedDay == i;
                     final day = _weekStart.add(Duration(days: i));
@@ -110,21 +111,24 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                         duration: const Duration(milliseconds: 180),
                         width: 44,
                         decoration: BoxDecoration(
-                          color: selected
-                              ? M.navy
-                              : (Theme.of(context).brightness == Brightness.dark
-                                    ? const Color(0xFF0F2030)
-                                    : Colors.white),
-                          borderRadius: BorderRadius.circular(M.rMd),
-                          border: selected
-                              ? null
-                              : Border.all(
-                                  color:
-                                      Theme.of(context).brightness ==
+                          color:
+                              selected
+                                  ? M.navy
+                                  : (Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? const Color(0xFF1A3040)
-                                      : M.divider,
-                                ),
+                                      ? const Color(0xFF0F2030)
+                                      : Colors.white),
+                          borderRadius: BorderRadius.circular(M.rMd),
+                          border:
+                              selected
+                                  ? null
+                                  : Border.all(
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? const Color(0xFF1A3040)
+                                            : M.divider,
+                                  ),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -132,12 +136,13 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                             Text(
                               dayNames[i],
                               style: TextStyle(
-                                color: selected
-                                    ? Colors.white70
-                                    : (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? const Color(0xFF78909C)
-                                          : M.muted),
+                                color:
+                                    selected
+                                        ? Colors.white70
+                                        : (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? const Color(0xFF78909C)
+                                            : M.muted),
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -146,12 +151,13 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                             Text(
                               '${day.day}',
                               style: TextStyle(
-                                color: selected
-                                    ? Colors.white
-                                    : (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : M.navy),
+                                color:
+                                    selected
+                                        ? Colors.white
+                                        : (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : M.navy),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -168,33 +174,40 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                 title:
                     '${dayNames[selectedDay]}, ${_weekStart.add(Duration(days: selectedDay)).day} ${monthNames[_weekStart.add(Duration(days: selectedDay)).month - 1]}',
                 child: workoutsAsync.when(
-                  loading: () => const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(M.base),
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  error: (e, _) => Padding(
-                    padding: const EdgeInsets.all(M.base),
-                    child: Text('Error: $e', style: M.adaptiveMuted(context)),
-                  ),
+                  loading:
+                      () => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(M.base),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                  error:
+                      (e, _) => Padding(
+                        padding: const EdgeInsets.all(M.base),
+                        child: Text(
+                          'Error: $e',
+                          style: M.adaptiveMuted(context),
+                        ),
+                      ),
                   data: (workouts) {
                     final selectedDate = _weekStart.add(
                       Duration(days: selectedDay),
                     );
-                    final visible = planFilter == null
-                        ? workouts
-                        : workouts
-                              .where((w) => w.planId == planFilter)
-                              .toList();
-                    final dayWorkouts = visible
-                        .where(
-                          (w) =>
-                              w.scheduledFor.year == selectedDate.year &&
-                              w.scheduledFor.month == selectedDate.month &&
-                              w.scheduledFor.day == selectedDate.day,
-                        )
-                        .toList();
+                    final visible =
+                        planFilter == null
+                            ? workouts
+                            : workouts
+                                .where((w) => w.planId == planFilter)
+                                .toList();
+                    final dayWorkouts =
+                        visible
+                            .where(
+                              (w) =>
+                                  w.scheduledFor.year == selectedDate.year &&
+                                  w.scheduledFor.month == selectedDate.month &&
+                                  w.scheduledFor.day == selectedDate.day,
+                            )
+                            .toList();
                     if (dayWorkouts.isEmpty) {
                       return MCard(
                         child: Padding(
@@ -206,9 +219,9 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                                 Icons.event_busy,
                                 color:
                                     (Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? const Color(0xFF78909C)
-                                    : M.muted),
+                                            Brightness.dark
+                                        ? const Color(0xFF78909C)
+                                        : M.muted),
                                 size: 20,
                               ),
                               const SizedBox(width: M.sm),
@@ -222,54 +235,59 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                       );
                     }
                     return Column(
-                      children: dayWorkouts.map((w) {
-                        final sportLabel = w.sport.name.toUpperCase();
-                        final details = [
-                          w.duration,
-                          if (w.tss != null) '${w.tss} TSS',
-                        ].join('  •  ');
-                        final icon = w.sport == Sport.run
-                            ? Icons.directions_run
-                            : w.sport == Sport.bike
-                            ? Icons.directions_bike
-                            : w.sport == Sport.swim
-                            ? Icons.pool
-                            : w.sport == Sport.strength
-                            ? Icons.fitness_center
-                            : Icons.self_improvement;
-                        final color = w.sport == Sport.run
-                            ? M.blue
-                            : w.sport == Sport.bike
-                            ? M.purple
-                            : w.sport == Sport.swim
-                            ? M.teal
-                            : w.sport == Sport.strength
-                            ? M.orange
-                            : M.muted;
-                        return Column(
-                          children: [
-                            MWorkoutCard(
-                              sport: sportLabel,
-                              title: w.title,
-                              details: details,
-                              color: color,
-                              icon: icon,
-                              progress: w.progress,
-                              planLabel: _planLabel(w.planId),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        WorkoutDetailsScreen(workout: w),
-                                  ),
-                                );
-                              },
-                            ),
-                            const SizedBox(height: M.sm),
-                          ],
-                        );
-                      }).toList(),
+                      children:
+                          dayWorkouts.map((w) {
+                            final sportLabel = w.sport.name.toUpperCase();
+                            final details = [
+                              w.duration,
+                              if (w.tss != null) '${w.tss} TSS',
+                            ].join('  •  ');
+                            final icon =
+                                w.sport == Sport.run
+                                    ? Icons.directions_run
+                                    : w.sport == Sport.bike
+                                    ? Icons.directions_bike
+                                    : w.sport == Sport.swim
+                                    ? Icons.pool
+                                    : w.sport == Sport.strength
+                                    ? Icons.fitness_center
+                                    : Icons.self_improvement;
+                            final color =
+                                w.sport == Sport.run
+                                    ? M.blue
+                                    : w.sport == Sport.bike
+                                    ? M.purple
+                                    : w.sport == Sport.swim
+                                    ? M.teal
+                                    : w.sport == Sport.strength
+                                    ? M.orange
+                                    : M.muted;
+                            return Column(
+                              children: [
+                                MWorkoutCard(
+                                  sport: sportLabel,
+                                  title: w.title,
+                                  details: details,
+                                  color: color,
+                                  icon: icon,
+                                  progress: w.progress,
+                                  planLabel: _planLabel(w.planId),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (_) => WorkoutDetailsScreen(
+                                              workout: w,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: M.sm),
+                              ],
+                            );
+                          }).toList(),
                     );
                   },
                 ),
@@ -284,19 +302,21 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                     separatorBuilder: (_, _) => const SizedBox(width: 8),
                     itemBuilder: (context, index) {
                       final isAll = index == 0;
-                      final selected = isAll
-                          ? planFilter == null
-                          : planFilter == activePlans[index - 1].id;
+                      final selected =
+                          isAll
+                              ? planFilter == null
+                              : planFilter == activePlans[index - 1].id;
                       final label = isAll ? 'All' : activePlans[index - 1].name;
                       return ChoiceChip(
                         label: Text(label),
                         selected: selected,
-                        onSelected: (_) =>
-                            ref
-                                .read(calendarPlanFilterProvider.notifier)
-                                .state = isAll
-                            ? null
-                            : activePlans[index - 1].id,
+                        onSelected:
+                            (_) =>
+                                ref
+                                    .read(calendarPlanFilterProvider.notifier)
+                                    .state = isAll
+                                        ? null
+                                        : activePlans[index - 1].id,
                       );
                     },
                   ),
@@ -306,22 +326,28 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
               MSection(
                 title: 'Week overview',
                 child: workoutsAsync.when(
-                  loading: () => const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(M.base),
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  error: (e, _) => Padding(
-                    padding: const EdgeInsets.all(M.base),
-                    child: Text('Error: $e', style: M.adaptiveMuted(context)),
-                  ),
+                  loading:
+                      () => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(M.base),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                  error:
+                      (e, _) => Padding(
+                        padding: const EdgeInsets.all(M.base),
+                        child: Text(
+                          'Error: $e',
+                          style: M.adaptiveMuted(context),
+                        ),
+                      ),
                   data: (workouts) {
-                    final visible = planFilter == null
-                        ? workouts
-                        : workouts
-                              .where((w) => w.planId == planFilter)
-                              .toList();
+                    final visible =
+                        planFilter == null
+                            ? workouts
+                            : workouts
+                                .where((w) => w.planId == planFilter)
+                                .toList();
                     if (visible.isEmpty) {
                       return MCard(
                         child: Padding(
@@ -333,9 +359,9 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                                 Icons.event_available,
                                 color:
                                     (Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? const Color(0xFF78909C)
-                                    : M.muted),
+                                            Brightness.dark
+                                        ? const Color(0xFF78909C)
+                                        : M.muted),
                                 size: 20,
                               ),
                               SizedBox(width: M.sm),
@@ -351,14 +377,15 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                     return Column(
                       children: List.generate(7, (i) {
                         final day = _weekStart.add(Duration(days: i));
-                        final dayWorkouts = visible
-                            .where(
-                              (w) =>
-                                  w.scheduledFor.year == day.year &&
-                                  w.scheduledFor.month == day.month &&
-                                  w.scheduledFor.day == day.day,
-                            )
-                            .toList();
+                        final dayWorkouts =
+                            visible
+                                .where(
+                                  (w) =>
+                                      w.scheduledFor.year == day.year &&
+                                      w.scheduledFor.month == day.month &&
+                                      w.scheduledFor.day == day.day,
+                                )
+                                .toList();
                         if (dayWorkouts.isEmpty) {
                           return _WeekDayRow(
                             '${dayNames[i]} ${day.day}',
@@ -369,24 +396,26 @@ class _MobileCalendarScreenState extends ConsumerState<MobileCalendarScreen> {
                           );
                         }
                         final w = dayWorkouts.first;
-                        final color = w.sport == Sport.run
-                            ? M.blue
-                            : w.sport == Sport.bike
-                            ? M.purple
-                            : w.sport == Sport.swim
-                            ? M.teal
-                            : w.sport == Sport.strength
-                            ? M.orange
-                            : M.muted;
-                        final icon = w.sport == Sport.run
-                            ? Icons.directions_run
-                            : w.sport == Sport.bike
-                            ? Icons.directions_bike
-                            : w.sport == Sport.swim
-                            ? Icons.pool
-                            : w.sport == Sport.strength
-                            ? Icons.fitness_center
-                            : Icons.self_improvement;
+                        final color =
+                            w.sport == Sport.run
+                                ? M.blue
+                                : w.sport == Sport.bike
+                                ? M.purple
+                                : w.sport == Sport.swim
+                                ? M.teal
+                                : w.sport == Sport.strength
+                                ? M.orange
+                                : M.muted;
+                        final icon =
+                            w.sport == Sport.run
+                                ? Icons.directions_run
+                                : w.sport == Sport.bike
+                                ? Icons.directions_bike
+                                : w.sport == Sport.swim
+                                ? Icons.pool
+                                : w.sport == Sport.strength
+                                ? Icons.fitness_center
+                                : Icons.self_improvement;
                         return _WeekDayRow(
                           '${dayNames[i]} ${day.day}',
                           w.title,
@@ -442,9 +471,10 @@ class _WeekDayRow extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFFB0BEC5)
-                          : M.ink),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFFB0BEC5)
+                              : M.ink),
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -454,9 +484,10 @@ class _WeekDayRow extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right,
-              color: (Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF78909C)
-                  : M.muted),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : M.muted),
               size: 20,
             ),
           ],

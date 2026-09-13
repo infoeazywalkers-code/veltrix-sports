@@ -68,9 +68,10 @@ class Workout {
           (map['scheduledFor'] as Timestamp?)?.toDate() ?? DateTime.now(),
       progress: (map['progress'] as num?)?.toDouble() ?? 0,
       completed: map['completed'] as bool? ?? false,
-      segments: (map['segments'] as List? ?? [])
-          .map((s) => WorkoutSegment.fromMap(s as Map<String, dynamic>))
-          .toList(),
+      segments:
+          (map['segments'] as List? ?? [])
+              .map((s) => WorkoutSegment.fromMap(s as Map<String, dynamic>))
+              .toList(),
     );
   }
 

@@ -269,13 +269,14 @@ class AdaptiveTrainingService {
     int limit = 10,
   }) async {
     try {
-      final snap = await _db
-          .collection('users')
-          .doc(userId)
-          .collection('recommendations')
-          .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .get();
+      final snap =
+          await _db
+              .collection('users')
+              .doc(userId)
+              .collection('recommendations')
+              .orderBy('createdAt', descending: true)
+              .limit(limit)
+              .get();
 
       return snap.docs
           .map((doc) => TrainingRecommendation.fromMap(doc.data()))

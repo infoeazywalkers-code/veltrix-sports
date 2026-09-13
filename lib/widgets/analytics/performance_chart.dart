@@ -112,9 +112,10 @@ class PerformanceChartWidget extends StatelessWidget {
                   return Text(
                     value.toInt().toString(),
                     style: TextStyle(
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),
@@ -136,9 +137,10 @@ class PerformanceChartWidget extends StatelessWidget {
                     return Text(
                       '${date.day}/${date.month}',
                       style: TextStyle(
-                        color: (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF78909C)
-                            : muted),
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF78909C)
+                                : muted),
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                       ),
@@ -147,9 +149,10 @@ class PerformanceChartWidget extends StatelessWidget {
                   return Text(
                     'W${index + 1}',
                     style: TextStyle(
-                      color: (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+                      color:
+                          (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),
@@ -174,9 +177,10 @@ class PerformanceChartWidget extends StatelessWidget {
                   return LineTooltipItem(
                     '$label: ${spot.y.toStringAsFixed(1)}',
                     TextStyle(
-                      color: spot.barIndex == 0
-                          ? lime
-                          : (spot.barIndex == 1 ? Colors.white : orange),
+                      color:
+                          spot.barIndex == 0
+                              ? lime
+                              : (spot.barIndex == 1 ? Colors.white : orange),
                       fontWeight: FontWeight.w800,
                       fontSize: 12,
                     ),

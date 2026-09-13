@@ -7,9 +7,7 @@ import 'package:veltrix_sports/mobile/widgets/mobile_workout_card.dart';
 
 void main() {
   Widget wrap(Widget child) => MaterialApp(
-    home: Scaffold(
-      body: SingleChildScrollView(child: Center(child: child)),
-    ),
+    home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
   );
 
   Widget wrapFull(Widget child) => MaterialApp(home: Scaffold(body: child));

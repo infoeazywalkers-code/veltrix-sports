@@ -33,9 +33,10 @@ class EventDetailsDialog extends StatelessWidget {
               title,
               style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
               ),
             ),
           ),
@@ -70,9 +71,10 @@ class EventDetailsDialog extends StatelessWidget {
               'About the Event',
               style: TextStyle(
                 fontWeight: FontWeight.w800,
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                 fontSize: 16,
               ),
             ),
@@ -80,9 +82,10 @@ class EventDetailsDialog extends StatelessWidget {
             Text(
               description,
               style: TextStyle(
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFFB0BEC5).withValues(alpha: 0.8)
-                    : ink.withValues(alpha: 0.8)),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFFB0BEC5).withValues(alpha: 0.8)
+                        : ink.withValues(alpha: 0.8)),
                 height: 1.4,
               ),
             ),
@@ -103,9 +106,10 @@ class EventDetailsDialog extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
+                        color:
+                            (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : navy),
                       ),
                     ),
                   ),
@@ -128,9 +132,10 @@ class EventDetailsDialog extends StatelessWidget {
               final raceWorkout = Workout(
                 id: const Uuid().v4(),
                 planId: 'race_entry',
-                sport: category.toLowerCase().contains('cycle')
-                    ? Sport.bike
-                    : Sport.run,
+                sport:
+                    category.toLowerCase().contains('cycle')
+                        ? Sport.bike
+                        : Sport.run,
                 title: 'RACE: $title',
                 description: 'Official Race Event in $location',
                 duration: '2h 30m',
@@ -212,18 +217,20 @@ class EventDetailsDialog extends StatelessWidget {
           Icon(
             icon,
             size: 18,
-            color: (Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : navy),
+            color:
+                (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
           ),
           const SizedBox(width: 8),
           Text(
             '$label: ',
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              color: (Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white
-                  : navy),
+              color:
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
             ),
           ),
           Expanded(
@@ -232,9 +239,10 @@ class EventDetailsDialog extends StatelessWidget {
               textAlign: TextAlign.end,
               style: TextStyle(
                 fontWeight: FontWeight.w800,
-                color: (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFFB0BEC5)
-                    : ink),
+                color:
+                    (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFFB0BEC5)
+                        : ink),
               ),
             ),
           ),

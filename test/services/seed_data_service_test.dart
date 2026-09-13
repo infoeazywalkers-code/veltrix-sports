@@ -31,10 +31,11 @@ void main() {
     test('seedNewUser creates training plan', () async {
       await service.seedNewUser('uid-2');
 
-      final plans = await firestore
-          .collection('training_plans')
-          .where('userId', isEqualTo: 'uid-2')
-          .get();
+      final plans =
+          await firestore
+              .collection('training_plans')
+              .where('userId', isEqualTo: 'uid-2')
+              .get();
       expect(plans.docs.length, 1);
       expect(plans.docs.first.data()['name'], 'Half Marathon Performance');
     });
@@ -42,20 +43,22 @@ void main() {
     test('seedNewUser creates 7 weekly workouts', () async {
       await service.seedNewUser('uid-3');
 
-      final workouts = await firestore
-          .collection('workouts')
-          .where('userId', isEqualTo: 'uid-3')
-          .get();
+      final workouts =
+          await firestore
+              .collection('workouts')
+              .where('userId', isEqualTo: 'uid-3')
+              .get();
       expect(workouts.docs.length, 7);
     });
 
     test('seedNewUser creates 5 performance snapshots', () async {
       await service.seedNewUser('uid-4');
 
-      final snaps = await firestore
-          .collection('performance_snapshots')
-          .where('userId', isEqualTo: 'uid-4')
-          .get();
+      final snaps =
+          await firestore
+              .collection('performance_snapshots')
+              .where('userId', isEqualTo: 'uid-4')
+              .get();
       expect(snaps.docs.length, 5);
     });
 
@@ -63,16 +66,18 @@ void main() {
       'seedNewUser is idempotent - does not re-seed existing user',
       () async {
         await service.seedNewUser('uid-5');
-        final firstPlan = await firestore
-            .collection('training_plans')
-            .where('userId', isEqualTo: 'uid-5')
-            .get();
+        final firstPlan =
+            await firestore
+                .collection('training_plans')
+                .where('userId', isEqualTo: 'uid-5')
+                .get();
 
         await service.seedNewUser('uid-5');
-        final secondPlan = await firestore
-            .collection('training_plans')
-            .where('userId', isEqualTo: 'uid-5')
-            .get();
+        final secondPlan =
+            await firestore
+                .collection('training_plans')
+                .where('userId', isEqualTo: 'uid-5')
+                .get();
 
         expect(firstPlan.docs.length, secondPlan.docs.length);
       },
@@ -89,23 +94,24 @@ void main() {
     test('seedNewUser marks completed workouts with progress 1.0', () async {
       await service.seedNewUser('uid-7');
 
-      final workouts = await firestore
-          .collection('workouts')
-          .where('userId', isEqualTo: 'uid-7')
-          .get();
-      final completedCount = workouts.docs
-          .where((d) => d.data()['completed'] == true)
-          .length;
+      final workouts =
+          await firestore
+              .collection('workouts')
+              .where('userId', isEqualTo: 'uid-7')
+              .get();
+      final completedCount =
+          workouts.docs.where((d) => d.data()['completed'] == true).length;
       expect(completedCount, greaterThanOrEqualTo(3));
     });
 
     test('seedNewUser creates workouts with segments', () async {
       await service.seedNewUser('uid-8');
 
-      final workouts = await firestore
-          .collection('workouts')
-          .where('userId', isEqualTo: 'uid-8')
-          .get();
+      final workouts =
+          await firestore
+              .collection('workouts')
+              .where('userId', isEqualTo: 'uid-8')
+              .get();
       final withSegments = workouts.docs.where(
         (d) => (d.data()['segments'] as List).isNotEmpty,
       );
@@ -117,13 +123,15 @@ void main() {
       () async {
         await service.seedNewUser('uid-9');
 
-        final snaps = await firestore
-            .collection('performance_snapshots')
-            .where('userId', isEqualTo: 'uid-9')
-            .get();
-        final fitnessValues = snaps.docs
-            .map((d) => (d.data()['fitness'] as num).toDouble())
-            .toList();
+        final snaps =
+            await firestore
+                .collection('performance_snapshots')
+                .where('userId', isEqualTo: 'uid-9')
+                .get();
+        final fitnessValues =
+            snaps.docs
+                .map((d) => (d.data()['fitness'] as num).toDouble())
+                .toList();
         expect(fitnessValues.first, lessThan(fitnessValues.last));
       },
     );

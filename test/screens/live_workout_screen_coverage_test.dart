@@ -146,17 +146,19 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: Builder(
-            builder: (context) => TextButton(
-              onPressed: () async {
-                await Navigator.push<bool>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => LiveWorkoutScreen(workout: _makeWorkout()),
-                  ),
-                );
-              },
-              child: const Text('Open'),
-            ),
+            builder:
+                (context) => TextButton(
+                  onPressed: () async {
+                    await Navigator.push<bool>(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => LiveWorkoutScreen(workout: _makeWorkout()),
+                      ),
+                    );
+                  },
+                  child: const Text('Open'),
+                ),
           ),
         ),
       ),
@@ -201,17 +203,19 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: Builder(
-            builder: (context) => TextButton(
-              onPressed: () async {
-                await Navigator.push<bool>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => LiveWorkoutScreen(workout: _makeWorkout()),
-                  ),
-                );
-              },
-              child: const Text('Open'),
-            ),
+            builder:
+                (context) => TextButton(
+                  onPressed: () async {
+                    await Navigator.push<bool>(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => LiveWorkoutScreen(workout: _makeWorkout()),
+                      ),
+                    );
+                  },
+                  child: const Text('Open'),
+                ),
           ),
         ),
       ),

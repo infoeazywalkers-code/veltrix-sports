@@ -134,9 +134,10 @@ class _DashboardTab extends StatelessWidget {
               _MetricCard(
                 label: 'TSB (Form)',
                 value: '${form >= 0 ? '+' : ''}${form.round()}',
-                color: form >= 0
-                    ? const Color(0xFF10B981)
-                    : const Color(0xFFEF4444),
+                color:
+                    form >= 0
+                        ? const Color(0xFF10B981)
+                        : const Color(0xFFEF4444),
               ),
             ],
           ),

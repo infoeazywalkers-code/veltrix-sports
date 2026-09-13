@@ -129,9 +129,10 @@ class ZoneService {
     }
 
     for (final value in values) {
-      final zone = isPower
-          ? getPowerZone(value, referenceValue).zone
-          : getHeartRateZone(value, referenceValue).zone;
+      final zone =
+          isPower
+              ? getPowerZone(value, referenceValue).zone
+              : getHeartRateZone(value, referenceValue).zone;
       distribution[zone] = (distribution[zone] ?? 0) + 1;
     }
 

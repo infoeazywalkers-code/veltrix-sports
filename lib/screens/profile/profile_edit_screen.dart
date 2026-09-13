@@ -72,25 +72,29 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     // Fall back to the Firebase Auth identity so the form never shows
     // dummy defaults when the Firestore doc is missing.
     final authUser = FirebaseAuth.instance.currentUser;
-    _nameController.text = profile?.displayName.isNotEmpty == true
-        ? profile!.displayName
-        : (authUser?.displayName ?? '');
+    _nameController.text =
+        profile?.displayName.isNotEmpty == true
+            ? profile!.displayName
+            : (authUser?.displayName ?? '');
     _originalEmail = profile?.email ?? authUser?.email ?? '';
-    _selectedPrimarySport = (profile != null && profile.sports.isNotEmpty)
-        ? profile.sports.first
-        : 'Running';
+    _selectedPrimarySport =
+        (profile != null && profile.sports.isNotEmpty)
+            ? profile.sports.first
+            : 'Running';
     _selectedExperienceLevel =
         prefs?.sport.experienceLevel ?? ExperienceLevel.beginner;
     _weeklyHours = (prefs?.goals.weeklyHoursTarget ?? 5).toDouble();
     _dateOfBirth = prefs?.physical.dateOfBirth;
     _weightKg = prefs?.physical.weightKg ?? 70;
     _heightCm = prefs?.physical.heightCm ?? 170;
-    _selectedGoal = prefs?.goals.performanceGoals.isNotEmpty == true
-        ? prefs!.goals.performanceGoals.first
-        : 'General fitness';
-    _targetEventController.text = prefs?.goals.targetEvents.isNotEmpty == true
-        ? prefs!.goals.targetEvents.first.name
-        : '';
+    _selectedGoal =
+        prefs?.goals.performanceGoals.isNotEmpty == true
+            ? prefs!.goals.performanceGoals.first
+            : 'General fitness';
+    _targetEventController.text =
+        prefs?.goals.targetEvents.isNotEmpty == true
+            ? prefs!.goals.targetEvents.first.name
+            : '';
   }
 
   Future<void> _pickDateOfBirth() async {
@@ -104,9 +108,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         final isDark = Theme.of(context).brightness == Brightness.dark;
         return Theme(
           data: Theme.of(dialogContext).copyWith(
-            colorScheme: isDark
-                ? const ColorScheme.dark(primary: lime)
-                : const ColorScheme.light(primary: navy),
+            colorScheme:
+                isDark
+                    ? const ColorScheme.dark(primary: lime)
+                    : const ColorScheme.light(primary: navy),
           ),
           child: child!,
         );
@@ -158,30 +163,34 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       await UserService().upsert(updatedProfile);
 
       final targetEventName = _targetEventController.text.trim();
-      final targetEvents = targetEventName.isNotEmpty
-          ? [
-              TargetEvent(
-                name: targetEventName,
-                date: DateTime.now().add(const Duration(days: 90)),
-              ),
-            ]
-          : <TargetEvent>[];
+      final targetEvents =
+          targetEventName.isNotEmpty
+              ? [
+                TargetEvent(
+                  name: targetEventName,
+                  date: DateTime.now().add(const Duration(days: 90)),
+                ),
+              ]
+              : <TargetEvent>[];
 
       final updatedPrefs = {
-        'physical': PhysicalProfile(
-          dateOfBirth: _dateOfBirth,
-          weightKg: _weightKg,
-          heightCm: _heightCm,
-        ).toMap(),
-        'sport': SportProfile(
-          primarySport: _selectedPrimarySport,
-          experienceLevel: _selectedExperienceLevel,
-        ).toMap(),
-        'goals': TrainingGoals(
-          targetEvents: targetEvents,
-          performanceGoals: [_selectedGoal],
-          weeklyHoursTarget: _weeklyHours.round(),
-        ).toMap(),
+        'physical':
+            PhysicalProfile(
+              dateOfBirth: _dateOfBirth,
+              weightKg: _weightKg,
+              heightCm: _heightCm,
+            ).toMap(),
+        'sport':
+            SportProfile(
+              primarySport: _selectedPrimarySport,
+              experienceLevel: _selectedExperienceLevel,
+            ).toMap(),
+        'goals':
+            TrainingGoals(
+              targetEvents: targetEvents,
+              performanceGoals: [_selectedGoal],
+              weeklyHoursTarget: _weeklyHours.round(),
+            ).toMap(),
       };
 
       await PreferencesService().update(user.uid, updatedPrefs);
@@ -217,9 +226,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     _initFromData(profile, prefs);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? darkNavy
-          : bg,
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.dark ? darkNavy : bg,
       appBar: AppBar(
         backgroundColor: navy,
         foregroundColor: Colors.white,
@@ -249,30 +257,33 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   Icons.person_outline,
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600),
-                validator: (val) => val == null || val.trim().isEmpty
-                    ? 'Enter your name'
-                    : null,
+                validator:
+                    (val) =>
+                        val == null || val.trim().isEmpty
+                            ? 'Enter your name'
+                            : null,
               ),
               const SizedBox(height: 14),
               TextFormField(
                 initialValue: _originalEmail,
                 readOnly: true,
-                decoration:
-                    _inputDecoration(
-                      context,
-                      'Email',
-                      Icons.email_outlined,
-                    ).copyWith(
-                      fillColor: Theme.of(context).brightness == Brightness.dark
+                decoration: _inputDecoration(
+                  context,
+                  'Email',
+                  Icons.email_outlined,
+                ).copyWith(
+                  fillColor:
+                      Theme.of(context).brightness == Brightness.dark
                           ? const Color(0xFF0F2030)
                           : const Color(0xffeef1f5),
-                      filled: true,
-                    ),
+                  filled: true,
+                ),
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted,
+                  color:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted,
                 ),
               ),
             ]),
@@ -330,9 +341,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF1A3040)
-                          : const Color(0xffd5dbe3),
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF1A3040)
+                              : const Color(0xffd5dbe3),
                     ),
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -340,9 +352,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     children: [
                       Icon(
                         Icons.cake_outlined,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy,
+                        color:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : navy,
                         size: 22,
                       ),
                       const SizedBox(width: 12),
@@ -355,9 +368,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                               style: TextStyle(
                                 color:
                                     Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? const Color(0xFF78909C)
-                                    : muted,
+                                            Brightness.dark
+                                        ? const Color(0xFF78909C)
+                                        : muted,
                                 fontSize: 12,
                               ),
                             ),
@@ -368,15 +381,16 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                   : 'Tap to select',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: _dateOfBirth != null
-                                    ? (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : navy)
-                                    : (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? const Color(0xFF78909C)
-                                          : muted),
+                                color:
+                                    _dateOfBirth != null
+                                        ? (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : navy)
+                                        : (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? const Color(0xFF78909C)
+                                            : muted),
                                 fontSize: 15,
                               ),
                             ),
@@ -385,9 +399,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                       ),
                       Icon(
                         Icons.chevron_right,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF78909C)
-                            : muted,
+                        color:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? const Color(0xFF78909C)
+                                : muted,
                         size: 20,
                       ),
                     ],
@@ -451,22 +466,23 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   ),
                 ),
                 onPressed: _saving ? null : _save,
-                child: _saving
-                    ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          color: navy,
+                child:
+                    _saving
+                        ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: navy,
+                          ),
+                        )
+                        : const Text(
+                          'Save Changes',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
-                      )
-                    : const Text(
-                        'Save Changes',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
               ),
             ),
             const SizedBox(height: 40),
@@ -480,9 +496,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     return Text(
       title,
       style: TextStyle(
-        color: (Theme.of(context).brightness == Brightness.dark
-            ? Colors.white
-            : navy),
+        color:
+            (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
         fontSize: 17,
         fontWeight: FontWeight.w900,
       ),
@@ -556,9 +573,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       decoration: _inputDecoration(context, label, icon),
       style: TextStyle(
         fontWeight: FontWeight.w600,
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFFE0E6ED)
-            : ink,
+        color:
+            Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFFE0E6ED)
+                : ink,
         fontSize: 15,
       ),
       borderRadius: BorderRadius.circular(12),
@@ -566,9 +584,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         final itemValue = items[i];
         final displayName = displayNames != null ? displayNames[i] : itemValue;
         return DropdownMenuItem<T>(
-          value: T == ExperienceLevel
-              ? ExperienceLevel.values[i] as T
-              : itemValue as T,
+          value:
+              T == ExperienceLevel
+                  ? ExperienceLevel.values[i] as T
+                  : itemValue as T,
           child: Text(displayName),
         );
       }),
@@ -594,9 +613,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
             Text(
               label,
               style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : muted,
+                color:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),
@@ -610,9 +630,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
               child: Text(
                 suffix,
                 style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy,
+                  color:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy,
                   fontWeight: FontWeight.w800,
                   fontSize: 13,
                 ),
