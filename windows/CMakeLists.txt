@@ -1,4 +1,10 @@
 # Project-level configuration.
+# Allow old third-party CMakeLists (e.g. firebase_cpp_sdk_windows, which
+# declares cmake_minimum_required(<3.5)) to configure under CMake >= 4.0.
+# Normal variables propagate to subdirectories, so this covers plugins too.
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0")
+  set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+endif()
 cmake_minimum_required(VERSION 3.14)
 project(veltrix_sports LANGUAGES CXX)
 

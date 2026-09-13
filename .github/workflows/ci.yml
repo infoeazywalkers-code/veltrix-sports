@@ -176,33 +176,11 @@ jobs:
           channel: 'stable'
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
-      - name: Build Windows with CMake 3.x
-        # windows-latest ships CMake 4.x, which removed support for the
-        # cmake_minimum_required(<3.5) used by firebase_cpp_sdk_windows.
-        # Flutter does NOT honor PATH here (it probes well-known VS/CMake
-        # install dirs), so replace the 4.x binaries in place. The runner
-        # is disposable, so overwriting is safe.
-        run: |
-          Invoke-WebRequest -Uri https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-windows-x86_64.zip -OutFile "$env:TEMP/cmake.zip"
-          Expand-Archive -Path "$env:TEMP/cmake.zip" -DestinationPath C:\cmake-3.31 -Force
-          $newBin = "C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin"
-          Write-Host "--- cmake candidates before ---"
-          where.exe cmake
-          $cands = @("C:\Program Files\CMake\bin\cmake.exe") + @(Get-ChildItem 'C:\Program Files\Microsoft Visual Studio' -Recurse -Filter cmake.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName)
-          foreach ($c in $cands | Select-Object -Unique) {
-            if (-not $c) { continue }
-            $v = (& $c --version | Select-Object -First 1) 2>$null
-            Write-Host "$c -> $v"
-            if ($v -match "cmake version ([4-9]|[1-9][0-9])\.") {
-              Write-Host "Replacing 4.x with 3.31.6: $c"
-              Copy-Item "$newBin\*" (Split-Path $c) -Force
-            }
-          }
-          Write-Host "--- after ---"
-          where.exe cmake
-          & "C:\Program Files\CMake\bin\cmake.exe" --version | Select-Object -First 1
-          $env:PATH = "$newBin;$env:PATH"
-          flutter build windows --release --no-tree-shake-icons
+      - run: flutter config --enable-windows-desktop
+      - run: flutter pub get
+      # NOTE: windows/CMakeLists.txt sets CMAKE_POLICY_VERSION_MINIMUM so the
+      # firebase C++ SDK configures under the runner's CMake 4.x. No CI hack.
+      - run: flutter build windows --release --no-tree-shake-icons
       - uses: actions/upload-artifact@v4
         with:
           name: windows-build
