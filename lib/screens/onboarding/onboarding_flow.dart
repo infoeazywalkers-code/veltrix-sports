@@ -218,12 +218,11 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                 children: [
                   Expanded(child: Container()),
                   IconButton(
-                    onPressed:
-                        _isCompleting
-                            ? null
-                            : () {
-                              widget.onComplete?.call();
-                            },
+                    onPressed: _isCompleting
+                        ? null
+                        : () {
+                            widget.onComplete?.call();
+                          },
                     icon: const Icon(
                       Icons.close,
                       color: Colors.white54,
@@ -291,12 +290,11 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                   if (_currentStep == 0)
                     Expanded(
                       child: OutlinedButton(
-                        onPressed:
-                            _isCompleting
-                                ? null
-                                : () {
-                                  widget.onComplete?.call();
-                                },
+                        onPressed: _isCompleting
+                            ? null
+                            : () {
+                                widget.onComplete?.call();
+                              },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.white54,
                           side: const BorderSide(color: Colors.white12),
@@ -307,30 +305,28 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                   if (_currentStep > 0) const SizedBox(width: 16),
                   Expanded(
                     child: FilledButton(
-                      onPressed:
-                          _isCompleting
-                              ? null
-                              : _currentStep == _totalSteps - 1
-                              ? _completeOnboarding
-                              : _canProceed()
-                              ? _nextStep
-                              : null,
+                      onPressed: _isCompleting
+                          ? null
+                          : _currentStep == _totalSteps - 1
+                          ? _completeOnboarding
+                          : _canProceed()
+                          ? _nextStep
+                          : null,
                       style: FilledButton.styleFrom(backgroundColor: blue),
-                      child:
-                          _isCompleting
-                              ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                              : Text(
-                                _currentStep == _totalSteps - 1
-                                    ? 'Get Started'
-                                    : 'Next',
+                      child: _isCompleting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
                               ),
+                            )
+                          : Text(
+                              _currentStep == _totalSteps - 1
+                                  ? 'Get Started'
+                                  : 'Next',
+                            ),
                     ),
                   ),
                 ],
@@ -409,10 +405,9 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color:
-                isSelected
-                    ? blue.withValues(alpha: 0.15)
-                    : Colors.white.withValues(alpha: 0.05),
+            color: isSelected
+                ? blue.withValues(alpha: 0.15)
+                : Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isSelected ? blue : Colors.white24,
@@ -432,8 +427,9 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -471,25 +467,22 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children:
-                sports
-                    .map(
-                      (sport) => ChoiceChip(
-                        label: Text(sport),
-                        selected: _primarySport == sport,
-                        onSelected:
-                            (_) => setState(() => _primarySport = sport),
-                        selectedColor: blue,
-                        backgroundColor: Colors.white10,
-                        labelStyle: TextStyle(
-                          color:
-                              _primarySport == sport
-                                  ? Colors.white
-                                  : Colors.white70,
-                        ),
-                      ),
-                    )
-                    .toList(),
+            children: sports
+                .map(
+                  (sport) => ChoiceChip(
+                    label: Text(sport),
+                    selected: _primarySport == sport,
+                    onSelected: (_) => setState(() => _primarySport = sport),
+                    selectedColor: blue,
+                    backgroundColor: Colors.white10,
+                    labelStyle: TextStyle(
+                      color: _primarySport == sport
+                          ? Colors.white
+                          : Colors.white70,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
           const SizedBox(height: 24),
           const Text(
@@ -500,25 +493,22 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children:
-                levels
-                    .map(
-                      (level) => ChoiceChip(
-                        label: Text(level),
-                        selected: _experienceLevel == level,
-                        onSelected:
-                            (_) => setState(() => _experienceLevel = level),
-                        selectedColor: blue,
-                        backgroundColor: Colors.white10,
-                        labelStyle: TextStyle(
-                          color:
-                              _experienceLevel == level
-                                  ? Colors.white
-                                  : Colors.white70,
-                        ),
-                      ),
-                    )
-                    .toList(),
+            children: levels
+                .map(
+                  (level) => ChoiceChip(
+                    label: Text(level),
+                    selected: _experienceLevel == level,
+                    onSelected: (_) => setState(() => _experienceLevel = level),
+                    selectedColor: blue,
+                    backgroundColor: Colors.white10,
+                    labelStyle: TextStyle(
+                      color: _experienceLevel == level
+                          ? Colors.white
+                          : Colors.white70,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
           const SizedBox(height: 24),
           Text(
@@ -580,10 +570,9 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
                           ? _formatDate(_dateOfBirth!)
                           : 'Select date',
                       style: TextStyle(
-                        color:
-                            _dateOfBirth != null
-                                ? Colors.white
-                                : Colors.white54,
+                        color: _dateOfBirth != null
+                            ? Colors.white
+                            : Colors.white54,
                       ),
                     ),
                   ],
@@ -649,25 +638,23 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children:
-                goals
-                    .map(
-                      (goal) => ChoiceChip(
-                        label: Text(goal),
-                        selected: _primaryGoal == goal,
-                        onSelected: (_) => setState(() => _primaryGoal = goal),
-                        selectedColor: blue,
-                        backgroundColor: Colors.white10,
-                        labelStyle: TextStyle(
-                          color:
-                              _primaryGoal == goal
-                                  ? Colors.white
-                                  : Colors.white70,
-                          fontSize: 12,
-                        ),
-                      ),
-                    )
-                    .toList(),
+            children: goals
+                .map(
+                  (goal) => ChoiceChip(
+                    label: Text(goal),
+                    selected: _primaryGoal == goal,
+                    onSelected: (_) => setState(() => _primaryGoal = goal),
+                    selectedColor: blue,
+                    backgroundColor: Colors.white10,
+                    labelStyle: TextStyle(
+                      color: _primaryGoal == goal
+                          ? Colors.white
+                          : Colors.white70,
+                      fontSize: 12,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
           const SizedBox(height: 24),
           const Text(
@@ -695,47 +682,44 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children:
-                days
-                    .map(
-                      (day) => MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (_selectedDays.contains(day)) {
-                                _selectedDays.remove(day);
-                              } else {
-                                _selectedDays = [..._selectedDays, day];
-                              }
-                            });
-                          },
-                          child: Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color:
-                                  _selectedDays.contains(day)
-                                      ? blue
-                                      : Colors.white10,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              day.substring(0, 2),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight:
-                                    _selectedDays.contains(day)
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                              ),
-                            ),
+            children: days
+                .map(
+                  (day) => MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (_selectedDays.contains(day)) {
+                            _selectedDays.remove(day);
+                          } else {
+                            _selectedDays = [..._selectedDays, day];
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: _selectedDays.contains(day)
+                              ? blue
+                              : Colors.white10,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          day.substring(0, 2),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: _selectedDays.contains(day)
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                       ),
-                    )
-                    .toList(),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ],
       ),

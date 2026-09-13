@@ -18,10 +18,9 @@ class Best extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               fontSize: 11,
             ),
           ),
@@ -30,10 +29,9 @@ class Best extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w900,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
             ),
           ),
         ],

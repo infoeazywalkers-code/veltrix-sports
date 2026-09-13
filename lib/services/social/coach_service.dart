@@ -89,12 +89,11 @@ class CoachReview {
 class CoachService {
   static Future<List<CoachProfile>> fetchFeaturedCoaches() async {
     try {
-      final snapshot =
-          await FirebaseFirestore.instance
-              .collection('coaches')
-              .where('featured', isEqualTo: true)
-              .limit(20)
-              .get();
+      final snapshot = await FirebaseFirestore.instance
+          .collection('coaches')
+          .where('featured', isEqualTo: true)
+          .limit(20)
+          .get();
       return snapshot.docs.map(CoachProfile.fromFirestore).toList();
     } catch (_) {
       return [];
@@ -103,11 +102,10 @@ class CoachService {
 
   static Future<CoachProfile?> fetchCoachById(String coachId) async {
     try {
-      final doc =
-          await FirebaseFirestore.instance
-              .collection('coaches')
-              .doc(coachId)
-              .get();
+      final doc = await FirebaseFirestore.instance
+          .collection('coaches')
+          .doc(coachId)
+          .get();
       if (doc.exists) return CoachProfile.fromFirestore(doc);
     } catch (_) {}
     return null;
@@ -117,14 +115,12 @@ class CoachService {
     try {
       // Single-where query with client-side sort so no composite index
       // is required.
-      final snapshot =
-          await FirebaseFirestore.instance
-              .collection('coach_inquiries')
-              .where('userId', isEqualTo: userId)
-              .get();
-      final inquiries =
-          snapshot.docs.map(CoachInquiry.fromFirestore).toList()
-            ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      final snapshot = await FirebaseFirestore.instance
+          .collection('coach_inquiries')
+          .where('userId', isEqualTo: userId)
+          .get();
+      final inquiries = snapshot.docs.map(CoachInquiry.fromFirestore).toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
       return inquiries;
     } catch (_) {
       return [];

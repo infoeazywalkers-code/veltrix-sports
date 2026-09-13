@@ -76,10 +76,9 @@ class MSectionIntro extends StatelessWidget {
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : M.navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : M.navy),
             fontSize: 26,
             height: 1.1,
             fontWeight: FontWeight.w900,
@@ -111,10 +110,9 @@ class MDivider extends StatelessWidget {
           child: Text(
             label!,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : M.muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : M.muted),
               fontSize: 10,
               letterSpacing: 1.2,
               fontWeight: FontWeight.w900,

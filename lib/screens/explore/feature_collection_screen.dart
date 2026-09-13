@@ -74,35 +74,31 @@ class FeatureCollectionScreen extends StatelessWidget {
                   title: Text(
                     item.title,
                     style: TextStyle(
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : navy),
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                   subtitle: Text(item.subtitle),
                   trailing: Icon(
                     Icons.chevron_right,
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF78909C)
-                            : muted),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
                   ),
-                  onTap:
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) => FeatureDetailScreen(
-                                title: item.title,
-                                subtitle: item.subtitle,
-                                icon: item.icon,
-                                accent: accent,
-                                message: item.message,
-                              ),
-                        ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => FeatureDetailScreen(
+                        title: item.title,
+                        subtitle: item.subtitle,
+                        icon: item.icon,
+                        accent: accent,
+                        message: item.message,
                       ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -214,10 +210,9 @@ class _DetailRow extends StatelessWidget {
         title: Text(
           title,
           style: TextStyle(
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
             fontWeight: FontWeight.w900,
           ),
         ),
@@ -338,10 +333,9 @@ class MyTicketsScreen extends StatelessWidget {
                       ticket.eventTitle,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        color:
-                            (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : navy),
+                        color: (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : navy),
                       ),
                     ),
                     subtitle: Text(

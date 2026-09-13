@@ -29,19 +29,17 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         Text(
           'Understand the work behind your progress',
           style: TextStyle(
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : muted),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF78909C)
+                : muted),
           ),
         ),
         const SizedBox(height: 18),
@@ -67,47 +65,42 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w900,
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                   ),
                 ),
                 Text(
                   'Training load over time (CTL, ATL, TSB)',
                   style: TextStyle(
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF78909C)
-                            : muted),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
                     fontSize: 11,
                   ),
                 ),
                 const SizedBox(height: 20),
                 historyAsync.when(
-                  loading:
-                      () => const SizedBox(
-                        height: 200,
-                        child: Center(
-                          child: CircularProgressIndicator(color: navy),
+                  loading: () => const SizedBox(
+                    height: 200,
+                    child: Center(
+                      child: CircularProgressIndicator(color: navy),
+                    ),
+                  ),
+                  error: (e, _) => SizedBox(
+                    height: 200,
+                    child: Center(
+                      child: Text(
+                        'Failed to load chart: $e',
+                        style: TextStyle(
+                          color:
+                              (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
                         ),
                       ),
-                  error:
-                      (e, _) => SizedBox(
-                        height: 200,
-                        child: Center(
-                          child: Text(
-                            'Failed to load chart: $e',
-                            style: TextStyle(
-                              color:
-                                  (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? const Color(0xFF78909C)
-                                      : muted),
-                            ),
-                          ),
-                        ),
-                      ),
+                    ),
+                  ),
                   data: (history) {
                     final latest = perfAsync.valueOrNull;
                     return PerformanceChartWidget(
@@ -177,72 +170,59 @@ class _ProgressState extends ConsumerState<ProgressScreen> {
         ref
             .watch(personalBestsProvider)
             .when(
-              loading:
-                  () => const Row(
-                    children: [
-                      Expanded(
-                        child: Best(
-                          '5K run',
-                          '\u2014',
-                          Icons.directions_run,
-                          blue,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Best(
-                          '20 min power',
-                          '\u2014',
-                          Icons.directions_bike,
-                          purple,
-                        ),
-                      ),
-                    ],
+              loading: () => const Row(
+                children: [
+                  Expanded(
+                    child: Best('5K run', '\u2014', Icons.directions_run, blue),
                   ),
-              error:
-                  (_, __) => const Row(
-                    children: [
-                      Expanded(
-                        child: Best(
-                          '5K run',
-                          '\u2014',
-                          Icons.directions_run,
-                          blue,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Best(
-                          '20 min power',
-                          '\u2014',
-                          Icons.directions_bike,
-                          purple,
-                        ),
-                      ),
-                    ],
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Best(
+                      '20 min power',
+                      '\u2014',
+                      Icons.directions_bike,
+                      purple,
+                    ),
                   ),
-              data:
-                  (pbs) => Row(
-                    children: [
-                      Expanded(
-                        child: Best(
-                          '5K run',
-                          pbs.best5kPace,
-                          Icons.directions_run,
-                          blue,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Best(
-                          '20 min power',
-                          pbs.best20MinPower,
-                          Icons.directions_bike,
-                          purple,
-                        ),
-                      ),
-                    ],
+                ],
+              ),
+              error: (_, __) => const Row(
+                children: [
+                  Expanded(
+                    child: Best('5K run', '\u2014', Icons.directions_run, blue),
                   ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Best(
+                      '20 min power',
+                      '\u2014',
+                      Icons.directions_bike,
+                      purple,
+                    ),
+                  ),
+                ],
+              ),
+              data: (pbs) => Row(
+                children: [
+                  Expanded(
+                    child: Best(
+                      '5K run',
+                      pbs.best5kPace,
+                      Icons.directions_run,
+                      blue,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Best(
+                      '20 min power',
+                      pbs.best20MinPower,
+                      Icons.directions_bike,
+                      purple,
+                    ),
+                  ),
+                ],
+              ),
             ),
       ],
     );

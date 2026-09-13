@@ -31,13 +31,11 @@ List<AchievementBadge> computeAchievements({
 }) {
   final now = DateTime.now();
   final monthAgo = now.subtract(const Duration(days: 30));
-  final recent =
-      activities
-          .where(
-            (a) =>
-                a.date.isAfter(monthAgo) || a.date.isAtSameMomentAs(monthAgo),
-          )
-          .toList();
+  final recent = activities
+      .where(
+        (a) => a.date.isAfter(monthAgo) || a.date.isAtSameMomentAs(monthAgo),
+      )
+      .toList();
 
   var monthDistanceKm = 0.0;
   var monthClimbM = 0.0;
@@ -204,10 +202,9 @@ class AthleteAchievementsRow extends ConsumerWidget {
               return const _AchievementsCard(badges: [], loading: true);
             }
             final activities = actSnap.data ?? const <Activity>[];
-            final completed =
-                (workSnap.data ?? const <Workout>[])
-                    .where((w) => w.completed)
-                    .toList();
+            final completed = (workSnap.data ?? const <Workout>[])
+                .where((w) => w.completed)
+                .toList();
             final badges = computeAchievements(
               activities: activities,
               completedWorkouts: completed,
@@ -281,10 +278,9 @@ class _BadgeTile extends StatelessWidget {
             opacity: earned ? 1 : 0.45,
             child: CircleAvatar(
               radius: 24,
-              backgroundColor:
-                  earned
-                      ? const Color(0xFFF97316)
-                      : (isDark ? Colors.white10 : Colors.grey.shade300),
+              backgroundColor: earned
+                  ? const Color(0xFFF97316)
+                  : (isDark ? Colors.white10 : Colors.grey.shade300),
               child: Icon(badge.icon, color: fg, size: 22),
             ),
           ),

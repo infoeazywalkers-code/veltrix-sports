@@ -29,10 +29,9 @@ class FooterGroup extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: GestureDetector(
-            onTap:
-                onTapLinks != null && i < onTapLinks!.length
-                    ? onTapLinks![i]
-                    : null,
+            onTap: onTapLinks != null && i < onTapLinks!.length
+                ? onTapLinks![i]
+                : null,
             child: Text(
               links[i],
               style: const TextStyle(

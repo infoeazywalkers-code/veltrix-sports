@@ -16,18 +16,17 @@ class PmcChartWidget extends StatelessWidget {
         color: const Color(0xFF111111),
         borderRadius: BorderRadius.circular(12),
       ),
-      child:
-          metrics.isEmpty
-              ? const Center(
-                child: Text(
-                  'No PMC data',
-                  style: TextStyle(color: Colors.white38, fontSize: 12),
-                ),
-              )
-              : CustomPaint(
-                size: Size(double.infinity, height - 24),
-                painter: _PmcChartPainter(metrics),
+      child: metrics.isEmpty
+          ? const Center(
+              child: Text(
+                'No PMC data',
+                style: TextStyle(color: Colors.white38, fontSize: 12),
               ),
+            )
+          : CustomPaint(
+              size: Size(double.infinity, height - 24),
+              painter: _PmcChartPainter(metrics),
+            ),
     );
   }
 }
@@ -45,24 +44,19 @@ class _PmcChartPainter extends CustomPainter {
     final maxAtl = data.map((m) => m.atl).reduce((a, b) => a > b ? a : b);
     final maxLoad = [maxCtl, maxAtl, 50.0].reduce((a, b) => a > b ? a : b);
 
-    final ctlPaint =
-        Paint()
-          ..color = const Color(0xFF38BDF8)
-          ..strokeWidth = 2
-          ..style = PaintingStyle.stroke;
-    final atlPaint =
-        Paint()
-          ..color = const Color(0xFFFB7185)
-          ..strokeWidth = 2
-          ..style = PaintingStyle.stroke;
+    final ctlPaint = Paint()
+      ..color = const Color(0xFF38BDF8)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+    final atlPaint = Paint()
+      ..color = const Color(0xFFFB7185)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
 
-    final getX =
-        (int idx) => (idx / (data.length - 1).clamp(1, 999)) * size.width;
-    final getYLoad =
-        (double val) =>
-            size.height -
-            (val / maxLoad * size.height * 0.8) -
-            size.height * 0.1;
+    final getX = (int idx) =>
+        (idx / (data.length - 1).clamp(1, 999)) * size.width;
+    final getYLoad = (double val) =>
+        size.height - (val / maxLoad * size.height * 0.8) - size.height * 0.1;
 
     if (data.length > 1) {
       _drawLine(canvas, data, getX, getYLoad, (m) => m.ctl, ctlPaint);

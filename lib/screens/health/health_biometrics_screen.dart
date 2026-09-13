@@ -203,12 +203,11 @@ class HealthBiometricsScreen extends StatelessWidget {
           Text(
             '$score',
             style: TextStyle(
-              color:
-                  score >= 80
-                      ? const Color(0xFF10B981)
-                      : score >= 60
-                      ? const Color(0xFFF59E0B)
-                      : const Color(0xFFEF4444),
+              color: score >= 80
+                  ? const Color(0xFF10B981)
+                  : score >= 60
+                  ? const Color(0xFFF59E0B)
+                  : const Color(0xFFEF4444),
               fontSize: 20,
               fontWeight: FontWeight.w800,
             ),
@@ -450,10 +449,9 @@ class HealthBiometricsScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color:
-              isOvernight
-                  ? const Color(0xFF3B82F6).withValues(alpha: 0.1)
-                  : Colors.white.withValues(alpha: 0.03),
+          color: isOvernight
+              ? const Color(0xFF3B82F6).withValues(alpha: 0.1)
+              : Colors.white.withValues(alpha: 0.03),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(

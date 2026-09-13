@@ -93,13 +93,12 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        final doc =
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(user.uid)
-                .collection('devices')
-                .doc(DeviceService.sanitizeDeviceId(widget.deviceName))
-                .get();
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('devices')
+            .doc(DeviceService.sanitizeDeviceId(widget.deviceName))
+            .get();
         requested = (doc.data()?['status'] == 'requested');
       }
       if (!requested) {
@@ -420,10 +419,9 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
               widget.deviceName,
               style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
               ),
             ),
           ),
@@ -455,8 +453,8 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                           fontWeight: FontWeight.w800,
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : navy),
+                              ? Colors.white
+                              : navy),
                         ),
                       ),
                     ],
@@ -475,12 +473,11 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color:
-                              _connected
-                                  ? Colors.green.withValues(alpha: 0.15)
-                                  : _requested
-                                  ? Colors.orange.withValues(alpha: 0.15)
-                                  : Colors.grey.withValues(alpha: 0.2),
+                          color: _connected
+                              ? Colors.green.withValues(alpha: 0.15)
+                              : _requested
+                              ? Colors.orange.withValues(alpha: 0.15)
+                              : Colors.grey.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -492,12 +489,11 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w900,
-                            color:
-                                _connected
-                                    ? Colors.green[800]
-                                    : _requested
-                                    ? Colors.orange[800]
-                                    : Colors.grey[700],
+                            color: _connected
+                                ? Colors.green[800]
+                                : _requested
+                                ? Colors.orange[800]
+                                : Colors.grey[700],
                           ),
                         ),
                       ),
@@ -518,8 +514,8 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                             fontWeight: FontWeight.w800,
                             color:
                                 (Theme.of(context).brightness == Brightness.dark
-                                    ? const Color(0xFFB0BEC5)
-                                    : ink),
+                                ? const Color(0xFFB0BEC5)
+                                : ink),
                           ),
                         ),
                       ],
@@ -561,10 +557,9 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                     : 'Pair this device to sync workouts directly from your wearable sensor.',
                 style: TextStyle(
                   fontSize: 13,
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFFB0BEC5).withValues(alpha: 0.8)
-                          : ink.withValues(alpha: 0.8)),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFFB0BEC5).withValues(alpha: 0.8)
+                      : ink.withValues(alpha: 0.8)),
                 ),
               ),
             ],
@@ -601,14 +596,13 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
               backgroundColor: _connected ? Colors.red[700] : lime,
               foregroundColor: _connected ? Colors.white : navy,
             ),
-            onPressed:
-                _syncing
-                    ? null
-                    : _connected
-                    ? _disconnectBle
-                    : _showBleResults
-                    ? null
-                    : _startBleScan,
+            onPressed: _syncing
+                ? null
+                : _connected
+                ? _disconnectBle
+                : _showBleResults
+                ? null
+                : _startBleScan,
             child: Text(
               _connected
                   ? 'Disconnect Device'
@@ -624,10 +618,9 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
               backgroundColor: _requested ? Colors.grey[300] : lime,
               foregroundColor: navy,
             ),
-            onPressed:
-                (_requestLoading || _requested)
-                    ? null
-                    : _requestOAuthIntegration,
+            onPressed: (_requestLoading || _requested)
+                ? null
+                : _requestOAuthIntegration,
             child: Text(
               _requested ? 'Request received' : 'Notify me when ready',
               style: const TextStyle(fontWeight: FontWeight.w900),
@@ -711,10 +704,9 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
                 dense: true,
                 leading: Icon(
                   Icons.bluetooth_searching,
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : navy),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
                 ),
                 title: Text(
                   d.name,
@@ -761,10 +753,9 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
               : '${widget.deviceName} links via OAuth — coming to your account soon.',
           style: TextStyle(
             fontSize: 13,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFFB0BEC5).withValues(alpha: 0.8)
-                    : ink.withValues(alpha: 0.8)),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFFB0BEC5).withValues(alpha: 0.8)
+                : ink.withValues(alpha: 0.8)),
           ),
         ),
         if (_requestLoading) ...[

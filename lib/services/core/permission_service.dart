@@ -44,17 +44,18 @@ class PermissionService {
       return {for (final t in types) t: PermissionStatus.granted};
     }
 
-    final permissions =
-        types.map(_mapPermission).whereType<Permission>().toList();
+    final permissions = types
+        .map(_mapPermission)
+        .whereType<Permission>()
+        .toList();
     final statuses = await permissions.request();
 
     final result = <PermissionType, PermissionStatus>{};
     for (int i = 0; i < types.length; i++) {
       final handlerStatus = statuses[permissions[i]];
-      result[types[i]] =
-          handlerStatus != null
-              ? _mapStatus(handlerStatus)
-              : PermissionStatus.denied;
+      result[types[i]] = handlerStatus != null
+          ? _mapStatus(handlerStatus)
+          : PermissionStatus.denied;
     }
     return result;
   }

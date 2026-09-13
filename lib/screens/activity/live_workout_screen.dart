@@ -338,10 +338,9 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
 
                     // Main Action Button
                     Semantics(
-                      label:
-                          _engine.state == WorkoutExecutionState.running
-                              ? 'Pause workout'
-                              : 'Start workout',
+                      label: _engine.state == WorkoutExecutionState.running
+                          ? 'Pause workout'
+                          : 'Start workout',
                       button: true,
                       child: GestureDetector(
                         onTap: () {
@@ -357,8 +356,8 @@ class _LiveWorkoutScreenState extends State<LiveWorkoutScreen> {
                           decoration: BoxDecoration(
                             color:
                                 _engine.state == WorkoutExecutionState.running
-                                    ? Colors.orange
-                                    : lime,
+                                ? Colors.orange
+                                : lime,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(

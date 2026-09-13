@@ -14,7 +14,9 @@ void main() {
       latestPerformanceProvider.overrideWith((ref) => Stream.value(null)),
     ],
     child: MaterialApp(
-      home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
+      home: Scaffold(
+        body: SingleChildScrollView(child: Center(child: child)),
+      ),
     ),
   );
 
@@ -253,8 +255,9 @@ void main() {
   });
 
   group('VeltrixFooter', () {
-    Widget footerWrap(Widget child) =>
-        MaterialApp(home: Scaffold(body: SingleChildScrollView(child: child)));
+    Widget footerWrap(Widget child) => MaterialApp(
+      home: Scaffold(body: SingleChildScrollView(child: child)),
+    );
 
     testWidgets('renders VELTRIX branding and copyright', (tester) async {
       await tester.pumpWidget(footerWrap(const VeltrixFooter()));

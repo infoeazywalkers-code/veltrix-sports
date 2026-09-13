@@ -41,13 +41,8 @@ class MobileSettingsScreen extends ConsumerWidget {
                     ),
                   ],
                   selected: {prefs?.theme.mode ?? ThemeModePreference.system},
-                  onSelectionChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'theme.mode',
-                        v.first.name,
-                      ),
+                  onSelectionChanged: (v) =>
+                      _updateField(context, ref, 'theme.mode', v.first.name),
                 ),
               ],
             ),
@@ -73,13 +68,12 @@ class MobileSettingsScreen extends ConsumerWidget {
                     ),
                   ],
                   selected: {prefs?.display.unitSystem ?? UnitSystem.metric},
-                  onSelectionChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'display.unitSystem',
-                        v.first.name,
-                      ),
+                  onSelectionChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'display.unitSystem',
+                    v.first.name,
+                  ),
                 ),
               ],
             ),
@@ -96,37 +90,34 @@ class MobileSettingsScreen extends ConsumerWidget {
                 SwitchListTile(
                   title: const Text('Workout Reminders'),
                   value: prefs?.notifications.workoutReminders ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'notifications.workoutReminders',
-                        v,
-                      ),
+                  onChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'notifications.workoutReminders',
+                    v,
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Coach Messages'),
                   value: prefs?.notifications.coachMessages ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'notifications.coachMessages',
-                        v,
-                      ),
+                  onChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'notifications.coachMessages',
+                    v,
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Weekly Summary'),
                   value: prefs?.notifications.weeklySummary ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'notifications.weeklySummary',
-                        v,
-                      ),
+                  onChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'notifications.weeklySummary',
+                    v,
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
               ],
@@ -160,73 +151,63 @@ class MobileSettingsScreen extends ConsumerWidget {
                 SwitchListTile(
                   title: const Text('Profile Visible to Coaches'),
                   value: prefs?.privacy.profileVisibleToCoaches ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'privacy.profileVisibleToCoaches',
-                        v,
-                      ),
+                  onChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'privacy.profileVisibleToCoaches',
+                    v,
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Activity Feed Visible'),
                   value: prefs?.privacy.activityFeedVisible ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'privacy.activityFeedVisible',
-                        v,
-                      ),
+                  onChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'privacy.activityFeedVisible',
+                    v,
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Share Location in Workouts'),
                   value: prefs?.privacy.shareLocationInWorkouts ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'privacy.shareLocationInWorkouts',
-                        v,
-                      ),
+                  onChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'privacy.shareLocationInWorkouts',
+                    v,
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Show on Leaderboards'),
                   value: prefs?.privacy.showOnLeaderboards ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'privacy.showOnLeaderboards',
-                        v,
-                      ),
+                  onChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'privacy.showOnLeaderboards',
+                    v,
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Allow Coach Data Access'),
                   value: prefs?.privacy.allowCoachDataAccess ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'privacy.allowCoachDataAccess',
-                        v,
-                      ),
+                  onChanged: (v) => _updateField(
+                    context,
+                    ref,
+                    'privacy.allowCoachDataAccess',
+                    v,
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
                 SwitchListTile(
                   title: const Text('Analytics Enabled'),
                   value: prefs?.privacy.analyticsEnabled ?? true,
-                  onChanged:
-                      (v) => _updateField(
-                        context,
-                        ref,
-                        'privacy.analyticsEnabled',
-                        v,
-                      ),
+                  onChanged: (v) =>
+                      _updateField(context, ref, 'privacy.analyticsEnabled', v),
                   contentPadding: EdgeInsets.zero,
                 ),
               ],

@@ -18,10 +18,9 @@ class Legend extends StatelessWidget {
       Text(
         text,
         style: TextStyle(
-          color:
-              (Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF78909C)
-                  : muted),
+          color: (Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF78909C)
+              : muted),
           fontSize: 11,
           fontWeight: FontWeight.w700,
         ),

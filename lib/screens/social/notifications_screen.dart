@@ -46,15 +46,13 @@ class NotificationsScreen extends StatelessWidget {
                 (notification) => Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: GestureDetector(
-                    onTap:
-                        notification.read
-                            ? null
-                            : () => repo.markRead(notification.id),
+                    onTap: notification.read
+                        ? null
+                        : () => repo.markRead(notification.id),
                     child: _NotificationCard(
-                      icon:
-                          notification.type == 'coach'
-                              ? Icons.chat_bubble_outline
-                              : Icons.notifications_outlined,
+                      icon: notification.type == 'coach'
+                          ? Icons.chat_bubble_outline
+                          : Icons.notifications_outlined,
                       color: notification.type == 'coach' ? purple : blue,
                       title: notification.title,
                       body: notification.body,
@@ -174,10 +172,9 @@ class _NotificationCard extends StatelessWidget {
         title,
         style: TextStyle(
           fontWeight: FontWeight.w900,
-          color:
-              (Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white
-                  : navy),
+          color: (Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : navy),
         ),
       ),
       subtitle: Padding(
@@ -187,10 +184,9 @@ class _NotificationCard extends StatelessWidget {
       trailing: Text(
         meta,
         style: TextStyle(
-          color:
-              (Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF78909C)
-                  : muted),
+          color: (Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF78909C)
+              : muted),
           fontSize: 11,
           fontWeight: FontWeight.w700,
         ),

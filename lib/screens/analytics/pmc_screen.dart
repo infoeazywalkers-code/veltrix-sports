@@ -47,38 +47,37 @@ class _PmcScreenState extends ConsumerState<PmcScreen> {
           ),
         ],
       ),
-      body:
-          widget.metrics.isEmpty
-              ? const Center(
-                child: Text(
-                  'No PMC data',
-                  style: TextStyle(color: Colors.white54),
-                ),
-              )
-              : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildKpiCards(
-                      latest!,
-                      projectedMetrics,
-                      pmcService,
-                      rampRate,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTimeRangeSelector(),
-                    const SizedBox(height: 12),
-                    _buildForecastScenarioSelector(),
-                    const SizedBox(height: 16),
-                    _buildForecastInsights(forecastStats, projectedMetrics),
-                    const SizedBox(height: 16),
-                    _buildChart(filteredMetrics, projectedMetrics),
-                    const SizedBox(height: 12),
-                    _buildLegend(),
-                  ],
-                ),
+      body: widget.metrics.isEmpty
+          ? const Center(
+              child: Text(
+                'No PMC data',
+                style: TextStyle(color: Colors.white54),
               ),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildKpiCards(
+                    latest!,
+                    projectedMetrics,
+                    pmcService,
+                    rampRate,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTimeRangeSelector(),
+                  const SizedBox(height: 12),
+                  _buildForecastScenarioSelector(),
+                  const SizedBox(height: 16),
+                  _buildForecastInsights(forecastStats, projectedMetrics),
+                  const SizedBox(height: 16),
+                  _buildChart(filteredMetrics, projectedMetrics),
+                  const SizedBox(height: 12),
+                  _buildLegend(),
+                ],
+              ),
+            ),
     );
   }
 
@@ -105,8 +104,9 @@ class _PmcScreenState extends ConsumerState<PmcScreen> {
   ) {
     final formState = pmcService.getFormState(latest.tsb);
     final finalProjected = projected.isNotEmpty ? projected.last : null;
-    final projectedTsbDelta =
-        finalProjected != null ? finalProjected.tsb - latest.tsb : 0.0;
+    final projectedTsbDelta = finalProjected != null
+        ? finalProjected.tsb - latest.tsb
+        : 0.0;
 
     return Column(
       children: [
@@ -127,10 +127,9 @@ class _PmcScreenState extends ConsumerState<PmcScreen> {
             _KpiCard(
               label: 'Form (TSB)',
               value: '${latest.tsb > 0 ? '+' : ''}${latest.tsb.round()}',
-              color:
-                  latest.tsb >= 0
-                      ? const Color(0xFF10B981)
-                      : const Color(0xFFF59E0B),
+              color: latest.tsb >= 0
+                  ? const Color(0xFF10B981)
+                  : const Color(0xFFF59E0B),
             ),
           ],
         ),
@@ -139,10 +138,9 @@ class _PmcScreenState extends ConsumerState<PmcScreen> {
           children: [
             _KpiCard(
               label: 'Projected TSB (+7d)',
-              value:
-                  finalProjected != null
-                      ? '${finalProjected.tsb > 0 ? '+' : ''}${finalProjected.tsb.round()}'
-                      : '--',
+              value: finalProjected != null
+                  ? '${finalProjected.tsb > 0 ? '+' : ''}${finalProjected.tsb.round()}'
+                  : '--',
               color: const Color(0xFFF59E0B),
               subtitle:
                   '${projectedTsbDelta >= 0 ? '+' : ''}${projectedTsbDelta.round()} pts',
@@ -205,98 +203,91 @@ class _PmcScreenState extends ConsumerState<PmcScreen> {
 
   Widget _buildTimeRangeSelector() {
     return Row(
-      children:
-          ['30', '45', 'all'].map((range) {
-            final isSelected = _timeRange == range;
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () => setState(() => _timeRange = range),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color:
-                          isSelected
-                              ? const Color(0xFF262626)
-                              : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: isSelected ? Colors.white24 : Colors.white12,
-                      ),
-                    ),
-                    child: Text(
-                      range == 'all' ? 'All (90d)' : '$range Days',
-                      style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.white54,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+      children: ['30', '45', 'all'].map((range) {
+        final isSelected = _timeRange == range;
+        return Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => setState(() => _timeRange = range),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFF262626)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected ? Colors.white24 : Colors.white12,
+                  ),
+                ),
+                child: Text(
+                  range == 'all' ? 'All (90d)' : '$range Days',
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.white54,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-            );
-          }).toList(),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
   Widget _buildForecastScenarioSelector() {
     return Row(
-      children:
-          ForecastScenario.values.map((scenario) {
-            final isSelected = _forecastScenario == scenario;
-            final label =
-                scenario == ForecastScenario.linear
-                    ? 'Linear'
-                    : scenario == ForecastScenario.average
-                    ? 'Average'
-                    : scenario == ForecastScenario.taper
-                    ? 'Taper'
-                    : 'Overload';
-            return Padding(
-              padding: const EdgeInsets.only(right: 6),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () => setState(() => _forecastScenario = scenario),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color:
-                          isSelected
-                              ? const Color(0xFFF59E0B).withValues(alpha: 0.2)
-                              : Colors.transparent,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(
-                        color:
-                            isSelected
-                                ? const Color(0xFFF59E0B).withValues(alpha: 0.4)
-                                : Colors.white12,
-                      ),
-                    ),
-                    child: Text(
-                      label,
-                      style: TextStyle(
-                        color:
-                            isSelected
-                                ? const Color(0xFFF59E0B)
-                                : Colors.white54,
-                        fontSize: 11,
-                      ),
-                    ),
+      children: ForecastScenario.values.map((scenario) {
+        final isSelected = _forecastScenario == scenario;
+        final label = scenario == ForecastScenario.linear
+            ? 'Linear'
+            : scenario == ForecastScenario.average
+            ? 'Average'
+            : scenario == ForecastScenario.taper
+            ? 'Taper'
+            : 'Overload';
+        return Padding(
+          padding: const EdgeInsets.only(right: 6),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => setState(() => _forecastScenario = scenario),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFFF59E0B).withValues(alpha: 0.2)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: isSelected
+                        ? const Color(0xFFF59E0B).withValues(alpha: 0.4)
+                        : Colors.white12,
+                  ),
+                ),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: isSelected
+                        ? const Color(0xFFF59E0B)
+                        : Colors.white54,
+                    fontSize: 11,
                   ),
                 ),
               ),
-            );
-          }).toList(),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -317,10 +308,9 @@ class _PmcScreenState extends ConsumerState<PmcScreen> {
           _InsightPill(
             label: 'Slope',
             value: '${stats.slope >= 0 ? '+' : ''}${stats.slope}',
-            color:
-                stats.slope >= 0
-                    ? const Color(0xFF10B981)
-                    : const Color(0xFFEF4444),
+            color: stats.slope >= 0
+                ? const Color(0xFF10B981)
+                : const Color(0xFFEF4444),
           ),
           _InsightPill(
             label: 'Proj 7d',
@@ -540,40 +530,32 @@ class _EnhancedPmcChartPainter extends CustomPainter {
     final maxTsb = all.map((m) => m.tsb).reduce((a, b) => a > b ? a : b);
     final tsbRange = (maxTsb - minTsb).abs() < 1 ? 1.0 : maxTsb - minTsb;
 
-    final getX =
-        (int idx) => (idx / (all.length - 1).clamp(1, 999)) * size.width;
-    final getYLoad =
-        (double val) =>
-            size.height -
-            (val / maxLoad * size.height * 0.8) -
-            size.height * 0.1;
-    final getYTsb =
-        (double val) =>
-            size.height -
-            ((val - minTsb) / tsbRange * size.height * 0.6) -
-            size.height * 0.2;
+    final getX = (int idx) =>
+        (idx / (all.length - 1).clamp(1, 999)) * size.width;
+    final getYLoad = (double val) =>
+        size.height - (val / maxLoad * size.height * 0.8) - size.height * 0.1;
+    final getYTsb = (double val) =>
+        size.height -
+        ((val - minTsb) / tsbRange * size.height * 0.6) -
+        size.height * 0.2;
 
-    final ctlPaint =
-        Paint()
-          ..color = const Color(0xFF38BDF8)
-          ..strokeWidth = 2
-          ..style = PaintingStyle.stroke;
-    final atlPaint =
-        Paint()
-          ..color = const Color(0xFFFB7185)
-          ..strokeWidth = 2
-          ..style = PaintingStyle.stroke;
-    final tsbPaint =
-        Paint()
-          ..color = const Color(0xFFF59E0B)
-          ..strokeWidth = 1.5
-          ..style = PaintingStyle.stroke;
+    final ctlPaint = Paint()
+      ..color = const Color(0xFF38BDF8)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+    final atlPaint = Paint()
+      ..color = const Color(0xFFFB7185)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+    final tsbPaint = Paint()
+      ..color = const Color(0xFFF59E0B)
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke;
 
     // Zero TSB line
-    final zeroPaint =
-        Paint()
-          ..color = Colors.white24
-          ..strokeWidth = 0.5;
+    final zeroPaint = Paint()
+      ..color = Colors.white24
+      ..strokeWidth = 0.5;
     final zeroY = getYTsb(0);
     canvas.drawLine(Offset(0, zeroY), Offset(size.width, zeroY), zeroPaint);
 
@@ -586,21 +568,18 @@ class _EnhancedPmcChartPainter extends CustomPainter {
 
     // Draw projected lines (dashed)
     if (projected.isNotEmpty) {
-      final dashedPaint =
-          Paint()
-            ..color = const Color(0xFFA855F7)
-            ..strokeWidth = 2
-            ..style = PaintingStyle.stroke;
-      final projCtlPaint =
-          Paint()
-            ..color = const Color(0xFF38BDF8)
-            ..strokeWidth = 1.5
-            ..style = PaintingStyle.stroke;
-      final projAtlPaint =
-          Paint()
-            ..color = const Color(0xFFFB7185)
-            ..strokeWidth = 1.5
-            ..style = PaintingStyle.stroke;
+      final dashedPaint = Paint()
+        ..color = const Color(0xFFA855F7)
+        ..strokeWidth = 2
+        ..style = PaintingStyle.stroke;
+      final projCtlPaint = Paint()
+        ..color = const Color(0xFF38BDF8)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke;
+      final projAtlPaint = Paint()
+        ..color = const Color(0xFFFB7185)
+        ..strokeWidth = 1.5
+        ..style = PaintingStyle.stroke;
 
       // Connect from last historical point
       final lastHistIdx = historical.length - 1;
@@ -640,10 +619,9 @@ class _EnhancedPmcChartPainter extends CustomPainter {
       canvas.drawPath(projTsbPath, dashedPaint);
 
       // TODAY line
-      final todayPaint =
-          Paint()
-            ..color = const Color(0xFFF59E0B)
-            ..strokeWidth = 1;
+      final todayPaint = Paint()
+        ..color = const Color(0xFFF59E0B)
+        ..strokeWidth = 1;
       canvas.drawLine(
         Offset(startX, 0),
         Offset(startX, size.height),

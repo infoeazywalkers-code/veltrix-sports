@@ -49,23 +49,21 @@ class HelpSupportScreen extends StatelessWidget {
               icon: Icons.email_outlined,
               title: 'Email Support',
               subtitle: 'support@veltrixsports.com',
-              onTap:
-                  () => _showContactInfo(
-                    context,
-                    'Email Support',
-                    'support@veltrixsports.com',
-                  ),
+              onTap: () => _showContactInfo(
+                context,
+                'Email Support',
+                'support@veltrixsports.com',
+              ),
             ),
             _buildContactTile(
               icon: Icons.report_outlined,
               title: 'Report a Bug',
               subtitle: 'Tell us about an issue',
-              onTap:
-                  () => _showContactInfo(
-                    context,
-                    'Report a Bug',
-                    'bugs@veltrixsports.com',
-                  ),
+              onTap: () => _showContactInfo(
+                context,
+                'Report a Bug',
+                'bugs@veltrixsports.com',
+              ),
             ),
           ]),
           const SizedBox(height: 24),
@@ -73,24 +71,22 @@ class HelpSupportScreen extends StatelessWidget {
             _buildContactTile(
               icon: Icons.description_outlined,
               title: 'Terms of Service',
-              onTap:
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const LegalScreen(isTerms: true),
-                    ),
-                  ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LegalScreen(isTerms: true),
+                ),
+              ),
             ),
             _buildContactTile(
               icon: Icons.privacy_tip_outlined,
               title: 'Privacy Policy',
-              onTap:
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const LegalScreen(isTerms: false),
-                    ),
-                  ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LegalScreen(isTerms: false),
+                ),
+              ),
             ),
           ]),
         ],
@@ -111,10 +107,9 @@ class HelpSupportScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 12),
@@ -132,10 +127,9 @@ class HelpSupportScreen extends StatelessWidget {
         Text(
           answer,
           style: TextStyle(
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : Colors.grey[600]),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF78909C)
+                : Colors.grey[600]),
             height: 1.5,
           ),
         ),
@@ -162,19 +156,18 @@ class HelpSupportScreen extends StatelessWidget {
   void _showContactInfo(BuildContext context, String title, String email) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(title),
-            content: Text(
-              'Please reach out to us at $email and we will get back to you as soon as possible.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(
+          'Please reach out to us at $email and we will get back to you as soon as possible.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
           ),
+        ],
+      ),
     );
   }
 }

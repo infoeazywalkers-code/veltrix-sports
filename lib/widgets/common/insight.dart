@@ -23,10 +23,9 @@ class Insight extends StatelessWidget {
         title,
         style: TextStyle(
           fontWeight: FontWeight.w900,
-          color:
-              (Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white
-                  : navy),
+          color: (Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : navy),
         ),
       ),
       subtitle: Text(body, style: const TextStyle(fontSize: 11)),

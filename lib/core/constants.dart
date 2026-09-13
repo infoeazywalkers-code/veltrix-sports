@@ -49,19 +49,18 @@ DateTime getStartOfWeek(DateTime date, {int weekOffset = 0}) {
 }
 
 /// Returns the full month name for the given month number (1-12).
-String monthName(int m) =>
-    [
-      '',
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ][m];
+String monthName(int m) => [
+  '',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+][m];

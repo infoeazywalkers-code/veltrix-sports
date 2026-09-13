@@ -76,81 +76,73 @@ class _AthleteCompareScreenState extends ConsumerState<AthleteCompareScreen> {
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
       ),
-      body:
-          me == null
-              ? const _SignInRequiredState()
-              : ListView(
-                padding: const EdgeInsets.all(18),
-                children: [
-                  SegmentedButton<int>(
-                    segments: const [
-                      ButtonSegment(value: 14, label: Text('14 days')),
-                      ButtonSegment(value: 30, label: Text('30 days')),
-                    ],
-                    selected: {_days},
-                    showSelectedIcon: false,
-                    onSelectionChanged: (v) => _setDays(v.first),
-                  ),
-                  const SizedBox(height: 16),
-                  FutureBuilder<_SidePair>(
-                    future: _future,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 64),
-                          child: Center(
-                            child: CircularProgressIndicator(color: navy),
-                          ),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return _ErrorState(
-                          message: ErrorHandler.getUserMessage(snapshot.error!),
-                          onRetry: () => setState(() => _future = _load()),
-                        );
-                      }
-                      final pair =
-                          snapshot.data ??
-                          (
-                            mine: const <Activity>[],
-                            theirs: const <Activity>[],
-                          );
-                      final mine = summarizeActivities(pair.mine);
-                      final theirs = summarizeActivities(pair.theirs);
-                      if (mine.count == 0 && theirs.count == 0) {
-                        return _EmptyState(days: _days);
-                      }
-                      final end = DateTime.now();
-                      final start = end.subtract(Duration(days: _days));
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          if (me.uid == widget.otherUid)
-                            _SelfNote(isDark: isDark),
-                          _VersusHeader(
-                            otherName: widget.otherName,
-                            isDark: isDark,
-                          ),
-                          const SizedBox(height: 12),
-                          _DeltaCard(
-                            mine: mine,
-                            theirs: theirs,
-                            isDark: isDark,
-                          ),
-                          const SizedBox(height: 16),
-                          _WeeklyTssCard(
-                            mine: pair.mine,
-                            theirs: pair.theirs,
-                            start: start,
-                            days: _days,
-                            isDark: isDark,
-                          ),
-                        ],
+      body: me == null
+          ? const _SignInRequiredState()
+          : ListView(
+              padding: const EdgeInsets.all(18),
+              children: [
+                SegmentedButton<int>(
+                  segments: const [
+                    ButtonSegment(value: 14, label: Text('14 days')),
+                    ButtonSegment(value: 30, label: Text('30 days')),
+                  ],
+                  selected: {_days},
+                  showSelectedIcon: false,
+                  onSelectionChanged: (v) => _setDays(v.first),
+                ),
+                const SizedBox(height: 16),
+                FutureBuilder<_SidePair>(
+                  future: _future,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 64),
+                        child: Center(
+                          child: CircularProgressIndicator(color: navy),
+                        ),
                       );
-                    },
-                  ),
-                ],
-              ),
+                    }
+                    if (snapshot.hasError) {
+                      return _ErrorState(
+                        message: ErrorHandler.getUserMessage(snapshot.error!),
+                        onRetry: () => setState(() => _future = _load()),
+                      );
+                    }
+                    final pair =
+                        snapshot.data ??
+                        (mine: const <Activity>[], theirs: const <Activity>[]);
+                    final mine = summarizeActivities(pair.mine);
+                    final theirs = summarizeActivities(pair.theirs);
+                    if (mine.count == 0 && theirs.count == 0) {
+                      return _EmptyState(days: _days);
+                    }
+                    final end = DateTime.now();
+                    final start = end.subtract(Duration(days: _days));
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (me.uid == widget.otherUid)
+                          _SelfNote(isDark: isDark),
+                        _VersusHeader(
+                          otherName: widget.otherName,
+                          isDark: isDark,
+                        ),
+                        const SizedBox(height: 12),
+                        _DeltaCard(mine: mine, theirs: theirs, isDark: isDark),
+                        const SizedBox(height: 16),
+                        _WeeklyTssCard(
+                          mine: pair.mine,
+                          theirs: pair.theirs,
+                          start: start,
+                          days: _days,
+                          isDark: isDark,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
     );
   }
 }
@@ -370,10 +362,9 @@ class _VersusHeader extends StatelessWidget {
         ),
         Expanded(
           child: _SideLabel(
-            label:
-                otherName != null && otherName!.isNotEmpty
-                    ? otherName!
-                    : 'Athlete',
+            label: otherName != null && otherName!.isNotEmpty
+                ? otherName!
+                : 'Athlete',
             color: orange,
             alignRight: true,
           ),
@@ -397,8 +388,9 @@ class _SideLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment:
-          alignRight ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: alignRight
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       children: [
         Container(
           width: 10,
@@ -477,36 +469,33 @@ class _DeltaCard extends ConsumerWidget {
             const SizedBox(height: 10),
             _DeltaRow(
               label: 'Avg speed',
-              mine:
-                  mine.avgSpeedKmh == null
-                      ? '–'
-                      : '${mine.avgSpeedKmh!.toStringAsFixed(1)} km/h',
-              theirs:
-                  theirs.avgSpeedKmh == null
-                      ? '–'
-                      : '${theirs.avgSpeedKmh!.toStringAsFixed(1)} km/h',
-              delta:
-                  mine.avgSpeedKmh == null || theirs.avgSpeedKmh == null
-                      ? '–'
-                      : _signed(
-                        '${(mine.avgSpeedKmh! - theirs.avgSpeedKmh!).abs().toStringAsFixed(1)} km/h',
-                        mine.avgSpeedKmh! - theirs.avgSpeedKmh!,
-                      ),
+              mine: mine.avgSpeedKmh == null
+                  ? '–'
+                  : '${mine.avgSpeedKmh!.toStringAsFixed(1)} km/h',
+              theirs: theirs.avgSpeedKmh == null
+                  ? '–'
+                  : '${theirs.avgSpeedKmh!.toStringAsFixed(1)} km/h',
+              delta: mine.avgSpeedKmh == null || theirs.avgSpeedKmh == null
+                  ? '–'
+                  : _signed(
+                      '${(mine.avgSpeedKmh! - theirs.avgSpeedKmh!).abs().toStringAsFixed(1)} km/h',
+                      mine.avgSpeedKmh! - theirs.avgSpeedKmh!,
+                    ),
               isDark: isDark,
             ),
             const SizedBox(height: 10),
             _DeltaRow(
               label: 'Avg HR',
               mine: mine.avgHr == null ? '–' : '${mine.avgHr!.round()} bpm',
-              theirs:
-                  theirs.avgHr == null ? '–' : '${theirs.avgHr!.round()} bpm',
-              delta:
-                  mine.avgHr == null || theirs.avgHr == null
-                      ? '–'
-                      : _signedInt(
-                        (mine.avgHr! - theirs.avgHr!).round(),
-                        suffix: ' bpm',
-                      ),
+              theirs: theirs.avgHr == null
+                  ? '–'
+                  : '${theirs.avgHr!.round()} bpm',
+              delta: mine.avgHr == null || theirs.avgHr == null
+                  ? '–'
+                  : _signedInt(
+                      (mine.avgHr! - theirs.avgHr!).round(),
+                      suffix: ' bpm',
+                    ),
               isDark: isDark,
             ),
           ],
@@ -658,15 +647,14 @@ class _WeeklyTssCard extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 36,
-                        getTitlesWidget:
-                            (value, _) => Text(
-                              value.toInt().toString(),
-                              style: TextStyle(
-                                color: isDark ? const Color(0xFF78909C) : muted,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                        getTitlesWidget: (value, _) => Text(
+                          value.toInt().toString(),
+                          style: TextStyle(
+                            color: isDark ? const Color(0xFF78909C) : muted,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                     ),
                     bottomTitles: AxisTitles(

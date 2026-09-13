@@ -24,14 +24,13 @@ class MCard extends StatelessWidget {
 
     return Card(
       color: color,
-      child:
-          onTap != null
-              ? InkWell(
-                borderRadius: BorderRadius.circular(M.rLg),
-                onTap: onTap,
-                child: content,
-              )
-              : content,
+      child: onTap != null
+          ? InkWell(
+              borderRadius: BorderRadius.circular(M.rLg),
+              onTap: onTap,
+              child: content,
+            )
+          : content,
     );
   }
 }
@@ -87,10 +86,9 @@ class MInfoCard extends StatelessWidget {
             const SizedBox(width: M.sm),
             Icon(
               Icons.chevron_right,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : M.muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : M.muted),
               size: 20,
             ),
           ],

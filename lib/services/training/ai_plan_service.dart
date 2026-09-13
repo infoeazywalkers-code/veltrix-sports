@@ -119,12 +119,11 @@ class AIPlanService {
     required double weightKg,
   }) {
     final wPerKg = (ftpWatts / weightKg).toStringAsFixed(2);
-    final baseTssPerHour =
-        philosophy == 'sweet_spot'
-            ? 62
-            : philosophy == 'polarized'
-            ? 52
-            : 56;
+    final baseTssPerHour = philosophy == 'sweet_spot'
+        ? 62
+        : philosophy == 'polarized'
+        ? 52
+        : 56;
     final initialWeeklyTSS = (targetWeeklyHours * baseTssPerHour).round();
 
     final weeklyTSSProgression = <int>[];
@@ -142,14 +141,12 @@ class AIPlanService {
 
       weeks.add({
         'weekNumber': w,
-        'theme':
-            isRecoveryWeek
-                ? 'Week $w: Recovery & Adaptation'
-                : 'Week $w: Progressive Build',
-        'focus':
-            isRecoveryWeek
-                ? 'Active recovery and tissue remodeling.'
-                : 'Targeted threshold intervals and aerobic volume.',
+        'theme': isRecoveryWeek
+            ? 'Week $w: Recovery & Adaptation'
+            : 'Week $w: Progressive Build',
+        'focus': isRecoveryWeek
+            ? 'Active recovery and tissue remodeling.'
+            : 'Targeted threshold intervals and aerobic volume.',
         'targetWeeklyHours': weekHours,
         'targetWeeklyTSS': weekTSS,
         'isRecoveryWeek': isRecoveryWeek,

@@ -117,11 +117,10 @@ class CoachDashboardService {
     if (user == null) return [];
 
     try {
-      final snap =
-          await _db
-              .collection('coach_athletes')
-              .where('coachId', isEqualTo: user.uid)
-              .get();
+      final snap = await _db
+          .collection('coach_athletes')
+          .where('coachId', isEqualTo: user.uid)
+          .get();
       return snap.docs.map(AssignedAthlete.fromFirestore).toList();
     } catch (e) {
       throw Exception('Failed to fetch assigned athletes: $e');
@@ -133,14 +132,13 @@ class CoachDashboardService {
   /// precomputed summary doc exists (nothing populates it yet).
   Future<AthleteTrainingSummary> getAthleteSummary(String athleteId) async {
     try {
-      final snap =
-          await _db
-              .collection('coach_athletes')
-              .doc(athleteId)
-              .collection('summary')
-              .orderBy('recordedAt', descending: true)
-              .limit(1)
-              .get();
+      final snap = await _db
+          .collection('coach_athletes')
+          .doc(athleteId)
+          .collection('summary')
+          .orderBy('recordedAt', descending: true)
+          .limit(1)
+          .get();
 
       if (snap.docs.isNotEmpty) {
         return AthleteTrainingSummary.fromMap(
@@ -152,14 +150,13 @@ class CoachDashboardService {
 
     try {
       final now = DateTime.now();
-      final week =
-          await WorkoutService(db: _db)
-              .watchByDateRange(
-                athleteId,
-                now.subtract(const Duration(days: 7)),
-                now,
-              )
-              .first;
+      final week = await WorkoutService(db: _db)
+          .watchByDateRange(
+            athleteId,
+            now.subtract(const Duration(days: 7)),
+            now,
+          )
+          .first;
       final done = week.where((w) => w.completed).toList();
       final tss = done.fold<int>(0, (sum, w) => sum + (w.tss ?? 0));
       final mins = done.fold<int>(

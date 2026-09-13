@@ -153,8 +153,10 @@ void main() {
         );
 
         expect(planId, isNotEmpty);
-        final stored =
-            await firestore.collection('training_plans').doc(planId).get();
+        final stored = await firestore
+            .collection('training_plans')
+            .doc(planId)
+            .get();
         expect(stored.exists, isTrue);
         final data = stored.data()!;
         expect(data['userId'], 'buyer1');
@@ -190,10 +192,9 @@ void main() {
         final week1 = await workoutService.getByPlanId('buyer2', planId);
         expect(week1.length, count);
         // Every week-1 workout is dated within the first 7 days.
-        final firstWeek =
-            week1
-                .where((w) => w.scheduledFor.difference(startMonday).inDays < 7)
-                .toList();
+        final firstWeek = week1
+            .where((w) => w.scheduledFor.difference(startMonday).inDays < 7)
+            .toList();
         expect(firstWeek.length, template.workouts.length);
       });
     });
@@ -230,8 +231,9 @@ void main() {
           'completed': false,
         });
 
-        final emitted =
-            await workoutService.watchByPlanId('u9', 'plan_ord').first;
+        final emitted = await workoutService
+            .watchByPlanId('u9', 'plan_ord')
+            .first;
         expect(emitted.length, 3);
         for (var i = 1; i < emitted.length; i++) {
           expect(

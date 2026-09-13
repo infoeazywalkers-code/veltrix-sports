@@ -21,12 +21,11 @@ class FollowService {
       if (followerId == followingId) {
         throw Exception('You cannot follow yourself.');
       }
-      final existing =
-          await _follows
-              .where('followerId', isEqualTo: followerId)
-              .where('followingId', isEqualTo: followingId)
-              .limit(1)
-              .get();
+      final existing = await _follows
+          .where('followerId', isEqualTo: followerId)
+          .where('followingId', isEqualTo: followingId)
+          .limit(1)
+          .get();
       if (existing.docs.isNotEmpty) return;
       await _follows.add({
         'followerId': followerId,
@@ -41,11 +40,10 @@ class FollowService {
 
   Future<void> unfollow(String followerId, String followingId) async {
     try {
-      final matches =
-          await _follows
-              .where('followerId', isEqualTo: followerId)
-              .where('followingId', isEqualTo: followingId)
-              .get();
+      final matches = await _follows
+          .where('followerId', isEqualTo: followerId)
+          .where('followingId', isEqualTo: followingId)
+          .get();
       for (final doc in matches.docs) {
         await doc.reference.delete();
       }

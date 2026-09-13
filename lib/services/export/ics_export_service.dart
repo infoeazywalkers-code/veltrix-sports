@@ -20,14 +20,13 @@ class IcsExportService {
   }
 
   String _generateIcs(String calendarName, List<StructuredWorkout> workouts) {
-    final buffer =
-        StringBuffer()
-          ..writeln('BEGIN:VCALENDAR')
-          ..writeln('VERSION:2.0')
-          ..writeln('PRODID:-//Veltrix Sports//Training Plan//EN')
-          ..writeln('CALSCALE:GREGORIAN')
-          ..writeln('METHOD:PUBLISH')
-          ..writeln('X-WR-CALNAME:$calendarName');
+    final buffer = StringBuffer()
+      ..writeln('BEGIN:VCALENDAR')
+      ..writeln('VERSION:2.0')
+      ..writeln('PRODID:-//Veltrix Sports//Training Plan//EN')
+      ..writeln('CALSCALE:GREGORIAN')
+      ..writeln('METHOD:PUBLISH')
+      ..writeln('X-WR-CALNAME:$calendarName');
 
     for (final workout in workouts) {
       final startDt = _parseDate(workout.date);

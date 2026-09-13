@@ -115,10 +115,9 @@ class StrengthScreen extends StatelessWidget {
               Text(
                 'Start building strength today.',
                 style: TextStyle(
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : navy),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
                   fontSize: 30,
                   fontWeight: FontWeight.w900,
                 ),
@@ -127,10 +126,9 @@ class StrengthScreen extends StatelessWidget {
               Text(
                 'Included with Veltrix Premium.',
                 style: TextStyle(
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFFB0BEC5)
-                          : ink),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFFB0BEC5)
+                      : ink),
                   fontSize: 15,
                 ),
               ),
@@ -144,11 +142,10 @@ class StrengthScreen extends StatelessWidget {
                     vertical: 18,
                   ),
                 ),
-                onPressed:
-                    () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const PremiumScreen()),
-                    ),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                ),
                 child: const Text(
                   'Explore Premium',
                   style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
@@ -190,10 +187,9 @@ class _StrengthFeature extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
               fontSize: 18,
               fontWeight: FontWeight.w900,
             ),
@@ -202,10 +198,9 @@ class _StrengthFeature extends StatelessWidget {
           Text(
             body,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               fontSize: 13,
               height: 1.5,
             ),
@@ -282,32 +277,27 @@ class _StrengthPlans extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 8),
         Text(
           'Find the right strength program for your phase',
           style: TextStyle(
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : muted),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF78909C)
+                : muted),
             fontSize: 14,
           ),
         ),
         const SizedBox(height: 24),
         if (desktop)
           Row(
-            children:
-                plans
-                    .map(
-                      (p) => Expanded(child: _PlanCard(p.$1, p.$2, p.$3, p.$4)),
-                    )
-                    .toList(),
+            children: plans
+                .map((p) => Expanded(child: _PlanCard(p.$1, p.$2, p.$3, p.$4)))
+                .toList(),
           )
         else
           ...plans.map(
@@ -352,10 +342,9 @@ class _PlanCard extends StatelessWidget {
             title,
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
               fontSize: 17,
             ),
           ),
@@ -363,10 +352,9 @@ class _PlanCard extends StatelessWidget {
           Text(
             description,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               fontSize: 13,
             ),
           ),
@@ -376,13 +364,12 @@ class _PlanCard extends StatelessWidget {
               backgroundColor: navy,
               foregroundColor: Colors.white,
             ),
-            onPressed:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => strengthPlanDetailScreen(title),
-                  ),
-                ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => strengthPlanDetailScreen(title),
+              ),
+            ),
             child: const Text(
               'View plan',
               style: TextStyle(fontWeight: FontWeight.w800),
@@ -461,10 +448,9 @@ class _StrengthFAQ extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 20),
@@ -482,20 +468,18 @@ class _StrengthFAQ extends StatelessWidget {
                   f.$1,
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                   ),
                 ),
                 children: [
                   Text(
                     f.$2,
                     style: TextStyle(
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C)
-                              : muted),
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
                       height: 1.5,
                     ),
                   ),

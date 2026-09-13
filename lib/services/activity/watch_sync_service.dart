@@ -76,12 +76,11 @@ class WatchSyncService {
     final val = dp.value as WorkoutHealthValue;
 
     final typeStr = val.workoutActivityType.name.toLowerCase();
-    final sport =
-        typeStr.contains('cycle') || typeStr.contains('bike')
-            ? Sport.bike
-            : typeStr.contains('swim')
-            ? Sport.swim
-            : Sport.run;
+    final sport = typeStr.contains('cycle') || typeStr.contains('bike')
+        ? Sport.bike
+        : typeStr.contains('swim')
+        ? Sport.swim
+        : Sport.run;
 
     final distance = (val.totalDistance ?? 5000) / 1000.0;
     final durationMins = (dp.dateTo.difference(dp.dateFrom).inMinutes).clamp(

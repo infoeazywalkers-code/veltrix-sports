@@ -66,15 +66,12 @@ class _GearRetireDialogState extends ConsumerState<GearRetireDialog> {
           child: const Text('Delete', style: TextStyle(color: Colors.red)),
         ),
         FilledButton(
-          onPressed:
-              _working
-                  ? null
-                  : () => _run(
-                    (s) =>
-                        retired
-                            ? s.restoreGear(gear.id)
-                            : s.retireGear(gear.id),
-                  ),
+          onPressed: _working
+              ? null
+              : () => _run(
+                  (s) =>
+                      retired ? s.restoreGear(gear.id) : s.retireGear(gear.id),
+                ),
           style: FilledButton.styleFrom(
             backgroundColor: const Color(0xFFF97316),
           ),

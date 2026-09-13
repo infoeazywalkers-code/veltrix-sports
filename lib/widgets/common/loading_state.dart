@@ -19,10 +19,9 @@ class LoadingSpinner extends StatelessWidget {
               Text(
                 message!,
                 style: TextStyle(
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
                 ),
               ),
             ],
@@ -52,10 +51,9 @@ class ErrorState extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF78909C)
-                        : muted),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
               ),
             ),
             if (onRetry != null) ...[
@@ -90,10 +88,9 @@ class EmptyState extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               size: 48,
             ),
             const SizedBox(height: 16),
@@ -102,10 +99,9 @@ class EmptyState extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
               ),
             ),
             const SizedBox(height: 8),
@@ -113,10 +109,9 @@ class EmptyState extends StatelessWidget {
               subtitle,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF78909C)
-                        : muted),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
               ),
             ),
           ],

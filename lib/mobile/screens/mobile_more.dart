@@ -49,13 +49,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Unlock advanced training tools',
                       Icons.workspace_premium,
                       M.orange,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const PremiumScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const PremiumScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -63,13 +62,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Get guidance matched to your goals',
                       Icons.groups_outlined,
                       M.purple,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const CoachMatchScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CoachMatchScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -77,13 +75,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Build a stronger athletic foundation',
                       Icons.fitness_center,
                       M.teal,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const StrengthScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const StrengthScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -91,13 +88,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Browse structured plans for your goal',
                       Icons.event_note,
                       M.blue,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => TrainingPlanMarketplaceScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => TrainingPlanMarketplaceScreen(),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -112,13 +108,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Connect your watch and sensors',
                       Icons.devices_other,
                       M.blue,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const DevicesScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const DevicesScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -126,11 +121,10 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Find races and challenges',
                       Icons.emoji_events_outlined,
                       M.orange,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => eventsScreen()),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => eventsScreen()),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -138,11 +132,10 @@ class MobileMoreScreen extends ConsumerWidget {
                       'See event entries and confirmations',
                       Icons.confirmation_number,
                       M.teal,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => ticketsScreen()),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ticketsScreen()),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -150,13 +143,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Save and reuse your favorite sessions',
                       Icons.library_books_outlined,
                       M.navy,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => workoutLibraryScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => workoutLibraryScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -164,13 +156,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'See what athletes around you are doing',
                       Icons.dynamic_feed,
                       M.teal,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ActivityFeedScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ActivityFeedScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -178,13 +169,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Join challenges and climb the leaderboard',
                       Icons.emoji_events_outlined,
                       M.orange,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ChallengesScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ChallengesScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -192,13 +182,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Discover athletes and follow their training',
                       Icons.people_outline,
                       M.purple,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const AthleteDiscoveryScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AthleteDiscoveryScreen(),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -215,13 +204,12 @@ class MobileMoreScreen extends ConsumerWidget {
                           'Manage athletes and training workflows',
                           Icons.dashboard_customize,
                           M.purple,
-                          onTap:
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => coachPlatformScreen(),
-                                ),
-                              ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => coachPlatformScreen(),
+                            ),
+                          ),
                         ),
                         fallback: _LockedFeature(
                           context,
@@ -239,13 +227,12 @@ class MobileMoreScreen extends ConsumerWidget {
                           'Guides for professional coaching',
                           Icons.menu_book_outlined,
                           M.navy,
-                          onTap:
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => coachResourcesScreen(),
-                                ),
-                              ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => coachResourcesScreen(),
+                            ),
+                          ),
                         ),
                         fallback: _LockedFeature(
                           context,
@@ -263,13 +250,12 @@ class MobileMoreScreen extends ConsumerWidget {
                           'Review assigned athletes and readiness',
                           Icons.groups_outlined,
                           M.purple,
-                          onTap:
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const CoachDashboardScreen(),
-                                ),
-                              ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const CoachDashboardScreen(),
+                            ),
+                          ),
                         ),
                         fallback: _LockedFeature(
                           context,
@@ -287,14 +273,12 @@ class MobileMoreScreen extends ConsumerWidget {
                           'Review pending athlete match requests',
                           Icons.inbox_outlined,
                           M.orange,
-                          onTap:
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => const CoachRequestsInboxScreen(),
-                                ),
-                              ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const CoachRequestsInboxScreen(),
+                            ),
+                          ),
                         ),
                         fallback: _LockedFeature(
                           context,
@@ -311,13 +295,12 @@ class MobileMoreScreen extends ConsumerWidget {
                         'Chat with your coach or athletes',
                         Icons.chat_bubble_outline,
                         M.teal,
-                        onTap:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const ChatInboxScreen(),
-                              ),
-                            ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ChatInboxScreen(),
+                          ),
+                        ),
                       ),
                     if (isLoggedIn) const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -325,11 +308,10 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Resolve device, billing, and account issues',
                       Icons.support_agent,
                       M.teal,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => supportScreen()),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => supportScreen()),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -337,13 +319,12 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Learn planning, racing, and recovery basics',
                       Icons.school_outlined,
                       M.blue,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => trainingGuidesScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => trainingGuidesScreen(),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: M.sm),
                     _MoreFeature(
@@ -351,11 +332,10 @@ class MobileMoreScreen extends ConsumerWidget {
                       'Product principles and roadmap direction',
                       Icons.info_outline,
                       M.orange,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => aboutScreen()),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => aboutScreen()),
+                      ),
                     ),
                   ],
                 ),

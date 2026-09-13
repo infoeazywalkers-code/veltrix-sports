@@ -8,8 +8,9 @@ import 'package:veltrix_sports/screens/home/home_screen.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_explore.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_more.dart';
 
-Widget screenWrap(Widget child) =>
-    MaterialApp(home: Scaffold(body: SizedBox(height: 2000, child: child)));
+Widget screenWrap(Widget child) => MaterialApp(
+  home: Scaffold(body: SizedBox(height: 2000, child: child)),
+);
 
 void main() {
   group('CoachMatchScreen', () {

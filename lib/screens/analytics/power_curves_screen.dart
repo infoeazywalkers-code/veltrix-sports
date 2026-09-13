@@ -17,37 +17,36 @@ class PowerCurvesScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
-      body:
-          stats == null
-              ? const Center(
-                child: Text(
-                  'No power data available',
-                  style: TextStyle(color: Colors.white54),
-                ),
-              )
-              : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionHeader(
-                      'POWER DURATION PRs',
-                      const Color(0xFFF97316),
-                    ),
-                    const SizedBox(height: 10),
-                    ...stats!.powerPRs.map((pr) => _buildPowerPrRow(pr)),
-                    const SizedBox(height: 24),
-                    _buildSectionHeader(
-                      'PACE DURATION PRs',
-                      const Color(0xFF3B82F6),
-                    ),
-                    const SizedBox(height: 10),
-                    ...stats!.pacePRs.map((pr) => _buildPacePrRow(pr)),
-                    const SizedBox(height: 24),
-                    _buildStatsSummary(),
-                  ],
-                ),
+      body: stats == null
+          ? const Center(
+              child: Text(
+                'No power data available',
+                style: TextStyle(color: Colors.white54),
               ),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionHeader(
+                    'POWER DURATION PRs',
+                    const Color(0xFFF97316),
+                  ),
+                  const SizedBox(height: 10),
+                  ...stats!.powerPRs.map((pr) => _buildPowerPrRow(pr)),
+                  const SizedBox(height: 24),
+                  _buildSectionHeader(
+                    'PACE DURATION PRs',
+                    const Color(0xFF3B82F6),
+                  ),
+                  const SizedBox(height: 10),
+                  ...stats!.pacePRs.map((pr) => _buildPacePrRow(pr)),
+                  const SizedBox(height: 24),
+                  _buildStatsSummary(),
+                ],
+              ),
+            ),
     );
   }
 

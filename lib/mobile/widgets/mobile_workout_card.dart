@@ -94,10 +94,9 @@ class MWorkoutCard extends StatelessWidget {
           const SizedBox(width: M.sm),
           Icon(
             Icons.chevron_right,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : M.muted),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF78909C)
+                : M.muted),
             size: 20,
           ),
         ],

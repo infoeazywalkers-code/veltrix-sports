@@ -111,18 +111,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
         ),
       ),
       body: boardAsync.when(
-        loading:
-            () => const Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 48),
-                child: CircularProgressIndicator(color: navy),
-              ),
-            ),
-        error:
-            (e, _) => _BoardError(
-              message: ErrorHandler.getUserMessage(e),
-              onRetry: () => ref.invalidate(monthlyBoardProvider),
-            ),
+        loading: () => const Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 48),
+            child: CircularProgressIndicator(color: navy),
+          ),
+        ),
+        error: (e, _) => _BoardError(
+          message: ErrorHandler.getUserMessage(e),
+          onRetry: () => ref.invalidate(monthlyBoardProvider),
+        ),
         data: (rows) {
           if (rows.isEmpty) {
             return const Center(
@@ -158,16 +156,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                 decoration: InputDecoration(
                   hintText: 'Search name, handle, team, location',
                   prefixIcon: const Icon(Icons.search),
-                  suffixIcon:
-                      _query.isNotEmpty
-                          ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() => _query = '');
-                            },
-                          )
-                          : null,
+                  suffixIcon: _query.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _query = '');
+                          },
+                        )
+                      : null,
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -183,20 +180,19 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   const SizedBox(width: 8),
                   DropdownButton<String>(
                     value: _sport,
-                    items:
-                        sportOptions
-                            .map(
-                              (s) => DropdownMenuItem(
-                                value: s,
-                                child: Text(
-                                  s == 'All' ? 'All sports' : s,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
+                    items: sportOptions
+                        .map(
+                          (s) => DropdownMenuItem(
+                            value: s,
+                            child: Text(
+                              s == 'All' ? 'All sports' : s,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
                               ),
-                            )
-                            .toList(),
+                            ),
+                          ),
+                        )
+                        .toList(),
                     onChanged: (v) {
                       if (v != null) setState(() => _sport = v);
                     },
@@ -420,83 +416,78 @@ class _Podium extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children:
-              order.map((i) {
-                final row = top3[i];
-                final rank = i + 1;
-                final height = rank == 1 ? 88.0 : (rank == 2 ? 68.0 : 56.0);
-                final color =
-                    rank == 1
-                        ? const Color(0xFFFBBF24)
-                        : (rank == 2
-                            ? Colors.grey.shade400
-                            : const Color(0xFFCD7F32));
-                return Expanded(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => onTap(row.userId),
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: rank == 1 ? 28 : 22,
-                          backgroundColor: navy,
-                          backgroundImage:
-                              row.photoUrl != null && row.photoUrl!.isNotEmpty
-                                  ? NetworkImage(row.photoUrl!)
-                                  : null,
-                          child:
-                              row.photoUrl == null || row.photoUrl!.isEmpty
-                                  ? Text(
-                                    _initials(row.displayName),
-                                    style: const TextStyle(
-                                      color: lime,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  )
-                                  : null,
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          row.displayName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            color: isDark ? Colors.white : navy,
-                            fontSize: 12,
-                          ),
-                        ),
-                        Text(
-                          _valueLabel(row),
-                          style: TextStyle(
-                            color: isDark ? const Color(0xFF78909C) : muted,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Container(
-                          height: height,
-                          decoration: BoxDecoration(
-                            color: color.withValues(alpha: 0.25),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: color),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '#$rank',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 18,
-                              color: isDark ? Colors.white : navy,
-                            ),
-                          ),
-                        ),
-                      ],
+          children: order.map((i) {
+            final row = top3[i];
+            final rank = i + 1;
+            final height = rank == 1 ? 88.0 : (rank == 2 ? 68.0 : 56.0);
+            final color = rank == 1
+                ? const Color(0xFFFBBF24)
+                : (rank == 2 ? Colors.grey.shade400 : const Color(0xFFCD7F32));
+            return Expanded(
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () => onTap(row.userId),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: rank == 1 ? 28 : 22,
+                      backgroundColor: navy,
+                      backgroundImage:
+                          row.photoUrl != null && row.photoUrl!.isNotEmpty
+                          ? NetworkImage(row.photoUrl!)
+                          : null,
+                      child: row.photoUrl == null || row.photoUrl!.isEmpty
+                          ? Text(
+                              _initials(row.displayName),
+                              style: const TextStyle(
+                                color: lime,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            )
+                          : null,
                     ),
-                  ),
-                );
-              }).toList(),
+                    const SizedBox(height: 6),
+                    Text(
+                      row.displayName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? Colors.white : navy,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      _valueLabel(row),
+                      style: TextStyle(
+                        color: isDark ? const Color(0xFF78909C) : muted,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      height: height,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.25),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: color),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '#$rank',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 18,
+                          color: isDark ? Colors.white : navy,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
@@ -536,16 +527,15 @@ class _BoardRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final value =
-        metric == 'Elevation'
-            ? row.monthlyElevationM
-            : row.monthlyTss.toDouble();
-    final fraction =
-        leaderValue > 0 ? (value / leaderValue).clamp(0.0, 1.0) : 0.0;
-    final valueLabel =
-        metric == 'Elevation'
-            ? '${row.monthlyElevationM.toStringAsFixed(0)} m'
-            : '${row.monthlyTss} TSS';
+    final value = metric == 'Elevation'
+        ? row.monthlyElevationM
+        : row.monthlyTss.toDouble();
+    final fraction = leaderValue > 0
+        ? (value / leaderValue).clamp(0.0, 1.0)
+        : 0.0;
+    final valueLabel = metric == 'Elevation'
+        ? '${row.monthlyElevationM.toStringAsFixed(0)} m'
+        : '${row.monthlyTss} TSS';
     return Card(
       color: isSelf ? lime.withValues(alpha: 0.2) : null,
       child: InkWell(
@@ -571,17 +561,16 @@ class _BoardRow extends StatelessWidget {
                 backgroundColor: navy,
                 backgroundImage:
                     row.photoUrl != null && row.photoUrl!.isNotEmpty
-                        ? NetworkImage(row.photoUrl!)
-                        : null,
-                child:
-                    row.photoUrl == null || row.photoUrl!.isEmpty
-                        ? Text(
-                          row.displayName.isNotEmpty
-                              ? row.displayName[0].toUpperCase()
-                              : 'A',
-                          style: const TextStyle(color: lime, fontSize: 13),
-                        )
-                        : null,
+                    ? NetworkImage(row.photoUrl!)
+                    : null,
+                child: row.photoUrl == null || row.photoUrl!.isEmpty
+                    ? Text(
+                        row.displayName.isNotEmpty
+                            ? row.displayName[0].toUpperCase()
+                            : 'A',
+                        style: const TextStyle(color: lime, fontSize: 13),
+                      )
+                    : null,
               ),
               const SizedBox(width: 10),
               Expanded(

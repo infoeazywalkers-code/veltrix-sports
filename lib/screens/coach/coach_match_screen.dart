@@ -21,19 +21,17 @@ class CoachMatchScreen extends StatelessWidget {
         title: const Text('Coach Match'),
         actions: [
           Builder(
-            builder:
-                (actionContext) => TextButton(
-                  onPressed:
-                      () => Navigator.of(actionContext).push(
-                        MaterialPageRoute(
-                          builder: (_) => const MyCoachRequestsScreen(),
-                        ),
-                      ),
-                  child: const Text(
-                    'My requests',
-                    style: TextStyle(color: Colors.white),
-                  ),
+            builder: (actionContext) => TextButton(
+              onPressed: () => Navigator.of(actionContext).push(
+                MaterialPageRoute(
+                  builder: (_) => const MyCoachRequestsScreen(),
                 ),
+              ),
+              child: const Text(
+                'My requests',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
           ),
         ],
       ),
@@ -113,10 +111,9 @@ class CoachMatchScreen extends StatelessWidget {
                 Text(
                   'Ready to find your coach?',
                   style: TextStyle(
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                     fontSize: 30,
                     fontWeight: FontWeight.w900,
                   ),
@@ -125,10 +122,9 @@ class CoachMatchScreen extends StatelessWidget {
                 Text(
                   '30-day money-back guarantee. No risk.',
                   style: TextStyle(
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFFB0BEC5)
-                            : ink),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFFB0BEC5)
+                        : ink),
                     fontSize: 15,
                   ),
                 ),
@@ -228,20 +224,18 @@ class _FeaturedCoachesListState extends State<_FeaturedCoachesList> {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 8),
         Text(
           'Book a direct 1-on-1 consultation with certified endurance experts.',
           style: TextStyle(
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : muted),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF78909C)
+                : muted),
             fontSize: 14,
           ),
         ),
@@ -299,29 +293,27 @@ class _FeaturedCoachesListState extends State<_FeaturedCoachesList> {
             if (desktop) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                    coaches
-                        .map(
-                          (coach) => Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 12),
-                              child: _CoachCard(coach: coach),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                children: coaches
+                    .map(
+                      (coach) => Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: _CoachCard(coach: coach),
+                        ),
+                      ),
+                    )
+                    .toList(),
               );
             }
             return Column(
-              children:
-                  coaches
-                      .map(
-                        (coach) => Padding(
-                          padding: const EdgeInsets.only(bottom: 14),
-                          child: _CoachCard(coach: coach),
-                        ),
-                      )
-                      .toList(),
+              children: coaches
+                  .map(
+                    (coach) => Padding(
+                      padding: const EdgeInsets.only(bottom: 14),
+                      child: _CoachCard(coach: coach),
+                    ),
+                  )
+                  .toList(),
             );
           },
         ),
@@ -339,8 +331,11 @@ class _CoachAvatar extends StatelessWidget {
   const _CoachAvatar({required this.image, required this.name});
 
   String get _initials {
-    final parts =
-        name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    final parts = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((p) => p.isNotEmpty)
+        .toList();
     if (parts.isEmpty) return '?';
     if (parts.length == 1) return parts.first[0].toUpperCase();
     return '${parts.first[0]}${parts[1][0]}'.toUpperCase();
@@ -372,14 +367,13 @@ class _CoachAvatar extends StatelessWidget {
             width: 52,
             height: 52,
             fit: BoxFit.cover,
-            errorBuilder:
-                (_, __, ___) => Text(
-                  _initials,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+            errorBuilder: (_, __, ___) => Text(
+              _initials,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
           ),
         ),
       );
@@ -393,14 +387,13 @@ class _CoachAvatar extends StatelessWidget {
           width: 52,
           height: 52,
           fit: BoxFit.cover,
-          errorBuilder:
-              (_, __, ___) => Text(
-                _initials,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
+          errorBuilder: (_, __, ___) => Text(
+            _initials,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
         ),
       ),
     );
@@ -415,12 +408,9 @@ class _CoachCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(18),
-      onTap:
-          () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => CoachDetailScreen(coachId: coach.id),
-            ),
-          ),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => CoachDetailScreen(coachId: coach.id)),
+      ),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -441,8 +431,8 @@ class _CoachCard extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                             color:
                                 (Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : navy),
+                                ? Colors.white
+                                : navy),
                             fontSize: 16,
                           ),
                         ),
@@ -461,9 +451,9 @@ class _CoachCard extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 color:
                                     (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? const Color(0xFF78909C)
-                                        : muted),
+                                        Brightness.dark
+                                    ? const Color(0xFF78909C)
+                                    : muted),
                               ),
                             ),
                           ],
@@ -486,10 +476,9 @@ class _CoachCard extends StatelessWidget {
               Text(
                 coach.bio,
                 style: TextStyle(
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
                   fontSize: 12,
                   height: 1.4,
                 ),
@@ -498,21 +487,20 @@ class _CoachCard extends StatelessWidget {
               Wrap(
                 spacing: 6,
                 runSpacing: 6,
-                children:
-                    coach.specialities.map((spec) {
-                      return Chip(
-                        label: Text(
-                          spec,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        backgroundColor: bg,
-                        padding: EdgeInsets.zero,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      );
-                    }).toList(),
+                children: coach.specialities.map((spec) {
+                  return Chip(
+                    label: Text(
+                      spec,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    backgroundColor: bg,
+                    padding: EdgeInsets.zero,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  );
+                }).toList(),
               ),
               const SizedBox(height: 16),
               Row(
@@ -522,10 +510,9 @@ class _CoachCard extends StatelessWidget {
                     coach.monthlyFee,
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : navy),
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
                       fontSize: 16,
                     ),
                   ),
@@ -534,11 +521,10 @@ class _CoachCard extends StatelessWidget {
                       backgroundColor: lime,
                       foregroundColor: navy,
                     ),
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder: (_) => CoachBookingDialog(coach: coach),
-                        ),
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (_) => CoachBookingDialog(coach: coach),
+                    ),
                     child: const Text(
                       'Book Call',
                       style: TextStyle(
@@ -589,21 +575,17 @@ class _HowItWorks extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 28),
         if (desktop)
           Row(
-            children:
-                steps
-                    .map(
-                      (s) => Expanded(child: _StepCard(s.$1, s.$2, s.$3, s.$4)),
-                    )
-                    .toList(),
+            children: steps
+                .map((s) => Expanded(child: _StepCard(s.$1, s.$2, s.$3, s.$4)))
+                .toList(),
           )
         else
           ...steps.map(
@@ -633,10 +615,9 @@ class _StepCard extends StatelessWidget {
               Text(
                 number,
                 style: TextStyle(
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
                   fontSize: 24,
                   fontWeight: FontWeight.w900,
                 ),
@@ -659,10 +640,9 @@ class _StepCard extends StatelessWidget {
           Text(
             body,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               fontSize: 13,
               height: 1.5,
             ),
@@ -707,33 +687,30 @@ class _CoachFeatures extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 24),
         if (desktop)
           Row(
-            children:
-                features
-                    .map((f) => Expanded(child: _FeatureItem(f.$1, f.$2, f.$3)))
-                    .toList(),
+            children: features
+                .map((f) => Expanded(child: _FeatureItem(f.$1, f.$2, f.$3)))
+                .toList(),
           )
         else
           Wrap(
             spacing: 14,
             runSpacing: 14,
-            children:
-                features
-                    .map(
-                      (f) => SizedBox(
-                        width: (MediaQuery.sizeOf(context).width - 50) / 2,
-                        child: _FeatureItem(f.$1, f.$2, f.$3),
-                      ),
-                    )
-                    .toList(),
+            children: features
+                .map(
+                  (f) => SizedBox(
+                    width: (MediaQuery.sizeOf(context).width - 50) / 2,
+                    child: _FeatureItem(f.$1, f.$2, f.$3),
+                  ),
+                )
+                .toList(),
           ),
       ],
     );
@@ -757,10 +734,9 @@ class _FeatureItem extends StatelessWidget {
             title,
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
               fontSize: 15,
             ),
           ),
@@ -768,10 +744,9 @@ class _FeatureItem extends StatelessWidget {
           Text(
             body,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               fontSize: 12,
               height: 1.5,
             ),
@@ -873,23 +848,20 @@ class _PricingPackages extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 24),
         if (desktop)
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-                packages
-                    .map(
-                      (p) =>
-                          Expanded(child: _PackageCard(p.$1, p.$2, p.$3, p.$4)),
-                    )
-                    .toList(),
+            children: packages
+                .map(
+                  (p) => Expanded(child: _PackageCard(p.$1, p.$2, p.$3, p.$4)),
+                )
+                .toList(),
           )
         else
           ...packages.map(
@@ -940,12 +912,11 @@ class _PackageCard extends StatelessWidget {
             Text(
               name,
               style: TextStyle(
-                color:
-                    isGold
-                        ? Colors.white
-                        : (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
+                color: isGold
+                    ? Colors.white
+                    : (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
                 fontSize: 20,
                 fontWeight: FontWeight.w900,
               ),
@@ -957,12 +928,11 @@ class _PackageCard extends StatelessWidget {
                 Text(
                   price,
                   style: TextStyle(
-                    color:
-                        isGold
-                            ? Colors.white
-                            : (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : navy),
+                    color: isGold
+                        ? Colors.white
+                        : (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : navy),
                     fontSize: 32,
                     fontWeight: FontWeight.w900,
                   ),
@@ -970,12 +940,11 @@ class _PackageCard extends StatelessWidget {
                 Text(
                   period,
                   style: TextStyle(
-                    color:
-                        isGold
-                            ? Colors.white70
-                            : (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF78909C)
-                                : muted),
+                    color: isGold
+                        ? Colors.white70
+                        : (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF78909C)
+                              : muted),
                     fontSize: 14,
                   ),
                 ),
@@ -997,13 +966,11 @@ class _PackageCard extends StatelessWidget {
                       child: Text(
                         f,
                         style: TextStyle(
-                          color:
-                              isGold
-                                  ? Colors.white70
-                                  : (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? const Color(0xFFB0BEC5)
-                                      : ink),
+                          color: isGold
+                              ? Colors.white70
+                              : (Theme.of(context).brightness == Brightness.dark
+                                    ? const Color(0xFFB0BEC5)
+                                    : ink),
                           fontSize: 13,
                         ),
                       ),
@@ -1022,10 +989,8 @@ class _PackageCard extends StatelessWidget {
               onPressed: () async {
                 final result = await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder:
-                        (_) => CoachQuestionnaireScreen(
-                          package: name.toLowerCase(),
-                        ),
+                    builder: (_) =>
+                        CoachQuestionnaireScreen(package: name.toLowerCase()),
                   ),
                 );
                 if (!context.mounted) return;
@@ -1086,10 +1051,9 @@ class _FAQSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 20),
@@ -1107,20 +1071,18 @@ class _FAQSection extends StatelessWidget {
                   f.$1,
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                   ),
                 ),
                 children: [
                   Text(
                     f.$2,
                     style: TextStyle(
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C)
-                              : muted),
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
                       height: 1.5,
                     ),
                   ),

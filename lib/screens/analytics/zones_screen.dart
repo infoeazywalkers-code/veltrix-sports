@@ -17,27 +17,26 @@ class ZonesScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
-      body:
-          stats == null
-              ? const Center(
-                child: Text(
-                  'No zone data available',
-                  style: TextStyle(color: Colors.white54),
-                ),
-              )
-              : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildZoneDistribution(stats!.zoneDistribution),
-                    const SizedBox(height: 24),
-                    _buildEightyTwentyAnalysis(stats!.zoneDistribution),
-                    const SizedBox(height: 24),
-                    _buildZoneDetails(stats!.zoneDistribution),
-                  ],
-                ),
+      body: stats == null
+          ? const Center(
+              child: Text(
+                'No zone data available',
+                style: TextStyle(color: Colors.white54),
               ),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildZoneDistribution(stats!.zoneDistribution),
+                  const SizedBox(height: 24),
+                  _buildEightyTwentyAnalysis(stats!.zoneDistribution),
+                  const SizedBox(height: 24),
+                  _buildZoneDetails(stats!.zoneDistribution),
+                ],
+              ),
+            ),
     );
   }
 
@@ -169,10 +168,9 @@ class ZonesScreen extends StatelessWidget {
                     Text(
                       '${aerobicPct.round()}%',
                       style: TextStyle(
-                        color:
-                            aerobicPct >= 75
-                                ? const Color(0xFF10B981)
-                                : const Color(0xFFF59E0B),
+                        color: aerobicPct >= 75
+                            ? const Color(0xFF10B981)
+                            : const Color(0xFFF59E0B),
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
                       ),
@@ -196,10 +194,9 @@ class ZonesScreen extends StatelessWidget {
                     Text(
                       '${anaerobicPct.round()}%',
                       style: TextStyle(
-                        color:
-                            anaerobicPct <= 25
-                                ? const Color(0xFF10B981)
-                                : const Color(0xFFF59E0B),
+                        color: anaerobicPct <= 25
+                            ? const Color(0xFF10B981)
+                            : const Color(0xFFF59E0B),
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
                       ),
@@ -215,10 +212,9 @@ class ZonesScreen extends StatelessWidget {
                 ? 'Good polarized distribution'
                 : 'Consider more easy zone training',
             style: TextStyle(
-              color:
-                  aerobicPct >= 75
-                      ? const Color(0xFF10B981)
-                      : const Color(0xFFF59E0B),
+              color: aerobicPct >= 75
+                  ? const Color(0xFF10B981)
+                  : const Color(0xFFF59E0B),
               fontSize: 11,
             ),
           ),

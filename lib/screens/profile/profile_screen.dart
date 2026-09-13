@@ -35,16 +35,10 @@ class ProfileScreen extends ConsumerWidget {
     final profileAsync = ref.watch(userProfileProvider);
 
     return profileAsync.when(
-      loading:
-          () => const Center(child: CircularProgressIndicator(color: navy)),
-      error:
-          (e, _) => _buildProfileContent(
-            context,
-            ref,
-            authUser,
-            null,
-            loadError: true,
-          ),
+      loading: () =>
+          const Center(child: CircularProgressIndicator(color: navy)),
+      error: (e, _) =>
+          _buildProfileContent(context, ref, authUser, null, loadError: true),
       data: (profile) => _buildProfileContent(context, ref, authUser, profile),
     );
   }
@@ -58,20 +52,18 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             Icon(
               Icons.person_outline,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
               size: 64,
             ),
             const SizedBox(height: 16),
             Text(
               'Welcome to Veltrix Sports',
               style: TextStyle(
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
                 fontSize: 22,
                 fontWeight: FontWeight.w900,
               ),
@@ -81,10 +73,9 @@ class ProfileScreen extends ConsumerWidget {
               'Sign in with Google to save workouts, connect devices, and track your progress.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF78909C)
-                        : muted),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
               ),
             ),
             const SizedBox(height: 24),
@@ -125,10 +116,9 @@ class ProfileScreen extends ConsumerWidget {
     try {
       final existing = await ref.read(userServiceProvider).get(authUser.uid);
       if (existing == null) {
-        final name =
-            (authUser.displayName?.isNotEmpty == true)
-                ? authUser.displayName!
-                : 'Athlete';
+        final name = (authUser.displayName?.isNotEmpty == true)
+            ? authUser.displayName!
+            : 'Athlete';
         await ref
             .read(userServiceProvider)
             .create(
@@ -153,32 +143,29 @@ class ProfileScreen extends ConsumerWidget {
     UserProfile? profile, {
     bool loadError = false,
   }) {
-    final displayName =
-        (profile?.displayName.isNotEmpty == true)
-            ? profile!.displayName
-            : (authUser.displayName?.isNotEmpty == true)
-            ? authUser.displayName!
-            : 'Athlete';
+    final displayName = (profile?.displayName.isNotEmpty == true)
+        ? profile!.displayName
+        : (authUser.displayName?.isNotEmpty == true)
+        ? authUser.displayName!
+        : 'Athlete';
     final photoUrl = profile?.photoUrl ?? authUser.photoURL;
-    final email =
-        profile?.email.isNotEmpty == true
-            ? profile!.email
-            : (authUser.email ?? '');
-    final initials =
-        displayName
-            .split(' ')
-            .map((w) => w.isNotEmpty ? w[0] : '')
-            .take(2)
-            .join()
-            .toUpperCase();
+    final email = profile?.email.isNotEmpty == true
+        ? profile!.email
+        : (authUser.email ?? '');
+    final initials = displayName
+        .split(' ')
+        .map((w) => w.isNotEmpty ? w[0] : '')
+        .take(2)
+        .join()
+        .toUpperCase();
     final sports = profile?.sports ?? const <String>[];
-    final sportsLabel =
-        sports.isEmpty ? 'No sports added' : sports.join(' \u2022 ');
+    final sportsLabel = sports.isEmpty
+        ? 'No sports added'
+        : sports.join(' \u2022 ');
     final renewsAt = profile?.subscriptionRenewsAt;
-    final renewsText =
-        renewsAt != null
-            ? 'Renews ${renewsAt.day} ${monthName(renewsAt.month)} ${renewsAt.year}'
-            : 'No active subscription';
+    final renewsText = renewsAt != null
+        ? 'Renews ${renewsAt.day} ${monthName(renewsAt.month)} ${renewsAt.year}'
+        : 'No active subscription';
 
     return ListView(
       padding: const EdgeInsets.all(18),
@@ -219,21 +206,19 @@ class ProfileScreen extends ConsumerWidget {
             CircleAvatar(
               radius: 34,
               backgroundColor: navy,
-              backgroundImage:
-                  photoUrl != null && photoUrl.isNotEmpty
-                      ? NetworkImage(photoUrl)
-                      : null,
-              child:
-                  photoUrl == null || photoUrl.isEmpty
-                      ? Text(
-                        initials.isNotEmpty ? initials : 'A',
-                        style: const TextStyle(
-                          color: lime,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      )
-                      : null,
+              backgroundImage: photoUrl != null && photoUrl.isNotEmpty
+                  ? NetworkImage(photoUrl)
+                  : null,
+              child: photoUrl == null || photoUrl.isEmpty
+                  ? Text(
+                      initials.isNotEmpty ? initials : 'A',
+                      style: const TextStyle(
+                        color: lime,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(width: 13),
             Expanded(
@@ -243,10 +228,9 @@ class ProfileScreen extends ConsumerWidget {
                   Text(
                     displayName,
                     style: TextStyle(
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : navy),
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : navy),
                       fontSize: 21,
                       fontWeight: FontWeight.w900,
                     ),
@@ -254,20 +238,18 @@ class ProfileScreen extends ConsumerWidget {
                   Text(
                     sportsLabel,
                     style: TextStyle(
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C)
-                              : muted),
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
                     ),
                   ),
                   if (email.isNotEmpty)
                     Text(
                       email,
                       style: TextStyle(
-                        color:
-                            (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF78909C)
-                                : muted),
+                        color: (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
                         fontSize: 12,
                       ),
                     ),
@@ -275,13 +257,10 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
             IconButton(
-              onPressed:
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ProfileEditScreen(),
-                    ),
-                  ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileEditScreen()),
+              ),
               icon: const Icon(Icons.edit_outlined),
             ),
           ],
@@ -294,10 +273,9 @@ class ProfileScreen extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color:
-                    Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF0F2030)
-                        : const Color(0xffeaf2f8),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF0F2030)
+                    : const Color(0xffeaf2f8),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
@@ -314,8 +292,8 @@ class ProfileScreen extends ConsumerWidget {
                             fontWeight: FontWeight.w900,
                             color:
                                 (Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : navy),
+                                ? Colors.white
+                                : navy),
                           ),
                         ),
                       ],
@@ -332,10 +310,9 @@ class ProfileScreen extends ConsumerWidget {
           child: Text(
             renewsText,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               fontSize: 11,
             ),
           ),
@@ -412,22 +389,20 @@ class _SelfPrCard extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             prAsync.when(
-              loading:
-                  () => const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
+              loading: () => const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
               error: (_, _) => const _SelfPrRow('Best 5K', 'No PR yet'),
-              data:
-                  (pr) => Column(
-                    children: [
-                      _SelfPrRow('Best 5K pace', pr.best5kPace),
-                      const SizedBox(height: 8),
-                      _SelfPrRow('Best 20-min power', pr.best20MinPower),
-                    ],
-                  ),
+              data: (pr) => Column(
+                children: [
+                  _SelfPrRow('Best 5K pace', pr.best5kPace),
+                  const SizedBox(height: 8),
+                  _SelfPrRow('Best 20-min power', pr.best20MinPower),
+                ],
+              ),
             ),
           ],
         ),
@@ -478,10 +453,9 @@ class _Settings extends ConsumerWidget {
         final tile = ListTile(
           leading: Icon(
             items[i].$2,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
           title: Text(
             items[i].$1,
@@ -489,10 +463,9 @@ class _Settings extends ConsumerWidget {
           ),
           trailing: Icon(
             Icons.chevron_right,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : muted),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF78909C)
+                : muted),
           ),
           onTap: () => _open(context, ref, items[i].$1),
         );

@@ -41,11 +41,10 @@ class TrainingPlanService {
 
   Future<List<TrainingPlan>> getByUserId(String userId) async {
     try {
-      final q =
-          await _plans
-              .where('userId', isEqualTo: userId)
-              .orderBy('createdAt', descending: true)
-              .get();
+      final q = await _plans
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
       return q.docs
           .map((doc) => TrainingPlan.fromMap(doc.id, doc.data()))
           .toList();
@@ -60,10 +59,9 @@ class TrainingPlanService {
         .where('status', isEqualTo: 'active')
         .snapshots()
         .map(
-          (snap) =>
-              snap.docs
-                  .map((doc) => TrainingPlan.fromMap(doc.id, doc.data()))
-                  .toList(),
+          (snap) => snap.docs
+              .map((doc) => TrainingPlan.fromMap(doc.id, doc.data()))
+              .toList(),
         )
         .handleError((e) {
           throw Exception('Failed to watch active plans: $e');
@@ -80,8 +78,10 @@ class TrainingPlanService {
 
   Future<List<TrainingPlan>> getFeaturedPlans() async {
     try {
-      final q =
-          await _plans.where('isFeatured', isEqualTo: true).limit(10).get();
+      final q = await _plans
+          .where('isFeatured', isEqualTo: true)
+          .limit(10)
+          .get();
       return q.docs
           .map((doc) => TrainingPlan.fromMap(doc.id, doc.data()))
           .toList();
@@ -161,17 +161,15 @@ class TrainingPlanService {
     required String planId,
   }) async {
     try {
-      final q =
-          await _db
-              .collection('workouts')
-              .where('userId', isEqualTo: userId)
-              .where('planId', isEqualTo: planId)
-              .get();
+      final q = await _db
+          .collection('workouts')
+          .where('userId', isEqualTo: userId)
+          .where('planId', isEqualTo: planId)
+          .get();
       if (q.docs.isEmpty) return 0;
-      final done =
-          q.docs
-              .where((doc) => (doc.data()['completed'] as bool? ?? false))
-              .length;
+      final done = q.docs
+          .where((doc) => (doc.data()['completed'] as bool? ?? false))
+          .length;
       return done / q.docs.length;
     } catch (e) {
       throw Exception('Failed to compute plan progress: $e');

@@ -33,13 +33,12 @@ class AthleteProfileScreen extends ConsumerWidget {
         ),
       ),
       body: cardAsync.when(
-        loading:
-            () => const Center(child: CircularProgressIndicator(color: navy)),
-        error:
-            (e, _) => _ErrorState(
-              message: ErrorHandler.getUserMessage(e),
-              onRetry: () => ref.invalidate(athleteCardProvider(uid)),
-            ),
+        loading: () =>
+            const Center(child: CircularProgressIndicator(color: navy)),
+        error: (e, _) => _ErrorState(
+          message: ErrorHandler.getUserMessage(e),
+          onRetry: () => ref.invalidate(athleteCardProvider(uid)),
+        ),
         data: (card) {
           if (card == null) {
             return const _NotAvailableState();
@@ -98,13 +97,12 @@ class _Header extends ConsumerWidget {
     final location = card.location;
     final team = card.team;
     final photoUrl = card.photoUrl;
-    final initials =
-        displayName
-            .split(' ')
-            .map((w) => w.isNotEmpty ? w[0] : '')
-            .take(2)
-            .join()
-            .toUpperCase();
+    final initials = displayName
+        .split(' ')
+        .map((w) => w.isNotEmpty ? w[0] : '')
+        .take(2)
+        .join()
+        .toUpperCase();
     final sub = [
       if (handle.isNotEmpty) handle,
       if (location.isNotEmpty) location,
@@ -121,21 +119,19 @@ class _Header extends ConsumerWidget {
                 CircleAvatar(
                   radius: 32,
                   backgroundColor: navy,
-                  backgroundImage:
-                      photoUrl != null && photoUrl.isNotEmpty
-                          ? NetworkImage(photoUrl)
-                          : null,
-                  child:
-                      photoUrl == null || photoUrl.isEmpty
-                          ? Text(
-                            initials.isNotEmpty ? initials : 'A',
-                            style: const TextStyle(
-                              color: lime,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          )
-                          : null,
+                  backgroundImage: photoUrl != null && photoUrl.isNotEmpty
+                      ? NetworkImage(photoUrl)
+                      : null,
+                  child: photoUrl == null || photoUrl.isEmpty
+                      ? Text(
+                          initials.isNotEmpty ? initials : 'A',
+                          style: const TextStyle(
+                            color: lime,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        )
+                      : null,
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -176,17 +172,15 @@ class _Header extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed:
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) => AthleteCompareScreen(
-                                otherUid: card.uid,
-                                otherName: card.displayName,
-                              ),
-                        ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => AthleteCompareScreen(
+                        otherUid: card.uid,
+                        otherName: card.displayName,
                       ),
+                    ),
+                  ),
                   icon: const Icon(Icons.compare_arrows_outlined),
                   label: const Text(
                     'Compare',
@@ -214,13 +208,12 @@ class _FollowButton extends ConsumerWidget {
       isFollowingProvider((follower: viewerUid ?? '', following: targetUid)),
     );
     return followingAsync.when(
-      loading:
-          () => const FilledButton(onPressed: null, child: Text('Loading…')),
-      error:
-          (_, _) => FilledButton(
-            onPressed: () => _requireSignIn(context),
-            child: const Text('Follow'),
-          ),
+      loading: () =>
+          const FilledButton(onPressed: null, child: Text('Loading…')),
+      error: (_, _) => FilledButton(
+        onPressed: () => _requireSignIn(context),
+        child: const Text('Follow'),
+      ),
       data: (following) {
         return FilledButton.icon(
           style: FilledButton.styleFrom(
@@ -364,22 +357,20 @@ class _PrShowcase extends ConsumerWidget {
               ),
               const SizedBox(height: 10),
               prAsync.when(
-                loading:
-                    () => const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+                loading: () => const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
                 error: (_, _) => const _PrRow('Best 5K', 'No PR yet'),
-                data:
-                    (pr) => Column(
-                      children: [
-                        _PrRow('Best 5K pace', pr.best5kPace),
-                        const SizedBox(height: 8),
-                        _PrRow('Best 20-min power', pr.best20MinPower),
-                      ],
-                    ),
+                data: (pr) => Column(
+                  children: [
+                    _PrRow('Best 5K pace', pr.best5kPace),
+                    const SizedBox(height: 8),
+                    _PrRow('Best 20-min power', pr.best20MinPower),
+                  ],
+                ),
               ),
             ],
           ),
@@ -546,26 +537,25 @@ class _RecentActivities extends ConsumerWidget {
           );
         }
         return Column(
-          children:
-              activities
-                  .map(
-                    (a) => Card(
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.directions_run,
-                          color: isDark ? Colors.white : navy,
-                        ),
-                        title: Text(
-                          a.title.isNotEmpty ? a.title : a.sport.name,
-                          style: const TextStyle(fontWeight: FontWeight.w800),
-                        ),
-                        subtitle: Text(
-                          '${a.sport.name} • ${a.distanceKm.toStringAsFixed(1)} km • ${a.date.day}/${a.date.month}/${a.date.year}',
-                        ),
-                      ),
+          children: activities
+              .map(
+                (a) => Card(
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.directions_run,
+                      color: isDark ? Colors.white : navy,
                     ),
-                  )
-                  .toList(),
+                    title: Text(
+                      a.title.isNotEmpty ? a.title : a.sport.name,
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    subtitle: Text(
+                      '${a.sport.name} • ${a.distanceKm.toStringAsFixed(1)} km • ${a.date.day}/${a.date.month}/${a.date.year}',
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
         );
       },
     );

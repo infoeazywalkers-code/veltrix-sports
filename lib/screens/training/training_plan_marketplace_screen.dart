@@ -82,17 +82,17 @@ class TrainingPlanMarketplaceScreen extends ConsumerWidget {
         activePlansAsync.valueOrNull?.map((p) => p.name).toSet() ??
         const <String>{};
 
-    final explore =
-        plans.where((p) => !enrolledNames.contains(p.title)).toList();
+    final explore = plans
+        .where((p) => !enrolledNames.contains(p.title))
+        .toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed:
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const AiPlanGeneratorScreen()),
-            ),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const AiPlanGeneratorScreen()),
+        ),
         backgroundColor: const Color(0xFF8B5CF6),
         icon: const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
         label: const Text(
@@ -160,23 +160,19 @@ class TrainingPlanMarketplaceScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             activePlansAsync.when(
-              loading:
-                  () => const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Color(0xFF8B5CF6),
-                      ),
-                    ),
-                  ),
-              error:
-                  (_, _) => const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      'Sign in to see your training plans.',
-                      style: TextStyle(color: Colors.white54, fontSize: 12),
-                    ),
-                  ),
+              loading: () => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Center(
+                  child: CircularProgressIndicator(color: Color(0xFF8B5CF6)),
+                ),
+              ),
+              error: (_, _) => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  'Sign in to see your training plans.',
+                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                ),
+              ),
               data: (activePlans) {
                 if (activePlans.isEmpty) {
                   return const Padding(
@@ -507,29 +503,28 @@ class TrainingPlanMarketplaceScreen extends ConsumerWidget {
             Wrap(
               spacing: 6,
               runSpacing: 4,
-              children:
-                  plan.tags
-                      .map(
-                        (t) => Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: plan.gradient[0].withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            t,
-                            style: TextStyle(
-                              color: plan.gradient[0],
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+              children: plan.tags
+                  .map(
+                    (t) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: plan.gradient[0].withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        t,
+                        style: TextStyle(
+                          color: plan.gradient[0],
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
                         ),
-                      )
-                      .toList(),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
             const SizedBox(height: 12),
             Row(
@@ -643,29 +638,28 @@ class TrainingPlanMarketplaceScreen extends ConsumerWidget {
           Wrap(
             spacing: 6,
             runSpacing: 4,
-            children:
-                plan.tags
-                    .map(
-                      (t) => Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: plan.gradient[0].withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          t,
-                          style: TextStyle(
-                            color: plan.gradient[0],
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+            children: plan.tags
+                .map(
+                  (t) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: plan.gradient[0].withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      t,
+                      style: TextStyle(
+                        color: plan.gradient[0],
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
                       ),
-                    )
-                    .toList(),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
 
           const SizedBox(height: 12),

@@ -28,14 +28,12 @@ class HealthService {
       }
       recoveryScore = recoveryScore.clamp(45, 99);
 
-      final hrvRmssd =
-          recoveryScore > 75
-              ? baselineHRV + random.nextInt(13)
-              : baselineHRV - (random.nextInt(15) + 4);
-      final restingHr =
-          recoveryScore > 75
-              ? baselineRHR - random.nextInt(3)
-              : baselineRHR + random.nextInt(6) + 1;
+      final hrvRmssd = recoveryScore > 75
+          ? baselineHRV + random.nextInt(13)
+          : baselineHRV - (random.nextInt(15) + 4);
+      final restingHr = recoveryScore > 75
+          ? baselineRHR - random.nextInt(3)
+          : baselineRHR + random.nextInt(6) + 1;
       final sleepHours = double.parse(
         (6.8 + (recoveryScore / 100) * 1.6 + (random.nextDouble() * 0.4 - 0.2))
             .toStringAsFixed(1),
@@ -56,18 +54,16 @@ class HealthService {
         ((recoveryScore < 65 ? 0.3 : -0.2) + (random.nextDouble() * 0.2 - 0.1))
             .toStringAsFixed(2),
       );
-      final soreness =
-          isHardDay
-              ? 4
-              : isRecoveryDay
-              ? 1
-              : 2;
-      final stress =
-          recoveryScore > 80
-              ? 'low'
-              : recoveryScore > 60
-              ? 'moderate'
-              : 'high';
+      final soreness = isHardDay
+          ? 4
+          : isRecoveryDay
+          ? 1
+          : 2;
+      final stress = recoveryScore > 80
+          ? 'low'
+          : recoveryScore > 60
+          ? 'moderate'
+          : 'high';
 
       String recommendation;
       if (recoveryScore < 65) {
@@ -104,12 +100,11 @@ class HealthService {
             (69.2 + (random.nextDouble() * 0.6 - 0.3)).toStringAsFixed(1),
           ),
           readinessRecommendation: recommendation,
-          syncedWearable:
-              i == 0
-                  ? 'Whoop 4.0'
-                  : i % 2 == 0
-                  ? 'Garmin Connect'
-                  : 'Oura Ring Gen 3',
+          syncedWearable: i == 0
+              ? 'Whoop 4.0'
+              : i % 2 == 0
+              ? 'Garmin Connect'
+              : 'Oura Ring Gen 3',
         ),
       );
     }

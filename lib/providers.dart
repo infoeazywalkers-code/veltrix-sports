@@ -186,11 +186,10 @@ final completedWorkoutsProvider = FutureProvider<List<Workout>>((ref) async {
   final now = DateTime.now();
   final start = now.subtract(const Duration(days: 90));
   final end = now;
-  final all =
-      await ref
-          .watch(workoutServiceProvider)
-          .watchByDateRange(user.uid, start, end)
-          .first;
+  final all = await ref
+      .watch(workoutServiceProvider)
+      .watchByDateRange(user.uid, start, end)
+      .first;
   return all.where((w) => w.completed).toList();
 });
 
@@ -242,11 +241,10 @@ final bestPowerProvider = FutureProvider<String>((ref) async {
   final user = ref.watch(currentUserProvider);
   if (user == null) return 'No PR set yet';
   try {
-    final activities =
-        await ref
-            .watch(activityServiceProvider)
-            .watchUserActivities(user.uid, limit: 50)
-            .first;
+    final activities = await ref
+        .watch(activityServiceProvider)
+        .watchUserActivities(user.uid, limit: 50)
+        .first;
     int? best;
     for (final activity in activities) {
       final minutes = activity.durationSeconds / 60;

@@ -19,25 +19,24 @@ class _AccountDeletionScreenState extends ConsumerState<AccountDeletionScreen> {
   Future<void> _deleteAccount() async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Delete Account?'),
-            content: const Text(
-              'This action is permanent and cannot be undone. '
-              'All your data, including workouts, plans, and progress, will be permanently deleted.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
-              ),
-              FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: Colors.red),
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Delete Permanently'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Account?'),
+        content: const Text(
+          'This action is permanent and cannot be undone. '
+          'All your data, including workouts, plans, and progress, will be permanently deleted.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
           ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete Permanently'),
+          ),
+        ],
+      ),
     );
 
     if (confirmed != true) return;
@@ -61,29 +60,26 @@ class _AccountDeletionScreenState extends ConsumerState<AccountDeletionScreen> {
 
       await firestore.collection('users').doc(uid).delete();
 
-      final workouts =
-          await firestore
-              .collection('workouts')
-              .where('userId', isEqualTo: uid)
-              .get();
+      final workouts = await firestore
+          .collection('workouts')
+          .where('userId', isEqualTo: uid)
+          .get();
       for (final doc in workouts.docs) {
         await doc.reference.delete();
       }
 
-      final plans =
-          await firestore
-              .collection('training_plans')
-              .where('userId', isEqualTo: uid)
-              .get();
+      final plans = await firestore
+          .collection('training_plans')
+          .where('userId', isEqualTo: uid)
+          .get();
       for (final doc in plans.docs) {
         await doc.reference.delete();
       }
 
-      final snapshots =
-          await firestore
-              .collection('performance_snapshots')
-              .where('userId', isEqualTo: uid)
-              .get();
+      final snapshots = await firestore
+          .collection('performance_snapshots')
+          .where('userId', isEqualTo: uid)
+          .get();
       for (final doc in snapshots.docs) {
         await doc.reference.delete();
       }
@@ -186,17 +182,16 @@ class _AccountDeletionScreenState extends ConsumerState<AccountDeletionScreen> {
               backgroundColor: Colors.red,
               minimumSize: const Size(double.infinity, 48),
             ),
-            child:
-                _isDeleting
-                    ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                    : const Text('Delete My Account'),
+            child: _isDeleting
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text('Delete My Account'),
           ),
           const SizedBox(height: 16),
           TextButton(

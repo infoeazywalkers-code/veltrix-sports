@@ -22,14 +22,12 @@ class EditorialBanner extends StatelessWidget {
     foregroundDecoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
       gradient: LinearGradient(
-        begin:
-            alignment == Alignment.centerLeft
-                ? Alignment.centerLeft
-                : Alignment.centerRight,
-        end:
-            alignment == Alignment.centerLeft
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
+        begin: alignment == Alignment.centerLeft
+            ? Alignment.centerLeft
+            : Alignment.centerRight,
+        end: alignment == Alignment.centerLeft
+            ? Alignment.centerRight
+            : Alignment.centerLeft,
         colors: const [Color(0xe6102a43), Color(0x22102a43)],
       ),
     ),

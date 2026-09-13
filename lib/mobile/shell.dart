@@ -121,19 +121,16 @@ class _MobileShellState extends ConsumerState<MobileShell> {
           // Deep tabs (More/Notifications, index >= 5) get an AppBar back
           // affordance to Home so the bottom bar never falsely highlights
           // Profile.
-          appBar:
-              _index >= MobileTab.more.index
-                  ? AppBar(
-                    leading: BackButton(
-                      onPressed: () => _goTab(MobileTab.home),
-                    ),
-                    title: Text(
-                      _index == MobileTab.more.index
-                          ? 'More features'
-                          : 'Notifications',
-                    ),
-                  )
-                  : null,
+          appBar: _index >= MobileTab.more.index
+              ? AppBar(
+                  leading: BackButton(onPressed: () => _goTab(MobileTab.home)),
+                  title: Text(
+                    _index == MobileTab.more.index
+                        ? 'More features'
+                        : 'Notifications',
+                  ),
+                )
+              : null,
           body: Column(
             children: [
               if (onboardingStatus.isLoading)
@@ -170,8 +167,8 @@ class _MobileShellState extends ConsumerState<MobileShell> {
                         style: TextStyle(
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : M.navy),
+                              ? Colors.white
+                              : M.navy),
                           fontSize: 19,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.2,
@@ -302,10 +299,9 @@ class _MobileShellState extends ConsumerState<MobileShell> {
         label,
         style: TextStyle(
           fontWeight: FontWeight.w800,
-          color:
-              (Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFFB0BEC5)
-                  : M.ink),
+          color: (Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFFB0BEC5)
+              : M.ink),
         ),
       ),
       onTap: () {

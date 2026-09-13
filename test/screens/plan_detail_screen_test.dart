@@ -157,8 +157,10 @@ void main() {
       await tester.tap(find.text('Cancel plan').last);
       await tester.pumpAndSettle();
 
-      final stored =
-          await firestore.collection('training_plans').doc('p1').get();
+      final stored = await firestore
+          .collection('training_plans')
+          .doc('p1')
+          .get();
       expect(stored.data()?['status'], 'cancelled');
       expect(find.byType(PlanDetailScreen), findsNothing);
     });

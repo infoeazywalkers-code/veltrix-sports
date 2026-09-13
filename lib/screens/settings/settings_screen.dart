@@ -27,10 +27,9 @@ class SettingsScreen extends ConsumerWidget {
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w900,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
             ),
           ),
           const SizedBox(height: 24),
@@ -113,18 +112,16 @@ class SettingsScreen extends ConsumerWidget {
               ),
               trailing: Icon(
                 Icons.chevron_right,
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFF78909C)
-                        : muted),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFF78909C)
+                    : muted),
               ),
-              onTap:
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const AccountDeletionScreen(),
-                    ),
-                  ),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const AccountDeletionScreen(),
+                ),
+              ),
             ),
           ),
         ],
@@ -256,10 +253,9 @@ class _SettingsSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
               ),
             ),
             const SizedBox(height: 12),
@@ -320,43 +316,41 @@ class _ZoneSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final z = zones ?? HeartRateZones.autoFromMaxHr(maxHr);
     return Column(
-      children:
-          z.zones
-              .map(
-                (zone) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: Text(
-                          zone.label,
-                          style: const TextStyle(fontSize: 13),
-                        ),
-                      ),
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value: zone.max / maxHr,
-                          backgroundColor: Colors.grey[200],
-                          color: _zoneColor(z.zones.indexOf(zone)),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${zone.min}-${zone.max}',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color:
-                              (Theme.of(context).brightness == Brightness.dark
-                                  ? const Color(0xFF78909C)
-                                  : muted),
-                        ),
-                      ),
-                    ],
+      children: z.zones
+          .map(
+            (zone) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: Text(
+                      zone.label,
+                      style: const TextStyle(fontSize: 13),
+                    ),
                   ),
-                ),
-              )
-              .toList(),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: zone.max / maxHr,
+                      backgroundColor: Colors.grey[200],
+                      color: _zoneColor(z.zones.indexOf(zone)),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${zone.min}-${zone.max}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 

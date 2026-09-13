@@ -17,15 +17,13 @@ class MobileWorkoutDetailScreen extends ConsumerWidget {
     final units = ref.watch(unitSystemProvider);
     final title = workout?.title ?? 'Aerobic endurance';
     final sportName = workout?.sport.name.toUpperCase() ?? 'RUN';
-    final desc =
-        workout?.description.isNotEmpty == true
-            ? workout!.description
-            : 'Stay relaxed and keep your effort in Zone 2.';
+    final desc = workout?.description.isNotEmpty == true
+        ? workout!.description
+        : 'Stay relaxed and keep your effort in Zone 2.';
     final durationStr = workout?.duration ?? '45m';
-    final distanceStr =
-        workout?.distanceKm != null
-            ? UnitConversion.formatDistance(units, workout!.distanceKm!)
-            : UnitConversion.formatDistance(units, 7.2);
+    final distanceStr = workout?.distanceKm != null
+        ? UnitConversion.formatDistance(units, workout!.distanceKm!)
+        : UnitConversion.formatDistance(units, 7.2);
     final tssStr = workout?.tss != null ? '${workout!.tss}' : '62';
     final targetPace = workout?.targetPace ?? '5:55–6:15 /km';
     final segments =
@@ -100,10 +98,9 @@ class MobileWorkoutDetailScreen extends ConsumerWidget {
                     targetPace,
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : M.navy),
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : M.navy),
                     ),
                   ),
                 ),
@@ -182,23 +179,22 @@ class MobileWorkoutDetailScreen extends ConsumerWidget {
 void _showWorkoutMenu(BuildContext context) {
   showModalBottomSheet<void>(
     context: context,
-    builder:
-        (sheetContext) => SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.edit),
-                title: const Text('Edit workout'),
-                onTap: () => Navigator.pop(sheetContext),
-              ),
-              ListTile(
-                leading: const Icon(Icons.delete_outline),
-                title: const Text('Remove workout'),
-                onTap: () => Navigator.pop(sheetContext),
-              ),
-            ],
+    builder: (sheetContext) => SafeArea(
+      child: Wrap(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.edit),
+            title: const Text('Edit workout'),
+            onTap: () => Navigator.pop(sheetContext),
           ),
-        ),
+          ListTile(
+            leading: const Icon(Icons.delete_outline),
+            title: const Text('Remove workout'),
+            onTap: () => Navigator.pop(sheetContext),
+          ),
+        ],
+      ),
+    ),
   );
 }
 

@@ -48,10 +48,9 @@ class LiveWeatherData {
     latitude: (m['latitude'] ?? 0).toDouble(),
     longitude: (m['longitude'] ?? 0).toDouble(),
     locality: m['locality'],
-    relativeWindImpact:
-        m['relativeWindImpact'] != null
-            ? RelativeWindImpact.fromMap(m['relativeWindImpact'])
-            : null,
+    relativeWindImpact: m['relativeWindImpact'] != null
+        ? RelativeWindImpact.fromMap(m['relativeWindImpact'])
+        : null,
   );
 
   Map<String, dynamic> toMap() => {

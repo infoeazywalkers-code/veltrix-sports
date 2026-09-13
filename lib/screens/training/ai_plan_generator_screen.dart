@@ -277,24 +277,23 @@ class _AiPlanGeneratorScreenState extends ConsumerState<AiPlanGeneratorScreen> {
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              child:
-                  _isGenerating
-                      ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      )
-                      : const Text(
-                        'Generate AI Plan',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15,
-                        ),
+              child: _isGenerating
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
                       ),
+                    )
+                  : const Text(
+                      'Generate AI Plan',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                      ),
+                    ),
             ),
           ),
         ],
@@ -304,24 +303,21 @@ class _AiPlanGeneratorScreenState extends ConsumerState<AiPlanGeneratorScreen> {
 
   Widget _buildPlanView() {
     final basePlan = _basePlan;
-    final weeks =
-        basePlan == null
-            ? const <Map<String, dynamic>>[]
-            : (basePlan['weeks'] as List? ?? const [])
-                .whereType<Map>()
-                .map((w) => Map<String, dynamic>.from(w))
-                .toList();
-    final tssProgression =
-        basePlan == null
-            ? const <int>[]
-            : (basePlan['weeklyTSSProgression'] as List? ?? const [])
-                .whereType<num>()
-                .map((t) => t.toInt())
-                .toList();
-    final maxTss =
-        tssProgression.isEmpty
-            ? 1
-            : tssProgression.reduce((a, b) => a > b ? a : b);
+    final weeks = basePlan == null
+        ? const <Map<String, dynamic>>[]
+        : (basePlan['weeks'] as List? ?? const [])
+              .whereType<Map>()
+              .map((w) => Map<String, dynamic>.from(w))
+              .toList();
+    final tssProgression = basePlan == null
+        ? const <int>[]
+        : (basePlan['weeklyTSSProgression'] as List? ?? const [])
+              .whereType<num>()
+              .map((t) => t.toInt())
+              .toList();
+    final maxTss = tssProgression.isEmpty
+        ? 1
+        : tssProgression.reduce((a, b) => a > b ? a : b);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -583,23 +579,22 @@ class _AiPlanGeneratorScreenState extends ConsumerState<AiPlanGeneratorScreen> {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child:
-                      _isStarting
-                          ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : const Text(
-                            'Start Training',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
+                  child: _isStarting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
                           ),
+                        )
+                      : const Text(
+                          'Start Training',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -633,111 +628,100 @@ class _AiPlanGeneratorScreenState extends ConsumerState<AiPlanGeneratorScreen> {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-      children:
-          goals.map((goal) {
-            final isSelected = goal == _selectedGoal;
-            return GestureDetector(
-              onTap: () => setState(() => _selectedGoal = goal),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      isSelected
-                          ? const Color(0xFF8B5CF6).withValues(alpha: 0.15)
-                          : Colors.white.withValues(alpha: 0.03),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color:
-                        isSelected
-                            ? const Color(0xFF8B5CF6)
-                            : Colors.white.withValues(alpha: 0.06),
-                  ),
-                ),
-                child: Text(
-                  goal,
-                  style: TextStyle(
-                    color:
-                        isSelected ? const Color(0xFF8B5CF6) : Colors.white54,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                ),
+      children: goals.map((goal) {
+        final isSelected = goal == _selectedGoal;
+        return GestureDetector(
+          onTap: () => setState(() => _selectedGoal = goal),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? const Color(0xFF8B5CF6).withValues(alpha: 0.15)
+                  : Colors.white.withValues(alpha: 0.03),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: isSelected
+                    ? const Color(0xFF8B5CF6)
+                    : Colors.white.withValues(alpha: 0.06),
               ),
-            );
-          }).toList(),
+            ),
+            child: Text(
+              goal,
+              style: TextStyle(
+                color: isSelected ? const Color(0xFF8B5CF6) : Colors.white54,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
   Widget _sportSelector() {
     final sports = ['Cycling', 'Running', 'Triathlon', 'Swimming', 'Rowing'];
     return Row(
-      children:
-          sports.map((sport) {
-            final isSelected = sport == _selectedSport;
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => setState(() => _selectedSport = sport),
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 3),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? const Color(0xFF8B5CF6)
-                            : Colors.white.withValues(alpha: 0.03),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    sport,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.white54,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
-                    ),
-                  ),
+      children: sports.map((sport) {
+        final isSelected = sport == _selectedSport;
+        return Expanded(
+          child: GestureDetector(
+            onTap: () => setState(() => _selectedSport = sport),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color(0xFF8B5CF6)
+                    : Colors.white.withValues(alpha: 0.03),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                sport,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.white54,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 11,
                 ),
               ),
-            );
-          }).toList(),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
   Widget _levelSelector() {
     final levels = ['Beginner', 'Intermediate', 'Advanced', 'Elite'];
     return Row(
-      children:
-          levels.map((level) {
-            final isSelected = level == _fitnessLevel;
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => setState(() => _fitnessLevel = level),
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 3),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? const Color(0xFF8B5CF6)
-                            : Colors.white.withValues(alpha: 0.03),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    level,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.white54,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
-                    ),
-                  ),
+      children: levels.map((level) {
+        final isSelected = level == _fitnessLevel;
+        return Expanded(
+          child: GestureDetector(
+            onTap: () => setState(() => _fitnessLevel = level),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color(0xFF8B5CF6)
+                    : Colors.white.withValues(alpha: 0.03),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                level,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.white54,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 11,
                 ),
               ),
-            );
-          }).toList(),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -746,41 +730,34 @@ class _AiPlanGeneratorScreenState extends ConsumerState<AiPlanGeneratorScreen> {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-      children:
-          options.map((opt) {
-            final isSelected = opt == _experience;
-            return GestureDetector(
-              onTap: () => setState(() => _experience = opt),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      isSelected
-                          ? const Color(0xFF8B5CF6).withValues(alpha: 0.15)
-                          : Colors.white.withValues(alpha: 0.03),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color:
-                        isSelected
-                            ? const Color(0xFF8B5CF6)
-                            : Colors.white.withValues(alpha: 0.06),
-                  ),
-                ),
-                child: Text(
-                  opt,
-                  style: TextStyle(
-                    color:
-                        isSelected ? const Color(0xFF8B5CF6) : Colors.white54,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                ),
+      children: options.map((opt) {
+        final isSelected = opt == _experience;
+        return GestureDetector(
+          onTap: () => setState(() => _experience = opt),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? const Color(0xFF8B5CF6).withValues(alpha: 0.15)
+                  : Colors.white.withValues(alpha: 0.03),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: isSelected
+                    ? const Color(0xFF8B5CF6)
+                    : Colors.white.withValues(alpha: 0.06),
               ),
-            );
-          }).toList(),
+            ),
+            child: Text(
+              opt,
+              style: TextStyle(
+                color: isSelected ? const Color(0xFF8B5CF6) : Colors.white54,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 

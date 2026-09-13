@@ -48,7 +48,10 @@ class _ChallengesScreenState extends State<ChallengesScreen>
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
               ),
-              tabs: const [Tab(text: 'Challenges'), Tab(text: 'Leaderboard')],
+              tabs: const [
+                Tab(text: 'Challenges'),
+                Tab(text: 'Leaderboard'),
+              ],
             ),
           ),
           Expanded(
@@ -76,37 +79,34 @@ class _ChallengesListState extends ConsumerState<_ChallengesList> {
   Widget build(BuildContext context) {
     final challengesAsync = ref.watch(challengesProvider);
     final me = ref.watch(currentUserProvider);
-    final entriesAsync =
-        me == null
-            ? const AsyncValue<Map<String, ChallengeEntry>>.data({})
-            : ref.watch(myChallengeEntriesProvider(me.uid));
+    final entriesAsync = me == null
+        ? const AsyncValue<Map<String, ChallengeEntry>>.data({})
+        : ref.watch(myChallengeEntriesProvider(me.uid));
 
     return challengesAsync.when(
-      loading:
-          () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFFF97316)),
-          ),
-      error:
-          (e, _) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    ErrorHandler.getUserMessage(e),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-                  const SizedBox(height: 16),
-                  FilledButton(
-                    onPressed: () => ref.invalidate(challengesProvider),
-                    child: const Text('Retry'),
-                  ),
-                ],
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFF97316)),
+      ),
+      error: (e, _) => Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                ErrorHandler.getUserMessage(e),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white70),
               ),
-            ),
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: () => ref.invalidate(challengesProvider),
+                child: const Text('Retry'),
+              ),
+            ],
           ),
+        ),
+      ),
       data: (challenges) {
         if (challenges.isEmpty) {
           return const Center(
@@ -123,12 +123,11 @@ class _ChallengesListState extends ConsumerState<_ChallengesList> {
         final entries = entriesAsync.valueOrNull ?? const {};
         final categories =
             challenges.map((c) => c.category.name).toSet().toList()..sort();
-        final visible =
-            _selectedCategory == null
-                ? challenges
-                : challenges
-                    .where((c) => c.category.name == _selectedCategory)
-                    .toList();
+        final visible = _selectedCategory == null
+            ? challenges
+            : challenges
+                  .where((c) => c.category.name == _selectedCategory)
+                  .toList();
         return Column(
           children: [
             SizedBox(
@@ -149,58 +148,56 @@ class _ChallengesListState extends ConsumerState<_ChallengesList> {
                     _FilterChip(
                       label: cat,
                       selected: _selectedCategory == cat,
-                      onTap:
-                          () => setState(
-                            () =>
-                                _selectedCategory =
-                                    _selectedCategory == cat ? null : cat,
-                          ),
+                      onTap: () => setState(
+                        () => _selectedCategory = _selectedCategory == cat
+                            ? null
+                            : cat,
+                      ),
                     ),
                 ],
               ),
             ),
             Expanded(
-              child:
-                  visible.isEmpty
-                      ? const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(24),
-                          child: Text(
-                            'No challenges in this category yet.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white70),
-                          ),
+              child: visible.isEmpty
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(24),
+                        child: Text(
+                          'No challenges in this category yet.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70),
                         ),
-                      )
-                      : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: visible.length,
-                        itemBuilder: (context, index) {
-                          final c = visible[index];
-                          final entry = entries[c.id];
-                          final joined = entry != null;
-                          final completed = entry?.completed ?? false;
-                          return _ChallengeCard(
-                            challengeId: c.id,
-                            title: c.title,
-                            description: c.description,
-                            categoryLabel: c.category.name,
-                            sportLabel: c.sport.name,
-                            badgeIcon: c.badgeIcon,
-                            targetValue: c.targetValue,
-                            currentValue: c.currentValue,
-                            unit: c.unit,
-                            participants: c.participantsCount,
-                            daysLeft: c.daysRemaining,
-                            joined: joined,
-                            completed: completed,
-                            entryProgress: entry?.progress,
-                            busy: _busy.contains(c.id),
-                            onJoin: () => _join(me?.uid, c.id),
-                            onLeave: () => _leave(me?.uid, c.id),
-                          );
-                        },
                       ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: visible.length,
+                      itemBuilder: (context, index) {
+                        final c = visible[index];
+                        final entry = entries[c.id];
+                        final joined = entry != null;
+                        final completed = entry?.completed ?? false;
+                        return _ChallengeCard(
+                          challengeId: c.id,
+                          title: c.title,
+                          description: c.description,
+                          categoryLabel: c.category.name,
+                          sportLabel: c.sport.name,
+                          badgeIcon: c.badgeIcon,
+                          targetValue: c.targetValue,
+                          currentValue: c.currentValue,
+                          unit: c.unit,
+                          participants: c.participantsCount,
+                          daysLeft: c.daysRemaining,
+                          joined: joined,
+                          completed: completed,
+                          entryProgress: entry?.progress,
+                          busy: _busy.contains(c.id),
+                          onJoin: () => _join(me?.uid, c.id),
+                          onLeave: () => _leave(me?.uid, c.id),
+                        );
+                      },
+                    ),
             ),
           ],
         );
@@ -282,10 +279,9 @@ class _FilterChip extends StatelessWidget {
           fontSize: 12,
         ),
         side: BorderSide(
-          color:
-              selected
-                  ? const Color(0xFFF97316)
-                  : Colors.white.withValues(alpha: 0.12),
+          color: selected
+              ? const Color(0xFFF97316)
+              : Colors.white.withValues(alpha: 0.12),
         ),
       ),
     );
@@ -334,8 +330,9 @@ class _ChallengeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasTarget = targetValue > 0;
-    final progress =
-        hasTarget ? (currentValue / targetValue).clamp(0.0, 1.0) : 0.0;
+    final progress = hasTarget
+        ? (currentValue / targetValue).clamp(0.0, 1.0)
+        : 0.0;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -357,16 +354,12 @@ class _ChallengeCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
-                  child:
-                      badgeIcon.isNotEmpty
-                          ? Text(
-                            badgeIcon,
-                            style: const TextStyle(fontSize: 22),
-                          )
-                          : const Icon(
-                            Icons.emoji_events_outlined,
-                            color: Color(0xFFF97316),
-                          ),
+                  child: badgeIcon.isNotEmpty
+                      ? Text(badgeIcon, style: const TextStyle(fontSize: 22))
+                      : const Icon(
+                          Icons.emoji_events_outlined,
+                          color: Color(0xFFF97316),
+                        ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -528,23 +521,22 @@ class _ChallengeCard extends StatelessWidget {
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
-            child:
-                joined
-                    ? OutlinedButton(
-                      onPressed: busy ? null : onLeave,
-                      child: Text(
-                        busy ? 'Working…' : 'Leave challenge',
-                        style: const TextStyle(color: Colors.white70),
-                      ),
-                    )
-                    : FilledButton(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xFFF97316),
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: busy ? null : onJoin,
-                      child: Text(busy ? 'Joining…' : 'Join challenge'),
+            child: joined
+                ? OutlinedButton(
+                    onPressed: busy ? null : onLeave,
+                    child: Text(
+                      busy ? 'Working…' : 'Leave challenge',
+                      style: const TextStyle(color: Colors.white70),
                     ),
+                  )
+                : FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFFF97316),
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: busy ? null : onJoin,
+                    child: Text(busy ? 'Joining…' : 'Join challenge'),
+                  ),
           ),
         ],
       ),
@@ -570,31 +562,29 @@ class _LeaderboardList extends ConsumerWidget {
     final me = ref.watch(currentUserProvider);
 
     return boardAsync.when(
-      loading:
-          () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFFF97316)),
-          ),
-      error:
-          (e, _) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    ErrorHandler.getUserMessage(e),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-                  const SizedBox(height: 16),
-                  FilledButton(
-                    onPressed: () => ref.invalidate(monthlyBoardProvider),
-                    child: const Text('Retry'),
-                  ),
-                ],
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFF97316)),
+      ),
+      error: (e, _) => Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                ErrorHandler.getUserMessage(e),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white70),
               ),
-            ),
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: () => ref.invalidate(monthlyBoardProvider),
+                child: const Text('Retry'),
+              ),
+            ],
           ),
+        ),
+      ),
       data: (rows) {
         if (rows.isEmpty) {
           return const Center(
@@ -698,16 +688,14 @@ class _LiveLeaderRow extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color:
-              isCurrentUser
-                  ? const Color(0xFFF97316).withValues(alpha: 0.1)
-                  : const Color(0xFF1A1A1A),
+          color: isCurrentUser
+              ? const Color(0xFFF97316).withValues(alpha: 0.1)
+              : const Color(0xFF1A1A1A),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color:
-                isCurrentUser
-                    ? const Color(0xFFF97316).withValues(alpha: 0.3)
-                    : Colors.white.withValues(alpha: 0.06),
+            color: isCurrentUser
+                ? const Color(0xFFF97316).withValues(alpha: 0.3)
+                : Colors.white.withValues(alpha: 0.06),
           ),
         ),
         child: Row(
@@ -727,22 +715,20 @@ class _LiveLeaderRow extends StatelessWidget {
             CircleAvatar(
               radius: 16,
               backgroundColor: const Color(0xFFF97316).withValues(alpha: 0.2),
-              backgroundImage:
-                  row.photoUrl != null && row.photoUrl!.isNotEmpty
-                      ? NetworkImage(row.photoUrl!)
-                      : null,
-              child:
-                  row.photoUrl == null || row.photoUrl!.isEmpty
-                      ? Text(
-                        row.displayName.isNotEmpty
-                            ? row.displayName[0].toUpperCase()
-                            : 'A',
-                        style: const TextStyle(
-                          color: Color(0xFFF97316),
-                          fontSize: 13,
-                        ),
-                      )
-                      : null,
+              backgroundImage: row.photoUrl != null && row.photoUrl!.isNotEmpty
+                  ? NetworkImage(row.photoUrl!)
+                  : null,
+              child: row.photoUrl == null || row.photoUrl!.isEmpty
+                  ? Text(
+                      row.displayName.isNotEmpty
+                          ? row.displayName[0].toUpperCase()
+                          : 'A',
+                      style: const TextStyle(
+                        color: Color(0xFFF97316),
+                        fontSize: 13,
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -752,10 +738,9 @@ class _LiveLeaderRow extends StatelessWidget {
                   Text(
                     row.displayName,
                     style: TextStyle(
-                      color:
-                          isCurrentUser
-                              ? const Color(0xFFF97316)
-                              : Colors.white,
+                      color: isCurrentUser
+                          ? const Color(0xFFF97316)
+                          : Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),

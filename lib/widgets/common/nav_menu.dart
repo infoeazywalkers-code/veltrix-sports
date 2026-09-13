@@ -17,26 +17,24 @@ class NavMenu extends StatelessWidget {
     color: Colors.white,
     offset: const Offset(0, 52),
     onSelected: onSelected,
-    itemBuilder:
-        (_) => List.generate(
-          items.length,
-          (i) => PopupMenuItem(
-            value: i,
-            child: SizedBox(
-              width: 180,
-              child: Text(
-                items[i],
-                style: TextStyle(
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFFB0BEC5)
-                          : ink),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+    itemBuilder: (_) => List.generate(
+      items.length,
+      (i) => PopupMenuItem(
+        value: i,
+        child: SizedBox(
+          width: 180,
+          child: Text(
+            items[i],
+            style: TextStyle(
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFFB0BEC5)
+                  : ink),
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
+      ),
+    ),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 24),
       child: Row(

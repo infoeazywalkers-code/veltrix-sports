@@ -126,12 +126,11 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color =
-        status == 'matched'
-            ? Colors.green
-            : status == 'pending'
-            ? orange
-            : muted;
+    final Color color = status == 'matched'
+        ? Colors.green
+        : status == 'pending'
+        ? orange
+        : muted;
     return Chip(
       label: Text(
         status,

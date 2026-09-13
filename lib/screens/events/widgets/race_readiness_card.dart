@@ -162,20 +162,19 @@ class RaceReadinessCard extends StatelessWidget {
                     foregroundColor: navy,
                   ),
                   onPressed: registering ? null : onRegister,
-                  child:
-                      registering
-                          ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: navy,
-                            ),
-                          )
-                          : const Text(
-                            'Register to track readiness',
-                            style: TextStyle(fontWeight: FontWeight.w900),
+                  child: registering
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: navy,
                           ),
+                        )
+                      : const Text(
+                          'Register to track readiness',
+                          style: TextStyle(fontWeight: FontWeight.w900),
+                        ),
                 ),
               ),
             ],
@@ -258,10 +257,9 @@ class _ScoreRing extends StatelessWidget {
             painter: _RingPainter(
               fraction: score / 100,
               color: _verdictColor(verdict),
-              trackColor:
-                  dark
-                      ? Colors.white.withValues(alpha: 0.12)
-                      : navy.withValues(alpha: 0.10),
+              trackColor: dark
+                  ? Colors.white.withValues(alpha: 0.12)
+                  : navy.withValues(alpha: 0.10),
             ),
           ),
           Column(
@@ -305,19 +303,17 @@ class _RingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final Offset center = Offset(size.width / 2, size.height / 2);
     final double radius = (size.width - 12) / 2;
-    final Paint track =
-        Paint()
-          ..color = trackColor
-          ..strokeWidth = 10
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.round;
+    final Paint track = Paint()
+      ..color = trackColor
+      ..strokeWidth = 10
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
     canvas.drawCircle(center, radius, track);
-    final Paint progress =
-        Paint()
-          ..color = color
-          ..strokeWidth = 10
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.round;
+    final Paint progress = Paint()
+      ..color = color
+      ..strokeWidth = 10
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       -math.pi / 2,
@@ -382,10 +378,9 @@ class _ComponentBar extends StatelessWidget {
           child: LinearProgressIndicator(
             value: fraction,
             minHeight: 7,
-            backgroundColor:
-                dark
-                    ? Colors.white.withValues(alpha: 0.12)
-                    : navy.withValues(alpha: 0.10),
+            backgroundColor: dark
+                ? Colors.white.withValues(alpha: 0.12)
+                : navy.withValues(alpha: 0.10),
             valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),

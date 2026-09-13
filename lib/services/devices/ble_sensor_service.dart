@@ -65,10 +65,9 @@ class BleSensorService extends ChangeNotifier {
         var added = false;
         for (ScanResult r in results) {
           _devices[r.device.remoteId.str] = r.device;
-          final deviceName =
-              r.device.platformName.isNotEmpty
-                  ? r.device.platformName
-                  : 'Heart Rate Monitor (${r.device.remoteId.str.length >= 5 ? r.device.remoteId.str.substring(0, 5) : r.device.remoteId.str})';
+          final deviceName = r.device.platformName.isNotEmpty
+              ? r.device.platformName
+              : 'Heart Rate Monitor (${r.device.remoteId.str.length >= 5 ? r.device.remoteId.str.substring(0, 5) : r.device.remoteId.str})';
 
           if (!_discoveredDevices.any((d) => d.id == r.device.remoteId.str)) {
             _discoveredDevices.add(
@@ -161,13 +160,11 @@ class BleSensorService extends ChangeNotifier {
 
     // Simulated BPM feed for demo entries (no real hardware handle).
     await _hrSub?.cancel();
-    _hrSub = Stream.periodic(
-      const Duration(seconds: 2),
-      (i) => 140 + (i % 22),
-    ).listen((bpm) {
-      _liveHeartRate = bpm;
-      notifyListeners();
-    });
+    _hrSub = Stream.periodic(const Duration(seconds: 2), (i) => 140 + (i % 22))
+        .listen((bpm) {
+          _liveHeartRate = bpm;
+          notifyListeners();
+        });
   }
 
   Future<void> connectToWatch(DiscoveredWatchDevice device) async {

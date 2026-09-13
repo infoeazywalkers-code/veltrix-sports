@@ -113,10 +113,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
               'Checkout — ${widget.plan.title}',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color:
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : navy),
+                color: (Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : navy),
                 fontSize: 18,
               ),
             ),
@@ -185,9 +184,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                               fontWeight: FontWeight.w900,
                               color:
                                   (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : navy),
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : navy),
                             ),
                           ),
                           Text(
@@ -195,9 +194,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                             style: TextStyle(
                               color:
                                   (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? const Color(0xFF78909C)
-                                      : muted),
+                                      Brightness.dark
+                                  ? const Color(0xFF78909C)
+                                  : muted),
                               fontSize: 12,
                             ),
                           ),
@@ -213,9 +212,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                                 decoration: TextDecoration.lineThrough,
                                 color:
                                     (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? const Color(0xFF78909C)
-                                        : muted),
+                                        Brightness.dark
+                                    ? const Color(0xFF78909C)
+                                    : muted),
                                 fontSize: 12,
                               ),
                             ),
@@ -225,9 +224,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                               fontWeight: FontWeight.w900,
                               color:
                                   (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : navy),
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : navy),
                               fontSize: 20,
                             ),
                           ),
@@ -273,10 +272,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
-                        color:
-                            (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF78909C)
-                                : muted),
+                        color: (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
                       ),
                     ),
                   ),
@@ -291,9 +289,8 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.credit_card),
                 ),
-                validator:
-                    (val) =>
-                        val == null || val.trim().isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.trim().isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
               Row(
@@ -347,10 +344,9 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                   hintText: 'e.g. ATHLETE20',
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.card_giftcard),
-                  suffixIcon:
-                      discountApplied
-                          ? const Icon(Icons.check_circle, color: Colors.green)
-                          : null,
+                  suffixIcon: discountApplied
+                      ? const Icon(Icons.check_circle, color: Colors.green)
+                      : null,
                 ),
               ),
               if (discountApplied) ...[
@@ -383,19 +379,18 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
               foregroundColor: navy,
             ),
             onPressed: _processing ? null : _pay,
-            child:
-                _processing
-                    ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                    : Text(
-                      _finalPrice == 0
-                          ? 'Activate Free Access'
-                          : 'Pay \u20b9${_finalPrice.toStringAsFixed(0)}',
-                      style: const TextStyle(fontWeight: FontWeight.w900),
-                    ),
+            child: _processing
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Text(
+                    _finalPrice == 0
+                        ? 'Activate Free Access'
+                        : 'Pay \u20b9${_finalPrice.toStringAsFixed(0)}',
+                    style: const TextStyle(fontWeight: FontWeight.w900),
+                  ),
           ),
         ),
       ],

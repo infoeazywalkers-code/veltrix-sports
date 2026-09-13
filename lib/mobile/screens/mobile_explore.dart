@@ -52,12 +52,11 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredEvents =
-        _allEvents.where((e) {
-          final q = _searchQuery.toLowerCase();
-          return e['title'].toString().toLowerCase().contains(q) ||
-              e['location'].toString().toLowerCase().contains(q);
-        }).toList();
+    final filteredEvents = _allEvents.where((e) {
+      final q = _searchQuery.toLowerCase();
+      return e['title'].toString().toLowerCase().contains(q) ||
+          e['location'].toString().toLowerCase().contains(q);
+    }).toList();
 
     return CustomScrollView(
       slivers: [
@@ -72,16 +71,15 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                 decoration: InputDecoration(
                   hintText: 'Search plans, events',
                   prefixIcon: const Icon(Icons.search, size: M.iconMd),
-                  suffixIcon:
-                      _searchQuery.isNotEmpty
-                          ? IconButton(
-                            icon: const Icon(Icons.clear, size: 18),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() => _searchQuery = '');
-                            },
-                          )
-                          : null,
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _searchQuery = '');
+                          },
+                        )
+                      : null,
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding: const EdgeInsets.symmetric(
@@ -109,105 +107,96 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                       'Training plans',
                       Icons.event_note,
                       M.blue,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => TrainingPlanMarketplaceScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => TrainingPlanMarketplaceScreen(),
+                        ),
+                      ),
                     ),
                     _ExploreTile(
                       'Find a coach',
                       Icons.groups,
                       M.purple,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const CoachMatchScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CoachMatchScreen(),
+                        ),
+                      ),
                     ),
                     _ExploreTile(
                       'Sports events',
                       Icons.emoji_events,
                       M.orange,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => eventsScreen()),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => eventsScreen()),
+                      ),
                     ),
                     _ExploreTile(
                       'My tickets',
                       Icons.confirmation_number,
                       M.teal,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => ticketsScreen()),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ticketsScreen()),
+                      ),
                     ),
                     _ExploreTile(
                       'Premium',
                       Icons.workspace_premium,
                       M.navy,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const PremiumScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const PremiumScreen(),
+                        ),
+                      ),
                     ),
                     _ExploreTile(
                       'Devices',
                       Icons.devices_other,
                       M.blue,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const DevicesScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const DevicesScreen(),
+                        ),
+                      ),
                     ),
                     _ExploreTile(
                       'Activity Feed',
                       Icons.dynamic_feed,
                       M.teal,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ActivityFeedScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ActivityFeedScreen(),
+                        ),
+                      ),
                     ),
                     _ExploreTile(
                       'Challenges',
                       Icons.emoji_events_outlined,
                       M.orange,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ChallengesScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ChallengesScreen(),
+                        ),
+                      ),
                     ),
                     _ExploreTile(
                       'Find Athletes',
                       Icons.people_outline,
                       M.purple,
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const AthleteDiscoveryScreen(),
-                            ),
-                          ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AthleteDiscoveryScreen(),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -255,14 +244,12 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                             backgroundColor: M.lime,
                             foregroundColor: M.navy,
                           ),
-                          onPressed:
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => TrainingPlanMarketplaceScreen(),
-                                ),
-                              ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => TrainingPlanMarketplaceScreen(),
+                            ),
+                          ),
                           child: const Text(
                             'View plan',
                             style: TextStyle(fontWeight: FontWeight.w900),
@@ -278,26 +265,23 @@ class _MobileExploreScreenState extends State<MobileExploreScreen> {
                 title: 'Upcoming events (${filteredEvents.length})',
                 action: 'See all',
                 child: Column(
-                  children:
-                      filteredEvents
-                          .map(
-                            (e) => Padding(
-                              padding: const EdgeInsets.only(bottom: M.sm),
-                              child: _EventRow(
-                                d: e['day'],
-                                m: e['month'],
-                                title: e['title'],
-                                sub: e['location'],
-                                onTap:
-                                    () => showDialog(
-                                      context: context,
-                                      builder:
-                                          (_) => EventDetailsDialog(event: e),
-                                    ),
-                              ),
+                  children: filteredEvents
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.only(bottom: M.sm),
+                          child: _EventRow(
+                            d: e['day'],
+                            m: e['month'],
+                            title: e['title'],
+                            sub: e['location'],
+                            onTap: () => showDialog(
+                              context: context,
+                              builder: (_) => EventDetailsDialog(event: e),
                             ),
-                          )
-                          .toList(),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
               const SizedBox(height: M.xxl),
@@ -338,10 +322,9 @@ class _ExploreTile extends StatelessWidget {
             text,
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : M.navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : M.navy),
               fontSize: 13,
             ),
           ),
@@ -409,10 +392,9 @@ class _EventRow extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : M.navy),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : M.navy),
                   ),
                 ),
                 Text(sub, style: M.adaptiveCardBody(context)),
@@ -421,10 +403,9 @@ class _EventRow extends StatelessWidget {
           ),
           Icon(
             Icons.chevron_right,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : M.muted),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF78909C)
+                : M.muted),
             size: 20,
           ),
         ],

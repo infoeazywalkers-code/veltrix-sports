@@ -31,21 +31,19 @@ class MobileProfileScreen extends ConsumerWidget {
           sliver: SliverList.list(
             children: [
               profileAsync.when(
-                loading:
-                    () => const Padding(
-                      padding: EdgeInsets.symmetric(vertical: M.xl),
-                      child: Center(child: CircularProgressIndicator()),
+                loading: () => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: M.xl),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (e, _) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: M.xl),
+                  child: Center(
+                    child: Text(
+                      'Error loading profile: $e',
+                      style: M.adaptiveMuted(context),
                     ),
-                error:
-                    (e, _) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: M.xl),
-                      child: Center(
-                        child: Text(
-                          'Error loading profile: $e',
-                          style: M.adaptiveMuted(context),
-                        ),
-                      ),
-                    ),
+                  ),
+                ),
                 data: (profile) {
                   if (profile == null) {
                     return MCard(
@@ -55,8 +53,8 @@ class MobileProfileScreen extends ConsumerWidget {
                             Icons.person_outline,
                             color:
                                 (Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : M.navy),
+                                ? Colors.white
+                                : M.navy),
                             size: 48,
                           ),
                           const SizedBox(height: M.sm),
@@ -90,17 +88,15 @@ class MobileProfileScreen extends ConsumerWidget {
                     );
                   }
                   final name = profile.displayName;
-                  final sports =
-                      profile.sports.isNotEmpty == true
-                          ? profile.sports.join(' • ')
-                          : 'No sports set';
-                  final initials =
-                      name
-                          .split(' ')
-                          .map((w) => w.isNotEmpty ? w[0] : '')
-                          .take(2)
-                          .join()
-                          .toUpperCase();
+                  final sports = profile.sports.isNotEmpty == true
+                      ? profile.sports.join(' • ')
+                      : 'No sports set';
+                  final initials = name
+                      .split(' ')
+                      .map((w) => w.isNotEmpty ? w[0] : '')
+                      .take(2)
+                      .join()
+                      .toUpperCase();
                   return Row(
                     children: [
                       CircleAvatar(
@@ -108,20 +104,19 @@ class MobileProfileScreen extends ConsumerWidget {
                         backgroundColor: M.navy,
                         backgroundImage:
                             profile.photoUrl != null &&
-                                    profile.photoUrl!.isNotEmpty
-                                ? NetworkImage(profile.photoUrl!)
-                                : null,
-                        child:
-                            profile.photoUrl == null
-                                ? Text(
-                                  initials,
-                                  style: const TextStyle(
-                                    color: M.lime,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                )
-                                : null,
+                                profile.photoUrl!.isNotEmpty
+                            ? NetworkImage(profile.photoUrl!)
+                            : null,
+                        child: profile.photoUrl == null
+                            ? Text(
+                                initials,
+                                style: const TextStyle(
+                                  color: M.lime,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              )
+                            : null,
                       ),
                       const SizedBox(width: M.md),
                       Expanded(
@@ -133,9 +128,9 @@ class MobileProfileScreen extends ConsumerWidget {
                               style: TextStyle(
                                 color:
                                     (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : M.navy),
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : M.navy),
                                 fontSize: 20,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -145,13 +140,12 @@ class MobileProfileScreen extends ConsumerWidget {
                         ),
                       ),
                       IconButton(
-                        onPressed:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const ProfileEditScreen(),
-                              ),
-                            ),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProfileEditScreen(),
+                          ),
+                        ),
                         icon: const Icon(Icons.edit_outlined),
                       ),
                     ],
@@ -160,11 +154,10 @@ class MobileProfileScreen extends ConsumerWidget {
               ),
               const SizedBox(height: M.lg),
               MCard(
-                onTap:
-                    () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const PremiumScreen()),
-                    ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                ),
                 color: const Color(0xFFEAF2F8),
                 child: Row(
                   children: [
@@ -180,9 +173,9 @@ class MobileProfileScreen extends ConsumerWidget {
                               fontWeight: FontWeight.w900,
                               color:
                                   (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : M.navy),
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : M.navy),
                             ),
                           ),
                           Text(
@@ -197,10 +190,9 @@ class MobileProfileScreen extends ConsumerWidget {
                     ),
                     Icon(
                       Icons.chevron_right,
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C)
-                              : M.muted),
+                      color: (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : M.muted),
                     ),
                   ],
                 ),
@@ -290,41 +282,34 @@ class MobileProfileScreen extends ConsumerWidget {
               ),
               const SizedBox(height: M.lg),
               OutlinedButton(
-                onPressed:
-                    () => showDialog<void>(
-                      context: context,
-                      builder:
-                          (dialogContext) => AlertDialog(
-                            title: const Text('Sign out?'),
-                            content: const Text(
-                              'You can sign back in at any time.',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(dialogContext),
-                                child: const Text('Cancel'),
-                              ),
-                              FilledButton(
-                                onPressed: () async {
-                                  Navigator.pop(dialogContext);
-                                  try {
-                                    await AuthService().signOut();
-                                    _showMessage(
-                                      context,
-                                      'You have been signed out.',
-                                    );
-                                  } catch (e) {
-                                    _showMessage(
-                                      context,
-                                      ErrorHandler.getUserMessage(e),
-                                    );
-                                  }
-                                },
-                                child: const Text('Sign out'),
-                              ),
-                            ],
-                          ),
-                    ),
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (dialogContext) => AlertDialog(
+                    title: const Text('Sign out?'),
+                    content: const Text('You can sign back in at any time.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        child: const Text('Cancel'),
+                      ),
+                      FilledButton(
+                        onPressed: () async {
+                          Navigator.pop(dialogContext);
+                          try {
+                            await AuthService().signOut();
+                            _showMessage(context, 'You have been signed out.');
+                          } catch (e) {
+                            _showMessage(
+                              context,
+                              ErrorHandler.getUserMessage(e),
+                            );
+                          }
+                        },
+                        child: const Text('Sign out'),
+                      ),
+                    ],
+                  ),
+                ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                   minimumSize: const Size.fromHeight(M.touchTarget),
@@ -342,21 +327,20 @@ class MobileProfileScreen extends ConsumerWidget {
     );
   }
 
-  String _monthName(int m) =>
-      [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ][m - 1];
+  String _monthName(int m) => [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ][m - 1];
 }
 
 class _SettingsGroup extends StatelessWidget {
@@ -377,10 +361,9 @@ class _SettingsGroup extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   items[i].$2,
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : M.navy),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : M.navy),
                 ),
                 title: Text(
                   items[i].$1,
@@ -388,10 +371,9 @@ class _SettingsGroup extends StatelessWidget {
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : M.muted),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : M.muted),
                   size: 20,
                 ),
                 onTap: () => onSelect(items[i].$1),

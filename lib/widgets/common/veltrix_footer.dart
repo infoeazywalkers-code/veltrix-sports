@@ -103,30 +103,28 @@ class VeltrixFooter extends StatelessWidget {
                   child: Wrap(
                     spacing: 46,
                     runSpacing: 28,
-                    children:
-                        groups
-                            .map(
-                              (g) => SizedBox(
-                                width: 130,
-                                child: FooterGroup(title: g.$1, links: g.$2),
-                              ),
-                            )
-                            .toList(),
+                    children: groups
+                        .map(
+                          (g) => SizedBox(
+                            width: 130,
+                            child: FooterGroup(title: g.$1, links: g.$2),
+                          ),
+                        )
+                        .toList(),
                   ),
                 )
               else
                 Wrap(
                   spacing: 24,
                   runSpacing: 28,
-                  children:
-                      groups
-                          .map(
-                            (g) => SizedBox(
-                              width: 140,
-                              child: FooterGroup(title: g.$1, links: g.$2),
-                            ),
-                          )
-                          .toList(),
+                  children: groups
+                      .map(
+                        (g) => SizedBox(
+                          width: 140,
+                          child: FooterGroup(title: g.$1, links: g.$2),
+                        ),
+                      )
+                      .toList(),
                 ),
             ],
           ),

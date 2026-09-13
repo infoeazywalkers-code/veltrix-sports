@@ -78,12 +78,9 @@ Future<void> main() async {
 
   try {
     await Firebase.initializeApp(
-      options:
-          const bool.fromEnvironment('VELTRIX_PRODUCTION')
-              ? production_firebase_options
-                  .DefaultFirebaseOptions
-                  .currentPlatform
-              : firebase_options.DefaultFirebaseOptions.currentPlatform,
+      options: const bool.fromEnvironment('VELTRIX_PRODUCTION')
+          ? production_firebase_options.DefaultFirebaseOptions.currentPlatform
+          : firebase_options.DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true,

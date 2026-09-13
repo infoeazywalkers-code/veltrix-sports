@@ -95,9 +95,9 @@ class ProductionInfoScreen extends StatelessWidget {
                               style: TextStyle(
                                 color:
                                     (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : navy),
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : navy),
                                 fontWeight: FontWeight.w900,
                                 fontSize: 16,
                               ),
@@ -108,9 +108,9 @@ class ProductionInfoScreen extends StatelessWidget {
                               style: TextStyle(
                                 color:
                                     (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? const Color(0xFF78909C)
-                                        : muted),
+                                        Brightness.dark
+                                    ? const Color(0xFF78909C)
+                                    : muted),
                                 height: 1.45,
                               ),
                             ),
@@ -173,10 +173,9 @@ class _AthleteOnboardingScreenState extends State<AthleteOnboardingScreen> {
         experienceLevel: _experience,
         mainGoal: _goal,
         weeklyHours: _weeklyHours.round(),
-        goalRace:
-            _raceController.text.trim().isEmpty
-                ? null
-                : _raceController.text.trim(),
+        goalRace: _raceController.text.trim().isEmpty
+            ? null
+            : _raceController.text.trim(),
         complete: complete,
       );
       if (!mounted) return;
@@ -216,10 +215,9 @@ class _AthleteOnboardingScreenState extends State<AthleteOnboardingScreen> {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 8),
@@ -230,28 +228,24 @@ class _AthleteOnboardingScreenState extends State<AthleteOnboardingScreen> {
         DropdownButtonFormField<String>(
           initialValue: _sport,
           decoration: const InputDecoration(labelText: 'Primary sport'),
-          items:
-              ['Running', 'Cycling', 'Triathlon', 'Strength']
-                  .map(
-                    (value) =>
-                        DropdownMenuItem(value: value, child: Text(value)),
-                  )
-                  .toList(),
+          items: ['Running', 'Cycling', 'Triathlon', 'Strength']
+              .map(
+                (value) => DropdownMenuItem(value: value, child: Text(value)),
+              )
+              .toList(),
           onChanged: (value) => setState(() => _sport = value ?? _sport),
         ),
         const SizedBox(height: 14),
         DropdownButtonFormField<String>(
           initialValue: _experience,
           decoration: const InputDecoration(labelText: 'Experience level'),
-          items:
-              ['Beginner', 'Intermediate', 'Advanced']
-                  .map(
-                    (value) =>
-                        DropdownMenuItem(value: value, child: Text(value)),
-                  )
-                  .toList(),
-          onChanged:
-              (value) => setState(() => _experience = value ?? _experience),
+          items: ['Beginner', 'Intermediate', 'Advanced']
+              .map(
+                (value) => DropdownMenuItem(value: value, child: Text(value)),
+              )
+              .toList(),
+          onChanged: (value) =>
+              setState(() => _experience = value ?? _experience),
         ),
         const SizedBox(height: 14),
         DropdownButtonFormField<String>(
@@ -317,22 +311,18 @@ ProductionInfoScreen coachPlatformScreen() => ProductionInfoScreen(
   accent: purple,
   actions: [
     Builder(
-      builder:
-          (context) => FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: lime,
-              foregroundColor: navy,
-            ),
-            onPressed:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CoachDashboardScreen(),
-                  ),
-                ),
-            icon: const Icon(Icons.dashboard_customize),
-            label: const Text('Open dashboard'),
-          ),
+      builder: (context) => FilledButton.icon(
+        style: FilledButton.styleFrom(
+          backgroundColor: lime,
+          foregroundColor: navy,
+        ),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CoachDashboardScreen()),
+        ),
+        icon: const Icon(Icons.dashboard_customize),
+        label: const Text('Open dashboard'),
+      ),
     ),
   ],
   blocks: const [
@@ -479,20 +469,18 @@ ProductionInfoScreen strengthPlanDetailScreen(
   accent: purple,
   actions: [
     Builder(
-      builder:
-          (context) => FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: lime,
-              foregroundColor: navy,
-            ),
-            onPressed:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const PremiumScreen()),
-                ),
-            icon: const Icon(Icons.workspace_premium),
-            label: const Text('Review Premium'),
-          ),
+      builder: (context) => FilledButton.icon(
+        style: FilledButton.styleFrom(
+          backgroundColor: lime,
+          foregroundColor: navy,
+        ),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const PremiumScreen()),
+        ),
+        icon: const Icon(Icons.workspace_premium),
+        label: const Text('Review Premium'),
+      ),
     ),
   ],
   blocks: const [

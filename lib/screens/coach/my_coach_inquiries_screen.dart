@@ -83,20 +83,17 @@ class MyCoachInquiriesScreen extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 10),
             itemBuilder: (context, index) {
               final inquiry = inquiries[index];
-              final goal =
-                  inquiry.targetGoal.isEmpty
-                      ? 'Discovery call'
-                      : inquiry.targetGoal;
-              final date =
-                  inquiry.preferredDate.isEmpty
-                      ? ''
-                      : 'Preferred: ${_formatDate(inquiry.preferredDate)}';
-              final body =
-                  inquiry.message.isEmpty
-                      ? date
-                      : date.isEmpty
-                      ? inquiry.message
-                      : '${inquiry.message}\n$date';
+              final goal = inquiry.targetGoal.isEmpty
+                  ? 'Discovery call'
+                  : inquiry.targetGoal;
+              final date = inquiry.preferredDate.isEmpty
+                  ? ''
+                  : 'Preferred: ${_formatDate(inquiry.preferredDate)}';
+              final body = inquiry.message.isEmpty
+                  ? date
+                  : date.isEmpty
+                  ? inquiry.message
+                  : '${inquiry.message}\n$date';
               return Card(
                 child: ListTile(
                   leading: const Icon(
@@ -154,12 +151,11 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final normalized = status.isEmpty ? 'pending' : status;
-    final Color color =
-        normalized == 'accepted'
-            ? Colors.green
-            : normalized == 'declined'
-            ? muted
-            : orange;
+    final Color color = normalized == 'accepted'
+        ? Colors.green
+        : normalized == 'declined'
+        ? muted
+        : orange;
     return Chip(
       label: Text(
         normalized,

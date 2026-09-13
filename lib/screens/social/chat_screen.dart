@@ -94,10 +94,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Text(
                       'Error loading messages',
                       style: TextStyle(
-                        color:
-                            (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF78909C)
-                                : muted),
+                        color: (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
                       ),
                     ),
                   );
@@ -115,8 +114,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           size: 48,
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                                  ? const Color(0xFF78909C)
-                                  : muted),
+                              ? const Color(0xFF78909C)
+                              : muted),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -124,8 +123,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           style: TextStyle(
                             color:
                                 (Theme.of(context).brightness == Brightness.dark
-                                    ? const Color(0xFF78909C)
-                                    : muted),
+                                ? const Color(0xFF78909C)
+                                : muted),
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -212,12 +211,11 @@ class _MessageBubble extends StatelessWidget {
               _formatTime(message.createdAt),
               style: TextStyle(
                 fontSize: 10,
-                color:
-                    isMe
-                        ? Colors.white60
-                        : (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF78909C)
-                            : muted),
+                color: isMe
+                    ? Colors.white60
+                    : (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF78909C)
+                          : muted),
               ),
             ),
           ],
@@ -290,17 +288,16 @@ class _MessageInput extends StatelessWidget {
                 foregroundColor: Colors.white,
               ),
               onPressed: isLoading ? null : onSend,
-              icon:
-                  isLoading
-                      ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                      : const Icon(Icons.send_rounded, size: 18),
+              icon: isLoading
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.send_rounded, size: 18),
             ),
           ],
         ),

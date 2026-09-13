@@ -46,11 +46,10 @@ class GearVaultScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed:
-            () => showDialog(
-              context: context,
-              builder: (_) => const GearEditDialog(),
-            ),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (_) => const GearEditDialog(),
+        ),
         backgroundColor: const Color(0xFFF97316),
         icon: const Icon(Icons.add, color: Colors.white, size: 20),
         label: const Text(
@@ -59,20 +58,18 @@ class GearVaultScreen extends ConsumerWidget {
         ),
       ),
       body: gearAsync.when(
-        loading:
-            () => const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xFFF97316)),
-              ),
-            ),
-        error:
-            (e, _) => Center(
-              child: Text(
-                "Couldn't load gear: $e",
-                style: const TextStyle(color: Colors.white54, fontSize: 13),
-                textAlign: TextAlign.center,
-              ),
-            ),
+        loading: () => const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(Color(0xFFF97316)),
+          ),
+        ),
+        error: (e, _) => Center(
+          child: Text(
+            "Couldn't load gear: $e",
+            style: const TextStyle(color: Colors.white54, fontSize: 13),
+            textAlign: TextAlign.center,
+          ),
+        ),
         data: (gear) {
           if (gear.isEmpty) return _emptyState();
           return SingleChildScrollView(
@@ -95,8 +92,9 @@ class GearVaultScreen extends ConsumerWidget {
     final bikes = gear.where((g) => g.type == GearType.bike).toList();
     final shoes = gear.where((g) => g.type == GearType.shoes).toList();
     final watches = gear.where((g) => g.type == GearType.watch).toList();
-    final powerMeters =
-        gear.where((g) => g.type == GearType.powerMeter).toList();
+    final powerMeters = gear
+        .where((g) => g.type == GearType.powerMeter)
+        .toList();
     return [
       if (bikes.isNotEmpty) ...[
         _sectionHeader('Bicycles', Icons.directions_bike),
@@ -233,11 +231,10 @@ class GearVaultScreen extends ConsumerWidget {
 
   Widget _gearCard(BuildContext context, GearItem g) {
     return GestureDetector(
-      onTap:
-          () => showDialog(
-            context: context,
-            builder: (_) => GearEditDialog(existing: g),
-          ),
+      onTap: () => showDialog(
+        context: context,
+        builder: (_) => GearEditDialog(existing: g),
+      ),
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
@@ -334,11 +331,10 @@ class GearVaultScreen extends ConsumerWidget {
                 if (g.maxDistanceKm > 0) _usageIndicator(g.usagePercent),
                 IconButton(
                   tooltip: g.isRetired ? 'Restore gear' : 'Retire gear',
-                  onPressed:
-                      () => showDialog(
-                        context: context,
-                        builder: (_) => GearRetireDialog(gear: g),
-                      ),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => GearRetireDialog(gear: g),
+                  ),
                   icon: Icon(
                     g.isRetired
                         ? Icons.unarchive_outlined

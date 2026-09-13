@@ -74,16 +74,14 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
 
     final title = workout.title;
     final sportName = workout.sport.name.toUpperCase();
-    final desc =
-        workout.description.isNotEmpty
-            ? workout.description
-            : 'Stay relaxed and keep your effort in Zone 2.';
+    final desc = workout.description.isNotEmpty
+        ? workout.description
+        : 'Stay relaxed and keep your effort in Zone 2.';
     final durationStr = workout.duration;
     final units = ref.watch(unitSystemProvider);
-    final distanceStr =
-        workout.distanceKm != null
-            ? UnitConversion.formatDistance(units, workout.distanceKm!)
-            : '—';
+    final distanceStr = workout.distanceKm != null
+        ? UnitConversion.formatDistance(units, workout.distanceKm!)
+        : '—';
     final tssStr = workout.tss != null ? '${workout.tss}' : '—';
     final targetPace = workout.targetPace ?? '—';
     final segments = workout.segments;
@@ -153,10 +151,9 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
                       targetPace,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        color:
-                            (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : navy),
+                        color: (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : navy),
                       ),
                     ),
                   ),
@@ -235,14 +232,13 @@ class _WorkoutDetailsScreenState extends ConsumerState<WorkoutDetailsScreen> {
                 minimumSize: const Size.fromHeight(48),
               ),
               onPressed: _loading ? null : _markAsComplete,
-              icon:
-                  _loading
-                      ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                      : const Icon(Icons.check),
+              icon: _loading
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.check),
               label: const Text(
                 'Mark as complete',
                 style: TextStyle(fontWeight: FontWeight.w800),

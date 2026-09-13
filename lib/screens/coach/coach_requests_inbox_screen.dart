@@ -68,10 +68,9 @@ class _CoachRequestsInboxScreenState extends State<CoachRequestsInboxScreen> {
       } catch (_) {
         profile = null;
       }
-      final athleteName =
-          (profile?.displayName.isNotEmpty == true)
-              ? profile!.displayName
-              : 'Athlete';
+      final athleteName = (profile?.displayName.isNotEmpty == true)
+          ? profile!.displayName
+          : 'Athlete';
       final athleteEmail = profile?.email ?? '';
 
       await _dashboardService.assignAthlete(
@@ -108,9 +107,8 @@ class _CoachRequestsInboxScreenState extends State<CoachRequestsInboxScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder:
-                (_) =>
-                    ChatScreen(chatRoomId: roomId, otherUserName: athleteName),
+            builder: (_) =>
+                ChatScreen(chatRoomId: roomId, otherUserName: athleteName),
           ),
         );
       } catch (e) {
@@ -249,10 +247,9 @@ class _RequestCard extends StatelessWidget {
               future: profileFuture,
               builder: (context, snapshot) {
                 final profile = snapshot.data;
-                final name =
-                    (profile?.displayName.isNotEmpty == true)
-                        ? profile!.displayName
-                        : 'Athlete ${request.userId.isEmpty ? '—' : request.userId.substring(0, request.userId.length.clamp(0, 6))}';
+                final name = (profile?.displayName.isNotEmpty == true)
+                    ? profile!.displayName
+                    : 'Athlete ${request.userId.isEmpty ? '—' : request.userId.substring(0, request.userId.length.clamp(0, 6))}';
                 final email = profile?.email ?? '';
                 return Row(
                   children: [
@@ -333,16 +330,13 @@ class _RequestCard extends StatelessWidget {
                         foregroundColor: navy,
                       ),
                       onPressed: busy ? null : onAccept,
-                      icon:
-                          busy
-                              ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : const Icon(Icons.check, size: 18),
+                      icon: busy
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.check, size: 18),
                       label: Text(
                         busy ? 'Accepting…' : 'Accept',
                         style: const TextStyle(fontWeight: FontWeight.w900),

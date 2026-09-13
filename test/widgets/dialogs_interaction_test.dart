@@ -34,15 +34,13 @@ void main() {
           MaterialApp(
             home: Scaffold(
               body: Builder(
-                builder:
-                    (context) => ElevatedButton(
-                      onPressed:
-                          () => showDialog(
-                            context: context,
-                            builder: (_) => CheckoutDialog(plan: plan),
-                          ),
-                      child: const Text('Open Dialog'),
-                    ),
+                builder: (context) => ElevatedButton(
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => CheckoutDialog(plan: plan),
+                  ),
+                  child: const Text('Open Dialog'),
+                ),
               ),
             ),
           ),
@@ -71,20 +69,17 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) => const DeviceConnectDialog(
-                                deviceName: 'Garmin Forerunner 965',
-                                category: 'GPS Watch',
-                                isConnected: false,
-                              ),
-                        ),
-                    child: const Text('Open Dialog'),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const DeviceConnectDialog(
+                    deviceName: 'Garmin Forerunner 965',
+                    category: 'GPS Watch',
+                    isConnected: false,
                   ),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -112,17 +107,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const CoachBookingDialog(coach: _testCoach),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -149,17 +140,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const CoachBookingDialog(coach: _testCoach),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -185,17 +172,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const CoachBookingDialog(coach: _testCoach),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -218,17 +201,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const CoachBookingDialog(coach: _testCoach),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -262,17 +241,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => const CoachBookingDialog(coach: _testCoach),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -307,17 +282,13 @@ void main() {
           MaterialApp(
             home: Scaffold(
               body: Builder(
-                builder:
-                    (context) => ElevatedButton(
-                      onPressed:
-                          () => showDialog(
-                            context: context,
-                            builder:
-                                (_) =>
-                                    EditProfileDialog(currentProfile: profile),
-                          ),
-                      child: const Text('Open Dialog'),
-                    ),
+                builder: (context) => ElevatedButton(
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => EditProfileDialog(currentProfile: profile),
+                  ),
+                  child: const Text('Open Dialog'),
+                ),
               ),
             ),
           ),
@@ -354,16 +325,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) => EditProfileDialog(currentProfile: profile),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => EditProfileDialog(currentProfile: profile),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -396,16 +364,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) => EditProfileDialog(currentProfile: profile),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => EditProfileDialog(currentProfile: profile),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -443,16 +408,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) => EditProfileDialog(currentProfile: profile),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => EditProfileDialog(currentProfile: profile),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),
@@ -489,16 +451,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) => EditProfileDialog(currentProfile: profile),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+              builder: (context) => ElevatedButton(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => EditProfileDialog(currentProfile: profile),
+                ),
+                child: const Text('Open Dialog'),
+              ),
             ),
           ),
         ),

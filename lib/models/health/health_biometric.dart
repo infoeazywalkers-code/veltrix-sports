@@ -52,8 +52,8 @@ class HealthBiometricDay {
         remSleepPct: m['remSleepPct'] ?? 0,
         spo2Pct: (m['spo2Pct'] ?? 0).toDouble(),
         respiratoryRate: (m['respiratoryRate'] ?? 0).toDouble(),
-        skinTempDeviationCelsius:
-            (m['skinTempDeviationCelsius'] ?? 0).toDouble(),
+        skinTempDeviationCelsius: (m['skinTempDeviationCelsius'] ?? 0)
+            .toDouble(),
         subjectiveSoreness: m['subjectiveSoreness'] ?? 1,
         subjectiveStress: m['subjectiveStress'] ?? 'low',
         hydrationLitres: (m['hydrationLitres'] ?? 0).toDouble(),

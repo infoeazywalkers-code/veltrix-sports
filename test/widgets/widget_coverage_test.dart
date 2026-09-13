@@ -12,7 +12,9 @@ import 'package:veltrix_sports/providers.dart';
 
 Widget wrap(Widget child) => ProviderScope(
   child: MaterialApp(
-    home: Scaffold(body: SingleChildScrollView(child: Center(child: child))),
+    home: Scaffold(
+      body: SingleChildScrollView(child: Center(child: child)),
+    ),
   ),
 );
 

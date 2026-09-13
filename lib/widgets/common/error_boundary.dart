@@ -11,10 +11,9 @@ class VeltrixErrorBoundary extends StatelessWidget {
   Widget build(BuildContext context) {
     if (child != null) return child!;
     return Material(
-      color:
-          (Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : navy),
+      color: (Theme.of(context).brightness == Brightness.dark
+          ? Colors.white
+          : navy),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),

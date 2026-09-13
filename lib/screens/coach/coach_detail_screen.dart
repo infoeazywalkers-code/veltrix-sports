@@ -246,24 +246,22 @@ class _CoachHero extends StatelessWidget {
               Wrap(
                 spacing: 6,
                 runSpacing: 6,
-                children:
-                    coach.specialities
-                        .map(
-                          (spec) => Chip(
-                            label: Text(
-                              spec,
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            backgroundColor: bg,
-                            padding: EdgeInsets.zero,
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                children: coach.specialities
+                    .map(
+                      (spec) => Chip(
+                        label: Text(
+                          spec,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
                           ),
-                        )
-                        .toList(),
+                        ),
+                        backgroundColor: bg,
+                        padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    )
+                    .toList(),
               ),
             ],
             if (coach.sports.isNotEmpty) ...[
@@ -271,24 +269,22 @@ class _CoachHero extends StatelessWidget {
               Wrap(
                 spacing: 6,
                 runSpacing: 6,
-                children:
-                    coach.sports
-                        .map(
-                          (sport) => Chip(
-                            label: Text(
-                              sport,
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            backgroundColor: const Color(0xffe7eff6),
-                            padding: EdgeInsets.zero,
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                children: coach.sports
+                    .map(
+                      (sport) => Chip(
+                        label: Text(
+                          sport,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
                           ),
-                        )
-                        .toList(),
+                        ),
+                        backgroundColor: const Color(0xffe7eff6),
+                        padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    )
+                    .toList(),
               ),
             ],
             const SizedBox(height: 14),
@@ -341,8 +337,11 @@ class _DetailAvatar extends StatelessWidget {
   const _DetailAvatar({required this.image, required this.name});
 
   String get _initials {
-    final parts =
-        name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    final parts = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((p) => p.isNotEmpty)
+        .toList();
     if (parts.isEmpty) return '?';
     if (parts.length == 1) return parts.first[0].toUpperCase();
     return '${parts.first[0]}${parts[1][0]}'.toUpperCase();
@@ -375,15 +374,14 @@ class _DetailAvatar extends StatelessWidget {
             width: 68,
             height: 68,
             fit: BoxFit.cover,
-            errorBuilder:
-                (_, __, ___) => Text(
-                  _initials,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20,
-                  ),
-                ),
+            errorBuilder: (_, __, ___) => Text(
+              _initials,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 20,
+              ),
+            ),
           ),
         ),
       );
@@ -397,15 +395,14 @@ class _DetailAvatar extends StatelessWidget {
           width: 68,
           height: 68,
           fit: BoxFit.cover,
-          errorBuilder:
-              (_, __, ___) => Text(
-                _initials,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 20,
-                ),
-              ),
+          errorBuilder: (_, __, ___) => Text(
+            _initials,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+              fontSize: 20,
+            ),
+          ),
         ),
       ),
     );
@@ -484,11 +481,10 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
       }
     } catch (_) {}
     try {
-      final assignment =
-          await FirebaseFirestore.instance
-              .collection('coach_athletes')
-              .doc(user.uid)
-              .get();
+      final assignment = await FirebaseFirestore.instance
+          .collection('coach_athletes')
+          .doc(user.uid)
+          .get();
       if (assignment.exists) return true;
     } catch (_) {}
     return false;
@@ -565,18 +561,17 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
               );
             }
             return Column(
-              children:
-                  reviews
-                      .map(
-                        (review) => Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: _ReviewCard(
-                            review: review,
-                            dateLabel: _formatDate(review.createdAt),
-                          ),
-                        ),
-                      )
-                      .toList(),
+              children: reviews
+                  .map(
+                    (review) => Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _ReviewCard(
+                        review: review,
+                        dateLabel: _formatDate(review.createdAt),
+                      ),
+                    ),
+                  )
+                  .toList(),
             );
           },
         ),
@@ -652,15 +647,14 @@ class _ReviewFormState extends State<_ReviewForm> {
                   labelText: 'Rating',
                   border: OutlineInputBorder(),
                 ),
-                items:
-                    const [1, 2, 3, 4, 5]
-                        .map(
-                          (v) => DropdownMenuItem(
-                            value: v,
-                            child: Text('$v star${v == 1 ? '' : 's'}'),
-                          ),
-                        )
-                        .toList(),
+                items: const [1, 2, 3, 4, 5]
+                    .map(
+                      (v) => DropdownMenuItem(
+                        value: v,
+                        child: Text('$v star${v == 1 ? '' : 's'}'),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (v) => setState(() => _rating = v ?? 5),
               ),
               const SizedBox(height: 12),
@@ -673,9 +667,8 @@ class _ReviewFormState extends State<_ReviewForm> {
                   hintText: 'What worked well in your sessions?',
                   border: OutlineInputBorder(),
                 ),
-                validator:
-                    (val) =>
-                        val == null || val.trim().isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.trim().isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
               FilledButton.icon(
@@ -684,14 +677,13 @@ class _ReviewFormState extends State<_ReviewForm> {
                   foregroundColor: navy,
                 ),
                 onPressed: _submitting ? null : _submit,
-                icon:
-                    _submitting
-                        ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                        : const Icon(Icons.rate_review_outlined, size: 18),
+                icon: _submitting
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.rate_review_outlined, size: 18),
                 label: Text(
                   _submitting ? 'Submitting…' : 'Submit review',
                   style: const TextStyle(fontWeight: FontWeight.w900),
@@ -712,10 +704,9 @@ class _ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initial =
-        review.userName.trim().isEmpty
-            ? '?'
-            : review.userName.trim()[0].toUpperCase();
+    final initial = review.userName.trim().isEmpty
+        ? '?'
+        : review.userName.trim()[0].toUpperCase();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14),

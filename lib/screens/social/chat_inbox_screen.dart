@@ -86,8 +86,9 @@ class ChatInboxScreen extends StatelessWidget {
               final room = rooms[index];
               final isAthlete = room.athleteId == uid;
               final otherName = isAthlete ? room.coachName : room.athleteName;
-              final preview =
-                  room.lastMessage.isEmpty ? 'Say hello 👋' : room.lastMessage;
+              final preview = room.lastMessage.isEmpty
+                  ? 'Say hello 👋'
+                  : room.lastMessage;
               return Card(
                 child: ListTile(
                   leading: const CircleAvatar(
@@ -104,20 +105,17 @@ class ChatInboxScreen extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap:
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) => ChatScreen(
-                                chatRoomId: room.id,
-                                otherUserName:
-                                    otherName.isEmpty
-                                        ? 'Conversation'
-                                        : otherName,
-                              ),
-                        ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChatScreen(
+                        chatRoomId: room.id,
+                        otherUserName: otherName.isEmpty
+                            ? 'Conversation'
+                            : otherName,
                       ),
+                    ),
+                  ),
                 ),
               );
             },

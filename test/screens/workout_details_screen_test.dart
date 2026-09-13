@@ -5,8 +5,9 @@ import 'package:veltrix_sports/models/activity/workout.dart';
 import 'package:veltrix_sports/screens/activity/workout_details.dart';
 
 void main() {
-  Widget wrap(Widget child) =>
-      ProviderScope(child: MaterialApp(home: Scaffold(body: child)));
+  Widget wrap(Widget child) => ProviderScope(
+    child: MaterialApp(home: Scaffold(body: child)),
+  );
 
   Workout makeWorkout({
     String id = 'w1',

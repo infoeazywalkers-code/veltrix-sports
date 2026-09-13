@@ -122,10 +122,9 @@ class PremiumScreen extends StatelessWidget {
                 Text(
                   'Go further with Premium.',
                   style: TextStyle(
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : navy),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
                     fontSize: 32,
                     fontWeight: FontWeight.w900,
                   ),
@@ -134,10 +133,9 @@ class PremiumScreen extends StatelessWidget {
                 Text(
                   '14-day free trial. Cancel anytime.',
                   style: TextStyle(
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFFB0BEC5)
-                            : ink),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFFB0BEC5)
+                        : ink),
                     fontSize: 15,
                   ),
                 ),
@@ -154,11 +152,10 @@ class PremiumScreen extends StatelessWidget {
                         vertical: 18,
                       ),
                     ),
-                    onPressed:
-                        () => _openCheckout(
-                          context,
-                          PaymentService.availablePlans[1],
-                        ),
+                    onPressed: () => _openCheckout(
+                      context,
+                      PaymentService.availablePlans[1],
+                    ),
                     child: const Text(
                       'Get Premium Now',
                       style: TextStyle(
@@ -210,10 +207,9 @@ class _PremiumFeature extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
               fontSize: 18,
               fontWeight: FontWeight.w900,
             ),
@@ -222,10 +218,9 @@ class _PremiumFeature extends StatelessWidget {
           Text(
             body,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               fontSize: 13,
               height: 1.5,
             ),
@@ -278,20 +273,18 @@ class _PricingSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 8),
         Text(
           'Start with a 14-day free trial',
           style: TextStyle(
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF78909C)
-                    : muted),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF78909C)
+                : muted),
             fontSize: 15,
           ),
         ),
@@ -384,12 +377,11 @@ class _PriceCard extends StatelessWidget {
           Text(
             plan,
             style: TextStyle(
-              color:
-                  featured
-                      ? Colors.white
-                      : (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : navy),
+              color: featured
+                  ? Colors.white
+                  : (Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : navy),
               fontSize: 16,
               fontWeight: FontWeight.w800,
             ),
@@ -401,12 +393,11 @@ class _PriceCard extends StatelessWidget {
               Text(
                 price,
                 style: TextStyle(
-                  color:
-                      featured
-                          ? Colors.white
-                          : (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : navy),
+                  color: featured
+                      ? Colors.white
+                      : (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : navy),
                   fontSize: 36,
                   fontWeight: FontWeight.w900,
                 ),
@@ -414,12 +405,11 @@ class _PriceCard extends StatelessWidget {
               Text(
                 period,
                 style: TextStyle(
-                  color:
-                      featured
-                          ? Colors.white70
-                          : (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C)
-                              : muted),
+                  color: featured
+                      ? Colors.white70
+                      : (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
                   fontSize: 14,
                 ),
               ),
@@ -429,12 +419,11 @@ class _PriceCard extends StatelessWidget {
           Text(
             detail,
             style: TextStyle(
-              color:
-                  featured
-                      ? Colors.white60
-                      : (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
+              color: featured
+                  ? Colors.white60
+                  : (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
               fontSize: 12,
             ),
           ),
@@ -461,13 +450,11 @@ class _PriceCard extends StatelessWidget {
                     child: Text(
                       f,
                       style: TextStyle(
-                        color:
-                            featured
-                                ? Colors.white70
-                                : (Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? const Color(0xFFB0BEC5)
-                                    : ink),
+                        color: featured
+                            ? Colors.white70
+                            : (Theme.of(context).brightness == Brightness.dark
+                                  ? const Color(0xFFB0BEC5)
+                                  : ink),
                         fontSize: 13,
                       ),
                     ),
@@ -487,10 +474,9 @@ class _PriceCard extends StatelessWidget {
                 minimumSize: const Size.fromHeight(48),
               ),
               onPressed: () {
-                final selectedPlan =
-                    featured
-                        ? PaymentService.availablePlans[1]
-                        : PaymentService.availablePlans.first;
+                final selectedPlan = featured
+                    ? PaymentService.availablePlans[1]
+                    : PaymentService.availablePlans.first;
                 _openCheckout(context, selectedPlan);
               },
               child: const Text(
@@ -539,33 +525,30 @@ class _FeatureHighlights extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color:
-                (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : navy),
+            color: (Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : navy),
           ),
         ),
         const SizedBox(height: 24),
         if (desktop)
           Row(
-            children:
-                features
-                    .map((f) => Expanded(child: _FeatureTile(f.$1, f.$2, f.$3)))
-                    .toList(),
+            children: features
+                .map((f) => Expanded(child: _FeatureTile(f.$1, f.$2, f.$3)))
+                .toList(),
           )
         else
           Wrap(
             spacing: 14,
             runSpacing: 14,
-            children:
-                features
-                    .map(
-                      (f) => SizedBox(
-                        width: (MediaQuery.sizeOf(context).width - 50) / 2,
-                        child: _FeatureTile(f.$1, f.$2, f.$3),
-                      ),
-                    )
-                    .toList(),
+            children: features
+                .map(
+                  (f) => SizedBox(
+                    width: (MediaQuery.sizeOf(context).width - 50) / 2,
+                    child: _FeatureTile(f.$1, f.$2, f.$3),
+                  ),
+                )
+                .toList(),
           ),
       ],
     );
@@ -589,10 +572,9 @@ class _FeatureTile extends StatelessWidget {
             title,
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : navy),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : navy),
               fontSize: 15,
             ),
           ),
@@ -600,10 +582,9 @@ class _FeatureTile extends StatelessWidget {
           Text(
             body,
             style: TextStyle(
-              color:
-                  (Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF78909C)
-                      : muted),
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
               fontSize: 12,
               height: 1.5,
             ),

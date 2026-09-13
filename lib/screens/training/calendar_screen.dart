@@ -95,10 +95,9 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : navy),
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : navy),
                 ),
               ),
             ),
@@ -122,12 +121,11 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                   width: 42,
                   padding: const EdgeInsets.symmetric(vertical: 9),
                   decoration: BoxDecoration(
-                    color:
-                        day == i
-                            ? navy
-                            : (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF0F2030)
-                                : Colors.white),
+                    color: day == i
+                        ? navy
+                        : (Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF0F2030)
+                              : Colors.white),
                     borderRadius: BorderRadius.circular(13),
                   ),
                   child: Column(
@@ -135,13 +133,11 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                       Text(
                         ['M', 'T', 'W', 'T', 'F', 'S', 'S'][i],
                         style: TextStyle(
-                          color:
-                              day == i
-                                  ? Colors.white70
-                                  : (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? const Color(0xFF78909C)
-                                      : muted),
+                          color: day == i
+                              ? Colors.white70
+                              : (Theme.of(context).brightness == Brightness.dark
+                                    ? const Color(0xFF78909C)
+                                    : muted),
                           fontSize: 10,
                         ),
                       ),
@@ -149,13 +145,11 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                       Text(
                         '${date.day}',
                         style: TextStyle(
-                          color:
-                              day == i
-                                  ? Colors.white
-                                  : (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : navy),
+                          color: day == i
+                              ? Colors.white
+                              : (Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : navy),
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -176,18 +170,16 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
               separatorBuilder: (_, _) => const SizedBox(width: 8),
               itemBuilder: (context, index) {
                 final isAll = index == 0;
-                final selected =
-                    isAll
-                        ? planFilter == null
-                        : planFilter == activePlans[index - 1].id;
+                final selected = isAll
+                    ? planFilter == null
+                    : planFilter == activePlans[index - 1].id;
                 final label = isAll ? 'All' : activePlans[index - 1].name;
                 return ChoiceChip(
                   label: Text(label),
                   selected: selected,
-                  onSelected:
-                      (_) =>
-                          ref.read(calendarPlanFilterProvider.notifier).state =
-                              isAll ? null : activePlans[index - 1].id,
+                  onSelected: (_) =>
+                      ref.read(calendarPlanFilterProvider.notifier).state =
+                          isAll ? null : activePlans[index - 1].id,
                 );
               },
             ),
@@ -199,31 +191,27 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
         ),
         const SizedBox(height: 12),
         workoutsAsync.when(
-          loading:
-              () => const Padding(
-                padding: EdgeInsets.symmetric(vertical: 30),
-                child: Center(child: CircularProgressIndicator(color: navy)),
-              ),
-          error:
-              (e, _) => Padding(
-                padding: EdgeInsets.symmetric(vertical: 30),
-                child: Center(
-                  child: Text(
-                    'Failed to load workouts',
-                    style: TextStyle(
-                      color:
-                          (Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF78909C)
-                              : muted),
-                    ),
-                  ),
+          loading: () => const Padding(
+            padding: EdgeInsets.symmetric(vertical: 30),
+            child: Center(child: CircularProgressIndicator(color: navy)),
+          ),
+          error: (e, _) => Padding(
+            padding: EdgeInsets.symmetric(vertical: 30),
+            child: Center(
+              child: Text(
+                'Failed to load workouts',
+                style: TextStyle(
+                  color: (Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF78909C)
+                      : muted),
                 ),
               ),
+            ),
+          ),
           data: (workouts) {
-            final visible =
-                planFilter == null
-                    ? workouts
-                    : workouts.where((w) => w.planId == planFilter).toList();
+            final visible = planFilter == null
+                ? workouts
+                : workouts.where((w) => w.planId == planFilter).toList();
             if (visible.isEmpty) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 30),
@@ -232,10 +220,9 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                     children: [
                       Icon(
                         Icons.event_busy,
-                        color:
-                            (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF78909C)
-                                : muted),
+                        color: (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
                         size: 44,
                       ),
                       SizedBox(height: 10),
@@ -244,8 +231,8 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                         style: TextStyle(
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : navy),
+                              ? Colors.white
+                              : navy),
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -255,8 +242,8 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                         style: TextStyle(
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                                  ? const Color(0xFF78909C)
-                                  : muted),
+                              ? const Color(0xFF78909C)
+                              : muted),
                         ),
                       ),
                     ],
@@ -264,15 +251,14 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                 ),
               );
             }
-            final dayWorkouts =
-                visible
-                    .where(
-                      (w) =>
-                          w.scheduledFor.day == selectedDate.day &&
-                          w.scheduledFor.month == selectedDate.month &&
-                          w.scheduledFor.year == selectedDate.year,
-                    )
-                    .toList();
+            final dayWorkouts = visible
+                .where(
+                  (w) =>
+                      w.scheduledFor.day == selectedDate.day &&
+                      w.scheduledFor.month == selectedDate.month &&
+                      w.scheduledFor.year == selectedDate.year,
+                )
+                .toList();
             if (dayWorkouts.isEmpty) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 30),
@@ -281,10 +267,9 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                     children: [
                       Icon(
                         Icons.event_busy,
-                        color:
-                            (Theme.of(context).brightness == Brightness.dark
-                                ? const Color(0xFF78909C)
-                                : muted),
+                        color: (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF78909C)
+                            : muted),
                         size: 44,
                       ),
                       SizedBox(height: 10),
@@ -293,8 +278,8 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
                         style: TextStyle(
                           color:
                               (Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : navy),
+                              ? Colors.white
+                              : navy),
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -304,33 +289,31 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
               );
             }
             return Column(
-              children:
-                  dayWorkouts
-                      .map(
-                        (w) => Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: WorkoutCard(
-                            sport: w.sport.name.toUpperCase(),
-                            title: w.title,
-                            details:
-                                '${w.duration}${w.tss != null ? '  \u2022  ${w.tss} TSS' : ''}',
-                            color: _sportColor(w.sport),
-                            icon: _sportIcon(w.sport),
-                            progress: w.progress,
-                            planLabel: _planLabel(w.planId),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => WorkoutDetailsScreen(workout: w),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      )
-                      .toList(),
+              children: dayWorkouts
+                  .map(
+                    (w) => Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: WorkoutCard(
+                        sport: w.sport.name.toUpperCase(),
+                        title: w.title,
+                        details:
+                            '${w.duration}${w.tss != null ? '  \u2022  ${w.tss} TSS' : ''}',
+                        color: _sportColor(w.sport),
+                        icon: _sportIcon(w.sport),
+                        progress: w.progress,
+                        planLabel: _planLabel(w.planId),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => WorkoutDetailsScreen(workout: w),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                  .toList(),
             );
           },
         ),
@@ -338,36 +321,31 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
         const SectionHeading('Week overview'),
         const SizedBox(height: 10),
         workoutsAsync.when(
-          loading:
-              () => const SizedBox(
-                height: 40,
-                child: Center(child: CircularProgressIndicator(color: navy)),
-              ),
-          error:
-              (e, _) => Text(
-                'Failed to load week',
-                style: TextStyle(
-                  color:
-                      (Theme.of(context).brightness == Brightness.dark
-                          ? const Color(0xFF78909C)
-                          : muted),
-                ),
-              ),
+          loading: () => const SizedBox(
+            height: 40,
+            child: Center(child: CircularProgressIndicator(color: navy)),
+          ),
+          error: (e, _) => Text(
+            'Failed to load week',
+            style: TextStyle(
+              color: (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF78909C)
+                  : muted),
+            ),
+          ),
           data: (workouts) {
-            final visible =
-                planFilter == null
-                    ? workouts
-                    : workouts.where((w) => w.planId == planFilter).toList();
+            final visible = planFilter == null
+                ? workouts
+                : workouts.where((w) => w.planId == planFilter).toList();
             if (visible.isEmpty) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Text(
                   'No workouts this week',
                   style: TextStyle(
-                    color:
-                        (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFF78909C)
-                            : muted),
+                    color: (Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF78909C)
+                        : muted),
                   ),
                 ),
               );
@@ -375,18 +353,17 @@ class _CalendarState extends ConsumerState<CalendarScreen> {
             final sorted = List<Workout>.from(visible)
               ..sort((a, b) => a.scheduledFor.compareTo(b.scheduledFor));
             return Column(
-              children:
-                  sorted
-                      .map(
-                        (w) => WeekRow(
-                          '${_dayLabel(w.scheduledFor.weekday)} ${w.scheduledFor.day}',
-                          w.title,
-                          w.duration,
-                          _sportColor(w.sport),
-                          _sportIcon(w.sport),
-                        ),
-                      )
-                      .toList(),
+              children: sorted
+                  .map(
+                    (w) => WeekRow(
+                      '${_dayLabel(w.scheduledFor.weekday)} ${w.scheduledFor.day}',
+                      w.title,
+                      w.duration,
+                      _sportColor(w.sport),
+                      _sportIcon(w.sport),
+                    ),
+                  )
+                  .toList(),
             );
           },
         ),

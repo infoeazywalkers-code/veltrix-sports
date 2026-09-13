@@ -99,13 +99,12 @@ class ChatService {
   }) async {
     try {
       // Check if a chat room already exists between these two users
-      final existing =
-          await _db
-              .collection('chat_rooms')
-              .where('athleteId', isEqualTo: athleteId)
-              .where('coachId', isEqualTo: coachId)
-              .limit(1)
-              .get();
+      final existing = await _db
+          .collection('chat_rooms')
+          .where('athleteId', isEqualTo: athleteId)
+          .where('coachId', isEqualTo: coachId)
+          .limit(1)
+          .get();
 
       if (existing.docs.isNotEmpty) {
         return existing.docs.first.id;
@@ -136,12 +135,11 @@ class ChatService {
     if (user == null) throw Exception('User not authenticated');
 
     try {
-      final messageRef =
-          _db
-              .collection('chat_rooms')
-              .doc(chatRoomId)
-              .collection('messages')
-              .doc();
+      final messageRef = _db
+          .collection('chat_rooms')
+          .doc(chatRoomId)
+          .collection('messages')
+          .doc();
 
       await messageRef.set({
         'senderId': user.uid,
@@ -196,10 +194,8 @@ class ChatService {
                   final room = ChatRoom.fromFirestore(doc);
                   rooms[room.id] = room;
                 }
-                final sortedRooms =
-                    rooms.values.toList()..sort(
-                      (a, b) => b.lastMessageAt.compareTo(a.lastMessageAt),
-                    );
+                final sortedRooms = rooms.values.toList()
+                  ..sort((a, b) => b.lastMessageAt.compareTo(a.lastMessageAt));
                 return sortedRooms;
               });
         })
@@ -214,14 +210,13 @@ class ChatService {
     if (user == null) return;
 
     try {
-      final unreadMessages =
-          await _db
-              .collection('chat_rooms')
-              .doc(chatRoomId)
-              .collection('messages')
-              .where('read', isEqualTo: false)
-              .where('senderId', isNotEqualTo: user.uid)
-              .get();
+      final unreadMessages = await _db
+          .collection('chat_rooms')
+          .doc(chatRoomId)
+          .collection('messages')
+          .where('read', isEqualTo: false)
+          .where('senderId', isNotEqualTo: user.uid)
+          .get();
 
       final batch = _db.batch();
       for (final doc in unreadMessages.docs) {
