@@ -822,7 +822,7 @@ class _VideoLayer extends StatelessWidget {
                       ),
                     ),
           ),
-        if (ready && c?.value.isPlaying == false)
+        if (ready && !c.value.isPlaying)
           Center(
             child: IconButton.filled(
               style: IconButton.styleFrom(

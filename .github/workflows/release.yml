@@ -46,7 +46,7 @@ jobs:
         run: |
           test -n "$ANDROID_KEYSTORE_BASE64"
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-keystore.jks
-          printf "storeFile=app/release-keystore.jks\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=%s\n" "$ANDROID_STORE_PASSWORD" "$ANDROID_KEY_PASSWORD" "$ANDROID_KEY_ALIAS" > android/key.properties
+          printf "storeFile=release-keystore.jks\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=%s\n" "$ANDROID_STORE_PASSWORD" "$ANDROID_KEY_PASSWORD" "$ANDROID_KEY_ALIAS" > android/key.properties
 
       - name: Get version from tag
         id: version
@@ -101,6 +101,8 @@ jobs:
         run: echo "VERSION=$($env:GITHUB_REF -replace 'refs/tags/v','')" >> $env:GITHUB_OUTPUT
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
+      - name: Downgrade CMake for Firebase C++ SDK
+        run: choco install cmake --version=3.31.6 -y --no-progress --allow-downgrade
       - run: flutter build windows --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
       - name: Zip Windows build
         run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath windows-build.zip

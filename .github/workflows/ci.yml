@@ -84,11 +84,11 @@ jobs:
         run: |
           if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
             echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-keystore.jks
-            printf "storeFile=app/release-keystore.jks\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=%s\n" "$ANDROID_STORE_PASSWORD" "$ANDROID_KEY_PASSWORD" "$ANDROID_KEY_ALIAS" > android/key.properties
+            printf "storeFile=release-keystore.jks\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=%s\n" "$ANDROID_STORE_PASSWORD" "$ANDROID_KEY_PASSWORD" "$ANDROID_KEY_ALIAS" > android/key.properties
           else
             echo "No signing secrets — generating ephemeral CI debug keystore"
             keytool -genkey -v -keystore android/app/release-keystore.jks -keyalg RSA -keysize 2048 -validity 30 -alias ci_debug -storepass android -keypass android -dname "CN=CI, OU=CI, O=CI, L=CI, ST=CI, C=US"
-            printf "storeFile=app/release-keystore.jks\nstorePassword=android\nkeyPassword=android\nkeyAlias=ci_debug\n" > android/key.properties
+            printf "storeFile=release-keystore.jks\nstorePassword=android\nkeyPassword=android\nkeyAlias=ci_debug\n" > android/key.properties
           fi
       - run: flutter pub get
       - run: flutter build apk --release
@@ -129,11 +129,11 @@ jobs:
         run: |
           if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
             echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-keystore.jks
-            printf "storeFile=app/release-keystore.jks\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=%s\n" "$ANDROID_STORE_PASSWORD" "$ANDROID_KEY_PASSWORD" "$ANDROID_KEY_ALIAS" > android/key.properties
+            printf "storeFile=release-keystore.jks\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=%s\n" "$ANDROID_STORE_PASSWORD" "$ANDROID_KEY_PASSWORD" "$ANDROID_KEY_ALIAS" > android/key.properties
           else
             echo "No signing secrets — generating ephemeral CI debug keystore"
             keytool -genkey -v -keystore android/app/release-keystore.jks -keyalg RSA -keysize 2048 -validity 30 -alias ci_debug -storepass android -keypass android -dname "CN=CI, OU=CI, O=CI, L=CI, ST=CI, C=US"
-            printf "storeFile=app/release-keystore.jks\nstorePassword=android\nkeyPassword=android\nkeyAlias=ci_debug\n" > android/key.properties
+            printf "storeFile=release-keystore.jks\nstorePassword=android\nkeyPassword=android\nkeyAlias=ci_debug\n" > android/key.properties
           fi
       - run: flutter pub get
       - run: flutter build appbundle --release
@@ -148,6 +148,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Reject CRLF line endings
+        # dart format behaves differently on CRLF vs LF checkouts, which once
+        # caused 152 phantom "changed" files. Blobs must be LF (.gitattributes).
+        run: |
+          if git grep -Il $'\r' -- . | grep -q .; then
+            echo "CRLF line endings detected in:"
+            git grep -Il $'\r' -- .
+            echo "Normalize to LF before pushing."
+            exit 1
+          fi
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.41.9'
@@ -165,6 +175,10 @@ jobs:
           channel: 'stable'
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
+      - name: Downgrade CMake for Firebase C++ SDK
+        # windows-latest ships CMake 4.x, which removed support for the
+        # cmake_minimum_required(<3.5) used by firebase_cpp_sdk_windows.
+        run: choco install cmake --version=3.31.6 -y --no-progress --allow-downgrade
       - run: flutter build windows --release --no-tree-shake-icons
       - uses: actions/upload-artifact@v4
         with:

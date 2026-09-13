@@ -1,0 +1,4 @@
+# Normalize line endings to LF on all platforms so `dart format`
+# and CI behave identically on Windows, macOS and Linux.
+# NOTE: plain `text` (not `text=auto`) — unconditional normalization.
+* text eol=lf
