@@ -179,13 +179,29 @@ jobs:
       - name: Build Windows with CMake 3.x
         # windows-latest ships CMake 4.x, which removed support for the
         # cmake_minimum_required(<3.5) used by firebase_cpp_sdk_windows.
-        # NOTE: GITHUB_PATH file encoding is unreliable for PATH injection
-        # here, so prepend to $env:PATH in the same step as the build.
+        # Flutter does NOT honor PATH here (it probes well-known VS/CMake
+        # install dirs), so replace the 4.x binaries in place. The runner
+        # is disposable, so overwriting is safe.
         run: |
           Invoke-WebRequest -Uri https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-windows-x86_64.zip -OutFile "$env:TEMP/cmake.zip"
           Expand-Archive -Path "$env:TEMP/cmake.zip" -DestinationPath C:\cmake-3.31 -Force
-          $env:PATH = "C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin;$env:PATH"
-          cmake --version
+          $newBin = "C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin"
+          Write-Host "--- cmake candidates before ---"
+          where.exe cmake
+          $cands = @("C:\Program Files\CMake\bin\cmake.exe") + @(Get-ChildItem 'C:\Program Files\Microsoft Visual Studio' -Recurse -Filter cmake.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName)
+          foreach ($c in $cands | Select-Object -Unique) {
+            if (-not $c) { continue }
+            $v = (& $c --version | Select-Object -First 1) 2>$null
+            Write-Host "$c -> $v"
+            if ($v -match "cmake version ([4-9]|[1-9][0-9])\.") {
+              Write-Host "Replacing 4.x with 3.31.6: $c"
+              Copy-Item "$newBin\*" (Split-Path $c) -Force
+            }
+          }
+          Write-Host "--- after ---"
+          where.exe cmake
+          & "C:\Program Files\CMake\bin\cmake.exe" --version | Select-Object -First 1
+          $env:PATH = "$newBin;$env:PATH"
           flutter build windows --release --no-tree-shake-icons
       - uses: actions/upload-artifact@v4
         with:
