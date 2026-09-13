@@ -101,13 +101,13 @@ jobs:
         run: echo "VERSION=$($env:GITHUB_REF -replace 'refs/tags/v','')" >> $env:GITHUB_OUTPUT
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
-      - name: Install CMake 3.x for Firebase C++ SDK
+      - name: Build Windows with CMake 3.x
         run: |
           Invoke-WebRequest -Uri https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-windows-x86_64.zip -OutFile "$env:TEMP/cmake.zip"
           Expand-Archive -Path "$env:TEMP/cmake.zip" -DestinationPath C:\cmake-3.31 -Force
-          "C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin" >> $env:GITHUB_PATH
-          C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin\cmake.exe --version
-      - run: flutter build windows --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
+          $env:PATH = "C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin;$env:PATH"
+          cmake --version
+          flutter build windows --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
       - name: Zip Windows build
         run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath windows-build.zip
       - uses: actions/upload-artifact@v4

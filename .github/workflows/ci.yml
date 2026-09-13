@@ -163,14 +163,6 @@ jobs:
           flutter-version: '3.41.9'
           channel: 'stable'
       - run: flutter pub get
-      # TEMP DEBUG — remove once format gate is green
-      - name: Debug formatter environment
-        run: |
-          dart --version
-          python3 -c "import json; d=json.load(open('.dart_tool/package_config.json')); print([ (p['name'], p.get('languageVersion')) for p in d['packages'] if p['name']=='veltrix_sports'])"
-          md5sum lib/main.dart
-          grep -c $'\r' lib/main.dart || echo "no CR bytes"
-          dart format --output=show lib/main.dart 2>/dev/null | head -60
       - run: dart format --set-exit-if-changed .
 
   build-windows:
@@ -184,17 +176,17 @@ jobs:
           channel: 'stable'
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
-      - name: Install CMake 3.x for Firebase C++ SDK
+      - name: Build Windows with CMake 3.x
         # windows-latest ships CMake 4.x, which removed support for the
         # cmake_minimum_required(<3.5) used by firebase_cpp_sdk_windows.
-        # choco's cmake package does not put cmake.exe on PATH, so use the
-        # official portable zip and prepend it via GITHUB_PATH instead.
+        # NOTE: GITHUB_PATH file encoding is unreliable for PATH injection
+        # here, so prepend to $env:PATH in the same step as the build.
         run: |
           Invoke-WebRequest -Uri https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-windows-x86_64.zip -OutFile "$env:TEMP/cmake.zip"
           Expand-Archive -Path "$env:TEMP/cmake.zip" -DestinationPath C:\cmake-3.31 -Force
-          "C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin" >> $env:GITHUB_PATH
-          C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin\cmake.exe --version
-      - run: flutter build windows --release --no-tree-shake-icons
+          $env:PATH = "C:\cmake-3.31\cmake-3.31.6-windows-x86_64\bin;$env:PATH"
+          cmake --version
+          flutter build windows --release --no-tree-shake-icons
       - uses: actions/upload-artifact@v4
         with:
           name: windows-build
