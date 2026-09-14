@@ -81,12 +81,17 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.veltrixsports.veltrixSports',
   );
 
+  // Firebase has no "Windows app" registration in the console: Flutter
+  // desktop connects with the WEB app's credentials (same project, same
+  // backend). The demo placeholders that used to be here made every Auth
+  // and Firestore call fail on the Windows build.
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDemoKeyForWindows',
-    appId: '1:25616595982:windows:placeholder',
+    apiKey: 'AIzaSyAmseNI3VGRd1mIonnzO4P9tp8_xdDt8p4',
+    appId: '1:25616595982:web:9858680bae4c42fcc8d05f',
     messagingSenderId: '25616595982',
     projectId: 'veltrix-sports',
     authDomain: 'veltrix-sports.firebaseapp.com',
     storageBucket: 'veltrix-sports.firebasestorage.app',
+    measurementId: 'G-22EME77ENP',
   );
 }

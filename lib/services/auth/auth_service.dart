@@ -28,6 +28,21 @@ class AuthService {
   User? get currentUser => _auth.currentUser;
 
   Future<User?> signInWithGoogle() async {
+    // google_sign_in ships Android/iOS/macOS/Web implementations only.
+    // Fail fast with a clear message instead of a MissingPluginException.
+    // (Thrown outside try/await so it is not re-wrapped below.)
+    if (!kIsWeb &&
+        defaultTargetPlatform != TargetPlatform.android &&
+        defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
+      throw const AuthException(
+        message: 'google-sign-in-unsupported-platform',
+        userMessage:
+            'Google sign-in isn\u2019t available on this device \u2014 '
+            'please sign in with email instead.',
+        code: 'unsupported-platform',
+      );
+    }
     try {
       if (kIsWeb) {
         final GoogleAuthProvider googleProvider = GoogleAuthProvider();
