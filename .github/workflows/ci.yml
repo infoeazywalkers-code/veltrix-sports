@@ -47,7 +47,7 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter build web --release --no-tree-shake-icons
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: web-build
           path: build/web/
@@ -92,7 +92,7 @@ jobs:
           fi
       - run: flutter pub get
       - run: flutter build apk --release
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk
@@ -137,7 +137,7 @@ jobs:
           fi
       - run: flutter pub get
       - run: flutter build appbundle --release
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android-aab
           path: build/app/outputs/bundle/release/app-release.aab
@@ -181,7 +181,7 @@ jobs:
       # NOTE: windows/CMakeLists.txt sets CMAKE_POLICY_VERSION_MINIMUM so the
       # firebase C++ SDK configures under the runner's CMake 4.x. No CI hack.
       - run: flutter build windows --release --no-tree-shake-icons
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: windows-build
           path: build/windows/x64/runner/Release/
@@ -203,7 +203,7 @@ jobs:
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
       - run: flutter build linux --release --no-tree-shake-icons
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux-build
           path: build/linux/x64/release/bundle/
@@ -221,7 +221,7 @@ jobs:
       - run: flutter config --enable-macos-desktop
       - run: flutter pub get
       - run: flutter build macos --release --no-tree-shake-icons
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: macos-build
           path: build/macos/Build/Products/Release/
@@ -238,7 +238,7 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter build ios --release --no-codesign --no-tree-shake-icons
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ios-nocodesign
           path: build/ios/iphoneos/Runner.app
