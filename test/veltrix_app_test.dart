@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:veltrix_sports/main.dart';
+import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/shell.dart';
 import 'package:veltrix_sports/mobile/shell.dart';
 
@@ -24,7 +26,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
 
-    await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(
+            (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+          ),
+        ],
+        child: const VeltrixRoot(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(MaterialApp), findsOneWidget);
   });
@@ -34,7 +45,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
 
-    await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(
+            (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+          ),
+        ],
+        child: const VeltrixRoot(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(MaterialApp), findsOneWidget);
   });
@@ -44,7 +64,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
 
-    await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(
+            (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+          ),
+        ],
+        child: const VeltrixRoot(),
+      ),
+    );
     await tester.pumpAndSettle();
     final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(app.title, 'Veltrix Sports');
@@ -55,7 +84,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
 
-    await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(
+            (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+          ),
+        ],
+        child: const VeltrixRoot(),
+      ),
+    );
     await tester.pumpAndSettle();
     final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(app.debugShowCheckedModeBanner, isFalse);
@@ -66,7 +104,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
 
-    await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(
+            (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+          ),
+        ],
+        child: const VeltrixRoot(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(Shell), findsOneWidget);
   });
@@ -78,7 +125,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
 
-    await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(
+            (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+          ),
+        ],
+        child: const VeltrixRoot(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(MobileShell), findsOneWidget);
   });
@@ -88,7 +144,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
 
-    await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(
+            (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+          ),
+        ],
+        child: const VeltrixRoot(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(ProviderScope), findsOneWidget);
   });
@@ -106,7 +171,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());
 
-    await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith(
+            (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+          ),
+        ],
+        child: const VeltrixRoot(),
+      ),
+    );
     await tester.pumpAndSettle();
     final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(app.theme?.useMaterial3, isTrue);

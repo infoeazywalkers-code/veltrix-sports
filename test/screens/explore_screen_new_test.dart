@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/screens/explore/explore_screen.dart';
 
 void main() {
   Widget wrap(Widget child, {ValueChanged<int>? onNavigate}) =>
       MaterialApp(home: Scaffold(body: child));
+
+  /// Pumps [child] with a [ProviderScope] for screens that watch providers
+  /// (e.g. pages navigated to from Explore).
+  Widget wrapScoped(Widget child) => ProviderScope(child: wrap(child));
 
   // Helper to scroll the ExploreScreen's ListView to the bottom
   Future<void> scrollDown(WidgetTester tester) async {
@@ -13,12 +18,21 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  // Helper to bring the recommended-plan card into the render window.
+  // Slivers garbage-collect far offscreen children, so a full -2000 fling
+  // destroys the card before assertions run; -600 keeps it built.
+  Future<void> scrollToCard(WidgetTester tester) async {
+    final listView = find.byType(ListView);
+    await tester.drag(listView, const Offset(0, -600));
+    await tester.pumpAndSettle();
+  }
+
   group('ExploreScreen', () {
     testWidgets('renders search field and hint', (tester) async {
       await tester.pumpWidget(wrap(const ExploreScreen()));
       await tester.pumpAndSettle();
       expect(find.byType(TextField), findsOneWidget);
-      expect(find.text('Search plans, events, coaches'), findsOneWidget);
+      expect(find.text('Search plans, events'), findsOneWidget);
     });
 
     testWidgets('renders Browse Veltrix section', (tester) async {
@@ -70,7 +84,7 @@ void main() {
     ) async {
       await tester.pumpWidget(wrap(const ExploreScreen()));
       await tester.pumpAndSettle();
-      await scrollDown(tester);
+      await scrollToCard(tester);
       expect(find.textContaining('Build endurance'), findsOneWidget);
       expect(find.text('16 weeks  \u2022  Coach Amit'), findsOneWidget);
     });
@@ -78,18 +92,20 @@ void main() {
     testWidgets('renders View plan button after scrolling', (tester) async {
       await tester.pumpWidget(wrap(const ExploreScreen()));
       await tester.pumpAndSettle();
-      await scrollDown(tester);
+      await scrollToCard(tester);
       expect(find.text('View plan'), findsOneWidget);
     });
 
     testWidgets('tap View plan opens training plans page', (tester) async {
-      await tester.pumpWidget(wrap(const ExploreScreen()));
+      await tester.pumpWidget(wrapScoped(const ExploreScreen()));
       await tester.pumpAndSettle();
-      await scrollDown(tester);
+      await scrollToCard(tester);
       await tester.tap(find.text('View plan'));
       await tester.pumpAndSettle();
-      expect(find.text('Training plans'), findsWidgets);
-      expect(find.text('Cycling Performance Builder'), findsOneWidget);
+      // The marketplace route covers Explore (offstage finders skip it), so
+      // assert the marketplace header plus a catalog entry instead.
+      expect(find.text('TRAINING PLANS'), findsOneWidget);
+      expect(find.text('Sub-3h Marathon'), findsOneWidget);
     });
 
     testWidgets('renders upcoming events section after scrolling', (
@@ -190,12 +206,14 @@ void main() {
     });
 
     testWidgets('tap Training plans opens feature page', (tester) async {
-      await tester.pumpWidget(wrap(const ExploreScreen()));
+      await tester.pumpWidget(wrapScoped(const ExploreScreen()));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Training plans'));
       await tester.pumpAndSettle();
-      expect(find.text('Training plans'), findsWidgets);
-      expect(find.text('Marathon Training Pro'), findsOneWidget);
+      // The marketplace route covers Explore (offstage finders skip it), so
+      // assert the marketplace header plus a catalog entry instead.
+      expect(find.text('TRAINING PLANS'), findsOneWidget);
+      expect(find.text('Sub-3h Marathon'), findsOneWidget);
     });
 
     testWidgets('tap Find a coach calls onNavigate(6)', (tester) async {
@@ -290,7 +308,7 @@ void main() {
     testWidgets('renders marathon run icon after scrolling', (tester) async {
       await tester.pumpWidget(wrap(const ExploreScreen()));
       await tester.pumpAndSettle();
-      await scrollDown(tester);
+      await scrollToCard(tester);
       expect(find.byIcon(Icons.directions_run), findsWidgets);
     });
   });

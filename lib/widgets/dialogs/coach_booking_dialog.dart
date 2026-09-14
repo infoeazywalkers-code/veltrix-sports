@@ -1,18 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants.dart';
+import '../../providers.dart';
 import '../../services/social/coach_service.dart';
 import '../../screens/coach/my_coach_inquiries_screen.dart';
 
-class CoachBookingDialog extends StatefulWidget {
+class CoachBookingDialog extends ConsumerStatefulWidget {
   final CoachProfile coach;
   const CoachBookingDialog({super.key, required this.coach});
 
   @override
-  State<CoachBookingDialog> createState() => _CoachBookingDialogState();
+  ConsumerState<CoachBookingDialog> createState() => _CoachBookingDialogState();
 }
 
-class _CoachBookingDialogState extends State<CoachBookingDialog> {
+class _CoachBookingDialogState extends ConsumerState<CoachBookingDialog> {
   final _formKey = GlobalKey<FormState>();
   final _goalController = TextEditingController();
   final _messageController = TextEditingController();
@@ -76,7 +77,9 @@ class _CoachBookingDialogState extends State<CoachBookingDialog> {
 
   @override
   Widget build(BuildContext context) {
-    if (FirebaseAuth.instance.currentUser == null) {
+    // Injected via provider (instead of FirebaseAuth.instance) so the gate
+    // stays testable and consistent with the rest of the app.
+    if (ref.watch(currentUserProvider) == null) {
       return AlertDialog(
         title: const Text('Sign in required'),
         content: const Text(

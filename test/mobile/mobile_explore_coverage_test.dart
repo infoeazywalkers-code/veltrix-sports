@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_explore.dart';
 
@@ -16,15 +17,18 @@ void main() {
     };
   });
 
-  Widget wrapExplore() =>
-      const MaterialApp(home: Scaffold(body: MobileExploreScreen()));
+  // ProviderScope is inert for MobileExploreScreen itself (plain
+  // StatefulWidget) but required by pages it navigates to (marketplace).
+  Widget wrapExplore() => const ProviderScope(
+    child: MaterialApp(home: Scaffold(body: MobileExploreScreen())),
+  );
 
   group('MobileExploreScreen search', () {
     testWidgets('renders search TextField with hint', (tester) async {
       await tester.pumpWidget(wrapExplore());
       await tester.pumpAndSettle();
       expect(find.byType(TextField), findsOneWidget);
-      expect(find.text('Search plans, events, coaches'), findsOneWidget);
+      expect(find.text('Search plans, events'), findsOneWidget);
     });
 
     testWidgets('search icon visible when empty', (tester) async {
@@ -132,8 +136,10 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Training plans'));
       await tester.pumpAndSettle();
-      expect(find.text('Training plans'), findsWidgets);
-      expect(find.text('Marathon Training Pro'), findsOneWidget);
+      // The marketplace route covers Explore (offstage finders skip it), so
+      // assert the marketplace header plus a catalog entry instead.
+      expect(find.text('TRAINING PLANS'), findsOneWidget);
+      expect(find.text('Sub-3h Marathon'), findsOneWidget);
     });
 
     testWidgets('premium tile navigates', (tester) async {

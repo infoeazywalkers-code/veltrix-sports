@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -72,9 +76,29 @@ final _testPerformance = PerformanceSnapshot(
   recordedAt: _now,
 );
 
+class _FakeAuthPlatform extends FirebaseAuthPlatform {
+  _FakeAuthPlatform() : super();
+  @override
+  UserPlatform? get currentUser => null;
+  @override
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) => this;
+  @override
+  FirebaseAuthPlatform setInitialValues({
+    PigeonUserDetails? currentUser,
+    String? languageCode,
+  }) => this;
+}
+
 Widget desktopShell(Widget child) => ProviderScope(
   overrides: [
-    authStateProvider.overrideWith((ref) => Stream.value(null)),
+    // ProfileScreen gates on a signed-in auth user; other screens ignore it.
+    // photoUrl is nulled so the avatar renders initials instead of a
+    // network image (unavailable in widget tests).
+    authStateProvider.overrideWith(
+      (ref) => Stream.value(
+        MockUser(uid: 'u1', email: 'priya@veltrix.com', photoURL: ''),
+      ),
+    ),
     userProfileProvider.overrideWith((ref) => Stream.value(_testProfile)),
     upcomingWorkoutsProvider.overrideWith((ref) async => _testWorkouts),
     activePlansProvider.overrideWith((ref) => Stream.value([])),
@@ -93,10 +117,27 @@ Widget desktopShell(Widget child) => ProviderScope(
 );
 
 void main() {
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp();
+    FirebaseAuthPlatform.instance = _FakeAuthPlatform();
+  });
+
   group('ProfileScreen with data', () {
     testWidgets('renders full profile', (tester) async {
+      // Tall viewport so the whole profile ListView builds at once
+      // (slivers garbage-collect far offscreen children in tests).
+      tester.view.physicalSize = const Size(1600, 4000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
       await tester.pumpWidget(desktopShell(const ProfileScreen()));
-      await tester.pumpAndSettle();
+      // Bounded pumps instead of pumpAndSettle: the achievements subtree
+      // holds a live Firestore stream that never settles in tests, but all
+      // asserted content is static once built.
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.text('Priya Sharma'), findsOneWidget);
       expect(find.text('PS'), findsOneWidget);
       expect(find.textContaining('Running'), findsWidgets);
@@ -123,10 +164,17 @@ void main() {
         role: UserRole.athlete,
         createdAt: DateTime(2024, 1, 1),
       );
+      tester.view.physicalSize = const Size(1600, 4000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            authStateProvider.overrideWith((ref) => Stream.value(null)),
+            authStateProvider.overrideWith(
+              (ref) => Stream.value(
+                MockUser(uid: 'u2', email: 'test@test.com', photoURL: ''),
+              ),
+            ),
             userProfileProvider.overrideWith(
               (ref) => Stream.value(noSubProfile),
             ),
@@ -134,7 +182,10 @@ void main() {
           child: const MaterialApp(home: Scaffold(body: ProfileScreen())),
         ),
       );
-      await tester.pumpAndSettle();
+      // Bounded pumps instead of pumpAndSettle (see above).
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
       expect(find.text('No active subscription'), findsOneWidget);
     });
   });

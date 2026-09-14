@@ -344,7 +344,7 @@ void main() {
       expect(find.text('Sync HealthKit'), findsOneWidget);
     });
 
-    testWidgets('shows Force Sync for connected non-wearable device', (
+    testWidgets('connected trainer shows auto-sync status and disconnect', (
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
@@ -362,7 +362,10 @@ void main() {
       );
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
-      expect(find.text('Force Sync'), findsOneWidget);
+      // Trainers pair over BLE, so there is no generic Force Sync button;
+      // a connected trainer shows auto-sync status plus disconnect.
+      expect(find.textContaining('Auto-sync is enabled'), findsOneWidget);
+      expect(find.text('Disconnect Device'), findsOneWidget);
     });
 
     testWidgets('no extra sync button for disconnected non-wearable device', (
@@ -384,7 +387,7 @@ void main() {
       expect(find.text('Sync HealthKit'), findsNothing);
     });
 
-    testWidgets('tapping pair button shows syncing indicator', (tester) async {
+    testWidgets('tapping pair button starts BLE scan', (tester) async {
       SharedPreferences.setMockInitialValues({});
       await tester.pumpWidget(
         openDialog(
@@ -399,8 +402,10 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Pair & Connect'));
       await tester.pump();
-      expect(find.text('Communicating with sensor...'), findsOneWidget);
-      // Advance past the 900ms timer and let the snackbar settle
+      // Sensor hardware pairs over BLE: scan UI appears (simulated feed in
+      // tests) instead of the legacy generic syncing indicator.
+      expect(find.text('Scanning for heart-rate sensors...'), findsOneWidget);
+      // Advance past the scan and let the demo results settle
       await tester.pump(const Duration(milliseconds: 4000));
     });
 
@@ -454,7 +459,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 3000));
     });
 
-    testWidgets('tapping Force Sync triggers manual sync flow', (tester) async {
+    testWidgets('disconnect device pops dialog for connected trainer', (
+      tester,
+    ) async {
       SharedPreferences.setMockInitialValues({
         'device_status_Wahoo KICKR': true,
         'device_sync_Wahoo KICKR': DateTime.now().toIso8601String(),
@@ -470,12 +477,9 @@ void main() {
       );
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Force Sync'));
-      await tester.pump();
-      expect(find.text('Communicating with sensor...'), findsOneWidget);
-      // Advance past the 1000ms timer so the test completes cleanly
-      await tester.pump(const Duration(milliseconds: 2000));
+      await tester.tap(find.text('Disconnect Device'));
       await tester.pumpAndSettle();
+      expect(find.byType(DeviceConnectDialog), findsNothing);
     });
 
     testWidgets('renders AlertDialog widget', (tester) async {

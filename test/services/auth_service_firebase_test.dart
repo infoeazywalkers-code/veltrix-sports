@@ -3,6 +3,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:veltrix_sports/core/errors/app_exception.dart';
 import 'package:veltrix_sports/services/auth/auth_service.dart';
 
 void main() {
@@ -57,13 +58,18 @@ void main() {
   });
 
   group('AuthService - signInWithGoogle', () {
-    test('returns null when GoogleSignIn fails', () async {
+    test('throws AuthException when GoogleSignIn fails', () async {
       final service = AuthService(
         auth: MockFirebaseAuth(),
         db: FakeFirebaseFirestore(),
       );
-      final result = await service.signInWithGoogle();
-      expect(result, isNull);
+      // Default GoogleSignIn.instance cannot initialize in the test env,
+      // so the service wraps the failure in an AuthException for callers
+      // (e.g. AuthWrapper) to surface via snackbar.
+      await expectLater(
+        service.signInWithGoogle(),
+        throwsA(isA<AuthException>()),
+      );
     });
   });
 
@@ -75,13 +81,15 @@ void main() {
   });
 
   group('AuthService - _ensureUserProfile', () {
-    test('does not throw when Firestore is available', () async {
+    test('surfaces AuthException when sign-in prerequisites fail', () async {
       final fakeFirestore = FakeFirebaseFirestore();
       final service = AuthService(auth: MockFirebaseAuth(), db: fakeFirestore);
-      // signInWithGoogle triggers _ensureUserProfile internally.
-      // Even though Google sign-in fails, the method still runs error-handling paths.
-      final result = await service.signInWithGoogle();
-      expect(result, isNull);
+      // signInWithGoogle triggers _ensureUserProfile internally, but Google
+      // sign-in fails first in the test env and is wrapped in AuthException.
+      await expectLater(
+        service.signInWithGoogle(),
+        throwsA(isA<AuthException>()),
+      );
     });
   });
 }

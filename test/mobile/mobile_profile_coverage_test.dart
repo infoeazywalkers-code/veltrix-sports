@@ -1,10 +1,30 @@
 import 'dart:async';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/models/user/user_profile.dart';
 import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_profile.dart';
+import 'package:veltrix_sports/screens/profile/profile_edit_screen.dart';
+import 'package:veltrix_sports/screens/analytics/zones_screen.dart';
+import 'package:veltrix_sports/screens/settings/help_support_screen.dart';
+import 'package:veltrix_sports/screens/explore/production_pages.dart';
+
+class _FakeAuthPlatform extends FirebaseAuthPlatform {
+  _FakeAuthPlatform() : super();
+  @override
+  UserPlatform? get currentUser => null;
+  @override
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) => this;
+  @override
+  FirebaseAuthPlatform setInitialValues({
+    PigeonUserDetails? currentUser,
+    String? languageCode,
+  }) => this;
+}
 
 Widget wrapProfile({UserProfile? profile}) => ProviderScope(
   overrides: [userProfileProvider.overrideWith((ref) => Stream.value(profile))],
@@ -20,8 +40,13 @@ Widget wrapProfileLoading() {
 }
 
 void main() {
-  setUpAll(() {
+  setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
+    // Screens navigated to from profile (edit/zones) touch FirebaseAuth and
+    // Firestore directly, so install the standard mocks.
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp();
+    FirebaseAuthPlatform.instance = _FakeAuthPlatform();
   });
 
   group('MobileProfileScreen logged-out', () {
@@ -215,7 +240,7 @@ void main() {
       expect(find.textContaining('15 Oct 2026'), findsOneWidget);
     });
 
-    testWidgets('personal details settings item tap shows snackbar', (
+    testWidgets('personal details settings item opens edit screen', (
       tester,
     ) async {
       final profile = UserProfile(
@@ -229,11 +254,11 @@ void main() {
       await tester.pumpWidget(wrapProfile(profile: profile));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Personal details'));
-      await tester.pump();
-      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.byType(ProfileEditScreen), findsOneWidget);
     });
 
-    testWidgets('training zones settings item tap shows snackbar', (
+    testWidgets('training zones settings item opens zones screen', (
       tester,
     ) async {
       final profile = UserProfile(
@@ -247,11 +272,11 @@ void main() {
       await tester.pumpWidget(wrapProfile(profile: profile));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Training zones'));
-      await tester.pump();
-      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.byType(ZonesScreen), findsOneWidget);
     });
 
-    testWidgets('help center tap shows snackbar', (tester) async {
+    testWidgets('help center tap opens support screen', (tester) async {
       final profile = UserProfile(
         id: 'u5',
         email: 'f@g.com',
@@ -265,11 +290,11 @@ void main() {
       await tester.scrollUntilVisible(find.text('Help center'), 200);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Help center'));
-      await tester.pump();
-      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.byType(HelpSupportScreen), findsOneWidget);
     });
 
-    testWidgets('about veltrix tap shows snackbar', (tester) async {
+    testWidgets('about veltrix tap opens info screen', (tester) async {
       final profile = UserProfile(
         id: 'u5',
         email: 'f@g.com',
@@ -283,8 +308,8 @@ void main() {
       await tester.scrollUntilVisible(find.text('About Veltrix'), 200);
       await tester.pumpAndSettle();
       await tester.tap(find.text('About Veltrix'));
-      await tester.pump();
-      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.byType(ProductionInfoScreen), findsOneWidget);
     });
   });
 }

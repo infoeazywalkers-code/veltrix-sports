@@ -142,7 +142,7 @@ void main() {
         createdAt: DateTime(2026),
       );
       final map = req.toMap();
-      expect(map.length, 8); // all fields except id
+      expect(map.length, 9); // all fields except id (incl. package)
     });
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/screens/coach/coach_match_screen.dart';
 import 'package:veltrix_sports/screens/coach/coach_questionnaire_screen.dart';
@@ -117,7 +118,9 @@ void main() {
   group('MobileMoreScreen', () {
     testWidgets('renders sections and links', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        const ProviderScope(
+          child: MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        ),
       );
       expect(find.text('More features'), findsOneWidget);
       expect(find.text('Train with more support'), findsOneWidget);
@@ -126,7 +129,9 @@ void main() {
 
     testWidgets('renders feature items', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        const ProviderScope(
+          child: MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        ),
       );
       expect(find.text('Premium'), findsOneWidget);
       expect(find.text('Find a coach'), findsOneWidget);
@@ -137,7 +142,9 @@ void main() {
 
     testWidgets('renders info cards', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        const ProviderScope(
+          child: MaterialApp(home: Scaffold(body: MobileMoreScreen())),
+        ),
       );
       expect(find.byType(Card), findsWidgets);
     });

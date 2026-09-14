@@ -1,11 +1,26 @@
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:veltrix_sports/main.dart';
+import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/shell.dart';
 import 'package:veltrix_sports/mobile/shell.dart';
 import 'package:veltrix_sports/widgets/common/error_boundary.dart';
+
+/// Pumps [VeltrixRoot] with a signed-in user so [AuthWrapper] renders the
+/// shell instead of [LoginScreen]. Other providers (profile, notifications)
+/// fall back to their loading defaults, which shells tolerate.
+Widget signedInRoot() => ProviderScope(
+  overrides: [
+    authStateProvider.overrideWith(
+      (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+    ),
+  ],
+  child: const VeltrixRoot(),
+);
 
 void main() {
   setUpAll(() {
@@ -49,22 +64,50 @@ void main() {
       expect(behavior.dragDevices.length, 4);
     });
 
-    testWidgets('getScrollPhysics returns BouncingScrollPhysics', (
+    testWidgets('getScrollPhysics returns BouncingScrollPhysics on iOS', (
       tester,
     ) async {
-      const behavior = VeltrixScrollBehavior();
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       late ScrollPhysics physics;
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Builder(
-            builder: (context) {
-              physics = behavior.getScrollPhysics(context);
-              return const Scaffold();
-            },
+      try {
+        const behavior = VeltrixScrollBehavior();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) {
+                physics = behavior.getScrollPhysics(context);
+                return const Scaffold();
+              },
+            ),
           ),
-        ),
-      );
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
       expect(physics, isA<BouncingScrollPhysics>());
+    });
+
+    testWidgets('getScrollPhysics returns ClampingScrollPhysics on Android', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      late ScrollPhysics physics;
+      try {
+        const behavior = VeltrixScrollBehavior();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) {
+                physics = behavior.getScrollPhysics(context);
+                return const Scaffold();
+              },
+            ),
+          ),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+      expect(physics, isA<ClampingScrollPhysics>());
     });
   });
 
@@ -74,7 +117,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       expect(find.byType(MaterialApp), findsOneWidget);
     });
@@ -84,7 +127,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       expect(find.byType(Shell), findsOneWidget);
     });
@@ -94,7 +137,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       expect(find.byType(MobileShell), findsOneWidget);
     });
@@ -104,7 +147,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.title, 'Veltrix Sports');
@@ -115,7 +158,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.debugShowCheckedModeBanner, false);
@@ -126,7 +169,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.scrollBehavior, isA<VeltrixScrollBehavior>());
@@ -137,7 +180,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.theme?.useMaterial3, true);
@@ -148,7 +191,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       // At exactly 900, should use desktop layout (>=900)
       expect(find.byType(Shell), findsOneWidget);
@@ -159,7 +202,7 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(const ProviderScope(child: VeltrixRoot()));
+      await tester.pumpWidget(signedInRoot());
       await tester.pumpAndSettle();
       expect(find.byType(MobileShell), findsOneWidget);
     });

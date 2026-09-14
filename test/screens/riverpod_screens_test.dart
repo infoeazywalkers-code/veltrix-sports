@@ -172,7 +172,7 @@ void main() {
   });
 
   group('ProfileScreen (desktop, with providers)', () {
-    testWidgets('renders loading state', (tester) async {
+    testWidgets('renders signed-out prompt when no user', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -182,7 +182,8 @@ void main() {
           child: const MaterialApp(home: Scaffold(body: ProfileScreen())),
         ),
       );
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      // Signed out: ProfileScreen shows the welcome prompt, not a spinner.
+      expect(find.text('Welcome to Veltrix Sports'), findsOneWidget);
     });
   });
 

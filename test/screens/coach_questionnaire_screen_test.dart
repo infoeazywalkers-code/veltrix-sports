@@ -79,10 +79,11 @@ void main() {
       expect(find.text('Improve performance'), findsOneWidget);
     });
 
-    testWidgets('has 3 dropdown button form fields', (tester) async {
+    testWidgets('has 4 dropdown button form fields', (tester) async {
       await tester.pumpWidget(wrap(const CoachQuestionnaireScreen()));
       await tester.pumpAndSettle();
-      expect(find.byType(DropdownButtonFormField<String>), findsNWidgets(3));
+      // sport + experience + goal + pricing package.
+      expect(find.byType(DropdownButtonFormField<String>), findsNWidgets(4));
     });
 
     testWidgets('has a TextFormField for notes', (tester) async {

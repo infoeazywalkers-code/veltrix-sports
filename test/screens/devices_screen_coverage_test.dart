@@ -1,7 +1,24 @@
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:veltrix_sports/screens/devices/devices_screen.dart';
+
+class _FakeAuthPlatform extends FirebaseAuthPlatform {
+  _FakeAuthPlatform() : super();
+  @override
+  UserPlatform? get currentUser => null;
+  @override
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) => this;
+  @override
+  FirebaseAuthPlatform setInitialValues({
+    PigeonUserDetails? currentUser,
+    String? languageCode,
+  }) => this;
+}
 
 Widget _wrap(Widget child) =>
     ProviderScope(child: MaterialApp(home: Scaffold(body: child)));
@@ -19,8 +36,11 @@ void _setDesktop(WidgetTester tester) {
 }
 
 void main() {
-  setUpAll(() {
+  setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp();
+    FirebaseAuthPlatform.instance = _FakeAuthPlatform();
   });
 
   group('DevicesScreen - top-level rendering', () {
@@ -41,6 +61,9 @@ void main() {
 
     testWidgets('renders top device tiles', (tester) async {
       _setMobile(tester);
+      SharedPreferences.setMockInitialValues({
+        'device_status_Apple Watch Series 9': true,
+      });
       await tester.pumpWidget(_wrap(const DevicesScreen()));
       await tester.pumpAndSettle();
 
@@ -320,6 +343,9 @@ void main() {
 
     testWidgets('top devices show Connected/Tap to pair text', (tester) async {
       _setMobile(tester);
+      SharedPreferences.setMockInitialValues({
+        'device_status_Apple Watch Series 9': true,
+      });
       await tester.pumpWidget(_wrap(const DevicesScreen()));
       await tester.pumpAndSettle();
 

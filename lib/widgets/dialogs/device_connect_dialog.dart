@@ -81,7 +81,9 @@ class _DeviceConnectDialogState extends State<DeviceConnectDialog> {
   bool get _isWatch {
     final cat = widget.category.toLowerCase();
     final name = widget.deviceName.toLowerCase();
-    return cat.contains('wearable') || name.contains('watch');
+    return cat.contains('wearable') ||
+        cat.contains('watch') ||
+        name.contains('watch');
   }
 
   bool get _isAppTile => !_isSensor && !_isWatch;

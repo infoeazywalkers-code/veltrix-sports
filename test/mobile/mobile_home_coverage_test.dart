@@ -3,17 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:veltrix_sports/models/user/user_profile.dart';
 import 'package:veltrix_sports/models/activity/workout.dart';
+import 'package:veltrix_sports/models/performance/performance_snapshot.dart';
 import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/mobile/screens/mobile_home.dart';
 
-Widget wrapHome({UserProfile? profile, List<Workout>? workouts}) =>
-    ProviderScope(
-      overrides: [
-        userProfileProvider.overrideWith((ref) => Stream.value(profile)),
-        upcomingWorkoutsProvider.overrideWith((ref) async => workouts ?? []),
-      ],
-      child: const MaterialApp(home: Scaffold(body: MobileHomeScreen())),
-    );
+Widget wrapHome({
+  UserProfile? profile,
+  List<Workout>? workouts,
+  PerformanceSnapshot? performance,
+}) => ProviderScope(
+  overrides: [
+    userProfileProvider.overrideWith((ref) => Stream.value(profile)),
+    upcomingWorkoutsProvider.overrideWith((ref) async => workouts ?? []),
+    latestPerformanceProvider.overrideWith((ref) => Stream.value(performance)),
+  ],
+  child: const MaterialApp(home: Scaffold(body: MobileHomeScreen())),
+);
 
 void main() {
   setUpAll(() {
@@ -154,13 +159,25 @@ void main() {
     });
 
     testWidgets('shows productive training text after scroll', (tester) async {
-      await tester.pumpWidget(wrapHome());
+      // form -15 lands in the [-30, -10) "Productive Training" TSB zone.
+      final snapshot = PerformanceSnapshot(
+        id: 'p1',
+        userId: 'u1',
+        fitness: 72.0,
+        fatigue: 87.0,
+        form: -15.0,
+        weeklyTss: 420,
+        weeklyWorkouts: 5,
+        weeklyDuration: '6h 30m',
+        recordedAt: DateTime.now(),
+      );
+      await tester.pumpWidget(wrapHome(performance: snapshot));
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(
-        find.textContaining('Productive training'),
+        find.textContaining('Productive Training'),
         200,
       );
-      expect(find.textContaining('Productive training'), findsOneWidget);
+      expect(find.textContaining('Productive Training'), findsOneWidget);
     });
 
     testWidgets('shows Run workout when workouts exist', (tester) async {

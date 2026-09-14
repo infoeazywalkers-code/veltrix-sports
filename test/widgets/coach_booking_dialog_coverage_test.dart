@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/services/social/coach_service.dart';
 import 'package:veltrix_sports/widgets/dialogs/coach_booking_dialog.dart';
 
@@ -14,16 +17,25 @@ const _testCoach = CoachProfile(
   specialities: ['Marathon', 'Triathlon', 'Power Metrics'],
 );
 
-Widget openDialog(Widget dialog) => MaterialApp(
-  home: Builder(
-    builder:
-        (context) => Scaffold(
-          body: ElevatedButton(
-            onPressed:
-                () => showDialog(context: context, builder: (_) => dialog),
-            child: const Text('Open'),
+/// Pumps [dialog] with a signed-in user so [CoachBookingDialog]'s auth gate
+/// renders the booking form instead of the "Sign in required" prompt.
+Widget openDialog(Widget dialog) => ProviderScope(
+  overrides: [
+    authStateProvider.overrideWith(
+      (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+    ),
+  ],
+  child: MaterialApp(
+    home: Builder(
+      builder:
+          (context) => Scaffold(
+            body: ElevatedButton(
+              onPressed:
+                  () => showDialog(context: context, builder: (_) => dialog),
+              child: const Text('Open'),
+            ),
           ),
-        ),
+    ),
   ),
 );
 
@@ -120,7 +132,7 @@ void main() {
         '',
       );
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Message for Coach'),
+        find.widgetWithText(TextFormField, 'Message for Coach *'),
         '',
       );
 
@@ -140,7 +152,7 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Message for Coach'),
+        find.widgetWithText(TextFormField, 'Message for Coach *'),
         '',
       );
 
@@ -190,12 +202,12 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Message for Coach'),
+        find.widgetWithText(TextFormField, 'Message for Coach *'),
         'I need help with my training plan',
       );
 
       final messageField = tester.widget<TextFormField>(
-        find.widgetWithText(TextFormField, 'Message for Coach'),
+        find.widgetWithText(TextFormField, 'Message for Coach *'),
       );
       expect(
         messageField.controller?.text,

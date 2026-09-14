@@ -106,8 +106,8 @@ void main() {
       await tester.tap(find.text('Training Plans'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Training plans'), findsWidgets);
-      expect(find.text('Marathon Training Pro'), findsOneWidget);
+      expect(find.text('TRAINING PLANS'), findsOneWidget);
+      expect(find.text('Sub-3h Marathon'), findsOneWidget);
     });
 
     testWidgets('desktop: Coaches > Coach Platform opens platform page', (
@@ -179,8 +179,8 @@ void main() {
       await tester.tap(find.text('Training Plans'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Training plans'), findsWidgets);
-      expect(find.text('Marathon Training Pro'), findsOneWidget);
+      expect(find.text('TRAINING PLANS'), findsOneWidget);
+      expect(find.text('Sub-3h Marathon'), findsOneWidget);
     });
 
     testWidgets('desktop: Resources > Training Guides opens guides page', (

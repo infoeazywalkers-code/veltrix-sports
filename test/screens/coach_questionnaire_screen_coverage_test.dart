@@ -19,7 +19,8 @@ void main() {
 
       expect(find.byType(Form), findsOneWidget);
       expect(find.byType(ListView), findsOneWidget);
-      expect(find.byType(DropdownButtonFormField<String>), findsNWidgets(3));
+      // sport + experience + goal + pricing package.
+      expect(find.byType(DropdownButtonFormField<String>), findsNWidgets(4));
       expect(find.byType(TextFormField), findsOneWidget);
     });
 

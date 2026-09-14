@@ -28,7 +28,8 @@ void main() {
     testWidgets('renders Settings title', (tester) async {
       await tester.pumpWidget(wrapSettings());
       await tester.pumpAndSettle();
-      expect(find.text('Settings'), findsOneWidget);
+      // AppBar title + in-body page heading both render 'Settings'.
+      expect(find.text('Settings'), findsNWidgets(2));
     });
 
     testWidgets('renders Appearance section', (tester) async {
@@ -106,7 +107,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Settings'), findsOneWidget);
+      // AppBar title + in-body page heading both render 'Settings'.
+      expect(find.text('Settings'), findsNWidgets(2));
       expect(find.text('Appearance'), findsOneWidget);
     });
   });

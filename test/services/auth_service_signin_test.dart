@@ -4,6 +4,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:veltrix_sports/core/errors/app_exception.dart';
 import 'package:veltrix_sports/services/auth/auth_service.dart';
 
 void main() {
@@ -15,27 +16,40 @@ void main() {
   });
 
   group('AuthService - signInWithGoogle', () {
-    test('returns null when GoogleSignIn is default (no mock)', () async {
-      final service = AuthService(
-        auth: MockFirebaseAuth(),
-        db: FakeFirebaseFirestore(),
-      );
-      // Default GoogleSignIn.instance will fail to initialize in test env
-      // and the exception is caught, returning null
-      final result = await service.signInWithGoogle();
-      expect(result, isNull);
-    });
+    test(
+      'throws AuthException when GoogleSignIn is default (no mock)',
+      () async {
+        final service = AuthService(
+          auth: MockFirebaseAuth(),
+          db: FakeFirebaseFirestore(),
+        );
+        // Default GoogleSignIn.instance will fail to initialize in test env
+        // and the exception is wrapped in AuthException for callers to surface.
+        await expectLater(
+          service.signInWithGoogle(),
+          throwsA(isA<AuthException>()),
+        );
+      },
+    );
   });
 
   group('AuthService - _ensureUserProfile', () {
-    test('exercises profile check for non-existent user', () async {
-      final fakeFirestore = FakeFirebaseFirestore();
-      final service = AuthService(auth: MockFirebaseAuth(), db: fakeFirestore);
-      // signInWithGoogle internally calls _ensureUserProfile
-      // which checks if user doc exists. Since no user is signed in,
-      // the _ensureUserProfile path isn't reached. The error catch is exercised.
-      await service.signInWithGoogle();
-    });
+    test(
+      'sign-in failure surfaces AuthException before profile check',
+      () async {
+        final fakeFirestore = FakeFirebaseFirestore();
+        final service = AuthService(
+          auth: MockFirebaseAuth(),
+          db: fakeFirestore,
+        );
+        // signInWithGoogle internally calls _ensureUserProfile, but Google
+        // sign-in fails first in the test env, so AuthException is thrown.
+        await expectLater(
+          service.signInWithGoogle(),
+          throwsA(isA<AuthException>()),
+        );
+      },
+    );
   });
 
   group('AuthService - signOut', () {

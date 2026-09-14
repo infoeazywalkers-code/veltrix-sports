@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:veltrix_sports/models/user/user_profile.dart';
+import 'package:veltrix_sports/providers.dart';
 import 'package:veltrix_sports/services/social/coach_service.dart';
 import 'package:veltrix_sports/services/payment/payment_service.dart';
 import 'package:veltrix_sports/widgets/dialogs/checkout_dialog.dart';
 import 'package:veltrix_sports/widgets/dialogs/coach_booking_dialog.dart';
 import 'package:veltrix_sports/widgets/dialogs/device_connect_dialog.dart';
 import 'package:veltrix_sports/widgets/dialogs/edit_profile_dialog.dart';
+
+/// Wraps [child] with a signed-in user so dialogs gated on auth
+/// (e.g. [CoachBookingDialog]) render their content in tests.
+Widget withSignedIn(Widget child) => ProviderScope(
+  overrides: [
+    authStateProvider.overrideWith(
+      (ref) => Stream.value(MockUser(uid: 'test-uid', email: 't@t.com')),
+    ),
+  ],
+  child: child,
+);
 
 const _testCoach = CoachProfile(
   id: 'coach_priya',
@@ -109,20 +123,22 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+        withSignedIn(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder:
+                    (context) => ElevatedButton(
+                      onPressed:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (_) =>
+                                    const CoachBookingDialog(coach: _testCoach),
+                          ),
+                      child: const Text('Open Dialog'),
+                    ),
+              ),
             ),
           ),
         ),
@@ -146,20 +162,22 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+        withSignedIn(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder:
+                    (context) => ElevatedButton(
+                      onPressed:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (_) =>
+                                    const CoachBookingDialog(coach: _testCoach),
+                          ),
+                      child: const Text('Open Dialog'),
+                    ),
+              ),
             ),
           ),
         ),
@@ -169,7 +187,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Primary Target Goal *'), findsOneWidget);
-      expect(find.text('Message for Coach'), findsOneWidget);
+      expect(find.text('Message for Coach *'), findsOneWidget);
       expect(find.textContaining('Call Date:'), findsOneWidget);
       expect(find.text('Change Date'), findsOneWidget);
     });
@@ -182,20 +200,22 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+        withSignedIn(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder:
+                    (context) => ElevatedButton(
+                      onPressed:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (_) =>
+                                    const CoachBookingDialog(coach: _testCoach),
+                          ),
+                      child: const Text('Open Dialog'),
+                    ),
+              ),
             ),
           ),
         ),
@@ -204,7 +224,7 @@ void main() {
       await tester.tap(find.text('Open Dialog'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Sub-3:45 Marathon PR'), findsOneWidget);
+      expect(find.text('e.g. Marathon Sub-3:45'), findsOneWidget);
     });
 
     testWidgets('CoachBookingDialog shows validation errors on empty submit', (
@@ -215,20 +235,22 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+        withSignedIn(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder:
+                    (context) => ElevatedButton(
+                      onPressed:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (_) =>
+                                    const CoachBookingDialog(coach: _testCoach),
+                          ),
+                      child: const Text('Open Dialog'),
+                    ),
+              ),
             ),
           ),
         ),
@@ -242,7 +264,7 @@ void main() {
         '',
       );
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Message for Coach'),
+        find.widgetWithText(TextFormField, 'Message for Coach *'),
         '',
       );
       await tester.tap(find.text('Book 1-on-1 Consultation'));
@@ -259,20 +281,22 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder:
-                  (context) => ElevatedButton(
-                    onPressed:
-                        () => showDialog(
-                          context: context,
-                          builder:
-                              (_) =>
-                                  const CoachBookingDialog(coach: _testCoach),
-                        ),
-                    child: const Text('Open Dialog'),
-                  ),
+        withSignedIn(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder:
+                    (context) => ElevatedButton(
+                      onPressed:
+                          () => showDialog(
+                            context: context,
+                            builder:
+                                (_) =>
+                                    const CoachBookingDialog(coach: _testCoach),
+                          ),
+                      child: const Text('Open Dialog'),
+                    ),
+              ),
             ),
           ),
         ),
