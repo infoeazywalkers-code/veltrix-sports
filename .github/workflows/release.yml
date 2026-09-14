@@ -51,7 +51,7 @@ jobs:
 
       # Uploaded BEFORE Android signing so the web build always ships even
       # when signing secrets are missing (same artifact name merges below).
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-android-web
           path: web-build.zip
@@ -84,7 +84,7 @@ jobs:
       - name: Build Android App Bundle
         run: flutter build appbundle --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-android-web
           path: |
@@ -115,7 +115,7 @@ jobs:
       - run: flutter build windows --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
       - name: Zip Windows build
         run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath windows-build.zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-windows
           path: windows-build.zip
@@ -144,7 +144,7 @@ jobs:
       - run: flutter build linux --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
       - name: Tar Linux bundle
         run: tar -czf linux-build.tar.gz -C build/linux/x64/release bundle
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-linux
           path: linux-build.tar.gz
@@ -169,7 +169,7 @@ jobs:
       - run: flutter build macos --release --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
       - name: Zip macOS build
         run: ditto -c -k --sequesterRsrc --keepParent build/macos/Build/Products/Release/*.app macos-build.zip || (cd build/macos/Build/Products/Release && zip -r ../../../../../macos-build.zip .)
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-macos
           path: macos-build.zip
@@ -214,7 +214,7 @@ jobs:
       - name: Build unsigned (fallback)
         if: steps.signing.outcome != 'success'
         run: flutter build ios --release --no-codesign --dart-define=VELTRIX_PRODUCTION=true --build-name=${{ steps.version.outputs.VERSION }} --build-number=${{ github.run_number }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: steps.signing.outcome == 'success'
         with:
           name: release-ios
